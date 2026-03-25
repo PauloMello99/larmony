@@ -15,10 +15,7 @@ export function CategoryBadge({ name, color, className }: CategoryBadgeProps) {
       )}
       style={{ backgroundColor: `${color}20`, color }}
     >
-      <span
-        className="size-1.5 rounded-full flex-shrink-0"
-        style={{ backgroundColor: color }}
-      />
+      <span className="size-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
       {name}
     </span>
   )

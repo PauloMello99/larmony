@@ -1,0 +1,315 @@
+{
+  "common": {
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "edit": "Edit",
+    "add": "Add",
+    "create": "Create",
+    "creating": "Creating...",
+    "confirm": "Confirm",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "Error",
+    "actions": "Actions",
+    "active": "Active",
+    "inactive": "Inactive",
+    "name": "Name",
+    "description": "Description",
+    "amount": "Amount",
+    "date": "Date",
+    "category": "Category",
+    "notes": "Notes",
+    "noData": "No records found",
+    "search": "Search",
+    "filter": "Filter",
+    "yes": "Yes",
+    "no": "No",
+    "back": "Back",
+    "next": "Next",
+    "optional": "optional",
+    "required": "required",
+    "income": "Income",
+    "expense": "Expense"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "transactions": "Transactions",
+    "categories": "Categories",
+    "budgets": "Budgets",
+    "goals": "Goals",
+    "bills": "Bills",
+    "reports": "Reports",
+    "household": "My Household",
+    "settings": "Settings",
+    "signOut": "Sign Out"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account and preferences",
+    "sections": {
+      "profile": "Profile",
+      "security": "Security",
+      "appearance": "Appearance",
+      "language": "Language"
+    },
+    "profile": {
+      "title": "Profile",
+      "description": "Update your name and personal information",
+      "fullName": "Full name",
+      "email": "Email",
+      "emailReadOnly": "Email cannot be changed.",
+      "saveSuccess": "Profile updated successfully!",
+      "saveButton": "Save changes",
+      "saving": "Saving..."
+    },
+    "security": {
+      "title": "Security",
+      "description": "Change your access password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "wrongPassword": "Incorrect current password",
+      "passwordMismatch": "Passwords do not match",
+      "saveSuccess": "Password changed successfully!",
+      "saveButton": "Change password",
+      "saving": "Changing..."
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Customize the interface",
+      "darkMode": "Dark mode",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "language": {
+      "title": "Language",
+      "description": "Select the interface language",
+      "label": "Preferred language",
+      "ptBR": "Português (Brasil)",
+      "en": "English",
+      "saveSuccess": "Language updated successfully!"
+    }
+  },
+  "household": {
+    "title": "My Household",
+    "subtitle": "Manage your household and members",
+    "info": {
+      "title": "Household info",
+      "householdName": "Household name",
+      "saveName": "Save name",
+      "memberNote": "You are a member of this household"
+    },
+    "members": {
+      "title": "Members",
+      "description": "People with access to the household",
+      "invite": "Invite",
+      "owner": "Owner",
+      "member": "Member",
+      "removeTitle": "Remove member",
+      "removeDescription": "Remove \"{{name}}\" from the household? They will immediately lose access.",
+      "removeButton": "Remove"
+    },
+    "pendingInvites": {
+      "title": "Pending invites",
+      "expires": "Expires on {{date}}",
+      "cancel": "Cancel"
+    },
+    "invite": {
+      "title": "Invite member",
+      "email": "Email",
+      "placeholder": "person@email.com",
+      "success": "Invite sent to {{email}}. The link expires in 7 days.",
+      "close": "close",
+      "error": "Error sending invite. Please try again.",
+      "sending": "Sending...",
+      "send": "Send invite"
+    },
+    "myHouseholds": {
+      "title": "My Households",
+      "description": "All households you are part of",
+      "active": "Active",
+      "enter": "Switch",
+      "createButton": "Create new household",
+      "createTitle": "Create new household",
+      "createName": "Household name",
+      "creating": "Creating..."
+    },
+    "switcher": {
+      "label": "Switch household",
+      "current": "Current household"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Monthly overview",
+    "income": "Income",
+    "expenses": "Expenses",
+    "balance": "Balance",
+    "recentTransactions": "Recent transactions",
+    "upcomingBills": "Upcoming bills",
+    "noTransactions": "No transactions this month",
+    "noBills": "No upcoming bills",
+    "dueIn": "Due in {{days}} days",
+    "dueToday": "Due today",
+    "overdue": "Overdue"
+  },
+  "transactions": {
+    "title": "Transactions",
+    "subtitle": "Manage your income and expenses",
+    "addButton": "New Transaction",
+    "editTitle": "Edit Transaction",
+    "createTitle": "New Transaction",
+    "columns": {
+      "date": "Date",
+      "description": "Description",
+      "person": "Person",
+      "category": "Category",
+      "type": "Type",
+      "amount": "Amount",
+      "actions": "Actions"
+    },
+    "filters": {
+      "month": "Month",
+      "type": "Type",
+      "category": "Category",
+      "allTypes": "All types",
+      "allCategories": "All categories"
+    },
+    "form": {
+      "description": "Description",
+      "amount": "Amount (R$)",
+      "type": "Type",
+      "category": "Category",
+      "date": "Date",
+      "person": "Person (optional)",
+      "notes": "Notes (optional)",
+      "noCategory": "No category",
+      "noPerson": "None"
+    },
+    "deleteTitle": "Delete transaction",
+    "deleteDescription": "Delete \"{{description}}\"? This action cannot be undone.",
+    "empty": "No transactions found"
+  },
+  "categories": {
+    "title": "Categories",
+    "subtitle": "Organize your transactions",
+    "addButton": "New Category",
+    "editTitle": "Edit Category",
+    "createTitle": "New Category",
+    "form": {
+      "name": "Name",
+      "type": "Type",
+      "color": "Color"
+    },
+    "types": {
+      "income": "Income",
+      "expense": "Expense",
+      "both": "Both"
+    },
+    "deleteTitle": "Delete category",
+    "deleteDescription": "Delete \"{{name}}\"? Linked transactions will lose their category.",
+    "empty": "No categories registered"
+  },
+  "budgets": {
+    "title": "Budgets",
+    "subtitle": "Control your monthly limits",
+    "addButton": "New Budget",
+    "editTitle": "Edit Budget",
+    "createTitle": "New Budget",
+    "form": {
+      "category": "Category",
+      "limit": "Limit (R$)",
+      "month": "Month"
+    },
+    "spent": "Spent",
+    "limit": "Limit",
+    "remaining": "Remaining",
+    "exceeded": "Exceeded",
+    "deleteTitle": "Delete budget",
+    "deleteDescription": "Delete the budget for \"{{name}}\"?",
+    "empty": "No budgets defined"
+  },
+  "goals": {
+    "title": "Goals",
+    "subtitle": "Track your savings goals",
+    "addButton": "New Goal",
+    "editTitle": "Edit Goal",
+    "createTitle": "New Goal",
+    "contribute": "Contribute",
+    "contributions": "Contributions",
+    "completed": "Completed",
+    "form": {
+      "name": "Name",
+      "targetAmount": "Target amount (R$)",
+      "targetDate": "Target date (optional)",
+      "color": "Color",
+      "contribution": "Contribution amount (R$)",
+      "contributionDate": "Date",
+      "contributionNotes": "Notes (optional)"
+    },
+    "deleteTitle": "Delete goal",
+    "deleteDescription": "Delete goal \"{{name}}\"?",
+    "empty": "No goals registered"
+  },
+  "bills": {
+    "title": "Bills",
+    "subtitle": "Manage your recurring bills",
+    "addButton": "New Bill",
+    "editTitle": "Edit Bill",
+    "createTitle": "New Bill",
+    "active": "Active",
+    "inactive": "Inactive",
+    "dueDay": "Day {{day}}",
+    "form": {
+      "name": "Name",
+      "amount": "Amount (R$)",
+      "dueDay": "Due day",
+      "category": "Category (optional)",
+      "notes": "Notes (optional)",
+      "isActive": "Active"
+    },
+    "deleteTitle": "Delete bill",
+    "deleteDescription": "Delete \"{{name}}\"?",
+    "empty": "No bills registered"
+  },
+  "reports": {
+    "title": "Reports",
+    "subtitle": "Financial analysis by period",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "byCategory": "By Category",
+    "byPerson": "By Person",
+    "evolution": "Evolution",
+    "income": "Income",
+    "expenses": "Expenses",
+    "balance": "Balance",
+    "noPersonData": "No expenses by person. Assign transactions to people to see data here."
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Access your account",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "submitting": "Signing in...",
+      "forgotPassword": "Forgot password",
+      "noAccount": "Don't have an account?",
+      "register": "Create account"
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Create your free account",
+      "fullName": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create account",
+      "submitting": "Creating...",
+      "hasAccount": "Already have an account?",
+      "login": "Sign in"
+    }
+  }
+}

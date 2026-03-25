@@ -7,12 +7,7 @@ interface LoadingSpinnerProps {
 }
 
 export function LoadingSpinner({ className, size = 24 }: LoadingSpinnerProps) {
-  return (
-    <Loader2
-      className={cn('animate-spin text-muted-foreground', className)}
-      size={size}
-    />
-  )
+  return <Loader2 className={cn('animate-spin text-muted-foreground', className)} size={size} />
 }
 
 export function FullPageLoader() {

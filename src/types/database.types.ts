@@ -25,6 +25,8 @@ export type Database = {
           is_active: boolean
           name: string
           notes: string | null
+          reminder_days_before: number | null
+          reminder_last_sent_at: string | null
           updated_at: string
         }
         Insert: {
@@ -37,6 +39,8 @@ export type Database = {
           is_active?: boolean
           name: string
           notes?: string | null
+          reminder_days_before?: number | null
+          reminder_last_sent_at?: string | null
           updated_at?: string
         }
         Update: {
@@ -49,6 +53,8 @@ export type Database = {
           is_active?: boolean
           name?: string
           notes?: string | null
+          reminder_days_before?: number | null
+          reminder_last_sent_at?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -396,6 +402,7 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          locale: string
           updated_at: string
         }
         Insert: {
@@ -403,6 +410,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
+          locale?: string
           updated_at?: string
         }
         Update: {
@@ -410,6 +418,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
+          locale?: string
           updated_at?: string
         }
         Relationships: []
@@ -456,6 +465,7 @@ export type Database = {
           is_recurring: boolean
           notes: string | null
           parent_id: string | null
+          person_id: string | null
           recurrence_rule: string | null
           type: string
           updated_at: string
@@ -475,6 +485,7 @@ export type Database = {
           is_recurring?: boolean
           notes?: string | null
           parent_id?: string | null
+          person_id?: string | null
           recurrence_rule?: string | null
           type: string
           updated_at?: string
@@ -494,6 +505,7 @@ export type Database = {
           is_recurring?: boolean
           notes?: string | null
           parent_id?: string | null
+          person_id?: string | null
           recurrence_rule?: string | null
           type?: string
           updated_at?: string
@@ -525,6 +537,13 @@ export type Database = {
             columns: ["parent_id"]
             isOneToOne: false
             referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_person_id_fkey"
+            columns: ["person_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]

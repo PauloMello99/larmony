@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
 import {
   LayoutDashboard,
   ArrowLeftRight,
@@ -10,48 +10,79 @@ import {
   Settings,
   LogOut,
   Wallet,
+  X,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useAuth } from '@/contexts/AuthContext'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { HouseholdSwitcher } from '@/components/organisms/HouseholdSwitcher'
 
-const navItems = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard, exact: true },
-  { to: '/transactions', label: 'Transações', icon: ArrowLeftRight },
-  { to: '/categories', label: 'Categorias', icon: Tag },
-  { to: '/budgets', label: 'Orçamentos', icon: PieChart },
-  { to: '/goals', label: 'Metas', icon: Target },
-  { to: '/bills', label: 'Contas a Pagar', icon: Wallet },
-  { to: '/reports', label: 'Relatórios', icon: FileText },
-]
+interface AppSidebarProps {
+  className?: string
+  onClose?: () => void
+}
 
-const bottomNavItems = [
-  { to: '/household', label: 'Meu Lar', icon: Home },
-  { to: '/settings', label: 'Configurações', icon: Settings },
-]
-
-export function AppSidebar({ className }: { className?: string }) {
+export function AppSidebar({ className, onClose }: AppSidebarProps) {
+  const { t } = useTranslation()
   const { profile, signOut } = useAuth()
-  const initials = profile?.full_name
-    ?.split(' ')
-    .slice(0, 2)
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase() ?? '?'
+  const router = useRouter()
+
+  const navItems = [
+    { to: '/', label: t('nav.dashboard'), icon: LayoutDashboard, exact: true },
+    { to: '/transactions', label: t('nav.transactions'), icon: ArrowLeftRight },
+    { to: '/categories', label: t('nav.categories'), icon: Tag },
+    { to: '/budgets', label: t('nav.budgets'), icon: PieChart },
+    { to: '/goals', label: t('nav.goals'), icon: Target },
+    { to: '/bills', label: t('nav.bills'), icon: Wallet },
+    { to: '/reports', label: t('nav.reports'), icon: FileText },
+  ]
+
+  const bottomNavItems = [
+    { to: '/household', label: t('nav.household'), icon: Home },
+    { to: '/settings', label: t('nav.settings'), icon: Settings },
+  ]
+
+  const initials =
+    profile?.full_name
+      ?.split(' ')
+      .slice(0, 2)
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase() ?? '?'
+
+  const onSignOut = () => {
+    signOut()
+    onClose?.()
+    router.navigate({ replace: true, to: '/login' })
+  }
 
   return (
     <aside className={cn('flex h-full w-60 flex-col border-r bg-sidebar px-3 py-4', className)}>
-      <div className="mb-6 px-2">
+      <div className="mb-4 flex items-center justify-between px-2">
         <h1 className="text-lg font-semibold text-sidebar-foreground">Home Finances</h1>
+        {onClose && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-7 text-sidebar-foreground md:hidden"
+            onClick={onClose}
+          >
+            <X className="size-4" />
+          </Button>
+        )}
       </div>
 
-      <nav className="flex-1 space-y-1">
+      <HouseholdSwitcher onClose={onClose} />
+
+      <nav className="flex-1 space-y-1 mt-2">
         {navItems.map(({ to, label, icon: Icon }) => (
           <Link
             key={to}
             to={to}
+            onClick={onClose}
             activeProps={{ className: 'bg-sidebar-accent text-sidebar-accent-foreground' }}
             inactiveProps={{ className: 'text-sidebar-foreground hover:bg-sidebar-accent/50' }}
             className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors"
@@ -68,6 +99,7 @@ export function AppSidebar({ className }: { className?: string }) {
           <Link
             key={to}
             to={to}
+            onClick={onClose}
             activeProps={{ className: 'bg-sidebar-accent text-sidebar-accent-foreground' }}
             inactiveProps={{ className: 'text-sidebar-foreground hover:bg-sidebar-accent/50' }}
             className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors"
@@ -90,8 +122,8 @@ export function AppSidebar({ className }: { className?: string }) {
             variant="ghost"
             size="icon"
             className="size-7 text-sidebar-foreground hover:text-destructive"
-            onClick={signOut}
-            title="Sair"
+            onClick={onSignOut}
+            title={t('nav.signOut')}
           >
             <LogOut className="size-4" />
           </Button>

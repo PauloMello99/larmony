@@ -40,7 +40,8 @@ export function SummaryStatCard({
         {trend && (
           <p className="mt-1 text-xs text-muted-foreground">
             <span className={trend.value >= 0 ? 'text-green-600' : 'text-red-600'}>
-              {trend.value >= 0 ? '+' : ''}{trend.value.toFixed(1)}%
+              {trend.value >= 0 ? '+' : ''}
+              {trend.value.toFixed(1)}%
             </span>{' '}
             {trend.label}
           </p>

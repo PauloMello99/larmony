@@ -1,0 +1,315 @@
+{
+  "common": {
+    "save": "Salvar",
+    "saving": "Salvando...",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "deleting": "Excluindo...",
+    "edit": "Editar",
+    "add": "Adicionar",
+    "create": "Criar",
+    "creating": "Criando...",
+    "confirm": "Confirmar",
+    "close": "Fechar",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "actions": "Ações",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "name": "Nome",
+    "description": "Descrição",
+    "amount": "Valor",
+    "date": "Data",
+    "category": "Categoria",
+    "notes": "Observações",
+    "noData": "Nenhum registro encontrado",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "yes": "Sim",
+    "no": "Não",
+    "back": "Voltar",
+    "next": "Próximo",
+    "optional": "opcional",
+    "required": "obrigatório",
+    "income": "Receita",
+    "expense": "Despesa"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "transactions": "Transações",
+    "categories": "Categorias",
+    "budgets": "Orçamentos",
+    "goals": "Metas",
+    "bills": "Contas a Pagar",
+    "reports": "Relatórios",
+    "household": "Meu Lar",
+    "settings": "Configurações",
+    "signOut": "Sair"
+  },
+  "settings": {
+    "title": "Configurações",
+    "subtitle": "Gerencie sua conta e preferências",
+    "sections": {
+      "profile": "Perfil",
+      "security": "Segurança",
+      "appearance": "Aparência",
+      "language": "Idioma"
+    },
+    "profile": {
+      "title": "Perfil",
+      "description": "Atualize seu nome e informações pessoais",
+      "fullName": "Nome completo",
+      "email": "E-mail",
+      "emailReadOnly": "O e-mail não pode ser alterado.",
+      "saveSuccess": "Perfil atualizado com sucesso!",
+      "saveButton": "Salvar alterações",
+      "saving": "Salvando..."
+    },
+    "security": {
+      "title": "Segurança",
+      "description": "Altere sua senha de acesso",
+      "currentPassword": "Senha atual",
+      "newPassword": "Nova senha",
+      "confirmPassword": "Confirmar nova senha",
+      "wrongPassword": "Senha atual incorreta",
+      "passwordMismatch": "Senhas não coincidem",
+      "saveSuccess": "Senha alterada com sucesso!",
+      "saveButton": "Alterar senha",
+      "saving": "Alterando..."
+    },
+    "appearance": {
+      "title": "Aparência",
+      "description": "Personalize a interface do sistema",
+      "darkMode": "Modo escuro",
+      "active": "Ativo",
+      "inactive": "Inativo"
+    },
+    "language": {
+      "title": "Idioma",
+      "description": "Selecione o idioma da interface",
+      "label": "Idioma preferido",
+      "ptBR": "Português (Brasil)",
+      "en": "English",
+      "saveSuccess": "Idioma atualizado com sucesso!"
+    }
+  },
+  "household": {
+    "title": "Meu Lar",
+    "subtitle": "Gerencie o seu lar e os membros",
+    "info": {
+      "title": "Informações do lar",
+      "householdName": "Nome do lar",
+      "saveName": "Salvar nome",
+      "memberNote": "Você é membro deste lar"
+    },
+    "members": {
+      "title": "Membros",
+      "description": "Pessoas com acesso ao lar",
+      "invite": "Convidar",
+      "owner": "Dono",
+      "member": "Membro",
+      "removeTitle": "Remover membro",
+      "removeDescription": "Remover \"{{name}}\" do lar? Eles perderão acesso imediatamente.",
+      "removeButton": "Remover"
+    },
+    "pendingInvites": {
+      "title": "Convites pendentes",
+      "expires": "Expira em {{date}}",
+      "cancel": "Cancelar"
+    },
+    "invite": {
+      "title": "Convidar membro",
+      "email": "E-mail",
+      "placeholder": "pessoa@email.com",
+      "success": "Convite enviado para {{email}}. O link expira em 7 dias.",
+      "close": "fechar",
+      "error": "Erro ao enviar convite. Tente novamente.",
+      "sending": "Enviando...",
+      "send": "Enviar convite"
+    },
+    "myHouseholds": {
+      "title": "Meus Lares",
+      "description": "Todos os lares que você participa",
+      "active": "Ativo",
+      "enter": "Entrar",
+      "createButton": "Criar novo lar",
+      "createTitle": "Criar novo lar",
+      "createName": "Nome do lar",
+      "creating": "Criando..."
+    },
+    "switcher": {
+      "label": "Trocar lar",
+      "current": "Lar atual"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Visão geral do mês",
+    "income": "Receitas",
+    "expenses": "Despesas",
+    "balance": "Saldo",
+    "recentTransactions": "Últimas transações",
+    "upcomingBills": "Contas próximas",
+    "noTransactions": "Nenhuma transação este mês",
+    "noBills": "Nenhuma conta próxima",
+    "dueIn": "Vence em {{days}} dias",
+    "dueToday": "Vence hoje",
+    "overdue": "Vencida"
+  },
+  "transactions": {
+    "title": "Transações",
+    "subtitle": "Gerencie suas entradas e saídas",
+    "addButton": "Nova Transação",
+    "editTitle": "Editar Transação",
+    "createTitle": "Nova Transação",
+    "columns": {
+      "date": "Data",
+      "description": "Descrição",
+      "person": "Pessoa",
+      "category": "Categoria",
+      "type": "Tipo",
+      "amount": "Valor",
+      "actions": "Ações"
+    },
+    "filters": {
+      "month": "Mês",
+      "type": "Tipo",
+      "category": "Categoria",
+      "allTypes": "Todos os tipos",
+      "allCategories": "Todas as categorias"
+    },
+    "form": {
+      "description": "Descrição",
+      "amount": "Valor (R$)",
+      "type": "Tipo",
+      "category": "Categoria",
+      "date": "Data",
+      "person": "Pessoa (opcional)",
+      "notes": "Observações (opcional)",
+      "noCategory": "Sem categoria",
+      "noPerson": "Nenhuma"
+    },
+    "deleteTitle": "Excluir transação",
+    "deleteDescription": "Excluir \"{{description}}\"? Esta ação não pode ser desfeita.",
+    "empty": "Nenhuma transação encontrada"
+  },
+  "categories": {
+    "title": "Categorias",
+    "subtitle": "Organize suas transações",
+    "addButton": "Nova Categoria",
+    "editTitle": "Editar Categoria",
+    "createTitle": "Nova Categoria",
+    "form": {
+      "name": "Nome",
+      "type": "Tipo",
+      "color": "Cor"
+    },
+    "types": {
+      "income": "Receita",
+      "expense": "Despesa",
+      "both": "Ambos"
+    },
+    "deleteTitle": "Excluir categoria",
+    "deleteDescription": "Excluir \"{{name}}\"? Transações vinculadas perderão a categoria.",
+    "empty": "Nenhuma categoria cadastrada"
+  },
+  "budgets": {
+    "title": "Orçamentos",
+    "subtitle": "Controle seus limites mensais",
+    "addButton": "Novo Orçamento",
+    "editTitle": "Editar Orçamento",
+    "createTitle": "Novo Orçamento",
+    "form": {
+      "category": "Categoria",
+      "limit": "Limite (R$)",
+      "month": "Mês"
+    },
+    "spent": "Gasto",
+    "limit": "Limite",
+    "remaining": "Restante",
+    "exceeded": "Excedido",
+    "deleteTitle": "Excluir orçamento",
+    "deleteDescription": "Excluir o orçamento de \"{{name}}\"?",
+    "empty": "Nenhum orçamento definido"
+  },
+  "goals": {
+    "title": "Metas",
+    "subtitle": "Acompanhe suas metas de poupança",
+    "addButton": "Nova Meta",
+    "editTitle": "Editar Meta",
+    "createTitle": "Nova Meta",
+    "contribute": "Contribuir",
+    "contributions": "Contribuições",
+    "completed": "Concluída",
+    "form": {
+      "name": "Nome",
+      "targetAmount": "Valor alvo (R$)",
+      "targetDate": "Data alvo (opcional)",
+      "color": "Cor",
+      "contribution": "Valor da contribuição (R$)",
+      "contributionDate": "Data",
+      "contributionNotes": "Observações (opcional)"
+    },
+    "deleteTitle": "Excluir meta",
+    "deleteDescription": "Excluir a meta \"{{name}}\"?",
+    "empty": "Nenhuma meta cadastrada"
+  },
+  "bills": {
+    "title": "Contas a Pagar",
+    "subtitle": "Gerencie suas contas recorrentes",
+    "addButton": "Nova Conta",
+    "editTitle": "Editar Conta",
+    "createTitle": "Nova Conta",
+    "active": "Ativas",
+    "inactive": "Inativas",
+    "dueDay": "Dia {{day}}",
+    "form": {
+      "name": "Nome",
+      "amount": "Valor (R$)",
+      "dueDay": "Dia de vencimento",
+      "category": "Categoria (opcional)",
+      "notes": "Observações (opcional)",
+      "isActive": "Ativa"
+    },
+    "deleteTitle": "Excluir conta",
+    "deleteDescription": "Excluir \"{{name}}\"?",
+    "empty": "Nenhuma conta cadastrada"
+  },
+  "reports": {
+    "title": "Relatórios",
+    "subtitle": "Análise financeira do período",
+    "monthly": "Mensal",
+    "annual": "Anual",
+    "byCategory": "Por Categoria",
+    "byPerson": "Por Pessoa",
+    "evolution": "Evolução",
+    "income": "Receitas",
+    "expenses": "Despesas",
+    "balance": "Saldo",
+    "noPersonData": "Nenhum gasto por pessoa. Atribua transações a pessoas para ver aqui."
+  },
+  "auth": {
+    "login": {
+      "title": "Entrar",
+      "subtitle": "Acesse sua conta",
+      "email": "E-mail",
+      "password": "Senha",
+      "submit": "Entrar",
+      "submitting": "Entrando...",
+      "forgotPassword": "Esqueci minha senha",
+      "noAccount": "Não tem conta?",
+      "register": "Criar conta"
+    },
+    "register": {
+      "title": "Criar conta",
+      "subtitle": "Crie sua conta gratuita",
+      "fullName": "Nome completo",
+      "email": "E-mail",
+      "password": "Senha",
+      "submit": "Criar conta",
+      "submitting": "Criando...",
+      "hasAccount": "Já tem conta?",
+      "login": "Entrar"
+    }
+  }
+}

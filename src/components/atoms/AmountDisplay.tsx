@@ -8,7 +8,12 @@ interface AmountDisplayProps {
   compact?: boolean
 }
 
-export function AmountDisplay({ value, type = 'neutral', className, compact = false }: AmountDisplayProps) {
+export function AmountDisplay({
+  value,
+  type = 'neutral',
+  className,
+  compact = false,
+}: AmountDisplayProps) {
   const colorClass =
     type === 'income'
       ? 'text-green-600 dark:text-green-400'
@@ -16,9 +21,7 @@ export function AmountDisplay({ value, type = 'neutral', className, compact = fa
         ? 'text-red-600 dark:text-red-400'
         : 'text-foreground'
 
-  const formatted = compact
-    ? `R$ ${(value / 1000).toFixed(1)}k`
-    : formatBRL(value)
+  const formatted = compact ? `R$ ${(value / 1000).toFixed(1)}k` : formatBRL(value)
 
   return (
     <span className={cn('font-medium tabular-nums', colorClass, className)}>
