@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Plus, Pencil, Trash2, Wallet, Clock, Bell } from 'lucide-react'
+import { Plus, Pencil, Trash2, Wallet, Clock, Bell, PlayCircle } from 'lucide-react'
 import { useBills, useCreateBill, useUpdateBill, useDeleteBill } from '@/queries/bills'
 import { useCategories } from '@/queries/categories'
 import { formatBRL } from '@/lib/currency'
@@ -30,6 +30,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { EmptyState } from '@/components/atoms/EmptyState'
 import { LoadingSpinner } from '@/components/atoms/LoadingSpinner'
 import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'
+import { TransactionSheet } from '@/components/organisms/TransactionSheet'
 import type { Tables } from '@/types/database.types'
 
 type Bill = Tables<'bills'> & {
@@ -216,6 +217,7 @@ export default function BillsPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editing, setEditing] = useState<Bill | undefined>()
   const [deleting, setDeleting] = useState<Bill | undefined>()
+  const [launchBill, setLaunchBill] = useState<Bill | undefined>()
 
   const activeBills = (bills as unknown as Bill[]).filter((b) => b.is_active)
   const inactiveBills = (bills as unknown as Bill[]).filter((b) => !b.is_active)
@@ -276,6 +278,7 @@ export default function BillsPage() {
               onEdit={openEdit}
               onDelete={setDeleting}
               onToggle={toggleActive}
+              onLaunch={setLaunchBill}
             />
           )}
           {inactiveBills.length > 0 && (
@@ -285,6 +288,7 @@ export default function BillsPage() {
               onEdit={openEdit}
               onDelete={setDeleting}
               onToggle={toggleActive}
+              onLaunch={setLaunchBill}
             />
           )}
         </div>
@@ -295,6 +299,23 @@ export default function BillsPage() {
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         initial={editing}
+      />
+
+      <TransactionSheet
+        key={launchBill?.id ?? 'launch'}
+        open={!!launchBill}
+        onClose={() => setLaunchBill(undefined)}
+        preset={
+          launchBill
+            ? {
+                description: launchBill.name,
+                amount: launchBill.amount,
+                type: 'expense',
+                category_id: launchBill.category_id,
+                notes: launchBill.notes,
+              }
+            : undefined
+        }
       />
 
       <ConfirmDialog
@@ -319,12 +340,14 @@ function BillGroup({
   onEdit,
   onDelete,
   onToggle,
+  onLaunch,
 }: {
   title: string
   bills: Bill[]
   onEdit: (b: Bill) => void
   onDelete: (b: Bill) => void
   onToggle: (b: Bill) => void
+  onLaunch: (b: Bill) => void
 }) {
   return (
     <div className="space-y-3">
@@ -373,13 +396,22 @@ function BillGroup({
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3 shrink-0 ml-3">
+              <div className="flex items-center gap-2 shrink-0 ml-3">
                 <span className="text-sm font-semibold">{formatBRL(bill.amount)}</span>
                 <Switch
                   checked={bill.is_active}
                   onCheckedChange={() => onToggle(bill)}
                   title={bill.is_active ? 'Desativar' : 'Ativar'}
                 />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8 text-muted-foreground hover:text-primary"
+                  title="Lançar transação"
+                  onClick={() => onLaunch(bill)}
+                >
+                  <PlayCircle className="size-3.5" />
+                </Button>
                 <Button variant="ghost" size="icon" className="size-8" onClick={() => onEdit(bill)}>
                   <Pencil className="size-3.5" />
                 </Button>

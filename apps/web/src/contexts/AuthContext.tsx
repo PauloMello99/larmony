@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import type { Session, User } from '@supabase/supabase-js'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '@/services/supabase'
+import { apiGet, apiPatch } from '@/services/apiClient'
 import type { Tables } from '@/types/database.types'
 import { useQueryClient } from '@tanstack/react-query'
 
@@ -44,56 +45,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [activeHouseholdId, setActiveHouseholdIdState] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  const loadProfile = useCallback(
-    async (userId: string) => {
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single()
+  const loadProfile = useCallback(async () => {
+    const { profile: profileData, households: householdList } = await apiGet<{
+      profile: Profile | null
+      households: Household[]
+    }>('/api/profiles/me')
 
-      if (profileData) {
-        setProfile(profileData)
-        if (profileData.locale) {
-          i18n.changeLanguage(profileData.locale)
-        }
+    if (profileData) {
+      setProfile(profileData)
+      if (profileData.locale) {
+        i18n.changeLanguage(profileData.locale)
       }
+    }
 
-      const { data: memberships } = await supabase
-        .from('household_memberships')
-        .select('household_id, role, households(id, name)')
-        .eq('user_id', userId)
-
-      if (memberships && memberships.length > 0) {
-        const householdList: Household[] = memberships
-          .filter((m) => m.households)
-          .map((m) => ({
-            id: (m.households as { id: string; name: string }).id,
-            name: (m.households as { id: string; name: string }).name,
-            role: m.role,
-          }))
-
-        setHouseholds(householdList)
-
-        // Restore active household from localStorage if still valid
-        const stored = localStorage.getItem(ACTIVE_HOUSEHOLD_KEY)
-        const isValidStored = stored && householdList.some((h) => h.id === stored)
-        const resolved = isValidStored ? stored : (householdList[0]?.id ?? null)
-        setActiveHouseholdIdState(resolved)
-        if (resolved) localStorage.setItem(ACTIVE_HOUSEHOLD_KEY, resolved)
-      } else {
-        setHouseholds([])
-        setActiveHouseholdIdState(null)
-      }
-    },
-    [i18n]
-  )
+    if (householdList.length > 0) {
+      setHouseholds(householdList)
+      const stored = localStorage.getItem(ACTIVE_HOUSEHOLD_KEY)
+      const isValidStored = stored && householdList.some((h) => h.id === stored)
+      const resolved = isValidStored ? stored : (householdList[0]?.id ?? null)
+      setActiveHouseholdIdState(resolved)
+      if (resolved) localStorage.setItem(ACTIVE_HOUSEHOLD_KEY, resolved)
+    } else {
+      setHouseholds([])
+      setActiveHouseholdIdState(null)
+    }
+  }, [i18n])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       if (session?.user) {
-        loadProfile(session.user.id).finally(() => setIsLoading(false))
+        loadProfile().finally(() => setIsLoading(false))
       } else {
         setIsLoading(false)
       }
@@ -104,7 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
       if (session?.user) {
-        loadProfile(session.user.id)
+        loadProfile()
       } else {
         setProfile(null)
         setHouseholds([])
@@ -134,13 +116,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [queryClient])
 
   const refreshProfile = useCallback(async () => {
-    if (session?.user) await loadProfile(session.user.id)
+    if (session?.user) await loadProfile()
   }, [session, loadProfile])
 
   const setLocale = useCallback(
     async (locale: string) => {
       if (!session?.user) return
-      await supabase.from('profiles').update({ locale }).eq('id', session.user.id)
+      await apiPatch('/api/profiles/me', { locale })
       setProfile((prev) => (prev ? { ...prev, locale } : prev))
       i18n.changeLanguage(locale)
     },

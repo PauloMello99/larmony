@@ -55,11 +55,16 @@ export function useAddContribution() {
   const { householdId, user } = useAuth()
   return useMutation({
     mutationFn: (
-      payload: Omit<TablesInsert<'goal_contributions'>, 'household_id' | 'created_by'>
-    ) => goalsApi.addGoalContribution(householdId!, user!.id, payload),
+      payload: Omit<TablesInsert<'goal_contributions'>, 'household_id' | 'created_by'> & {
+        goal_id: string
+      }
+    ) => {
+      const { goal_id, ...rest } = payload
+      return goalsApi.addGoalContribution(householdId!, user!.id, goal_id, rest)
+    },
     onSuccess: (_d, v) => {
       qc.invalidateQueries({ queryKey: queryKeys.goals.all(householdId!) })
-      qc.invalidateQueries({ queryKey: queryKeys.goals.contributions(v.goal_id!) })
+      qc.invalidateQueries({ queryKey: queryKeys.goals.contributions(v.goal_id) })
     },
   })
 }

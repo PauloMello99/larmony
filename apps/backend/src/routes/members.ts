@@ -1,21 +1,20 @@
-import { supabase } from '@/services/supabase'
+import { Hono } from 'hono'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
-export interface HouseholdMember {
-  id: string
-  user_id: string
-  role: string
-  joined_at: string
-  full_name: string | null
-  avatar_url: string | null
-}
+const members = new Hono()
 
-export async function getMembers(householdId: string): Promise<HouseholdMember[]> {
+members.get('/', async (c) => {
+  const supabase: SupabaseClient = c.get('supabase')
+  const householdId = c.req.query('householdId')
+  if (!householdId) return c.json({ error: 'householdId is required' }, 400)
+
   const { data: memberships, error } = await supabase
     .from('household_memberships')
     .select('id, user_id, role, joined_at')
     .eq('household_id', householdId)
-  if (error) throw error
-  if (!memberships?.length) return []
+
+  if (error) return c.json({ error: error.message }, 500)
+  if (!memberships?.length) return c.json([])
 
   const userIds = memberships.map((m) => m.user_id)
   const { data: profiles } = await supabase
@@ -25,7 +24,7 @@ export async function getMembers(householdId: string): Promise<HouseholdMember[]
 
   const profileMap = Object.fromEntries((profiles ?? []).map((p) => [p.id, p]))
 
-  return memberships.map((m) => ({
+  const result = memberships.map((m) => ({
     id: m.id,
     user_id: m.user_id,
     role: m.role,
@@ -33,4 +32,8 @@ export async function getMembers(householdId: string): Promise<HouseholdMember[]
     full_name: profileMap[m.user_id]?.full_name ?? null,
     avatar_url: profileMap[m.user_id]?.avatar_url ?? null,
   }))
-}
+
+  return c.json(result)
+})
+
+export default members

@@ -1,0 +1,62 @@
+import { Hono } from 'hono'
+import type { SupabaseClient } from '@supabase/supabase-js'
+
+const categories = new Hono()
+
+categories.get('/', async (c) => {
+  const supabase: SupabaseClient = c.get('supabase')
+  const householdId = c.req.query('householdId')
+  if (!householdId) return c.json({ error: 'householdId is required' }, 400)
+
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .eq('household_id', householdId)
+    .order('name')
+
+  if (error) return c.json({ error: error.message }, 500)
+  return c.json(data ?? [])
+})
+
+categories.post('/', async (c) => {
+  const supabase: SupabaseClient = c.get('supabase')
+  const body = await c.req.json()
+  const { householdId, ...payload } = body
+  if (!householdId) return c.json({ error: 'householdId is required' }, 400)
+
+  const { data, error } = await supabase
+    .from('categories')
+    .insert({ ...payload, household_id: householdId })
+    .select()
+    .single()
+
+  if (error) return c.json({ error: error.message }, 500)
+  return c.json(data, 201)
+})
+
+categories.put('/:id', async (c) => {
+  const supabase: SupabaseClient = c.get('supabase')
+  const id = c.req.param('id')
+  const payload = await c.req.json()
+
+  const { data, error } = await supabase
+    .from('categories')
+    .update(payload)
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) return c.json({ error: error.message }, 500)
+  return c.json(data)
+})
+
+categories.delete('/:id', async (c) => {
+  const supabase: SupabaseClient = c.get('supabase')
+  const id = c.req.param('id')
+
+  const { error } = await supabase.from('categories').delete().eq('id', id)
+  if (error) return c.json({ error: error.message }, 500)
+  return c.body(null, 204)
+})
+
+export default categories
