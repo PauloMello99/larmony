@@ -20,6 +20,9 @@
     "db:types": "supabase gen types typescript --linked > apps/web/src/types/database.types.ts",
     "db:push": "supabase db push"
   },
+  "resolutions": {
+    "next": "^15.5.9"
+  },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "eslint": "^10.1.0",
