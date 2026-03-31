@@ -1,0 +1,10 @@
+[build]
+builder = "nixpacks"
+buildCommand = "yarn build:backend"
+
+[deploy]
+startCommand = "yarn start:backend"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10

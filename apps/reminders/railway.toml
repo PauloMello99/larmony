@@ -1,0 +1,7 @@
+[build]
+builder = "nixpacks"
+buildCommand = "yarn build:reminders"
+
+[deploy]
+startCommand = "yarn start:reminders"
+restartPolicyType = "always"
