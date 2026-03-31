@@ -12,6 +12,13 @@ export const Route = createFileRoute('/_auth')({
       throw redirect({ to: '/login' })
     }
 
+    // If the user confirmed their email and came back without the invite token
+    // in the URL, restore it from localStorage and redirect to accept the invite.
+    const pendingToken = localStorage.getItem('hf:pendingInviteToken')
+    if (pendingToken) {
+      throw redirect({ to: '/accept-invite', search: { token: pendingToken } })
+    }
+
     const { data: membership } = await supabase
       .from('household_memberships')
       .select('household_id')

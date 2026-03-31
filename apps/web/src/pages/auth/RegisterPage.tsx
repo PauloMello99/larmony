@@ -60,19 +60,19 @@ export default function RegisterPage() {
     setRegistered(data.email)
   }
 
-  async function signInWithGoogle() {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/` },
-    })
-  }
+  // async function signInWithGoogle() {
+  //   await supabase.auth.signInWithOAuth({
+  //     provider: 'google',
+  //     options: { redirectTo: `${window.location.origin}/` },
+  //   })
+  // }
 
-  async function signInWithApple() {
-    await supabase.auth.signInWithOAuth({
-      provider: 'apple',
-      options: { redirectTo: `${window.location.origin}/` },
-    })
-  }
+  // async function signInWithApple() {
+  //   await supabase.auth.signInWithOAuth({
+  //     provider: 'apple',
+  //     options: { redirectTo: `${window.location.origin}/` },
+  //   })
+  // }
 
   if (registered) {
     return (
@@ -89,11 +89,8 @@ export default function RegisterPage() {
             </p>
             {redirectTo && (
               <p className="text-sm text-muted-foreground">
-                Após confirmar seu e-mail,{' '}
-                <Link to={redirectTo} className="text-foreground underline-offset-4 hover:underline">
-                  clique aqui
-                </Link>{' '}
-                para aceitar o convite.
+                Após confirmar seu e-mail, você será redirecionado automaticamente para aceitar o
+                convite.
               </p>
             )}
           </div>
@@ -113,8 +110,7 @@ export default function RegisterPage() {
       title="Criar conta"
       description="Registre-se para começar a organizar suas finanças"
     >
-      <div className="space-y-4">
-        {/* Social signup */}
+      {/* <div className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <Button type="button" variant="outline" className="w-full" onClick={signInWithGoogle}>
             <svg className="mr-2 size-4" viewBox="0 0 24 24" aria-hidden="true">
@@ -153,7 +149,7 @@ export default function RegisterPage() {
             <span className="bg-background px-2 text-muted-foreground">ou crie com e-mail</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-4">
         <div className="space-y-2">

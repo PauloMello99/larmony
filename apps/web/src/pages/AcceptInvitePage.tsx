@@ -3,6 +3,7 @@ import { useNavigate, Link } from '@tanstack/react-router'
 import { LogIn, UserPlus, Home } from 'lucide-react'
 import { Route } from '@/routes/accept-invite'
 import { supabase } from '@/services/supabase'
+import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -11,6 +12,7 @@ type Status = 'checking' | 'unauthenticated' | 'loading' | 'success' | 'error'
 export default function AcceptInvitePage() {
   const { token } = Route.useSearch()
   const navigate = useNavigate()
+  const { refreshProfile } = useAuth()
   const [status, setStatus] = useState<Status>(!token ? 'error' : 'checking')
   const [message, setMessage] = useState(!token ? 'Token de convite inválido.' : '')
 
@@ -25,6 +27,7 @@ export default function AcceptInvitePage() {
       } = await supabase.auth.getSession()
 
       if (!session) {
+        localStorage.setItem('hf:pendingInviteToken', token!)
         setStatus('unauthenticated')
         return
       }
@@ -40,8 +43,18 @@ export default function AcceptInvitePage() {
         .single()
 
       if (error || !invite) {
+        localStorage.removeItem('hf:pendingInviteToken')
         setStatus('error')
         setMessage('Convite inválido ou expirado.')
+        return
+      }
+
+      if (invite.email !== session.user.email) {
+        localStorage.removeItem('hf:pendingInviteToken')
+        setStatus('error')
+        setMessage(
+          `Este convite foi enviado para ${invite.email}. Entre com o e-mail correto para aceitar.`,
+        )
         return
       }
 
@@ -60,12 +73,14 @@ export default function AcceptInvitePage() {
         .update({ accepted_at: new Date().toISOString() })
         .eq('id', invite.id)
 
+      localStorage.removeItem('hf:pendingInviteToken')
       setStatus('success')
+      await refreshProfile()
       setTimeout(() => navigate({ to: '/' }), 2000)
     }
 
     checkAndAccept()
-  }, [token, navigate])
+  }, [token, navigate, refreshProfile])
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">

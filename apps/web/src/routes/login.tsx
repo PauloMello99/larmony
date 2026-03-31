@@ -14,7 +14,16 @@ export const Route = createFileRoute('/login')({
       data: { session },
     } = await supabase.auth.getSession()
     if (session) {
-      throw redirect({ to: (search.redirect as string) ?? '/' })
+      const redirectUrl = search.redirect
+      if (redirectUrl) {
+        const parsed = new URL(redirectUrl, window.location.origin)
+        const searchParams = Object.fromEntries(parsed.searchParams)
+        throw redirect({
+          to: parsed.pathname as '/',
+          ...(Object.keys(searchParams).length > 0 ? { search: searchParams } : {}),
+        })
+      }
+      throw redirect({ to: '/' })
     }
   },
   component: LoginPage,

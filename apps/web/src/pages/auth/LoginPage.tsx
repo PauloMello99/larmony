@@ -64,7 +64,12 @@ export default function LoginPage() {
       .single()
 
     if (redirectTo) {
-      navigate({ to: redirectTo })
+      const parsed = new URL(redirectTo, window.location.origin)
+      const searchParams = Object.fromEntries(parsed.searchParams)
+      navigate({
+        to: parsed.pathname as '/',
+        ...(Object.keys(searchParams).length > 0 ? { search: searchParams } : {}),
+      })
     } else {
       navigate({ to: membership ? '/' : '/setup' })
     }
@@ -79,24 +84,23 @@ export default function LoginPage() {
     setAlert({ type: 'resent' })
   }
 
-  async function signInWithGoogle() {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/` },
-    })
-  }
+  // async function signInWithGoogle() {
+  //   await supabase.auth.signInWithOAuth({
+  //     provider: 'google',
+  //     options: { redirectTo: `${window.location.origin}/` },
+  //   })
+  // }
 
-  async function signInWithApple() {
-    await supabase.auth.signInWithOAuth({
-      provider: 'apple',
-      options: { redirectTo: `${window.location.origin}/` },
-    })
-  }
+  // async function signInWithApple() {
+  //   await supabase.auth.signInWithOAuth({
+  //     provider: 'apple',
+  //     options: { redirectTo: `${window.location.origin}/` },
+  //   })
+  // }
 
   return (
     <AuthTemplate title="Bem-vindo de volta" description="Entre com sua conta para continuar">
-      <div className="space-y-4">
-        {/* Social login */}
+      {/* <div className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <Button type="button" variant="outline" className="w-full" onClick={signInWithGoogle}>
             <svg className="mr-2 size-4" viewBox="0 0 24 24" aria-hidden="true">
@@ -135,7 +139,7 @@ export default function LoginPage() {
             <span className="bg-background px-2 text-muted-foreground">ou entre com e-mail</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-5">
         <div className="space-y-2">
