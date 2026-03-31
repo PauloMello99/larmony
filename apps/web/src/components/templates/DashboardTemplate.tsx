@@ -3,6 +3,7 @@ import { Menu } from 'lucide-react'
 import { AppSidebar } from '@/components/organisms/AppSidebar'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { LarmonyLogo } from '../atoms/Logo'
 
 interface DashboardTemplateProps {
   children: React.ReactNode
@@ -28,7 +29,7 @@ export function DashboardTemplate({ children }: DashboardTemplateProps) {
           >
             <Menu className="size-5" />
           </Button>
-          <span className="font-semibold">Home Finances</span>
+          <LarmonyLogo variant="sidebar" />
         </header>
 
         {/* Page content */}

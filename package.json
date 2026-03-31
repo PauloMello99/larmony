@@ -1,19 +1,28 @@
 {
-  "name": "home-finances",
+  "name": "larmony",
   "private": true,
   "version": "0.0.0",
-  "workspaces": ["apps/*"],
+  "packageManager": "yarn@1.22.22",
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "dev": "npm run dev -w apps/web & npm run dev -w apps/backend",
-    "format": "prettier --write \"**/*.{ts,tsx,css,json}\" --ignore-path .prettierignore",
-    "format:check": "prettier --check \"**/*.{ts,tsx,css,json}\" --ignore-path .prettierignore",
-    "lint": "npm run lint --workspaces --if-present",
+    "dev": "turbo run dev",
+    "dev:infra": "turbo run dev --filter=!@hf/web",
+    "dev:web": "turbo run dev --filter=@hf/web",
+    "dev:backend": "turbo run dev --filter=@hf/backend",
+    "dev:reminders": "turbo run dev --filter=@hf/reminders",
+    "build": "turbo run build",
+    "format": "turbo run format",
+    "format:check": "turbo run format:check",
+    "lint": "turbo run lint",
+    "email:preview": "yarn workspace @hf/backend email:preview",
     "db:types": "supabase gen types typescript --linked > apps/web/src/types/database.types.ts",
     "db:push": "supabase db push"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
-    "eslint": "^9.39.4",
+    "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react-hooks": "^7.0.1",
@@ -21,6 +30,7 @@
     "globals": "^17.4.0",
     "prettier": "^3.8.1",
     "supabase": "^2.83.0",
+    "turbo": "^2.3.0",
     "typescript-eslint": "^8.57.0"
   }
 }

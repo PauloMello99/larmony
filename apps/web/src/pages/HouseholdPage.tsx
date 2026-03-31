@@ -8,6 +8,7 @@ import { UserPlus, Trash2, Crown, Home, Mail, Plus, Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/services/supabase'
+import { apiPost } from '@/services/apiClient'
 import { useAuth } from '@/contexts/AuthContext'
 import { useMembers } from '@/queries/members'
 import { Button } from '@/components/ui/button'
@@ -111,18 +112,11 @@ export default function HouseholdPage() {
     },
   })
 
-  // Invite member via Edge Function (sends email)
+  // Invite member via backend (sends email via Resend)
   const inviteForm = useForm<InviteForm>({ resolver: zodResolver(inviteSchema) })
   const inviteMut = useMutation({
     mutationFn: async (data: InviteForm) => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      const res = await supabase.functions.invoke('send-invite-email', {
-        body: { household_id: householdId!, email: data.email },
-        headers: { Authorization: `Bearer ${session?.access_token}` },
-      })
-      if (res.error) throw res.error
+      await apiPost('/api/household-invites', { householdId: householdId!, email: data.email })
       return data.email
     },
     onSuccess: (email) => {

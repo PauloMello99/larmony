@@ -2,11 +2,10 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Eye, EyeOff, Moon, Sun, User, Shield, Palette, Languages } from 'lucide-react'
+import { Eye, EyeOff, User, Shield, Languages } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '@/services/supabase'
 import { useAuth } from '@/contexts/AuthContext'
-import { useTheme } from '@/contexts/ThemeContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -43,19 +42,17 @@ const passwordSchema = z
 
 type ProfileForm = z.infer<typeof profileSchema>
 type PasswordForm = z.infer<typeof passwordSchema>
-type SectionId = 'profile' | 'security' | 'appearance' | 'language'
+type SectionId = 'profile' | 'security' | 'language'
 
 export default function SettingsPage() {
   const { t } = useTranslation()
   const { profile, refreshProfile, user, setLocale } = useAuth()
-  const { theme, toggleTheme } = useTheme()
   const [activeSection, setActiveSection] = useState<SectionId>('profile')
   const [languageSuccess, setLanguageSuccess] = useState(false)
 
   const sections: { id: SectionId; label: string; icon: React.ElementType }[] = [
     { id: 'profile', label: t('settings.sections.profile'), icon: User },
     { id: 'security', label: t('settings.sections.security'), icon: Shield },
-    { id: 'appearance', label: t('settings.sections.appearance'), icon: Palette },
     { id: 'language', label: t('settings.sections.language'), icon: Languages },
   ]
   const [profileSuccess, setProfileSuccess] = useState(false)
@@ -256,35 +253,6 @@ export default function SettingsPage() {
                     {passwordForm.formState.isSubmitting ? 'Alterando...' : 'Alterar senha'}
                   </Button>
                 </form>
-              </CardContent>
-            </Card>
-          )}
-
-          {activeSection === 'appearance' && (
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('settings.appearance.title')}</CardTitle>
-                <CardDescription>{t('settings.appearance.description')}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {theme === 'dark' ? (
-                      <Moon className="size-5 text-muted-foreground" />
-                    ) : (
-                      <Sun className="size-5 text-muted-foreground" />
-                    )}
-                    <div>
-                      <p className="text-sm font-medium">{t('settings.appearance.darkMode')}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {theme === 'dark'
-                          ? t('settings.appearance.active')
-                          : t('settings.appearance.inactive')}
-                      </p>
-                    </div>
-                  </div>
-                  <Switch checked={theme === 'dark'} onCheckedChange={toggleTheme} />
-                </div>
               </CardContent>
             </Card>
           )}

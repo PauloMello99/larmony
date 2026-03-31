@@ -1,35 +1,23 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+// Larmony is dark-mode only. ThemeContext is kept as a no-op stub so that
+// existing imports (e.g. SettingsPage) don't break during migration.
 
-type Theme = 'light' | 'dark'
+import { createContext, useContext } from 'react'
 
 interface ThemeContextValue {
-  theme: Theme
+  theme: 'dark'
   toggleTheme: () => void
-  setTheme: (t: Theme) => void
+  setTheme: (t: 'dark') => void
 }
 
-const ThemeContext = createContext<ThemeContextValue | null>(null)
-
-const STORAGE_KEY = 'hf-theme'
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: 'dark',
+  toggleTheme: () => {},
+  setTheme: () => {},
+})
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Theme | null
-    if (stored) return stored
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-  })
-
-  useEffect(() => {
-    const root = document.documentElement
-    root.classList.toggle('dark', theme === 'dark')
-    localStorage.setItem(STORAGE_KEY, theme)
-  }, [theme])
-
-  const setTheme = (t: Theme) => setThemeState(t)
-  const toggleTheme = () => setThemeState((t) => (t === 'dark' ? 'light' : 'dark'))
-
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme: 'dark', toggleTheme: () => {}, setTheme: () => {} }}>
       {children}
     </ThemeContext.Provider>
   )
@@ -37,7 +25,5 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useTheme() {
-  const ctx = useContext(ThemeContext)
-  if (!ctx) throw new Error('useTheme must be used within ThemeProvider')
-  return ctx
+  return useContext(ThemeContext)
 }

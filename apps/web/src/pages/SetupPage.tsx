@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
-import { Wallet } from 'lucide-react'
+import { LarmonyLogo } from '@/components/atoms/Logo'
 
 const setupSchema = z.object({
   householdName: z
@@ -59,9 +59,8 @@ export default function SetupPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-12">
       {/* Logo */}
-      <div className="mb-10 flex items-center gap-2 text-foreground">
-        <Wallet className="size-6 text-primary" />
-        <span className="text-xl font-semibold">Home Finances</span>
+      <div className="mb-10">
+        <LarmonyLogo variant="full" />
       </div>
 
       {/* Step indicator */}

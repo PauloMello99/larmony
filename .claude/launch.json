@@ -1,0 +1,34 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["dev:web"],
+      "cwd": ".",
+      "port": 5173,
+      "autoPort": false
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["dev:backend"],
+      "cwd": ".",
+      "port": 3000
+    },
+    {
+      "name": "reminders",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["dev:reminders"],
+      "cwd": ".",
+      "port": null
+    },
+    {
+      "name": "all",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["dev"],
+      "cwd": ".",
+      "port": null
+    }
+  ]
+}

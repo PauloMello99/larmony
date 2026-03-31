@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" fill="none">
+  <rect x="0" y="2" width="36" height="36" rx="10" fill="#162A22"/>
+  <path d="M7 20 Q13 13 18 13 Q23 13 29 20"
+        stroke="#9FE1CB" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M7 20 Q13 27 18 27 Q23 27 29 20"
+        stroke="#5DCAA5" stroke-width="2.2" stroke-linecap="round"/>
+  <circle cx="18" cy="20" r="1.8" fill="#5DCAA5"/>
+  <text
+    x="44" y="25"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="19"
+    font-weight="400"
+    fill="#E8F5F0"
+    letter-spacing="0.3"
+  >larmony</text>
+</svg>

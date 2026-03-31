@@ -1,4 +1,4 @@
-# Home Finances — Referência para Claude Code
+# Larmony — Referência para Claude Code
 
 ## Essência do Projeto
 
@@ -188,7 +188,7 @@ Contas fixas e recorrentes.
 - Helper compartilhado: `supabase/functions/_shared/resend.ts` — usado por todas as Edge Functions que enviam email
 - Free tier: 3.000 emails/mês, 100/dia — suficiente para uso pessoal
 - Se `RESEND_API_KEY` não estiver setada, o helper loga um warning e pula o envio (dev-friendly)
-- From address: `Home Finances <noreply@homefi.app>`
+- From address: `Larmony <team@larmony.me>`
 
 ### Dashboard (`/`)
 - Cards de resumo mensal (receitas, despesas, saldo)

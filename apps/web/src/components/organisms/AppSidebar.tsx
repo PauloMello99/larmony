@@ -9,8 +9,8 @@ import {
   Home,
   Settings,
   LogOut,
-  Wallet,
   X,
+  Wallet,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
@@ -19,6 +19,7 @@ import { Separator } from '@/components/ui/separator'
 import { useAuth } from '@/contexts/AuthContext'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { HouseholdSwitcher } from '@/components/organisms/HouseholdSwitcher'
+import LarmonyLogo from '../atoms/Logo'
 
 interface AppSidebarProps {
   className?: string
@@ -62,7 +63,7 @@ export function AppSidebar({ className, onClose }: AppSidebarProps) {
   return (
     <aside className={cn('flex h-full w-60 flex-col border-r bg-sidebar px-3 py-4', className)}>
       <div className="mb-4 flex items-center justify-between px-2">
-        <h1 className="text-lg font-semibold text-sidebar-foreground">Home Finances</h1>
+        <LarmonyLogo variant="sidebar" />
         {onClose && (
           <Button
             variant="ghost"

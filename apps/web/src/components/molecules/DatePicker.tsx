@@ -52,8 +52,9 @@ export function DatePicker({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="p-0" align="center">
         <Calendar
+          className="w-full"
           mode="single"
           selected={date}
           onSelect={(d) => onChange(d ? format(d, 'yyyy-MM-dd') : undefined)}
