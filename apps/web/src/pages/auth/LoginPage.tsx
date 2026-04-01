@@ -79,7 +79,11 @@ export default function LoginPage() {
     const email = getValues('email')
     if (!email) return
     setResending(true)
-    await supabase.auth.resend({ type: 'signup', email })
+    await supabase.auth.resend({
+      type: 'signup',
+      email,
+      options: { emailRedirectTo: `${window.location.origin}${redirectTo ?? '/'}` },
+    })
     setResending(false)
     setAlert({ type: 'resent' })
   }

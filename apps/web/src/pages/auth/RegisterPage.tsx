@@ -4,7 +4,7 @@ import { Route } from '@/routes/register'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Eye, EyeOff, Mail } from 'lucide-react'
+import { Eye, EyeOff, Mail, CheckCircle } from 'lucide-react'
 import { supabase } from '@/services/supabase'
 import { AuthTemplate } from '@/components/templates/AuthTemplate'
 import { Button } from '@/components/ui/button'
@@ -35,6 +35,8 @@ export default function RegisterPage() {
   const [showConfirm, setShowConfirm] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
   const [registered, setRegistered] = useState<string | null>(null)
+  const [resending, setResending] = useState(false)
+  const [resent, setResent] = useState(false)
 
   const {
     register,
@@ -42,12 +44,20 @@ export default function RegisterPage() {
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(registerSchema) })
 
+  function emailRedirectTo() {
+    const dest = redirectTo ?? '/'
+    return `${window.location.origin}${dest}`
+  }
+
   async function onSubmit(data: RegisterForm) {
     setServerError(null)
     const { error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
-      options: { data: { full_name: data.fullName } },
+      options: {
+        data: { full_name: data.fullName },
+        emailRedirectTo: emailRedirectTo(),
+      },
     })
     if (error) {
       if (error.message.includes('already registered')) {
@@ -58,6 +68,19 @@ export default function RegisterPage() {
       return
     }
     setRegistered(data.email)
+  }
+
+  async function resendConfirmation() {
+    if (!registered) return
+    setResending(true)
+    setResent(false)
+    await supabase.auth.resend({
+      type: 'signup',
+      email: registered,
+      options: { emailRedirectTo: emailRedirectTo() },
+    })
+    setResending(false)
+    setResent(true)
   }
 
   // async function signInWithGoogle() {
@@ -94,12 +117,24 @@ export default function RegisterPage() {
               </p>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">
-            Não recebeu?{' '}
-            <Link to="/login" className="text-foreground underline-offset-4 hover:underline">
-              Voltar ao login
-            </Link>
-          </p>
+          {resent ? (
+            <div className="flex items-center justify-center gap-2 text-xs text-green-700 dark:text-green-300">
+              <CheckCircle className="size-3.5" />
+              E-mail reenviado com sucesso!
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              Não recebeu?{' '}
+              <button
+                type="button"
+                className="text-foreground underline-offset-4 hover:underline disabled:opacity-50"
+                onClick={resendConfirmation}
+                disabled={resending}
+              >
+                {resending ? 'Reenviando...' : 'Reenviar e-mail'}
+              </button>
+            </p>
+          )}
         </div>
       </AuthTemplate>
     )
