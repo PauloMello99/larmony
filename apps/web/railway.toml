@@ -1,9 +1,8 @@
 [build]
-builder = "nixpacks"
-buildCommand = "yarn build:web"
+builder = "dockerfile"
+dockerfilePath = "apps/web/Dockerfile"
 
 [deploy]
-startCommand = "yarn start:web"
 healthcheckPath = "/"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
