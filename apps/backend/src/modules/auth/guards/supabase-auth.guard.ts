@@ -7,6 +7,9 @@ export class SupabaseAuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest()
+
+    if (request.method === 'OPTIONS') return true
+
     const authHeader = request.headers['authorization'] as string | undefined
 
     if (!authHeader?.startsWith('Bearer ')) {
