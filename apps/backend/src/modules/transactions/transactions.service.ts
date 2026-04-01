@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common'
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { format } from 'date-fns'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
@@ -16,6 +16,9 @@ export class TransactionsService {
   private dateRange(month: string, year: string) {
     const m = Number(month)
     const y = Number(year)
+    if (!Number.isInteger(m) || m < 1 || m > 12 || !Number.isInteger(y) || y < 2000 || y > 2100) {
+      throw new BadRequestException('month and year query params are required and must be valid')
+    }
     return {
       from: format(new Date(y, m - 1, 1), 'yyyy-MM-dd'),
       to: format(new Date(y, m, 0), 'yyyy-MM-dd'),
