@@ -13,10 +13,22 @@ import { AppModule } from './app.module'
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter())
 
+  const rawOrigins = process.env.WEB_ORIGIN ?? 'http://localhost:5173'
+  const allowedOrigins = rawOrigins
+    .split(',')
+    .map((o) => o.trim().replace(/\/$/, ''))
+    .filter(Boolean)
+
   app.enableCors({
-    origin: process.env.WEB_ORIGIN ?? 'http://localhost:5173',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. curl, Postman, server-to-server)
+      if (!origin) return callback(null, true)
+      if (allowedOrigins.includes(origin)) return callback(null, true)
+      callback(new Error(`CORS: origin "${origin}" not allowed`), false)
+    },
     allowedHeaders: ['Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    credentials: true,
   })
 
   const port = Number(process.env.PORT ?? 3000)
