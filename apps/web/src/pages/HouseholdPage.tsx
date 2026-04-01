@@ -47,14 +47,8 @@ type CreateHouseholdForm = z.infer<typeof createHouseholdSchema>
 
 export default function HouseholdPage() {
   const { t } = useTranslation()
-  const {
-    householdId,
-    user,
-    refreshProfile,
-    households,
-    activeHouseholdId,
-    setActiveHouseholdId,
-  } = useAuth()
+  const { householdId, user, refreshProfile, households, activeHouseholdId, setActiveHouseholdId } =
+    useAuth()
   const { data: members = [], isLoading: membersLoading } = useMembers()
   const qc = useQueryClient()
 
@@ -94,7 +88,7 @@ export default function HouseholdPage() {
   const isOwner = household?.owner_id === user?.id
 
   // Rename household
-  const renameForm = useForm<RenameForm>({
+  const renameForm = useForm({
     resolver: zodResolver(renameSchema),
     values: { name: household?.name ?? '' },
   })
@@ -113,7 +107,7 @@ export default function HouseholdPage() {
   })
 
   // Invite member via backend (sends email via Resend)
-  const inviteForm = useForm<InviteForm>({ resolver: zodResolver(inviteSchema) })
+  const inviteForm = useForm({ resolver: zodResolver(inviteSchema) })
   const inviteMut = useMutation({
     mutationFn: async (data: InviteForm) => {
       await apiPost('/api/household-invites', { householdId: householdId!, email: data.email })
@@ -145,7 +139,7 @@ export default function HouseholdPage() {
   })
 
   // Create new household
-  const createHouseholdForm = useForm<CreateHouseholdForm>({
+  const createHouseholdForm = useForm({
     resolver: zodResolver(createHouseholdSchema),
   })
   const createHouseholdMut = useMutation({
@@ -217,7 +211,10 @@ export default function HouseholdPage() {
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="text-xs gap-1">
                   {h.role === 'owner' ? (
-                    <><Crown className="size-3" />{t('household.members.owner')}</>
+                    <>
+                      <Crown className="size-3" />
+                      {t('household.members.owner')}
+                    </>
                   ) : (
                     t('household.members.member')
                   )}

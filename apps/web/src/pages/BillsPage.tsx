@@ -78,7 +78,7 @@ function BillDialog({
     watch,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<BillForm>({
+  } = useForm({
     resolver: zodResolver(billSchema),
     defaultValues: {
       name: initial?.name ?? '',

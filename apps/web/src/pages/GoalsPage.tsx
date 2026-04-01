@@ -51,14 +51,14 @@ const GOAL_COLORS = [
 const goalSchema = z.object({
   name: z.string().min(1, 'Nome obrigatório').max(80),
   description: z.string().optional(),
-  target_amount: z.coerce.number().positive('Valor deve ser positivo'),
+  target_amount: z.number().positive('Valor deve ser positivo'),
   target_date: z.string().nullable().optional(),
   color: z.string().default('#3b82f6'),
 })
 type GoalForm = z.infer<typeof goalSchema>
 
 const contributionSchema = z.object({
-  amount: z.coerce.number().positive('Valor deve ser positivo'),
+  amount: z.number().positive('Valor deve ser positivo'),
   date: z.string().min(1, 'Data obrigatória'),
   notes: z.string().optional(),
 })
@@ -86,7 +86,7 @@ function GoalDialog({
     control,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<GoalForm>({
+  } = useForm({
     resolver: zodResolver(goalSchema),
     defaultValues: {
       name: initial?.name ?? '',
@@ -141,7 +141,7 @@ function GoalDialog({
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label>Valor alvo (R$)</Label>
-              <Input type="number" step="0.01" {...register('target_amount')} />
+              <Input type="number" step="0.01" {...register('target_amount', { valueAsNumber: true })} />
               {errors.target_amount && (
                 <p className="text-xs text-destructive">{errors.target_amount.message}</p>
               )}
@@ -215,7 +215,7 @@ function ContributionDialog({
     control,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<ContributionForm>({
+  } = useForm({
     resolver: zodResolver(contributionSchema),
     defaultValues: { date: toISODate(new Date()), notes: '' },
   })
@@ -259,7 +259,7 @@ function ContributionDialog({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label>Valor (R$)</Label>
-            <Input type="number" step="0.01" placeholder="0,00" {...register('amount')} />
+            <Input type="number" step="0.01" placeholder="0,00" {...register('amount', { valueAsNumber: true })} />
             {errors.amount && <p className="text-xs text-destructive">{errors.amount.message}</p>}
           </div>
           <div className="space-y-2">

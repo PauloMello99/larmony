@@ -70,7 +70,7 @@ export function TransactionSheet({
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<TxForm>({
+  } = useForm({
     resolver: zodResolver(txSchema),
     defaultValues: {
       description: initial?.description ?? preset?.description ?? '',

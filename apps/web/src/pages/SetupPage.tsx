@@ -28,7 +28,7 @@ export default function SetupPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SetupForm>({
+  } = useForm({
     resolver: zodResolver(setupSchema),
     defaultValues: { householdName: 'Nossa Casa' },
   })

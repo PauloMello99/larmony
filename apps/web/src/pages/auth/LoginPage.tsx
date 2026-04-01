@@ -36,7 +36,7 @@ export default function LoginPage() {
     handleSubmit,
     getValues,
     formState: { errors, isSubmitting },
-  } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) })
+  } = useForm({ resolver: zodResolver(loginSchema) })
 
   async function onSubmit(data: LoginForm) {
     setAlert(null)

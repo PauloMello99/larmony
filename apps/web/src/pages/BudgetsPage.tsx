@@ -90,7 +90,7 @@ function BudgetDialog({
     watch,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<BudgetForm>({
+  } = useForm({
     resolver: zodResolver(budgetSchema),
     defaultValues: {
       category_id: initial?.category_id ?? '',

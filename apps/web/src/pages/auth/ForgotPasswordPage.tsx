@@ -24,7 +24,7 @@ export default function ForgotPasswordPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
     getValues,
-  } = useForm<ForgotForm>({ resolver: zodResolver(schema) })
+  } = useForm({ resolver: zodResolver(schema) })
 
   async function onSubmit(data: ForgotForm) {
     await supabase.auth.resetPasswordForEmail(data.email, {

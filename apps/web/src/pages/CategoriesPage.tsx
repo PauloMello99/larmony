@@ -79,7 +79,7 @@ function CategoryDialog({
     watch,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<CategoryForm>({
+  } = useForm({
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: initial?.name ?? '',

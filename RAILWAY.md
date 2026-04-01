@@ -89,17 +89,21 @@ Após o primeiro deploy bem-sucedido, vá em **Settings → Networking → Gener
 ### Deploy e domínio
 
 1. Clique em **Deploy**
-2. Após o deploy, vá em **Settings → Networking → Generate Domain**
-3. Copie a URL gerada (ex: `https://web-production-xxxx.up.railway.app`)
-4. Volte ao service `backend` e atualize `APP_URL` e `WEB_ORIGIN` com esta URL
-5. Faça redeploy do backend para aplicar as variáveis
+2. Após o deploy, vá em **Settings → Networking → Custom Domain**
+3. Adicione `larmony.me` e `www.larmony.me`
+4. Configure o DNS no seu registrar:
+   - `A` `@` → IP fornecido pelo Railway
+   - `CNAME` `www` → domínio gerado pelo Railway
+5. Volte ao service `backend` e defina `APP_URL` e `WEB_ORIGIN` como `https://larmony.me`
+6. Volte ao service `reminders` e defina `APP_URL` como `https://larmony.me`
+7. Faça redeploy do backend e do reminders para aplicar as variáveis
 
 ### Configurar Supabase para o domínio de produção
 
 No painel do Supabase (**Authentication → URL Configuration**):
 
-- **Site URL:** `https://web-production-xxxx.up.railway.app`
-- **Redirect URLs:** adicione `https://web-production-xxxx.up.railway.app/**`
+- **Site URL:** `https://larmony.me`
+- **Redirect URLs:** adicione `https://larmony.me/**` e `https://www.larmony.me/**`
 
 ---
 
