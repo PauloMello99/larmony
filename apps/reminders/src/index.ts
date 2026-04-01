@@ -1,4 +1,3 @@
-import cron from 'node-cron'
 import { createClient } from '@supabase/supabase-js'
 
 const RESEND_API_URL = 'https://api.resend.com/emails'
@@ -134,19 +133,13 @@ async function sendBillReminders(): Promise<void> {
   console.log(`[reminders] Done. sent=${sent}, skipped=${skipped}`)
 }
 
-const schedule = process.env.CRON_SCHEDULE ?? '0 11 * * *'
-console.log(`[reminders] Scheduled with cron: ${schedule}`)
-
-cron.schedule(schedule, () => {
-  console.log('[reminders] Running bill reminders job...')
-  sendBillReminders().catch((err) => console.error('[reminders] Error:', err))
-})
-
-// Also run immediately on startup if RUN_ON_START=true
-if (process.env.RUN_ON_START === 'true') {
-  console.log('[reminders] Running on startup...')
-  sendBillReminders().catch((err) => console.error('[reminders] Error:', err))
-}
+console.log('[reminders] Starting bill reminders job...')
+sendBillReminders()
+  .then(() => process.exit(0))
+  .catch((err) => {
+    console.error('[reminders] Fatal error:', err)
+    process.exit(1)
+  })
 
 interface GetHtmlParams {
   billName: string

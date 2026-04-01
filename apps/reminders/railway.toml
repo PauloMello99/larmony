@@ -4,4 +4,4 @@ buildCommand = "yarn build:reminders"
 
 [deploy]
 startCommand = "yarn start:reminders"
-restartPolicyType = "always"
+cronSchedule = "0 11 * * *"
