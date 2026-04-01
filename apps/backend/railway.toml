@@ -4,7 +4,7 @@ buildCommand = "yarn build:backend"
 
 [deploy]
 startCommand = "yarn start:backend"
-healthcheckPath = "/"
+healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
