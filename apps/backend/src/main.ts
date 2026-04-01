@@ -13,21 +13,8 @@ import { AppModule } from './app.module'
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter())
 
-  // WEB_ORIGIN accepts a comma-separated list, e.g.:
-  // "https://larmony.me,https://www.larmony.me"
-  const allowedOrigins = (process.env.WEB_ORIGIN ?? 'http://localhost:5173')
-    .split(',')
-    .map((o) => o.trim().replace(/\/$/, ''))
-    .filter(Boolean)
-
-  console.log(`[Backend] Allowed origins: ${allowedOrigins.join(', ')}`)
-
   app.enableCors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true)
-      if (allowedOrigins.includes(origin)) return callback(null, true)
-      callback(new Error(`CORS: origin "${origin}" not allowed`), false)
-    },
+    origin: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
