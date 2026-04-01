@@ -18,7 +18,7 @@ export async function apiGet<T>(path: string, params?: Record<string, string>): 
   const urlPath = `${API_URL}${path}`
   const url = new URL(urlPath)
   if (params) Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v))
-  const res = await fetch(urlPath, { headers: await authHeaders() })
+  const res = await fetch(url.href, { headers: await authHeaders() })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
     throw new Error((body as { error?: string }).error ?? `API error ${res.status}`)
