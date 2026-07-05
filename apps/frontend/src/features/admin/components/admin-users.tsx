@@ -169,7 +169,7 @@ export function AdminUsers() {
                   </TableCell>
                   <TableCell>
                     {isSuper ? (
-                      <Badge className="bg-orange-500/15 text-orange-400">
+                      <Badge className="bg-primary/15 text-primary">
                         super_admin
                       </Badge>
                     ) : (
@@ -193,7 +193,7 @@ export function AdminUsers() {
                         setActionError(null)
                         setTarget(u)
                       }}
-                      className={isSuper ? "text-foreground/60" : "text-orange-400 hover:text-orange-300"}
+                      className={isSuper ? "text-foreground/60" : "text-primary hover:text-orange-300"}
                     >
                       {isSuper ? (
                         <>

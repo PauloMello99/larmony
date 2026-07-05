@@ -42,7 +42,7 @@ export function TopHeader({ breadcrumbs, onMobileMenuToggle }: TopHeaderProps) {
           href="/dashboard/households"
           className="shrink-0 text-sm font-bold tracking-tight"
         >
-          ink<span className="text-orange-500">ops</span>
+          <span className="text-primary">lar</span>mony
         </Link>
 
         {/* Breadcrumb */}

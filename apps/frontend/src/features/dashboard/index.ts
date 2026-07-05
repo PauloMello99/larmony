@@ -20,5 +20,7 @@ export { useHouseholds, useHousehold } from "./hooks/use-households"
 export type { HouseholdSummary } from "./hooks/use-households"
 
 // Lib
-export { ORG_NAV_SECTIONS, PAGE_LABELS } from "./lib/nav"
+export { HOUSEHOLD_NAV_SECTIONS, PAGE_LABEL_KEYS, FEATURE_PAGES } from "./lib/nav"
+export { FeaturePlaceholder } from "./components/pages/feature-placeholder"
+export { HouseholdOverview } from "./components/pages/household-overview"
 export type { NavItem, NavSection } from "./lib/nav"

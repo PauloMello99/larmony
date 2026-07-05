@@ -111,13 +111,13 @@ export function Pricing() {
               className={cn(
                 "relative flex flex-col rounded-2xl border p-8 transition-all",
                 plan.highlighted
-                  ? "border-orange-500/50 bg-orange-500/5"
+                  ? "border-primary/50 bg-primary/5"
                   : "border-white/5 bg-white/[0.03]",
               )}
             >
               {plan.badge && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <Badge className="bg-orange-500 text-white">
+                  <Badge className="bg-primary text-white">
                     {plan.badge}
                   </Badge>
                 </div>
@@ -161,7 +161,7 @@ export function Pricing() {
                 className={cn(
                   "w-full",
                   plan.highlighted
-                    ? "bg-orange-500 text-white hover:bg-orange-600"
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
                     : "border border-white/10 bg-transparent text-white hover:bg-white/5",
                 )}
               >

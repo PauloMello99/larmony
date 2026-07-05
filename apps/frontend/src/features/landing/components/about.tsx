@@ -35,7 +35,7 @@ export function About() {
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
               Feito por quem
               <br />
-              <span className="text-orange-500">entende o ofício</span>
+              <span className="text-primary">entende o ofício</span>
             </h2>
             <p className="mt-6 leading-relaxed text-white/50">
               Construído com e para artistas. Sabemos que sua energia deve ir para
@@ -46,8 +46,8 @@ export function About() {
             <ul className="mt-8 space-y-3">
               {BULLETS.map((bullet) => (
                 <li key={bullet} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-500/15">
-                    <Check className="h-3 w-3 text-orange-400" />
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/15">
+                    <Check className="h-3 w-3 text-primary" />
                   </span>
                   <span className="text-sm text-white/60">{bullet}</span>
                 </li>
@@ -62,7 +62,7 @@ export function About() {
                 key={stat.label}
                 className="rounded-xl border border-white/5 bg-white/[0.03] p-4 sm:p-6"
               >
-                <p className="text-2xl font-bold text-orange-400 sm:text-4xl">
+                <p className="text-2xl font-bold text-primary sm:text-4xl">
                   {stat.value}
                 </p>
                 <p className="mt-1 text-sm text-white/50">{stat.label}</p>

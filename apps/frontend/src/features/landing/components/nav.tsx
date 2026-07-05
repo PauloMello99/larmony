@@ -29,7 +29,7 @@ export function Nav() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Logo */}
         <Link href="/" className="text-xl font-bold tracking-tight text-white">
-          ink<span className="text-orange-500">ops</span>
+          <span className="text-primary">lar</span>mony
         </Link>
 
         {/* Center links — desktop only */}
@@ -59,7 +59,7 @@ export function Nav() {
           <Button
             size="sm"
             asChild
-            className="hidden bg-orange-500 text-white hover:bg-orange-600 sm:flex"
+            className="hidden bg-primary text-primary-foreground hover:bg-primary/90 sm:flex"
           >
             <Link href="/auth/signup">Começar grátis</Link>
           </Button>
@@ -102,7 +102,7 @@ export function Nav() {
             </Button>
             <Button
               asChild
-              className="w-full bg-orange-500 text-white hover:bg-orange-600"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={closeMenu}
             >
               <Link href="/auth/signup">Começar grátis</Link>

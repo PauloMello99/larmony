@@ -149,7 +149,7 @@ export function AcceptInvitationPage() {
     <Centered>
       <CardHeader className="text-center">
         <div className="mb-2 text-xl font-bold">
-          ink<span className="text-orange-500">ops</span>
+          <span className="text-primary">lar</span>mony
         </div>
         <CardTitle className="text-xl">Convite para {invite.householdName}</CardTitle>
         <CardDescription className="text-foreground/40">
@@ -180,7 +180,7 @@ export function AcceptInvitationPage() {
       <CardFooter className="flex flex-col gap-2">
         {emailMismatch ? (
           <Button
-            className="w-full bg-orange-500 text-white hover:bg-orange-600"
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
             onClick={() => void handleSwitchAccount()}
           >
             Trocar de conta
@@ -188,7 +188,7 @@ export function AcceptInvitationPage() {
         ) : (
           <>
             <Button
-              className="w-full bg-orange-500 text-white hover:bg-orange-600"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               disabled={accepting || declining}
               onClick={() => void handleAccept()}
             >

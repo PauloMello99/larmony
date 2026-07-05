@@ -58,7 +58,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       {/* Top bar */}
       <header className="sticky top-0 z-20 flex items-center justify-between border-b border-foreground/[0.06] bg-background/80 px-4 py-2.5 backdrop-blur sm:px-6">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="h-5 w-5 text-orange-400" />
+          <ShieldCheck className="h-5 w-5 text-primary" />
           <span className="text-sm font-semibold text-foreground">
             larmony <span className="text-foreground/40">· Plataforma</span>
           </span>
@@ -95,7 +95,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                 <Icon
                   className={cn(
                     "h-4 w-4 shrink-0",
-                    active ? "text-orange-400" : "text-foreground/40",
+                    active ? "text-primary" : "text-foreground/40",
                   )}
                 />
                 {item.label}

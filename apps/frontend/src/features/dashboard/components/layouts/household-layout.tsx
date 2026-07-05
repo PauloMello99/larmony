@@ -10,8 +10,9 @@ import { HouseholdSwitcher } from "@/features/dashboard/components/household-swi
 import { HouseholdProvider } from "@/features/dashboard/components/household-context"
 import { useHouseholds, useResolveHouseholdBySlug } from "@/features/dashboard/hooks/use-households"
 import { useMe } from "@/features/auth/hooks/use-me"
+import { useTranslation } from "react-i18next"
 import {
-  PAGE_LABELS,
+  PAGE_LABEL_KEYS,
   isOwnerOnlyPath,
   isModuleKey,
   canAccessModule,
@@ -33,6 +34,7 @@ function buildHouseholdCrumbs(
   pathname: string,
   slug: string,
   householdSwitcher: React.ReactNode,
+  t: (key: string) => string,
 ): BreadcrumbItem[] {
   const crumbs: BreadcrumbItem[] = [{ label: "Household", node: householdSwitcher }]
 
@@ -41,14 +43,14 @@ function buildHouseholdCrumbs(
 
   if (segments[0] === "settings") {
     crumbs.push({
-      label: "Configurações",
+      label: t("nav.settings"),
       href: `/dashboard/household/${slug}/settings`,
     })
-    const subLabel = segments[1] ? PAGE_LABELS[segments[1]] : undefined
-    if (subLabel) crumbs.push({ label: subLabel })
+    const subKey = segments[1] ? PAGE_LABEL_KEYS[segments[1]] : undefined
+    if (subKey) crumbs.push({ label: t(subKey) })
   } else {
-    const pageLabel = segments[0] ? PAGE_LABELS[segments[0]] : undefined
-    if (pageLabel) crumbs.push({ label: pageLabel })
+    const pageKey = segments[0] ? PAGE_LABEL_KEYS[segments[0]] : undefined
+    if (pageKey) crumbs.push({ label: t(pageKey) })
   }
 
   return crumbs
@@ -56,6 +58,7 @@ function buildHouseholdCrumbs(
 
 export function HouseholdLayout({ children }: HouseholdLayoutProps) {
   const router = useRouter()
+  const { t } = useTranslation("dashboard")
   const { householdSlug } = router.query as { householdSlug?: string }
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
@@ -108,7 +111,7 @@ export function HouseholdLayout({ children }: HouseholdLayoutProps) {
     const lacksModule =
       isModuleKey(seg) && !canAccessModule(household.role, household.permissions, seg)
     if (isOwnerOnlyPath(currentSubpath) || lacksModule) {
-      void router.replace(`/dashboard/household/${household.slug}/overview`)
+      void router.replace(`/dashboard/household/${household.slug}`)
     }
   }, [household, currentSubpath, router])
 
@@ -120,14 +123,14 @@ export function HouseholdLayout({ children }: HouseholdLayoutProps) {
   if (!household) return null
 
   const householdSwitcher = <HouseholdSwitcher household={household} />
-  const breadcrumbs = buildHouseholdCrumbs(router.pathname, household.slug, householdSwitcher)
+  const breadcrumbs = buildHouseholdCrumbs(router.pathname, household.slug, householdSwitcher, t)
 
   return (
     <HouseholdProvider household={household} actingAsAdmin={actingAsAdmin}>
       <div className="flex h-screen flex-col overflow-hidden bg-background">
         {actingAsAdmin ? (
           // Funcionário ou não-membro agindo com poderes de plataforma → aviso forte.
-          <div className="flex shrink-0 items-center justify-center gap-2 bg-orange-500/15 px-4 py-1.5 text-center text-xs text-orange-300 sm:text-sm">
+          <div className="flex shrink-0 items-center justify-center gap-2 bg-warning/15 px-4 py-1.5 text-center text-xs text-warning sm:text-sm">
             <ShieldAlert className="h-4 w-4 shrink-0" />
             <span>
               Você está gerenciando{" "}
@@ -136,7 +139,7 @@ export function HouseholdLayout({ children }: HouseholdLayoutProps) {
             </span>
             <Link
               href={`/admin/households/${household.id}`}
-              className="shrink-0 font-medium underline underline-offset-2 hover:text-orange-200"
+              className="shrink-0 font-medium underline underline-offset-2 hover:opacity-80"
             >
               Voltar ao painel
             </Link>

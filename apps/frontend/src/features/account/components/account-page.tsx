@@ -133,7 +133,7 @@ export function AccountPage() {
                           isActive
                             ? isDanger
                               ? "text-red-400"
-                              : "text-orange-400"
+                              : "text-primary"
                             : isDanger
                               ? "text-red-400/60"
                               : "text-foreground/40",

@@ -150,7 +150,7 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
                   <TableCell>
                     <Link
                       href={`/admin/users/${m.userId}`}
-                      className="font-medium text-foreground hover:text-orange-400"
+                      className="font-medium text-foreground hover:text-primary"
                     >
                       {m.name}
                     </Link>
@@ -158,7 +158,7 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
                   </TableCell>
                   <TableCell>
                     {m.role === "owner" ? (
-                      <Badge className="bg-orange-500/15 text-orange-400">owner</Badge>
+                      <Badge className="bg-primary/15 text-primary">owner</Badge>
                     ) : (
                       <span className="text-foreground/60">{m.role}</span>
                     )}
@@ -251,7 +251,7 @@ function InfoCard({
   return (
     <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
       <div className="flex items-center gap-1.5 text-xs text-foreground/50">
-        <Icon className="h-3.5 w-3.5 text-orange-400" />
+        <Icon className="h-3.5 w-3.5 text-primary" />
         {label}
       </div>
       <p className="mt-1.5 truncate text-lg font-semibold text-foreground">{value}</p>

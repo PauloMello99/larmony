@@ -1,3 +1,4 @@
+import { makeI18nProps } from "@/shared/lib/i18n"
 import { useEffect } from "react"
 import { useRouter } from "next/router"
 import type { ReactElement } from "react"
@@ -25,3 +26,5 @@ SettingsBillingPage.getLayout = (page: ReactElement) => (
 )
 
 export default SettingsBillingPage
+
+export const getServerSideProps = makeI18nProps(["common", "dashboard"])

@@ -1,3 +1,4 @@
+import { makeI18nProps } from "@/shared/lib/i18n"
 import { useEffect } from "react"
 import { useRouter } from "next/router"
 
@@ -14,3 +15,5 @@ export default function BillingRedirect() {
 
   return null
 }
+
+export const getServerSideProps = makeI18nProps(["common", "dashboard"])

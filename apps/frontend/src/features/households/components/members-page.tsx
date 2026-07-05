@@ -105,7 +105,7 @@ export function MembersPage() {
       </div>
 
       {lastInviteUrl && (
-        <div className="flex flex-col gap-2 rounded-lg border border-orange-500/20 bg-orange-500/5 p-3 text-sm">
+        <div className="flex flex-col gap-2 rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm">
           <span className="text-foreground/70">
             Convite criado. Link de aceite (dev — copie para testar):
           </span>

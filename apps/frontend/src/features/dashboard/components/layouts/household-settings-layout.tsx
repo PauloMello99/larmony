@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { cn } from "@/shared/lib/utils"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
+import { useTranslation } from "react-i18next"
 import { SETTINGS_NAV } from "@/features/dashboard/lib/nav"
 
 interface HouseholdSettingsLayoutProps {
@@ -13,6 +14,7 @@ interface HouseholdSettingsLayoutProps {
 
 export function HouseholdSettingsLayout({ children }: HouseholdSettingsLayoutProps) {
   const router = useRouter()
+  const { t } = useTranslation("dashboard")
   const { household } = useCurrentHousehold()
   const basePath = `/dashboard/household/${household.slug}`
 
@@ -40,7 +42,7 @@ export function HouseholdSettingsLayout({ children }: HouseholdSettingsLayoutPro
                   : "text-foreground/50 hover:bg-foreground/[0.04] hover:text-foreground",
               )}
             >
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           )
         })}
@@ -70,10 +72,10 @@ export function HouseholdSettingsLayout({ children }: HouseholdSettingsLayoutPro
                     <Icon
                       className={cn(
                         "h-4 w-4 shrink-0",
-                        active ? "text-orange-400" : "text-foreground/40",
+                        active ? "text-primary" : "text-foreground/40",
                       )}
                     />
-                    {item.label}
+                    {t(item.labelKey)}
                   </Link>
                 </li>
               )

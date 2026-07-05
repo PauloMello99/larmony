@@ -82,7 +82,7 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
               {user.name}
             </h1>
             {isSuper && (
-              <Badge className="bg-orange-500/15 text-orange-400">super_admin</Badge>
+              <Badge className="bg-primary/15 text-primary">super_admin</Badge>
             )}
           </div>
           <p className="mt-0.5 text-sm text-foreground/40">
@@ -119,7 +119,7 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
       {/* Memberships */}
       <section className="space-y-3">
         <h2 className="flex items-center gap-1.5 text-sm font-medium text-foreground">
-          <Building2 className="h-4 w-4 text-orange-400" />
+          <Building2 className="h-4 w-4 text-primary" />
           Lares ({user.memberships.length})
         </h2>
         {user.memberships.length === 0 ? (
@@ -143,7 +143,7 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
                     <TableCell>
                       <Link
                         href={`/admin/households/${m.householdId}`}
-                        className="font-medium text-foreground hover:text-orange-400"
+                        className="font-medium text-foreground hover:text-primary"
                       >
                         {m.householdName}
                       </Link>
@@ -151,7 +151,7 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
                     </TableCell>
                     <TableCell>
                       {m.role === "owner" ? (
-                        <Badge className="bg-orange-500/15 text-orange-400">owner</Badge>
+                        <Badge className="bg-primary/15 text-primary">owner</Badge>
                       ) : (
                         <span className="text-foreground/60">{m.role}</span>
                       )}

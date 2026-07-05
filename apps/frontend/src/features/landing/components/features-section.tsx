@@ -80,8 +80,8 @@ export function FeaturesSection() {
                 key={feature.title}
                 className="group rounded-xl border border-white/5 bg-white/[0.03] p-6 transition-all hover:border-white/10 hover:bg-white/[0.05]"
               >
-                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/10">
-                  <Icon className="h-5 w-5 text-orange-400" />
+                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                  <Icon className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="mb-2 text-base font-semibold text-white">
                   {feature.title}

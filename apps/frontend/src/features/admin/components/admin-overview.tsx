@@ -27,7 +27,7 @@ import { fmtMonth } from "../lib/format"
 import { usePrefersReducedMotion } from "../lib/use-prefers-reduced-motion"
 
 const COLORS = {
-  households: "#fb923c", // orange-400 (accent)
+  households: "var(--chart-1)",
   users: "#60a5fa", // blue-400
   active: "#22c55e", // green-500
   suspended: "#ef4444", // red-500
@@ -49,7 +49,7 @@ function StatCard({
   return (
     <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
       <div className="flex items-center gap-1.5 text-xs text-foreground/50">
-        <Icon className="h-3.5 w-3.5 text-orange-400" />
+        <Icon className="h-3.5 w-3.5 text-primary" />
         {label}
       </div>
       {loading ? (
@@ -138,7 +138,7 @@ export function AdminOverview() {
         {/* Crescimento (últimos 12 meses) */}
         <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4 lg:col-span-2">
           <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
-            <TrendingUp className="h-4 w-4 text-orange-400" />
+            <TrendingUp className="h-4 w-4 text-primary" />
             Crescimento · novos por mês (12 meses)
           </div>
           {growthLoading ? (
@@ -177,7 +177,7 @@ export function AdminOverview() {
         {/* Lares por status */}
         <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
           <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
-            <Building2 className="h-4 w-4 text-orange-400" />
+            <Building2 className="h-4 w-4 text-primary" />
             Lares por status
           </div>
           {loading ? (

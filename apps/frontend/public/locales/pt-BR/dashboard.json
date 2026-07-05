@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "overview": "Visão geral",
+    "transactions": "Transações",
+    "categories": "Categorias",
+    "budgets": "Orçamentos",
+    "goals": "Metas",
+    "bills": "Contas",
+    "reports": "Relatórios",
+    "members": "Membros",
+    "settings": "Configurações",
+    "settingsGeneral": "Geral",
+    "settingsSubscription": "Assinatura",
+    "billing": "Cobrança",
+    "households": "Lares",
+    "sectionHousehold": "Lar"
+  },
+  "overview": {
+    "goodMorning": "Bom dia",
+    "goodAfternoon": "Boa tarde",
+    "goodEvening": "Boa noite",
+    "incomeMonth": "Receitas do mês",
+    "expensesMonth": "Despesas do mês",
+    "balanceMonth": "Saldo do mês",
+    "goalsTotal": "Guardado em metas",
+    "recentTransactions": "Transações recentes",
+    "seeAll": "Ver todas",
+    "upcomingBills": "Contas próximas",
+    "activeGoals": "Metas ativas",
+    "budgets": "Orçamentos",
+    "emptyTransactions": "Nenhuma transação ainda",
+    "emptyTransactionsHint": "Os lançamentos do seu lar aparecerão aqui.",
+    "emptyBills": "Nenhuma conta por vencer",
+    "emptyBillsHint": "Cadastre contas fixas para receber lembretes.",
+    "emptyGoals": "Nenhuma meta ativa",
+    "emptyGoalsHint": "Crie metas para acompanhar seus objetivos.",
+    "emptyBudgets": "Nenhum orçamento definido",
+    "emptyBudgetsHint": "Defina limites de gasto por categoria."
+  },
+  "placeholders": {
+    "arriving": "Chega no {{milestone}}",
+    "underConstruction": "Em construção",
+    "transactions": {
+      "title": "Transações",
+      "description": "Entradas e saídas do seu lar: lançamentos com categoria, pessoa, parcelamento e rateio entre membros."
+    },
+    "categories": {
+      "title": "Categorias",
+      "description": "Organize as finanças do lar com categorias de receita e despesa, cores e ícones."
+    },
+    "budgets": {
+      "title": "Orçamentos",
+      "description": "Defina limites de gasto mensais por categoria e acompanhe o quanto já foi usado."
+    },
+    "goals": {
+      "title": "Metas",
+      "description": "Guarde dinheiro para objetivos do lar e acompanhe o progresso de cada meta."
+    },
+    "bills": {
+      "title": "Contas",
+      "description": "Contas fixas e recorrentes com lembretes por e-mail antes do vencimento."
+    },
+    "reports": {
+      "title": "Relatórios",
+      "description": "Análise mensal e anual das finanças do lar, por categoria e por pessoa."
+    }
+  }
+}

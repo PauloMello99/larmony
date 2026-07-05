@@ -6,7 +6,8 @@ import { useRouter } from "next/router"
 import { PanelLeftClose, PanelLeftOpen, X } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { Tooltip } from "@/shared/components/ui/tooltip"
-import { ORG_NAV_SECTIONS, canAccessModule } from "@/features/dashboard/lib/nav"
+import { useTranslation } from "react-i18next"
+import { HOUSEHOLD_NAV_SECTIONS, canAccessModule } from "@/features/dashboard/lib/nav"
 import type { HouseholdSummary } from "@/features/dashboard/hooks/use-households"
 
 interface HouseholdSidebarProps {
@@ -19,7 +20,15 @@ interface HouseholdSidebarProps {
 
 export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose }: HouseholdSidebarProps) {
   const router = useRouter()
-  const [collapsed, setCollapsed] = React.useState(false)
+  const { t } = useTranslation("dashboard")
+  // Colapso persistido (init lazy com guard de SSR).
+  const [collapsed, setCollapsed] = React.useState(() => {
+    if (typeof window === "undefined") return false
+    return window.localStorage.getItem("larmony_sidebar_collapsed") === "1"
+  })
+  React.useEffect(() => {
+    window.localStorage.setItem("larmony_sidebar_collapsed", collapsed ? "1" : "0")
+  }, [collapsed])
 
   const basePath = `/dashboard/household/${household.slug}`
 
@@ -70,7 +79,7 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
 
           {!collapsed && (
             <div className="flex min-w-0 flex-1 items-center gap-2.5">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-orange-500/20 text-xs font-bold text-orange-400">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-primary/20 text-xs font-bold text-primary">
                 {household.name.charAt(0).toUpperCase()}
               </span>
               <span className="truncate text-sm font-medium text-foreground">
@@ -104,7 +113,7 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
 
         {/* Nav sections — items filtrados por papel (household.role) via visibleItems */}
         <nav className="flex-1 overflow-y-auto px-2 py-3">
-          {ORG_NAV_SECTIONS.map((section, sIdx) => {
+          {HOUSEHOLD_NAV_SECTIONS.map((section, sIdx) => {
             const visibleItems = section.items.filter(
               (item) =>
                 (!item.roles || item.roles.includes(household.role)) &&
@@ -114,18 +123,18 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
             return (
             <div key={sIdx} className={sIdx > 0 ? "mt-4" : undefined}>
               {/* Section label — hidden when collapsed on desktop */}
-              {section.label && (
+              {section.labelKey && (
                 <p
                   className={cn(
                     "mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-foreground/25",
                     collapsed && "md:hidden",
                   )}
                 >
-                  {section.label}
+                  {t(section.labelKey)}
                 </p>
               )}
               {/* Divider when collapsed + not first section */}
-              {section.label && collapsed && sIdx > 0 && (
+              {section.labelKey && collapsed && sIdx > 0 && (
                 <div className="mx-1 mb-2 hidden h-px bg-foreground/[0.06] md:block" />
               )}
 
@@ -137,7 +146,7 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
                   return (
                     <li key={item.href}>
                       <Tooltip
-                        content={item.label}
+                        content={t(item.labelKey)}
                         side="right"
                         disabled={!collapsed}
                       >
@@ -159,12 +168,12 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
                           <Icon
                             className={cn(
                               "h-4 w-4 shrink-0",
-                              active ? "text-orange-400" : "text-foreground/40",
+                              active ? "text-primary" : "text-foreground/40",
                             )}
                           />
                           {/* Label: always visible on mobile, hidden when collapsed on desktop */}
                           <span className={cn(collapsed && "md:hidden")}>
-                            {item.label}
+                            {t(item.labelKey)}
                           </span>
                         </Link>
                       </Tooltip>

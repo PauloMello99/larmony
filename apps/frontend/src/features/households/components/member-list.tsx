@@ -171,7 +171,7 @@ export function MemberList({
                       <span
                         className={
                           member.role === "owner"
-                            ? "inline-flex items-center rounded-md bg-orange-500/10 px-2 py-0.5 text-xs font-medium text-orange-400"
+                            ? "inline-flex items-center rounded-md bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
                             : "inline-flex items-center rounded-md bg-foreground/5 px-2 py-0.5 text-xs font-medium text-foreground/50"
                         }
                       >
@@ -220,7 +220,7 @@ export function MemberList({
                 <span
                   className={
                     member.role === "owner"
-                      ? "shrink-0 rounded-md bg-orange-500/10 px-2 py-0.5 text-xs font-medium text-orange-400"
+                      ? "shrink-0 rounded-md bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
                       : "shrink-0 rounded-md bg-foreground/5 px-2 py-0.5 text-xs font-medium text-foreground/50"
                   }
                 >

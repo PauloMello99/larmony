@@ -148,7 +148,7 @@ export function ProfileSection() {
                 className="h-16 w-16 rounded-full object-cover"
               />
             ) : (
-              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-500/20 text-xl font-semibold text-orange-400">
+              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/20 text-xl font-semibold text-primary">
                 {(me?.name ?? "?").charAt(0).toUpperCase()}
               </span>
             )}
@@ -269,7 +269,7 @@ export function AccessSection() {
       />
       <section className="max-w-lg rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-5">
         <div className="flex items-center gap-2">
-          <KeyRound className="h-4 w-4 text-orange-400" />
+          <KeyRound className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-medium">Alterar senha</h3>
         </div>
         {sent ? (
@@ -325,7 +325,7 @@ export function AppearanceSection() {
       />
       <section className="max-w-lg rounded-xl border border-border bg-foreground/[0.02] p-5">
         <div className="flex items-center gap-2">
-          <Palette className="h-4 w-4 text-orange-400" />
+          <Palette className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-medium">Tema</h3>
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
@@ -350,7 +350,7 @@ export function AppearanceSection() {
                 <Icon
                   className={cn(
                     "h-5 w-5",
-                    active ? "text-orange-400" : "text-muted-foreground",
+                    active ? "text-primary" : "text-muted-foreground",
                   )}
                 />
                 {label}

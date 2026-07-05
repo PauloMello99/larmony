@@ -14,7 +14,7 @@ export function Hero() {
         <div className="mb-5 flex justify-center sm:mb-6">
           <Badge
             variant="outline"
-            className="border-orange-500/30 bg-orange-500/10 text-orange-400"
+            className="border-primary/30 bg-primary/10 text-primary"
           >
             ✦ Novo — Agendamentos automáticos com IA
           </Badge>
@@ -24,7 +24,7 @@ export function Hero() {
         <h1 className="mx-auto max-w-4xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl md:text-7xl">
           Gestão completa para
           <br />
-          <span className="text-orange-500">estúdios criativos</span>
+          <span className="text-primary">estúdios criativos</span>
         </h1>
 
         {/* Subtitle */}
@@ -38,7 +38,7 @@ export function Hero() {
           <Button
             size="lg"
             asChild
-            className="w-full bg-orange-500 px-8 text-white hover:bg-orange-600 sm:w-auto"
+            className="w-full bg-primary px-8 text-white hover:bg-primary/90 sm:w-auto"
           >
             <Link href="/auth/signup">Começar grátis</Link>
           </Button>
@@ -90,7 +90,7 @@ export function Hero() {
                         <div className="mb-1 h-1.5 w-10 rounded-full bg-white/10 sm:mb-2 sm:h-2 sm:w-16" />
                         <div
                           className={`text-base font-bold sm:text-2xl ${
-                            i === 2 ? "text-orange-400" : "text-white"
+                            i === 2 ? "text-primary" : "text-white"
                           }`}
                         >
                           {i === 0 ? "24" : i === 1 ? "142" : "R$8.4k"}
@@ -109,7 +109,7 @@ export function Hero() {
           </div>
 
           {/* Glow under dashboard */}
-          <div className="mx-auto mt-[-16px] h-6 w-3/4 rounded-full bg-orange-500/10 blur-xl sm:mt-[-20px] sm:h-8" />
+          <div className="mx-auto mt-[-16px] h-6 w-3/4 rounded-full bg-primary/10 blur-xl sm:mt-[-20px] sm:h-8" />
         </div>
       </div>
     </section>

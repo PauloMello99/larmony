@@ -42,7 +42,7 @@ export function Footer() {
           {/* Brand + newsletter */}
           <div className="col-span-2 md:col-span-2">
             <Link href="/" className="text-xl font-bold tracking-tight text-white">
-              ink<span className="text-orange-500">ops</span>
+              <span className="text-primary">lar</span>mony
             </Link>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/40">
               Gestão completa para estúdios criativos. Agendamentos, clientes e
@@ -58,11 +58,11 @@ export function Footer() {
                 <Input
                   type="email"
                   placeholder="seu@email.com"
-                  className="h-9 border-white/10 bg-white/5 text-sm text-white placeholder:text-white/30 focus-visible:ring-orange-500/50"
+                  className="h-9 border-white/10 bg-white/5 text-sm text-white placeholder:text-white/30 focus-visible:ring-primary/50"
                 />
                 <Button
                   size="sm"
-                  className="shrink-0 bg-orange-500 text-white hover:bg-orange-600"
+                  className="shrink-0 bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   Assinar
                 </Button>

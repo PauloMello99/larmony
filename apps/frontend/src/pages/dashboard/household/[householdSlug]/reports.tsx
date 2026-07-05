@@ -1,13 +1,14 @@
 import type { ReactElement } from "react"
 import type { NextPageWithLayout } from "@/pages/_app"
 import { AuthGuard } from "@/features/auth/components/auth-guard"
-import { HouseholdLayout, HouseholdOverview } from "@/features/dashboard"
+import { HouseholdLayout, FeaturePlaceholder, FEATURE_PAGES } from "@/features/dashboard"
 import { makeI18nProps } from "@/shared/lib/i18n"
 
-// Home do lar: esqueleto real do dashboard (dados chegam no M2).
-const HouseholdIndexPage: NextPageWithLayout = () => <HouseholdOverview />
+const feature = FEATURE_PAGES.find((f) => f.href === "reports")!
 
-HouseholdIndexPage.getLayout = (page: ReactElement) => (
+const ReportsPage: NextPageWithLayout = () => <FeaturePlaceholder feature={feature} />
+
+ReportsPage.getLayout = (page: ReactElement) => (
   <AuthGuard>
     <HouseholdLayout>{page}</HouseholdLayout>
   </AuthGuard>
@@ -15,4 +16,4 @@ HouseholdIndexPage.getLayout = (page: ReactElement) => (
 
 export const getServerSideProps = makeI18nProps(["common", "dashboard"])
 
-export default HouseholdIndexPage
+export default ReportsPage
