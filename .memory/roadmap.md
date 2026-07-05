@@ -17,14 +17,14 @@ metadata:
 | 0 — Preparação | branch `bootstrap/larmony`, baseline verde | ✅ |
 | 1 — Cleanup | remover domínio ink-ops, manter shell de infra; renames RAG/branding | ✅ |
 | 2 — Redocumentação | `.memory/`, ADRs re-ratificados, `docs/`, `CLAUDE.md` | em andamento |
-| 3 — Evolução do RAG | bge-m3, chunking token-aware, parent-document, hybrid search, indexar código, hook SessionStart | pendente |
-| 4 — Fundação do produto | rename org→household, schema `finance/`, squash de migrations + RLS, i18n base | pendente |
+| 3 — Evolução do RAG | bge-m3, chunking token-aware, parent-document, hybrid search, indexar código, hook SessionStart | ✅ |
+| 4 — Fundação do produto | rename org→household, schema `finance/`, squash de migrations + RLS (baseline 0000+0001), i18n base (next-i18next + `users.locale` + PATCH /auth/me) | ✅ (2026-07-05) |
 
 ## Milestones de features (cada um = plano próprio)
 
 | M | Feature | Escopo resumido |
 |---|---|---|
-| M1 | **Households core** | rename org→household ponta a ponta, signup→setup de lar, convites, switcher multi-lar, i18n base, landing com copy do Larmony |
+| M1 | **Households core** | fluxo signup→setup de lar, convites revisados, switcher multi-lar, seletor de idioma no Account + namespaces i18n por feature, landing com copy do Larmony (rename org→household e fundação i18n já feitos na Fase 4) |
 | M2 | **Categories + Transactions simples** | CRUD de categorias (13 defaults por use-case) e transações (income/expense, filtros mês/tipo/categoria, Sheet lateral) |
 | M3 | **Dashboard** | resumo mensal (receitas/despesas/saldo), últimas 5 transações, contas ≤7 dias, atalhos |
 | M4 | **Parcelamento + rateio** | installment_groups (N parcelas), transaction_members (split igual/específico), coluna Pessoa |
@@ -43,7 +43,9 @@ metadata:
 
 ## Infra pendente
 
-- Reset do banco staging quando o baseline novo de migrations existir (Fase 4) —
-  **destrutivo, confirmar antes**.
+- **Reset do banco staging** com o baseline novo (0000+0001) — **destrutivo,
+  aguardando confirmação do usuário**: dropar schema public do Supabase staging
+  e deixar o deploy (RUN_MIGRATIONS=true) aplicar o baseline.
 - Railway MCP sem autorização local (`railway login`) — snapshot de env vars manual
   antes do reset.
+- Repo sem remote git — criar GitHub privado e push (ponto de restauração).

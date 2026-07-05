@@ -1,0 +1,19 @@
+{
+  "app": {
+    "name": "Larmony",
+    "tagline": "Controle financeiro do seu lar"
+  },
+  "actions": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "create": "Criar",
+    "confirm": "Confirmar"
+  },
+  "locale": {
+    "label": "Idioma",
+    "pt-BR": "Português (Brasil)",
+    "en": "English"
+  }
+}

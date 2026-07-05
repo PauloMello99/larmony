@@ -11,6 +11,8 @@ export interface UserEntityProps {
   avatarUrl: string | null;
   birthDate: string | null;
   gender: Gender | null;
+  /** Idioma da UI/e-mails (ADR-0018): pt-BR | en. */
+  locale: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,6 +24,7 @@ export interface CreateUserData {
 }
 
 export interface UpdateUserData {
+  locale?: string;
   name?: string;
   email?: string;
   avatarUrl?: string | null;
@@ -37,6 +40,7 @@ export class UserEntity {
   readonly avatarUrl: string | null;
   readonly birthDate: string | null;
   readonly gender: Gender | null;
+  readonly locale: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -50,6 +54,7 @@ export class UserEntity {
     this.avatarUrl = props.avatarUrl;
     this.birthDate = props.birthDate;
     this.gender = props.gender;
+    this.locale = props.locale;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
   }

@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import type { AppProps } from "next/app"
 import type { NextPage } from "next"
 import type { ReactElement, ReactNode } from "react"
+import { appWithTranslation } from "next-i18next/pages"
 import { AppProviders } from "@/providers"
 import { ErrorBoundary } from "@/shared/components/error-boundary"
 import { installGlobalErrorHandlers } from "@/infrastructure/telemetry/telemetry"
@@ -16,7 +17,7 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
 
-export default function App({ Component, pageProps }: AppPropsWithLayout) {
+function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page)
 
   // Captura erros globais não tratados (window.onerror / unhandledrejection).
@@ -30,3 +31,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     </ErrorBoundary>
   )
 }
+
+// i18n (ADR-0018): pt-BR default + en; strings novas SEMPRE via useTranslation.
+export default appWithTranslation(App)

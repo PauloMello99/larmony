@@ -16,6 +16,7 @@ export interface UpdateMeInput {
   name?: string;
   email?: string;
   avatarUrl?: string | null;
+  locale?: string;
 }
 
 @Injectable()
@@ -40,6 +41,7 @@ export class UpdateMeUseCase {
       name: input.name,
       email: emailChanged ? input.email : undefined,
       avatarUrl: input.avatarUrl,
+      locale: input.locale,
     });
 
     const changedFields = Object.keys(input).filter(

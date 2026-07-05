@@ -1,0 +1,19 @@
+{
+  "app": {
+    "name": "Larmony",
+    "tagline": "Your household finances, in harmony"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "confirm": "Confirm"
+  },
+  "locale": {
+    "label": "Language",
+    "pt-BR": "Português (Brasil)",
+    "en": "English"
+  }
+}

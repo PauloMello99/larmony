@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString, MaxLength } from "class-validator";
+import { IsEmail, IsIn, IsOptional, IsString, MaxLength } from "class-validator";
 
 export class UpdateMeDto {
   @IsString()
@@ -13,4 +13,8 @@ export class UpdateMeDto {
   @IsString()
   @IsOptional()
   avatarUrl?: string | null;
+
+  @IsIn(["pt-BR", "en"])
+  @IsOptional()
+  locale?: string;
 }
