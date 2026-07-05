@@ -27,7 +27,7 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-postgres",
-        ""
+        "postgresql://postgres.ubpcmccdvldspoyfoark:rQjkxQFpyvl1hHiB@aws-1-sa-east-1.pooler.supabase.com:5432/postgres"
       ]
     },
     "larmony-memory": {
