@@ -40,9 +40,12 @@ WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=pruner /app/out/json/ ./
 RUN pnpm install --prod --frozen-lockfile
-# artefato buildado + config (sem pasta public/ — o app não usa)
+# artefato buildado + configs + public/ (locales do next-i18next são lidos do
+# filesystem em runtime; next.config.js importa next-i18next.config.js)
 COPY --from=builder /app/apps/frontend/.next ./apps/frontend/.next
 COPY --from=builder /app/apps/frontend/next.config.js ./apps/frontend/next.config.js
+COPY --from=builder /app/apps/frontend/next-i18next.config.js ./apps/frontend/next-i18next.config.js
+COPY --from=builder /app/apps/frontend/public ./apps/frontend/public
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nextjs \
   && chown -R nextjs:nodejs /app
