@@ -1,6 +1,6 @@
 # ADR-0016 — Evolução do RAG: bge-m3, chunking token-aware, parent-document e hybrid search
 
-**Status:** Aceito (implementação na Fase 3 do bootstrap)
+**Status:** Aceito — implementado em 2026-07-05 (Fase 3 do bootstrap)
 **Data:** 2026-07-04
 **Supersede parcialmente:** ADR-0002/ADR-0008 (mantém Qdrant + Ollama + MCP; troca modelo e retrieval)
 

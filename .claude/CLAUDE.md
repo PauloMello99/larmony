@@ -74,11 +74,12 @@ uma decisão, convenção ou *gotcha* — registre-o no arquivo `.memory/` certo
 ADR) **antes de encerrar**. Chats triviais estão isentos; o objetivo é capturar
 conhecimento que vale recall depois, não transcrever tudo.
 
-**Indexação (automática).** O índice é re-atualizado imediatamente após qualquer
-escrita em `.memory/` (hook PostToolUse). Stack: Qdrant (Docker, `:6333`) + Ollama
-(`:11434`), coleção `larmony_memory`. Setup inicial: `/rag-setup`. A evolução do RAG
-(bge-m3, hybrid search, parent-document, indexação de código, hook SessionStart) está
-especificada no ADR-0016 — Fase 3 do bootstrap.
+**Indexação (automática).** O índice é re-atualizado em background no início da
+sessão (hook SessionStart) e imediatamente após qualquer escrita em `.memory/`
+(hook PostToolUse). Stack: Qdrant (Docker, `:6333`, hybrid dense+BM25) + Ollama
+(`:11434`, **bge-m3**), coleção `larmony_memory`, com parent-document retrieval e
+código TypeScript indexado (opt-in via `include_code`/`app`/`module`/`layer`) —
+ver ADR-0016. Setup inicial: `/rag-setup`.
 
 Comandos manuais (raramente necessários — o hook cuida disso):
 ```powershell

@@ -1,5 +1,16 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -Command \"Start-Process wsl -ArgumentList 'bash','bin/scripts/rag/reindex.sh' -WindowStyle Hidden\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "hooks": [

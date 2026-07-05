@@ -23,6 +23,6 @@ Diagnóstico do índice:
 wsl ~/larmony-rag-venv/bin/python bin/scripts/rag/health.py
 ```
 
-Obs.: o hook PostToolUse (Write/Edit em `.memory/`) já reindexa automaticamente —
-este comando é para reindex manual sob demanda. Se o venv não existir, rode
-`/rag-setup` primeiro.
+Obs.: os hooks (SessionStart em background; PostToolUse em Write/Edit de `.memory/`)
+já reindexam automaticamente — este comando é para reindex manual sob demanda.
+Se o venv não existir, rode `/rag-setup` primeiro.

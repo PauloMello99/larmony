@@ -37,6 +37,9 @@
       "mcp__railway__list_projects"
     ]
   },
+  "enabledMcpjsonServers": [
+    "better-stack"
+  ],
   "hooks": {
     "SessionStart": [
       {
@@ -58,5 +61,6 @@
         ]
       }
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true
 }
