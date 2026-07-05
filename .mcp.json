@@ -19,7 +19,7 @@
     },
     "supabase-staging": {
       "type": "http",
-      "url": ""
+      "url": "https://mcp.supabase.com/mcp?project_ref=ubpcmccdvldspoyfoark"
     },
     "postgres-staging": {
       "type": "stdio",

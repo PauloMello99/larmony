@@ -41,11 +41,22 @@ metadata:
 - OAuth Google/Apple (old-larmony tinha; reavaliar após M1 — auth atual é e-mail/senha).
 - Ledger append-only de transações (ADR-0010 superseded).
 
-## Infra pendente
+## Infra — estado 2026-07-05
 
-- **Reset do banco staging** com o baseline novo (0000+0001) — **destrutivo,
-  aguardando confirmação do usuário**: dropar schema public do Supabase staging
-  e deixar o deploy (RUN_MIGRATIONS=true) aplicar o baseline.
-- Railway MCP sem autorização local (`railway login`) — snapshot de env vars manual
-  antes do reset.
-- Repo sem remote git — criar GitHub privado e push (ponto de restauração).
+- **Git resolvido**: origin → PauloMello99/larmony, `main` com histórico limpo
+  (6 commits), v1 preservada em `legacy/v1`.
+- **Staging provisionado** no Railway novo (projeto `Larmony`, env `staging`):
+  services Backend (backend-staging-f229.up.railway.app), Frontend
+  (frontend-staging-5b93.up.railway.app) e Cron (alpine), conectados a
+  `PauloMello99/larmony@main` via `RAILWAY_DOCKERFILE_PATH`. Supabase staging:
+  `larmony-staging` (`ubpcmccdvldspoyfoark`, sa-east-1).
+- **Pendências manuais do staging** (dashboard):
+  1. Backend vars: `DATABASE_URL`/`DATABASE_APP_URL` (senha do DB) e
+     `SUPABASE_SERVICE_ROLE_KEY`.
+  2. Cron: Start Command (curl no tick via private networking — ver
+     docs/deployment.md §Cron), Cron Schedule `*/15 * * * *`, restart NEVER.
+  3. Redeploy Backend/Frontend após as vars (primeiro deploy falha por design
+     sem DATABASE_URL).
+- **v1 produção**: fica como está (decisão 2026-07-05) — services trackeiam
+  `main`; builds futuros falharão sem derrubar a produção (Railway serve o
+  último deploy bom).
