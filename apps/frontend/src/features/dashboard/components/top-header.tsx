@@ -21,7 +21,7 @@ interface TopHeaderProps {
 export function TopHeader({ breadcrumbs, onMobileMenuToggle }: TopHeaderProps) {
   return (
     // relative + z-10: elevates the header's stacking context above the sidebar so
-    // the OrgSwitcher dropdown (absolute, z-50 within this context) paints on top.
+    // the HouseholdSwitcher dropdown (absolute, z-50 within this context) paints on top.
     // backdrop-filter (backdrop-blur-sm) creates a stacking context but without a
     // z-index it loses to siblings that come later in the DOM.
     <header className="relative z-10 flex h-14 shrink-0 items-center border-b border-foreground/[0.06] bg-background/95 backdrop-blur-sm">
@@ -39,7 +39,7 @@ export function TopHeader({ breadcrumbs, onMobileMenuToggle }: TopHeaderProps) {
 
         {/* Logo */}
         <Link
-          href="/dashboard/organizations"
+          href="/dashboard/households"
           className="shrink-0 text-sm font-bold tracking-tight"
         >
           ink<span className="text-orange-500">ops</span>
@@ -57,15 +57,15 @@ export function TopHeader({ breadcrumbs, onMobileMenuToggle }: TopHeaderProps) {
                   return (
                     <React.Fragment key={item.label}>
                       {/* Internal separators — hidden on mobile.
-                          On mobile only i===0 (OrgSwitcher) is visible, so
+                          On mobile only i===0 (HouseholdSwitcher) is visible, so
                           separators between items would be orphaned. */}
                       {i > 0 && (
                         <ChevronRight className="hidden h-3 w-3 shrink-0 text-foreground/20 sm:block" />
                       )}
 
                       {/* Visibility:
-                          - Mobile: show only i===0 (OrgSwitcher) so the user can
-                            switch orgs without opening the drawer.
+                          - Mobile: show only i===0 (HouseholdSwitcher) so the user can
+                            switch households without opening the drawer.
                           - Desktop (sm+): show everything. */}
                       <li className={cn("min-w-0", i !== 0 && "hidden sm:block")}>
                         {item.node ? (

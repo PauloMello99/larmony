@@ -412,7 +412,7 @@ export function DangerSection() {
           <div>
             <p className="text-sm font-medium">Excluir minha conta</p>
             <p className="text-xs text-foreground/40">
-              Você precisa transferir ou excluir as organizações das quais é
+              Você precisa transferir ou excluir as lares das quais é
               proprietário antes de excluir sua conta.
             </p>
           </div>
@@ -440,7 +440,7 @@ export function DangerSection() {
                   Esta ação é{" "}
                   <span className="font-semibold text-red-400">irreversível</span>.
                   Seus dados pessoais serão permanentemente removidos. Se você
-                  ainda for proprietário de alguma organização, a exclusão será
+                  ainda for proprietário de alguma lar, a exclusão será
                   bloqueada.
                 </DialogDescription>
               </DialogHeader>

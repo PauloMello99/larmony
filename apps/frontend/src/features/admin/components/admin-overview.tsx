@@ -27,7 +27,7 @@ import { fmtMonth } from "../lib/format"
 import { usePrefersReducedMotion } from "../lib/use-prefers-reduced-motion"
 
 const COLORS = {
-  orgs: "#fb923c", // orange-400 (accent)
+  households: "#fb923c", // orange-400 (accent)
   users: "#60a5fa", // blue-400
   active: "#22c55e", // green-500
   suspended: "#ef4444", // red-500
@@ -97,17 +97,17 @@ export function AdminOverview() {
 
   const growthData = series.map((p) => ({
     month: fmtMonth(p.month),
-    Organizações: p.newOrgs,
+    Lares: p.newHouseholds,
     Usuários: p.newUsers,
   }))
-  const hasGrowth = series.some((p) => p.newOrgs > 0 || p.newUsers > 0)
+  const hasGrowth = series.some((p) => p.newHouseholds > 0 || p.newUsers > 0)
 
-  const activeOrgs = (stats?.totalOrgs ?? 0) - (stats?.suspendedOrgs ?? 0)
+  const activeHouseholds = (stats?.totalHouseholds ?? 0) - (stats?.suspendedHouseholds ?? 0)
   const statusData = [
-    { name: "Ativas", value: activeOrgs, color: COLORS.active },
-    { name: "Suspensas", value: stats?.suspendedOrgs ?? 0, color: COLORS.suspended },
+    { name: "Ativas", value: activeHouseholds, color: COLORS.active },
+    { name: "Suspensas", value: stats?.suspendedHouseholds ?? 0, color: COLORS.suspended },
   ]
-  const hasOrgs = (stats?.totalOrgs ?? 0) > 0
+  const hasHouseholds = (stats?.totalHouseholds ?? 0) > 0
 
   return (
     <div className="space-y-6">
@@ -116,7 +116,7 @@ export function AdminOverview() {
           Painel da plataforma
         </h1>
         <p className="mt-0.5 text-sm text-foreground/40">
-          Visão global de organizações, usuários e acessos (super_admin).
+          Visão global de lares, usuários e acessos (super_admin).
         </p>
       </div>
 
@@ -127,8 +127,8 @@ export function AdminOverview() {
       )}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        <StatCard label="Organizações" value={stats?.totalOrgs ?? 0} icon={Building2} loading={loading} />
-        <StatCard label="Suspensas" value={stats?.suspendedOrgs ?? 0} icon={Ban} loading={loading} />
+        <StatCard label="Lares" value={stats?.totalHouseholds ?? 0} icon={Building2} loading={loading} />
+        <StatCard label="Suspensas" value={stats?.suspendedHouseholds ?? 0} icon={Ban} loading={loading} />
         <StatCard label="Usuários" value={stats?.totalUsers ?? 0} icon={Users} loading={loading} />
         <StatCard label="Super admins" value={stats?.superAdmins ?? 0} icon={ShieldCheck} loading={loading} />
         <StatCard label="Memberships" value={stats?.totalMemberships ?? 0} icon={Network} loading={loading} />
@@ -148,9 +148,9 @@ export function AdminOverview() {
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={growthData} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
                   <defs>
-                    <linearGradient id="gOrgs" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={COLORS.orgs} stopOpacity={0.35} />
-                      <stop offset="100%" stopColor={COLORS.orgs} stopOpacity={0} />
+                    <linearGradient id="gHouseholds" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={COLORS.households} stopOpacity={0.35} />
+                      <stop offset="100%" stopColor={COLORS.households} stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="gUsers" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor={COLORS.users} stopOpacity={0.35} />
@@ -162,7 +162,7 @@ export function AdminOverview() {
                   <YAxis allowDecimals={false} tick={{ fill: COLORS.axis, fontSize: 11 }} tickLine={false} axisLine={false} width={32} />
                   <Tooltip content={<ChartTooltip />} />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <Area type="monotone" dataKey="Organizações" stroke={COLORS.orgs} fill="url(#gOrgs)" strokeWidth={2} isAnimationActive={!reducedMotion} />
+                  <Area type="monotone" dataKey="Lares" stroke={COLORS.households} fill="url(#gHouseholds)" strokeWidth={2} isAnimationActive={!reducedMotion} />
                   <Area type="monotone" dataKey="Usuários" stroke={COLORS.users} fill="url(#gUsers)" strokeWidth={2} isAnimationActive={!reducedMotion} />
                 </AreaChart>
               </ResponsiveContainer>
@@ -174,15 +174,15 @@ export function AdminOverview() {
           )}
         </div>
 
-        {/* Organizações por status */}
+        {/* Lares por status */}
         <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
           <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
             <Building2 className="h-4 w-4 text-orange-400" />
-            Organizações por status
+            Lares por status
           </div>
           {loading ? (
             <div className="h-64 animate-pulse rounded-lg bg-foreground/[0.04]" />
-          ) : hasOrgs ? (
+          ) : hasHouseholds ? (
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -206,7 +206,7 @@ export function AdminOverview() {
             </div>
           ) : (
             <div className="flex h-64 items-center justify-center text-sm text-foreground/40">
-              Nenhuma organização ainda.
+              Nenhuma lar ainda.
             </div>
           )}
         </div>

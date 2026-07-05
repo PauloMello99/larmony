@@ -4,8 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { apiRequest } from "@/infrastructure/api/client"
 import { queryKeys } from "@/infrastructure/query/query-keys"
 import type {
-  AdminOrg,
-  AdminOrgDetail,
+  AdminHousehold,
+  AdminHouseholdDetail,
   AdminUser,
   AdminUserDetail,
   AuditLogFilters,
@@ -39,14 +39,14 @@ export function useAdminGrowth() {
   }
 }
 
-export function useAdminOrgDetail(id: string | undefined) {
+export function useAdminHouseholdDetail(id: string | undefined) {
   const { data, isLoading, error } = useQuery({
-    queryKey: queryKeys.admin.orgDetail(id ?? ""),
-    queryFn: () => apiRequest<AdminOrgDetail>(`/admin/orgs/${id}`),
+    queryKey: queryKeys.admin.householdDetail(id ?? ""),
+    queryFn: () => apiRequest<AdminHouseholdDetail>(`/admin/households/${id}`),
     enabled: !!id,
   })
   return {
-    org: data ?? null,
+    household: data ?? null,
     loading: isLoading,
     error: error instanceof Error ? error.message : null,
   }
@@ -66,11 +66,11 @@ export function useAdminUserDetail(id: string | undefined) {
 }
 
 /** Mutation isolada (usada nas telas de detalhe — não busca a lista inteira). */
-export function useSetOrgSuspended() {
+export function useSetHouseholdSuspended() {
   const queryClient = useQueryClient()
   const mutation = useMutation({
     mutationFn: ({ id, suspended }: { id: string; suspended: boolean }) =>
-      apiRequest<void>(`/admin/orgs/${id}/suspend`, {
+      apiRequest<void>(`/admin/households/${id}/suspend`, {
         method: "PATCH",
         body: JSON.stringify({ suspended }),
       }),
@@ -100,7 +100,7 @@ export function useAdminAuditLogs(filters?: AuditLogFilters) {
   const params = new URLSearchParams()
   if (filters?.page) params.set("page", String(filters.page))
   if (filters?.limit) params.set("limit", String(filters.limit))
-  if (filters?.orgId) params.set("orgId", filters.orgId)
+  if (filters?.householdId) params.set("householdId", filters.householdId)
   if (filters?.actorId) params.set("actorId", filters.actorId)
   if (filters?.action) params.set("action", filters.action)
   if (filters?.entityType) params.set("entityType", filters.entityType)
@@ -119,17 +119,17 @@ export function useAdminAuditLogs(filters?: AuditLogFilters) {
   }
 }
 
-export function useAdminOrgs() {
+export function useAdminHouseholds() {
   const queryClient = useQueryClient()
 
   const { data = [], isLoading, error, refetch } = useQuery({
-    queryKey: queryKeys.admin.orgs(),
-    queryFn: () => apiRequest<AdminOrg[]>("/admin/orgs"),
+    queryKey: queryKeys.admin.households(),
+    queryFn: () => apiRequest<AdminHousehold[]>("/admin/households"),
   })
 
   const suspendMutation = useMutation({
     mutationFn: ({ id, suspended }: { id: string; suspended: boolean }) =>
-      apiRequest<void>(`/admin/orgs/${id}/suspend`, {
+      apiRequest<void>(`/admin/households/${id}/suspend`, {
         method: "PATCH",
         body: JSON.stringify({ suspended }),
       }),
@@ -139,7 +139,7 @@ export function useAdminOrgs() {
   })
 
   return {
-    orgs: data,
+    households: data,
     loading: isLoading,
     error: error instanceof Error ? error.message : null,
     refetch,

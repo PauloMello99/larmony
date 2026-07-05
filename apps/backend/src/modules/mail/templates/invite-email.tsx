@@ -2,16 +2,16 @@ import { Button, Heading, Section, Text } from "@react-email/components";
 import { BaseLayout, sharedStyles } from "./base-layout";
 
 export interface InviteEmailProps {
-  orgName: string;
+  householdName: string;
   acceptUrl: string;
 }
 
-export function InviteEmail({ orgName, acceptUrl }: InviteEmailProps) {
+export function InviteEmail({ householdName, acceptUrl }: InviteEmailProps) {
   return (
-    <BaseLayout preview={`Convite para ${orgName} no Larmony`}>
+    <BaseLayout preview={`Convite para ${householdName} no Larmony`}>
       <Heading style={sharedStyles.heading}>Você foi convidado 🎉</Heading>
       <Text style={sharedStyles.paragraph}>
-        Você foi convidado para participar de <strong>{orgName}</strong> no Ink
+        Você foi convidado para participar de <strong>{householdName}</strong> no Ink
         Ops. Clique no botão abaixo para aceitar o convite e acessar o estúdio.
       </Text>
       <Section style={{ textAlign: "center", margin: "24px 0" }}>
@@ -33,7 +33,7 @@ export function InviteEmail({ orgName, acceptUrl }: InviteEmailProps) {
 export default function InviteEmailPreview() {
   return (
     <InviteEmail
-      orgName="Helena's Ink"
+      householdName="Helena's Ink"
       acceptUrl="https://app.larmony.me/invite/accept?token=preview-token"
     />
   );

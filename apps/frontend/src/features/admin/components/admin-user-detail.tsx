@@ -120,18 +120,18 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
       <section className="space-y-3">
         <h2 className="flex items-center gap-1.5 text-sm font-medium text-foreground">
           <Building2 className="h-4 w-4 text-orange-400" />
-          Organizações ({user.memberships.length})
+          Lares ({user.memberships.length})
         </h2>
         {user.memberships.length === 0 ? (
           <p className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] px-4 py-8 text-center text-sm text-foreground/40">
-            Este usuário não pertence a nenhuma organização.
+            Este usuário não pertence a nenhuma lar.
           </p>
         ) : (
           <div className="overflow-hidden rounded-xl border border-foreground/[0.06]">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Organização</TableHead>
+                  <TableHead>Lar</TableHead>
                   <TableHead>Papel</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Entrou</TableHead>
@@ -139,15 +139,15 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
               </TableHeader>
               <TableBody>
                 {user.memberships.map((m) => (
-                  <TableRow key={m.orgId}>
+                  <TableRow key={m.householdId}>
                     <TableCell>
                       <Link
-                        href={`/admin/orgs/${m.orgId}`}
+                        href={`/admin/households/${m.householdId}`}
                         className="font-medium text-foreground hover:text-orange-400"
                       >
-                        {m.orgName}
+                        {m.householdName}
                       </Link>
-                      <span className="block text-xs text-foreground/40">/{m.orgSlug}</span>
+                      <span className="block text-xs text-foreground/40">/{m.householdSlug}</span>
                     </TableCell>
                     <TableCell>
                       {m.role === "owner" ? (
@@ -183,7 +183,7 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
         description={
           isSuper
             ? "O usuário perde acesso ao painel da plataforma."
-            : "O usuário passa a ter poder total sobre todas as organizações."
+            : "O usuário passa a ter poder total sobre todas as lares."
         }
         confirmLabel={isSuper ? "Rebaixar" : "Promover"}
         destructive={isSuper}

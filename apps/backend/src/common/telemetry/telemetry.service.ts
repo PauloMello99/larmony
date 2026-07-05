@@ -12,7 +12,7 @@ export interface TelemetryContext {
   path?: string | null;
   method?: string | null;
   userId?: string | null;
-  orgId?: string | null;
+  householdId?: string | null;
   [key: string]: unknown;
 }
 

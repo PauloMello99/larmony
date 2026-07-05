@@ -27,7 +27,7 @@ export class AuditLogsQueryDto {
 
   @IsOptional()
   @IsUUID()
-  orgId?: string;
+  householdId?: string;
 
   @IsOptional()
   @IsUUID()

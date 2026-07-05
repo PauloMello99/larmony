@@ -132,7 +132,7 @@ export function AdminAuditLogs() {
         <div className="flex gap-1">
           <Input
             className="h-8 w-44 text-sm"
-            placeholder="Tipo (ex: user, organization)"
+            placeholder="Tipo (ex: user, household)"
             value={entityType}
             onChange={handleEntityType}
             onKeyDown={handleKeyDown}
@@ -164,7 +164,7 @@ export function AdminAuditLogs() {
                 <TableRow>
                   <TableHead className="whitespace-nowrap">Data/Hora</TableHead>
                   <TableHead>Ator</TableHead>
-                  <TableHead>Org</TableHead>
+                  <TableHead>Household</TableHead>
                   <TableHead>Ação</TableHead>
                   <TableHead>Entidade</TableHead>
                   <TableHead className="text-right">Metadados</TableHead>
@@ -197,8 +197,8 @@ export function AdminAuditLogs() {
                         )}
                       </TableCell>
                       <TableCell>
-                        {row.org ? (
-                          <span className="text-sm">{row.org.name}</span>
+                        {row.household ? (
+                          <span className="text-sm">{row.household.name}</span>
                         ) : (
                           <span className="text-xs text-foreground/40">—</span>
                         )}

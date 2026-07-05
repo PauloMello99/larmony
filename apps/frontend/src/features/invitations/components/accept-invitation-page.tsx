@@ -18,11 +18,11 @@ import {
   useAcceptInvitation,
   useDeclineInvitation,
 } from "../hooks/use-invitation"
-import type { OrgRole } from "@/features/organizations/types"
+import type { HouseholdRole } from "@/features/households/types"
 
-const ROLE_LABELS: Record<OrgRole, string> = {
+const ROLE_LABELS: Record<HouseholdRole, string> = {
   owner: "Proprietário",
-  employee: "Funcionário",
+  member: "Membro",
 }
 
 function Centered({ children }: { children: React.ReactNode }) {
@@ -95,7 +95,7 @@ export function AcceptInvitationPage() {
           <Button
             variant="outline"
             className="w-full"
-            onClick={() => void router.replace("/dashboard/organizations")}
+            onClick={() => void router.replace("/dashboard/households")}
           >
             Ir para o painel
           </Button>
@@ -123,7 +123,7 @@ export function AcceptInvitationPage() {
     setAcceptError(null)
     try {
       const res = await acceptInvitation(token)
-      void router.replace(`/dashboard/org/${res.orgSlug}`)
+      void router.replace(`/dashboard/household/${res.householdSlug}`)
     } catch (err) {
       setAcceptError(
         err instanceof Error ? err.message : "Não foi possível aceitar o convite.",
@@ -131,13 +131,13 @@ export function AcceptInvitationPage() {
     }
   }
 
-  // Recusar remove o convite (o owner pode reenviar). Volta para as organizações.
+  // Recusar remove o convite (o owner pode reenviar). Volta para as lares.
   async function handleDecline() {
     if (!token) return
     setAcceptError(null)
     try {
       await declineInvitation(token)
-      void router.replace("/dashboard/organizations")
+      void router.replace("/dashboard/households")
     } catch (err) {
       setAcceptError(
         err instanceof Error ? err.message : "Não foi possível recusar o convite.",
@@ -151,7 +151,7 @@ export function AcceptInvitationPage() {
         <div className="mb-2 text-xl font-bold">
           ink<span className="text-orange-500">ops</span>
         </div>
-        <CardTitle className="text-xl">Convite para {invite.orgName}</CardTitle>
+        <CardTitle className="text-xl">Convite para {invite.householdName}</CardTitle>
         <CardDescription className="text-foreground/40">
           Você foi convidado como{" "}
           <span className="text-foreground/70">{ROLE_LABELS[invite.role]}</span>.

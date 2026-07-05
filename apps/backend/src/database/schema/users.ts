@@ -1,7 +1,7 @@
 import { pgTable, uuid, text, timestamp, date } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { platformRoleEnum, genderEnum } from "./enums";
-import { orgMemberships } from "./organizations";
+import { householdMemberships } from "./households";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -13,6 +13,8 @@ export const users = pgTable("users", {
   avatarUrl: text("avatar_url"),
   birthDate: date("birth_date"),
   gender: genderEnum("gender"),
+  // Idioma da UI e dos e-mails (ADR-0018): pt-BR (default) | en.
+  locale: text("locale").notNull().default("pt-BR"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -22,7 +24,7 @@ export const users = pgTable("users", {
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
-  memberships: many(orgMemberships),
+  memberships: many(householdMemberships),
 }));
 
 export type User = typeof users.$inferSelect;

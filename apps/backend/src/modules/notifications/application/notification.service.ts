@@ -11,7 +11,7 @@ import {
 
 export interface NotifyInput {
   userId: string;
-  orgId?: string | null;
+  householdId?: string | null;
   type: NotificationType;
   title: string;
   body?: string | null;
@@ -41,7 +41,7 @@ export class NotificationService {
   async notify(input: NotifyInput): Promise<NotificationEntity> {
     const notification = await this.repo.create({
       userId: input.userId,
-      orgId: input.orgId ?? null,
+      householdId: input.householdId ?? null,
       type: input.type,
       title: input.title,
       body: input.body ?? null,

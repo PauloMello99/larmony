@@ -10,9 +10,9 @@ import { NotificationEmail } from "../templates/notification-email";
 import { PasswordResetEmail } from "../templates/password-reset-email";
 import { WelcomeEmail } from "../templates/welcome-email";
 
-export interface SendOrgInviteInput {
+export interface SendHouseholdInviteInput {
   to: string;
-  orgName: string;
+  householdName: string;
   acceptUrl: string;
 }
 
@@ -48,11 +48,11 @@ export class MailService {
     @Inject(EMAIL_SENDER) private readonly sender: IEmailSender,
   ) {}
 
-  async sendOrgInvite(input: SendOrgInviteInput): Promise<boolean> {
+  async sendHouseholdInvite(input: SendHouseholdInviteInput): Promise<boolean> {
     return this.dispatch(
       input.to,
-      `Convite para ${input.orgName} no Larmony`,
-      InviteEmail({ orgName: input.orgName, acceptUrl: input.acceptUrl }),
+      `Convite para ${input.householdName} no Larmony`,
+      InviteEmail({ householdName: input.householdName, acceptUrl: input.acceptUrl }),
     );
   }
 

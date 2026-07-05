@@ -56,7 +56,7 @@ export function SignupForm() {
       await router.push(
         inviteToken
           ? `/invite/accept?token=${encodeURIComponent(inviteToken)}`
-          : "/dashboard/organizations",
+          : "/dashboard/households",
       )
     } catch {
       setError("root", { message: "Não foi possível criar a conta. Tente novamente." })

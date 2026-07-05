@@ -1,14 +1,14 @@
 import type { ReactElement } from "react"
 import type { NextPageWithLayout } from "@/pages/_app"
 import { AuthGuard } from "@/features/auth/components/auth-guard"
-import { AdminLayout, AdminOrgs } from "@/features/admin"
+import { AdminLayout, AdminHouseholds } from "@/features/admin"
 
-const AdminOrgsPage: NextPageWithLayout = () => <AdminOrgs />
+const AdminHouseholdsPage: NextPageWithLayout = () => <AdminHouseholds />
 
-AdminOrgsPage.getLayout = (page: ReactElement) => (
+AdminHouseholdsPage.getLayout = (page: ReactElement) => (
   <AuthGuard>
     <AdminLayout>{page}</AdminLayout>
   </AuthGuard>
 )
 
-export default AdminOrgsPage
+export default AdminHouseholdsPage

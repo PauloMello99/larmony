@@ -7,7 +7,7 @@ import type { AuditAction } from "../../audit.service";
 export interface AuditLogsFilter {
   page?: number;
   limit?: number;
-  orgId?: string;
+  householdId?: string;
   actorId?: string;
   action?: AuditAction;
   entityType?: string;
@@ -18,7 +18,7 @@ export interface AuditLogsFilter {
 export interface AuditLogRow {
   id: string;
   actor: { id: string; name: string; email: string } | null;
-  org: { id: string; name: string; slug: string } | null;
+  household: { id: string; name: string; slug: string } | null;
   action: AuditAction;
   entityType: string;
   entityId: string | null;
@@ -43,7 +43,7 @@ export class ListAuditLogsUseCase {
     const offset = (page - 1) * limit;
 
     const conditions = [];
-    if (filter.orgId) conditions.push(eq(schema.auditLogs.orgId, filter.orgId));
+    if (filter.householdId) conditions.push(eq(schema.auditLogs.householdId, filter.householdId));
     if (filter.actorId) conditions.push(eq(schema.auditLogs.actorId, filter.actorId));
     if (filter.action) conditions.push(eq(schema.auditLogs.action, filter.action));
     if (filter.entityType) conditions.push(eq(schema.auditLogs.entityType, filter.entityType));
@@ -69,13 +69,13 @@ export class ListAuditLogsUseCase {
         actorId: schema.auditLogs.actorId,
         actorName: schema.users.name,
         actorEmail: schema.users.email,
-        orgId: schema.auditLogs.orgId,
-        orgName: schema.organizations.name,
-        orgSlug: schema.organizations.slug,
+        householdId: schema.auditLogs.householdId,
+        householdName: schema.households.name,
+        householdSlug: schema.households.slug,
       })
       .from(schema.auditLogs)
       .leftJoin(schema.users, eq(schema.users.id, schema.auditLogs.actorId))
-      .leftJoin(schema.organizations, eq(schema.organizations.id, schema.auditLogs.orgId))
+      .leftJoin(schema.households, eq(schema.households.id, schema.auditLogs.householdId))
       .where(whereClause)
       .orderBy(desc(schema.auditLogs.createdAt))
       .limit(limit)
@@ -92,8 +92,8 @@ export class ListAuditLogsUseCase {
         actor: r.actorId
           ? { id: r.actorId, name: r.actorName ?? "", email: r.actorEmail ?? "" }
           : null,
-        org: r.orgId
-          ? { id: r.orgId, name: r.orgName ?? "", slug: r.orgSlug ?? "" }
+        household: r.householdId
+          ? { id: r.householdId, name: r.householdName ?? "", slug: r.householdSlug ?? "" }
           : null,
       })),
       total: Number(total),

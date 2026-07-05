@@ -11,18 +11,19 @@ import {
   subscriptionStatusEnum,
   billingIntervalEnum,
 } from "./enums";
-import { organizations } from "./organizations";
+import { households } from "./households";
 
+// Shell herdado da carcaça — billing fica fora do roadmap v1 (ADR-0015).
 export const subscriptions = pgTable("subscriptions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  orgId: uuid("org_id")
+  householdId: uuid("household_id")
     .unique()
     .notNull()
-    .references(() => organizations.id, { onDelete: "cascade" }),
+    .references(() => households.id, { onDelete: "cascade" }),
   stripeCustomerId: text("stripe_customer_id").unique(),
   stripeSubscriptionId: text("stripe_subscription_id").unique(),
-  type: subscriptionTypeEnum("type").notNull().default("trial"),
-  status: subscriptionStatusEnum("status").notNull().default("trialing"),
+  type: subscriptionTypeEnum("type").notNull().default("free"),
+  status: subscriptionStatusEnum("status").notNull().default("active"),
   billingInterval: billingIntervalEnum("billing_interval"),
   priceCents: integer("price_cents"),
   trialEndsAt: timestamp("trial_ends_at", { withTimezone: true }),
@@ -41,9 +42,9 @@ export const subscriptions = pgTable("subscriptions", {
 });
 
 export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
-  organization: one(organizations, {
-    fields: [subscriptions.orgId],
-    references: [organizations.id],
+  household: one(households, {
+    fields: [subscriptions.householdId],
+    references: [households.id],
   }),
 }));
 

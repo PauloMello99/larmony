@@ -7,7 +7,7 @@ import { ResendEmailSender } from "./infrastructure/resend-email-sender";
 /**
  * Módulo compartilhado de e-mail transacional (React Email + Resend).
  * Sem dependência de auth/notifications (evita ciclos). Importado por auth,
- * organizations e notifications.
+ * households e notifications.
  */
 @Module({
   imports: [ConfigModule],

@@ -1,4 +1,4 @@
-import type { Notification as NotificationRow } from "../../../../database/schema/studio/notifications";
+import type { Notification as NotificationRow } from "../../../../database/schema/notifications";
 import { NotificationEntity } from "../../domain/notification.entity";
 
 export class NotificationMapper {
@@ -6,7 +6,7 @@ export class NotificationMapper {
     return NotificationEntity.create({
       id: row.id,
       userId: row.userId,
-      orgId: row.orgId ?? null,
+      householdId: row.householdId ?? null,
       type: row.type,
       title: row.title,
       body: row.body ?? null,

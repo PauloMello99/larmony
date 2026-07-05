@@ -5,7 +5,7 @@ export const platformRoleEnum = pgEnum("platform_role", [
   "user",
 ]);
 
-export const orgRoleEnum = pgEnum("org_role", ["owner", "employee"]);
+export const householdRoleEnum = pgEnum("household_role", ["owner", "member"]);
 
 export const invitationStatusEnum = pgEnum("invitation_status", [
   "pending",
@@ -36,45 +36,21 @@ export const billingIntervalEnum = pgEnum("billing_interval", [
 
 export const transactionTypeEnum = pgEnum("transaction_type", [
   "income",
-  "outcome",
+  "expense",
 ]);
 
-export const paymentMethodEnum = pgEnum("payment_method", [
-  "cash",
-  "bank_transfer",
-  "credit_card",
-  "debit_card",
-  "credits",
+export const categoryTypeEnum = pgEnum("category_type", [
+  "income",
+  "expense",
+  "both",
 ]);
 
 export const genderEnum = pgEnum("gender", ["male", "female", "other"]);
 
-export const calendarEventTypeEnum = pgEnum("calendar_event_type", [
-  "appointment",
-  "unavailability",
-]);
-
-export const calendarEventStatusEnum = pgEnum("calendar_event_status", [
-  "scheduled",
-  "canceled",
-]);
-
-export const calendarProviderEnum = pgEnum("calendar_provider", [
-  "google",
-  "outlook",
-  "apple",
-]);
-
 export const notificationTypeEnum = pgEnum("notification_type", [
-  "agenda_reminder",
-  "member_unavailability",
-  "stock_check_reminder",
-]);
-
-export const stockMovementTypeEnum = pgEnum("stock_movement_type", [
-  "restock",
-  "service_consumption",
-  "manual_adjustment",
+  "bill_reminder",
+  "invite_accepted",
+  "goal_reached",
 ]);
 
 export const auditActionEnum = pgEnum("audit_action", [

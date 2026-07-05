@@ -1,12 +1,12 @@
 export type NotificationType =
-  | "agenda_reminder"
-  | "member_unavailability"
-  | "stock_check_reminder";
+  | "bill_reminder"
+  | "invite_accepted"
+  | "goal_reached";
 
 export interface NotificationProps {
   id: string;
   userId: string;
-  orgId: string | null;
+  householdId: string | null;
   type: NotificationType;
   title: string;
   body: string | null;
@@ -17,7 +17,7 @@ export interface NotificationProps {
 
 export interface CreateNotificationData {
   userId: string;
-  orgId?: string | null;
+  householdId?: string | null;
   type: NotificationType;
   title: string;
   body?: string | null;
@@ -27,7 +27,7 @@ export interface CreateNotificationData {
 export class NotificationEntity {
   readonly id: string;
   readonly userId: string;
-  readonly orgId: string | null;
+  readonly householdId: string | null;
   readonly type: NotificationType;
   readonly title: string;
   readonly body: string | null;
@@ -38,7 +38,7 @@ export class NotificationEntity {
   private constructor(props: NotificationProps) {
     this.id = props.id;
     this.userId = props.userId;
-    this.orgId = props.orgId;
+    this.householdId = props.householdId;
     this.type = props.type;
     this.title = props.title;
     this.body = props.body;

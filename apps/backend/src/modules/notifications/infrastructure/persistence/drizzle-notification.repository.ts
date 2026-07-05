@@ -22,7 +22,7 @@ export class DrizzleNotificationRepository implements INotificationRepository {
       .insert(schema.notifications)
       .values({
         userId: data.userId,
-        orgId: data.orgId ?? null,
+        householdId: data.householdId ?? null,
         type: data.type,
         title: data.title,
         body: data.body ?? null,

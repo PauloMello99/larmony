@@ -1,14 +1,14 @@
 export type PlatformRole = "super_admin" | "user"
 
 export interface PlatformStats {
-  totalOrgs: number
-  suspendedOrgs: number
+  totalHouseholds: number
+  suspendedHouseholds: number
   totalUsers: number
   superAdmins: number
   totalMemberships: number
 }
 
-export interface AdminOrg {
+export interface AdminHousehold {
   id: string
   name: string
   slug: string
@@ -23,18 +23,18 @@ export interface AdminUser {
   name: string
   email: string
   platformRole: PlatformRole
-  orgCount: number
+  householdCount: number
   createdAt: string
 }
 
 /** Ponto da série de crescimento (novos por mês). */
 export interface GrowthPoint {
   month: string
-  newOrgs: number
+  newHouseholds: number
   newUsers: number
 }
 
-export interface AdminOrgMember {
+export interface AdminHouseholdMember {
   userId: string
   name: string
   email: string
@@ -43,7 +43,7 @@ export interface AdminOrgMember {
   joinedAt: string
 }
 
-export interface AdminOrgInvitation {
+export interface AdminHouseholdInvitation {
   id: string
   email: string
   role: string
@@ -51,7 +51,7 @@ export interface AdminOrgInvitation {
   expiresAt: string
 }
 
-export interface AdminOrgDetail {
+export interface AdminHouseholdDetail {
   id: string
   name: string
   slug: string
@@ -60,14 +60,14 @@ export interface AdminOrgDetail {
   createdAt: string
   owner: { id: string; name: string; email: string } | null
   memberCount: number
-  members: AdminOrgMember[]
-  pendingInvitations: AdminOrgInvitation[]
+  members: AdminHouseholdMember[]
+  pendingInvitations: AdminHouseholdInvitation[]
 }
 
 export interface AdminUserMembership {
-  orgId: string
-  orgName: string
-  orgSlug: string
+  householdId: string
+  householdName: string
+  householdSlug: string
   role: string
   enabled: boolean
   joinedAt: string
@@ -94,7 +94,7 @@ export type AuditAction =
 export interface AuditLogEntry {
   id: string
   actor: { id: string; name: string; email: string } | null
-  org: { id: string; name: string; slug: string } | null
+  household: { id: string; name: string; slug: string } | null
   action: AuditAction
   entityType: string
   entityId: string | null
@@ -105,7 +105,7 @@ export interface AuditLogEntry {
 export interface AuditLogFilters {
   page?: number
   limit?: number
-  orgId?: string
+  householdId?: string
   actorId?: string
   action?: AuditAction
   entityType?: string
@@ -121,8 +121,8 @@ export interface AuditLogPage {
 }
 
 /** Filtros/ordenação client-side das tabelas. */
-export type OrgStatusFilter = "all" | "active" | "suspended"
+export type HouseholdStatusFilter = "all" | "active" | "suspended"
 export type UserRoleFilter = "all" | "super_admin" | "user"
-export type OrgSortKey = "name" | "createdAt" | "memberCount"
-export type UserSortKey = "name" | "createdAt" | "orgCount"
+export type HouseholdSortKey = "name" | "createdAt" | "memberCount"
+export type UserSortKey = "name" | "createdAt" | "householdCount"
 export type SortDir = "asc" | "desc"

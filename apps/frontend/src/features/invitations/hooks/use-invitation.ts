@@ -29,7 +29,7 @@ export function useAcceptInvitation() {
         body: JSON.stringify({ token }),
       }),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.orgs.all })
+      void queryClient.invalidateQueries({ queryKey: queryKeys.households.all })
     },
   })
   return {

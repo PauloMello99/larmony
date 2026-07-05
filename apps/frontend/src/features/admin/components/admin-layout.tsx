@@ -10,14 +10,14 @@ import { UserMenu } from "@/features/dashboard/components/user-menu"
 
 const NAV = [
   { href: "/admin", label: "Visão geral", icon: LayoutDashboard },
-  { href: "/admin/orgs", label: "Organizações", icon: Building2 },
+  { href: "/admin/households", label: "Lares", icon: Building2 },
   { href: "/admin/users", label: "Usuários", icon: Users },
   { href: "/admin/billing", label: "Assinaturas", icon: CreditCard },
   { href: "/admin/audit-logs", label: "Auditoria", icon: Shield },
 ]
 
 /**
- * Layout do painel da plataforma (PLAT-1). NÃO é org-scoped. Faz o guard de
+ * Layout do painel da plataforma (PLAT-1). NÃO é household-scoped. Faz o guard de
  * acesso (super_admin) via /auth/me e oferece a navegação entre as seções.
  */
 export function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -28,7 +28,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (!loading && me && !isSuperAdmin) {
-      void router.replace("/dashboard/organizations")
+      void router.replace("/dashboard/households")
     }
   }, [loading, me, isSuperAdmin, router])
 
@@ -65,7 +65,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         </div>
         <div className="flex items-center gap-1">
           <Link
-            href="/dashboard/organizations"
+            href="/dashboard/households"
             className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm text-foreground/50 transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />

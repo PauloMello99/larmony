@@ -11,10 +11,10 @@ import {
 import {
   MEMBER_REPOSITORY,
   IMemberRepository,
-} from "../../organizations/domain/member.repository.interface";
+} from "../../households/domain/member.repository.interface";
 import { AuditService } from "../../audit/audit.service";
 import { UserNotFoundException } from "../../user/domain/exceptions/user-not-found.exception";
-import { OwnsOrganizationException } from "../../user/domain/exceptions/owns-organization.exception";
+import { OwnsHouseholdException } from "../../user/domain/exceptions/owns-household.exception";
 
 @Injectable()
 export class DeleteAccountUseCase {
@@ -29,11 +29,11 @@ export class DeleteAccountUseCase {
     const user = await this.userRepo.findByAuthId(authUser.id);
     if (!user) throw new UserNotFoundException(authUser.id);
 
-    // Regra ACC-1: não pode haver org da qual o usuário ainda é proprietário.
-    const owned = await this.memberRepo.countOwnedOrgs(user.id);
-    if (owned > 0) throw new OwnsOrganizationException();
+    // Regra ACC-1: não pode haver household da qual o usuário ainda é proprietário.
+    const owned = await this.memberRepo.countOwnedHouseholds(user.id);
+    if (owned > 0) throw new OwnsHouseholdException();
 
-    // Remove vínculos de funcionário em outras orgs, o registro do usuário e a
+    // Remove vínculos de funcionário em outras households, o registro do usuário e a
     // identidade no provedor de auth (dados pessoais). Ordem: dados → identidade.
     await this.memberRepo.removeAllByUserId(user.id);
     await this.userRepo.delete(authUser.id);

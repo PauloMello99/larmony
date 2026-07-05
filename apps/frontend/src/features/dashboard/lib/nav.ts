@@ -13,7 +13,7 @@ export function isModuleKey(value: string): value is ModuleKey {
 
 /** Owner vê tudo; membro precisa do módulo. Itens sem módulo são livres. */
 export function canAccessModule(
-  role: "owner" | "employee",
+  role: "owner" | "member",
   permissions: readonly string[],
   module?: ModuleKey,
 ): boolean {
@@ -24,11 +24,11 @@ export function canAccessModule(
 export interface NavItem {
   /** Label displayed in sidebar and used in breadcrumbs */
   label: string
-  /** Path relative to /dashboard/org/[orgSlug]/ — "" = a própria índice; pode incluir barra, e.g. "settings/general" */
+  /** Path relative to /dashboard/household/[householdSlug]/ — "" = a própria índice; pode incluir barra, e.g. "settings/general" */
   href: string
   icon: LucideIcon
   /** When set, only users with one of these roles see this item. Omit = visible to all. */
-  roles?: Array<"owner" | "employee">
+  roles?: Array<"owner" | "member">
   /** When set, the employee needs this module permission (owner ignores). */
   module?: ModuleKey
 }
@@ -39,7 +39,7 @@ export interface NavSection {
   items: NavItem[]
 }
 
-/** Main navigation + settings sections for the org sidebar */
+/** Main navigation + settings sections for the household sidebar */
 export const ORG_NAV_SECTIONS: NavSection[] = [
   {
     items: [{ label: "Overview", href: "", icon: LayoutGrid }],
@@ -52,7 +52,7 @@ export const ORG_NAV_SECTIONS: NavSection[] = [
 
 /**
  * Sub-nav da página de configurações — owner-only enquanto o Larmony não tem
- * settings por feature. Fonte de verdade do que aparece no OrgSettingsLayout.
+ * settings por feature. Fonte de verdade do que aparece no HouseholdSettingsLayout.
  */
 export const SETTINGS_NAV: NavItem[] = [
   { label: "Geral", href: "settings/general", icon: Settings, roles: ["owner"] },
@@ -60,16 +60,16 @@ export const SETTINGS_NAV: NavItem[] = [
 ]
 
 /**
- * Sub-paths (após orgSlug) owner-only, derivados das `roles` do nav principal +
- * settings sub-nav. Usado pelo OrgLayout para redirecionar um membro que tente
+ * Sub-paths (após householdSlug) owner-only, derivados das `roles` do nav principal +
+ * settings sub-nav. Usado pelo HouseholdLayout para redirecionar um membro que tente
  * acessar essas rotas direto pela URL. A fonte de verdade de autorização continua
- * sendo o backend (OrgOwnerGuard); isto é só UX.
+ * sendo o backend (HouseholdOwnerGuard); isto é só UX.
  */
 const OWNER_ONLY_PATHS: readonly string[] = [
   ...ORG_NAV_SECTIONS.flatMap((s) => s.items),
   ...SETTINGS_NAV,
 ]
-  .filter((item) => item.roles && !item.roles.includes("employee"))
+  .filter((item) => item.roles && !item.roles.includes("member"))
   .map((item) => item.href)
 
 export function isOwnerOnlyPath(subpath: string): boolean {
@@ -85,5 +85,5 @@ export const PAGE_LABELS: Record<string, string> = {
   billing: "Cobrança",
   general: "Geral",
   subscription: "Assinatura",
-  organizations: "Organizações",
+  households: "Lares",
 }

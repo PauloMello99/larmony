@@ -15,7 +15,7 @@ export function AdminBilling() {
           Assinaturas &amp; Financeiro
         </h1>
         <p className="mt-0.5 text-sm text-foreground/40">
-          Receita, planos e cobrança das organizações da plataforma.
+          Receita, planos e cobrança das lares da plataforma.
         </p>
       </div>
 
@@ -52,7 +52,7 @@ export function AdminBilling() {
           integração de cobrança (Stripe), planejada na tarefa{" "}
           <span className="font-medium text-foreground/70">PLAT-2</span>. Assim que
           os planos e pagamentos existirem, esta seção mostrará MRR, status de
-          assinatura por organização, trials e inadimplência.
+          assinatura por lar, trials e inadimplência.
         </p>
       </div>
     </div>

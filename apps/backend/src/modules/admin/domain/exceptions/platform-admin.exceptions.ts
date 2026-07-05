@@ -1,6 +1,6 @@
 import { DomainException } from "../../../../common/exceptions/domain.exception";
 
-/** Alvo (org ou usuário) inexistente numa operação de plataforma. */
+/** Alvo (household ou usuário) inexistente numa operação de plataforma. */
 export class PlatformTargetNotFoundException extends DomainException {
   readonly code = "PLATFORM_TARGET_NOT_FOUND";
 

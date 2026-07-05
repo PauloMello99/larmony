@@ -6,13 +6,13 @@ import { Pool } from "pg";
 import * as schema from "./schema";
 
 /** RLS-aware Drizzle. Per request it resolves to a connection whose
- *  `request.jwt.claims` is set, so the 0000 RLS policies enforce org
+ *  `request.jwt.claims` is set, so the 0000 RLS policies enforce household
  *  isolation at the DB layer. Inject this in normal repositories. */
 export const DRIZZLE = Symbol("DRIZZLE");
 
 /** Privileged Drizzle (BYPASSRLS — `postgres`). Use ONLY where RLS cannot
  *  apply: guards that query before the interceptor runs, and bootstrap paths
- *  (sign-up user insert, create-org owner membership). */
+ *  (sign-up user insert, create-household owner membership). */
 export const DRIZZLE_ADMIN = Symbol("DRIZZLE_ADMIN");
 
 /** Internal: the NOBYPASSRLS connection pool (`app_user`). */

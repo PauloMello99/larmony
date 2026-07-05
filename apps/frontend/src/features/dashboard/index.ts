@@ -1,23 +1,23 @@
 // Layouts
 export { DashboardLayout } from "./components/layouts/dashboard-layout"
-export { OrgLayout } from "./components/layouts/org-layout"
-export { OrgSettingsLayout } from "./components/layouts/org-settings-layout"
+export { HouseholdLayout } from "./components/layouts/household-layout"
+export { HouseholdSettingsLayout } from "./components/layouts/household-settings-layout"
 
 // Components
 export { TopHeader } from "./components/top-header"
 export type { BreadcrumbItem } from "./components/top-header"
-export { OrgSidebar } from "./components/org-sidebar"
-export { OrgSwitcher } from "./components/org-switcher"
+export { HouseholdSidebar } from "./components/household-sidebar"
+export { HouseholdSwitcher } from "./components/household-switcher"
 export { UserMenu } from "./components/user-menu"
-export { OrgProvider, useCurrentOrg } from "./components/org-context"
+export { HouseholdProvider, useCurrentHousehold } from "./components/household-context"
 
 // Page content
-export { OrganizationsContent } from "./components/pages/organizations-content"
-export { OrgPagePlaceholder } from "./components/pages/org-page-placeholder"
+export { HouseholdsContent } from "./components/pages/households-content"
+export { HouseholdPagePlaceholder } from "./components/pages/household-page-placeholder"
 
 // Hooks
-export { useOrgs, useOrg } from "./hooks/use-orgs"
-export type { OrgSummary } from "./hooks/use-orgs"
+export { useHouseholds, useHousehold } from "./hooks/use-households"
+export type { HouseholdSummary } from "./hooks/use-households"
 
 // Lib
 export { ORG_NAV_SECTIONS, PAGE_LABELS } from "./lib/nav"

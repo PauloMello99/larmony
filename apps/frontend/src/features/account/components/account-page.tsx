@@ -23,10 +23,10 @@ export function AccountPage() {
   const router = useRouter()
   const [active, setActive] = React.useState<string>(SECTIONS[0].id)
 
-  // Item 7 — volta para onde estávamos; fallback p/ as organizações.
+  // Item 7 — volta para onde estávamos; fallback p/ as lares.
   function handleBack() {
     if (window.history.length > 1) router.back()
-    else void router.push("/dashboard/organizations")
+    else void router.push("/dashboard/households")
   }
 
   // Deep-link via #hash: rola para a seção ao montar e quando o hash muda.

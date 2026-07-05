@@ -55,7 +55,7 @@ export function LoginForm() {
       await router.push(
         inviteToken
           ? `/invite/accept?token=${encodeURIComponent(inviteToken)}`
-          : "/dashboard/organizations",
+          : "/dashboard/households",
       )
     } catch {
       setError("root", { message: "E-mail ou senha inválidos" })

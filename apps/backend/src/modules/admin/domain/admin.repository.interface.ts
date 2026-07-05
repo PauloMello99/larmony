@@ -4,15 +4,15 @@ export type PlatformRole = "super_admin" | "user";
 
 /** KPIs globais da plataforma (super_admin). */
 export interface PlatformStats {
-  totalOrgs: number;
-  suspendedOrgs: number;
+  totalHouseholds: number;
+  suspendedHouseholds: number;
   totalUsers: number;
   superAdmins: number;
   totalMemberships: number;
 }
 
-/** Linha de organização no painel da plataforma. */
-export interface AdminOrgRow {
+/** Linha de lar no painel da plataforma. */
+export interface AdminHouseholdRow {
   id: string;
   name: string;
   slug: string;
@@ -28,7 +28,7 @@ export interface AdminUserRow {
   name: string;
   email: string;
   platformRole: PlatformRole;
-  orgCount: number;
+  householdCount: number;
   createdAt: Date;
 }
 
@@ -36,23 +36,23 @@ export interface AdminUserRow {
 export interface GrowthPoint {
   /** Mês no formato "YYYY-MM". */
   month: string;
-  newOrgs: number;
+  newHouseholds: number;
   newUsers: number;
 }
 
-/** Membro de uma org no detalhe da plataforma. */
-export interface AdminOrgMember {
+/** Membro de uma household no detalhe da plataforma. */
+export interface AdminHouseholdMember {
   userId: string;
   name: string;
   email: string;
-  /** org_role: "owner" | "employee". */
+  /** household_role: "owner" | "member". */
   role: string;
   enabled: boolean;
   joinedAt: Date;
 }
 
-/** Convite pendente no detalhe da org. */
-export interface AdminOrgInvitation {
+/** Convite pendente no detalhe da household. */
+export interface AdminHouseholdInvitation {
   id: string;
   email: string;
   role: string;
@@ -60,8 +60,8 @@ export interface AdminOrgInvitation {
   expiresAt: Date;
 }
 
-/** Detalhe de uma organização (drill-down). */
-export interface AdminOrgDetail {
+/** Detalhe de uma lar (drill-down). */
+export interface AdminHouseholdDetail {
   id: string;
   name: string;
   slug: string;
@@ -70,15 +70,15 @@ export interface AdminOrgDetail {
   createdAt: Date;
   owner: { id: string; name: string; email: string } | null;
   memberCount: number;
-  members: AdminOrgMember[];
-  pendingInvitations: AdminOrgInvitation[];
+  members: AdminHouseholdMember[];
+  pendingInvitations: AdminHouseholdInvitation[];
 }
 
 /** Membership de um usuário no detalhe (drill-down). */
 export interface AdminUserMembership {
-  orgId: string;
-  orgName: string;
-  orgSlug: string;
+  householdId: string;
+  householdName: string;
+  householdSlug: string;
   role: string;
   enabled: boolean;
   joinedAt: Date;
@@ -97,16 +97,16 @@ export interface AdminUserDetail {
 
 export interface IAdminRepository {
   getStats(): Promise<PlatformStats>;
-  /** Novos orgs/users por mês nos últimos 12 meses (meses vazios incluídos). */
+  /** Novos households/users por mês nos últimos 12 meses (meses vazios incluídos). */
   getGrowthSeries(): Promise<GrowthPoint[]>;
-  listOrgs(): Promise<AdminOrgRow[]>;
+  listHouseholds(): Promise<AdminHouseholdRow[]>;
   listUsers(): Promise<AdminUserRow[]>;
-  /** Detalhe de uma org (membros + convites). Null se não existe. */
-  getOrgDetail(orgId: string): Promise<AdminOrgDetail | null>;
+  /** Detalhe de uma household (membros + convites). Null se não existe. */
+  getHouseholdDetail(householdId: string): Promise<AdminHouseholdDetail | null>;
   /** Detalhe de um usuário (memberships). Null se não existe. */
   getUserDetail(userId: string): Promise<AdminUserDetail | null>;
-  /** Marca/desmarca a org como suspensa. Retorna false se a org não existe. */
-  setOrgSuspended(orgId: string, suspended: boolean): Promise<boolean>;
+  /** Marca/desmarca a household como suspensa. Retorna false se a household não existe. */
+  setHouseholdSuspended(householdId: string, suspended: boolean): Promise<boolean>;
   /** Define o platform_role de um usuário. Retorna false se o usuário não existe. */
   setUserPlatformRole(userId: string, role: PlatformRole): Promise<boolean>;
   /** Usuário pelo id da app (para checagens de auto-rebaixamento). */

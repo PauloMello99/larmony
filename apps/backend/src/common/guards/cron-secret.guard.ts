@@ -9,7 +9,7 @@ import type { Request } from "express";
 
 /**
  * Protege endpoints internos de cron. O job agendado (Railway) deve enviar o
- * header `x-cron-secret` igual ao env `CRON_SECRET`. Não usa AuthGuard/Org guard
+ * header `x-cron-secret` igual ao env `CRON_SECRET`. Não usa AuthGuard/Household guard
  * (não há usuário); os use-cases por trás usam DRIZZLE_ADMIN.
  */
 @Injectable()

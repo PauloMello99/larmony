@@ -8,8 +8,8 @@ type Entry = { value: unknown; expiresAt: number };
  * externas.
  *
  * NÃO é compartilhado entre instâncias: ao escalar para múltiplas réplicas,
- * trocar por Redis (ver ADR-0011). Chaves devem ser escopadas por org
- * (`fees:<orgId>`) — o conteúdo cacheado é sempre dado org-wide, então não há
+ * trocar por Redis (ver ADR-0011). Chaves devem ser escopadas por household
+ * (`fees:<householdId>`) — o conteúdo cacheado é sempre dado household-wide, então não há
  * vazamento entre tenants.
  */
 @Injectable()

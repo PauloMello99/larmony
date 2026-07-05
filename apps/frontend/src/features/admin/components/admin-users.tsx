@@ -55,7 +55,7 @@ export function AdminUsers() {
     const dir = sortDir === "asc" ? 1 : -1
     return [...filtered].sort((a, b) => {
       if (sortKey === "name") return a.name.localeCompare(b.name) * dir
-      if (sortKey === "orgCount") return (a.orgCount - b.orgCount) * dir
+      if (sortKey === "householdCount") return (a.householdCount - b.householdCount) * dir
       return (
         (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) * dir
       )
@@ -148,7 +148,7 @@ export function AdminUsers() {
             <TableRow>
               <SortHead label="Usuário" active={sortKey === "name"} dir={sortDir} onClick={() => toggleSort("name")} />
               <TableHead>Papel</TableHead>
-              <SortHead label="Orgs" active={sortKey === "orgCount"} dir={sortDir} onClick={() => toggleSort("orgCount")} align="right" />
+              <SortHead label="Households" active={sortKey === "householdCount"} dir={sortDir} onClick={() => toggleSort("householdCount")} align="right" />
               <SortHead label="Criado" active={sortKey === "createdAt"} dir={sortDir} onClick={() => toggleSort("createdAt")} />
               <TableHead className="text-right">Ações</TableHead>
             </TableRow>
@@ -177,7 +177,7 @@ export function AdminUsers() {
                     )}
                   </TableCell>
                   <TableCell className="text-right tabular-nums text-foreground/70">
-                    {u.orgCount}
+                    {u.householdCount}
                   </TableCell>
                   <TableCell className="text-foreground/50">
                     {fmtDate(u.createdAt)}
@@ -244,7 +244,7 @@ export function AdminUsers() {
         description={
           target?.platformRole === "super_admin"
             ? "O usuário perde acesso ao painel da plataforma."
-            : "O usuário passa a ter poder total sobre todas as organizações."
+            : "O usuário passa a ter poder total sobre todas as lares."
         }
         confirmLabel={target?.platformRole === "super_admin" ? "Rebaixar" : "Promover"}
         destructive={target?.platformRole === "super_admin"}

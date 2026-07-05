@@ -16,7 +16,7 @@ export type AuditAction =
 
 export interface AuditEntry {
   actorId: string | null;
-  orgId?: string | null;
+  householdId?: string | null;
   action: AuditAction;
   entityType: string;
   entityId?: string | null;
@@ -41,7 +41,7 @@ export class AuditService {
     try {
       await this.db.insert(schema.auditLogs).values({
         actorId: entry.actorId,
-        orgId: entry.orgId ?? null,
+        householdId: entry.householdId ?? null,
         action: entry.action,
         entityType: entry.entityType,
         entityId: entry.entityId ?? null,

@@ -13,12 +13,12 @@ import type { AuthUser } from "../../modules/auth/application/ports/auth-provide
  * Runs each authenticated request's handler inside an RLS context: the
  * {@link RlsContext} opens a transaction on the `app_user` (NOBYPASSRLS)
  * connection with `request.jwt.claims` set to the caller's auth id, so the
- * RLS policies from migration 0000 enforce org isolation at the DB layer
+ * RLS policies from migration 0000 enforce household isolation at the DB layer
  * (defense-in-depth alongside the app-layer guards).
  *
  * Public routes (no `request.user`, set by {@link AuthGuard}) pass through
  * untouched. Guards run before interceptors, so guard-time queries and the
- * bootstrap flows (sign-up, create-org) deliberately use {@link DRIZZLE_ADMIN}.
+ * bootstrap flows (sign-up, create-household) deliberately use {@link DRIZZLE_ADMIN}.
  */
 @Injectable()
 export class RlsInterceptor implements NestInterceptor {

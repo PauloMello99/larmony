@@ -6,8 +6,8 @@ import {
 } from "../../../database/database.module";
 import * as schema from "../../../database/schema";
 import {
-  AdminOrgDetail,
-  AdminOrgRow,
+  AdminHouseholdDetail,
+  AdminHouseholdRow,
   AdminUserDetail,
   AdminUserRow,
   GrowthPoint,
@@ -19,7 +19,7 @@ import {
 /**
  * Repositório de leitura/gestão da plataforma (PLAT-1). Usa a conexão
  * privilegiada (BYPASSRLS) — o acesso já é restrito ao super_admin pelo
- * {@link PlatformAdminGuard}, e as consultas são cross-org por natureza.
+ * {@link PlatformAdminGuard}, e as consultas são cross-household por natureza.
  */
 @Injectable()
 export class DrizzleAdminRepository implements IAdminRepository {
@@ -34,16 +34,16 @@ export class DrizzleAdminRepository implements IAdminRepository {
       total_memberships: number;
     }>(sql`
       SELECT
-        (SELECT COUNT(*) FROM organizations)::int AS total_orgs,
-        (SELECT COUNT(*) FROM organizations WHERE suspended_at IS NOT NULL)::int AS suspended_orgs,
+        (SELECT COUNT(*) FROM households)::int AS total_orgs,
+        (SELECT COUNT(*) FROM households WHERE suspended_at IS NOT NULL)::int AS suspended_orgs,
         (SELECT COUNT(*) FROM users)::int AS total_users,
         (SELECT COUNT(*) FROM users WHERE platform_role = 'super_admin')::int AS super_admins,
-        (SELECT COUNT(*) FROM org_memberships)::int AS total_memberships
+        (SELECT COUNT(*) FROM household_memberships)::int AS total_memberships
     `);
     const r = rows[0];
     return {
-      totalOrgs: Number(r?.total_orgs ?? 0),
-      suspendedOrgs: Number(r?.suspended_orgs ?? 0),
+      totalHouseholds: Number(r?.total_orgs ?? 0),
+      suspendedHouseholds: Number(r?.suspended_orgs ?? 0),
       totalUsers: Number(r?.total_users ?? 0),
       superAdmins: Number(r?.super_admins ?? 0),
       totalMemberships: Number(r?.total_memberships ?? 0),
@@ -51,7 +51,7 @@ export class DrizzleAdminRepository implements IAdminRepository {
   }
 
   async getGrowthSeries(): Promise<GrowthPoint[]> {
-    // Novos orgs/users por mês nos últimos 12 meses. generate_series garante os
+    // Novos households/users por mês nos últimos 12 meses. generate_series garante os
     // meses vazios (sem cadastros) também apareçam, p/ um eixo contínuo.
     const { rows } = await this.db.execute<{
       month: string;
@@ -67,7 +67,7 @@ export class DrizzleAdminRepository implements IAdminRepository {
       )
       SELECT
         to_char(months.m, 'YYYY-MM') AS month,
-        (SELECT COUNT(*) FROM organizations o
+        (SELECT COUNT(*) FROM households o
            WHERE date_trunc('month', o.created_at) = months.m)::int AS new_orgs,
         (SELECT COUNT(*) FROM users u
            WHERE date_trunc('month', u.created_at) = months.m)::int AS new_users
@@ -76,12 +76,12 @@ export class DrizzleAdminRepository implements IAdminRepository {
     `);
     return rows.map((r) => ({
       month: r.month,
-      newOrgs: Number(r.new_orgs),
+      newHouseholds: Number(r.new_orgs),
       newUsers: Number(r.new_users),
     }));
   }
 
-  async listOrgs(): Promise<AdminOrgRow[]> {
+  async listHouseholds(): Promise<AdminHouseholdRow[]> {
     const { rows } = await this.db.execute<{
       id: string;
       name: string;
@@ -94,13 +94,13 @@ export class DrizzleAdminRepository implements IAdminRepository {
       SELECT o.id, o.name, o.slug, o.suspended_at, o.created_at,
         COUNT(DISTINCT m.id)::int AS member_count,
         (
-          SELECT u.name FROM org_memberships om
+          SELECT u.name FROM household_memberships om
           JOIN users u ON u.id = om.user_id
-          WHERE om.org_id = o.id AND om.role = 'owner'
+          WHERE om.household_id = o.id AND om.role = 'owner'
           ORDER BY om.joined_at ASC LIMIT 1
         ) AS owner_name
-      FROM organizations o
-      LEFT JOIN org_memberships m ON m.org_id = o.id
+      FROM households o
+      LEFT JOIN household_memberships m ON m.household_id = o.id
       GROUP BY o.id
       ORDER BY o.created_at DESC
     `);
@@ -127,7 +127,7 @@ export class DrizzleAdminRepository implements IAdminRepository {
       SELECT u.id, u.name, u.email, u.platform_role, u.created_at,
         COUNT(m.id)::int AS org_count
       FROM users u
-      LEFT JOIN org_memberships m ON m.user_id = u.id
+      LEFT JOIN household_memberships m ON m.user_id = u.id
       GROUP BY u.id
       ORDER BY u.created_at DESC
     `);
@@ -136,13 +136,13 @@ export class DrizzleAdminRepository implements IAdminRepository {
       name: r.name,
       email: r.email,
       platformRole: r.platform_role,
-      orgCount: Number(r.org_count),
+      householdCount: Number(r.org_count),
       createdAt: new Date(r.created_at),
     }));
   }
 
-  async getOrgDetail(orgId: string): Promise<AdminOrgDetail | null> {
-    const { rows: orgRows } = await this.db.execute<{
+  async getHouseholdDetail(householdId: string): Promise<AdminHouseholdDetail | null> {
+    const { rows: householdRows } = await this.db.execute<{
       id: string;
       name: string;
       slug: string;
@@ -155,18 +155,18 @@ export class DrizzleAdminRepository implements IAdminRepository {
     }>(sql`
       SELECT o.id, o.name, o.slug, o.suspended_at, o.stock_check_interval_days, o.created_at,
         owner.id AS owner_id, owner.name AS owner_name, owner.email AS owner_email
-      FROM organizations o
+      FROM households o
       LEFT JOIN LATERAL (
         SELECT u.id, u.name, u.email
-        FROM org_memberships om
+        FROM household_memberships om
         JOIN users u ON u.id = om.user_id
-        WHERE om.org_id = o.id AND om.role = 'owner'
+        WHERE om.household_id = o.id AND om.role = 'owner'
         ORDER BY om.joined_at ASC LIMIT 1
       ) owner ON true
-      WHERE o.id = ${orgId}
+      WHERE o.id = ${householdId}
       LIMIT 1
     `);
-    const o = orgRows[0];
+    const o = householdRows[0];
     if (!o) return null;
 
     const { rows: memberRows } = await this.db.execute<{
@@ -178,9 +178,9 @@ export class DrizzleAdminRepository implements IAdminRepository {
       joined_at: string;
     }>(sql`
       SELECT m.user_id, u.name, u.email, m.role, m.enabled, m.joined_at
-      FROM org_memberships m
+      FROM household_memberships m
       JOIN users u ON u.id = m.user_id
-      WHERE m.org_id = ${orgId}
+      WHERE m.household_id = ${householdId}
       ORDER BY (m.role = 'owner') DESC, m.joined_at ASC
     `);
 
@@ -192,8 +192,8 @@ export class DrizzleAdminRepository implements IAdminRepository {
       expires_at: string;
     }>(sql`
       SELECT id, email, role, created_at, expires_at
-      FROM org_invitations
-      WHERE org_id = ${orgId} AND status = 'pending'
+      FROM household_invitations
+      WHERE household_id = ${householdId} AND status = 'pending'
       ORDER BY created_at DESC
     `);
 
@@ -242,16 +242,16 @@ export class DrizzleAdminRepository implements IAdminRepository {
     if (!u) return null;
 
     const { rows: memberRows } = await this.db.execute<{
-      org_id: string;
+      household_id: string;
       org_name: string;
-      org_slug: string;
+      household_slug: string;
       role: string;
       enabled: boolean;
       joined_at: string;
     }>(sql`
-      SELECT m.org_id, o.name AS org_name, o.slug AS org_slug, m.role, m.enabled, m.joined_at
-      FROM org_memberships m
-      JOIN organizations o ON o.id = m.org_id
+      SELECT m.household_id, o.name AS org_name, o.slug AS household_slug, m.role, m.enabled, m.joined_at
+      FROM household_memberships m
+      JOIN households o ON o.id = m.household_id
       WHERE m.user_id = ${userId}
       ORDER BY m.joined_at ASC
     `);
@@ -264,9 +264,9 @@ export class DrizzleAdminRepository implements IAdminRepository {
       platformRole: u.platform_role,
       createdAt: new Date(u.created_at),
       memberships: memberRows.map((m) => ({
-        orgId: m.org_id,
-        orgName: m.org_name,
-        orgSlug: m.org_slug,
+        householdId: m.household_id,
+        householdName: m.org_name,
+        householdSlug: m.household_slug,
         role: m.role,
         enabled: m.enabled,
         joinedAt: new Date(m.joined_at),
@@ -274,12 +274,12 @@ export class DrizzleAdminRepository implements IAdminRepository {
     };
   }
 
-  async setOrgSuspended(orgId: string, suspended: boolean): Promise<boolean> {
+  async setHouseholdSuspended(householdId: string, suspended: boolean): Promise<boolean> {
     const rows = await this.db
-      .update(schema.organizations)
+      .update(schema.households)
       .set({ suspendedAt: suspended ? new Date() : null, updatedAt: new Date() })
-      .where(eq(schema.organizations.id, orgId))
-      .returning({ id: schema.organizations.id });
+      .where(eq(schema.households.id, householdId))
+      .returning({ id: schema.households.id });
     return rows.length > 0;
   }
 

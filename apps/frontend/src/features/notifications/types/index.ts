@@ -1,9 +1,9 @@
-export type NotificationType = "agenda_reminder" | "member_unavailability"
+export type NotificationType = "bill_reminder" | "invite_accepted" | "goal_reached"
 
 export interface AppNotification {
   id: string
   userId: string
-  orgId: string | null
+  householdId: string | null
   type: NotificationType
   title: string
   body: string | null

@@ -7,7 +7,7 @@ import { AppCacheModule } from "./common/cache/cache.module";
 import { RlsInterceptor } from "./common/interceptors/rls.interceptor";
 import { AuthModule } from "./modules/auth/auth.module";
 import { HealthModule } from "./modules/health/health.module";
-import { OrganizationsModule } from "./modules/organizations/organizations.module";
+import { HouseholdsModule } from "./modules/households/households.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
 import { AdminModule } from "./modules/admin/admin.module";
 import { AuditModule } from "./modules/audit/audit.module";
@@ -23,7 +23,7 @@ import { TelemetryModule } from "./common/telemetry/telemetry.module";
     DatabaseModule,
     AuthModule,
     HealthModule,
-    OrganizationsModule,
+    HouseholdsModule,
     NotificationsModule,
     AdminModule,
     AuditModule,
