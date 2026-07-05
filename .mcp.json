@@ -1,0 +1,70 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "npx",
+      "args": ["shadcn@latest", "mcp"]
+    },
+    "supabase-local": {
+      "type": "http",
+      "url": "http://127.0.0.1:54321/mcp"
+    },
+    "postgres-local": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://postgres:postgres@localhost:54322/postgres"
+      ]
+    },
+    "supabase-staging": {
+      "type": "http",
+      "url": ""
+    },
+    "postgres-staging": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        ""
+      ]
+    },
+    "larmony-memory": {
+      "type": "stdio",
+      "command": "wsl",
+      "args": [
+        "-e",
+        "bash",
+        "-lc",
+        "exec ~/larmony-rag-venv/bin/python /mnt/c/Users/Paulo/Documents/Repos/Pessoal/larmony/bin/scripts/rag/mcp_server.py"
+      ]
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_PAT}"
+      }
+    },
+    "railway": {
+      "type": "http",
+      "url": "https://mcp.railway.com"
+    },
+    "resend": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "resend-mcp"],
+      "env": {
+        "RESEND_API_KEY": "${RESEND_API_KEY}"
+      }
+    },
+    "better-stack": {
+      "type": "http",
+      "url": "https://mcp.betterstack.com",
+      "headers": {
+        "Authorization": "Bearer ${BETTERSTACK_TOKEN}"
+      }
+    }
+  }
+}

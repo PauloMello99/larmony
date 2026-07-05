@@ -1,0 +1,40 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -Command \"Write-Output 'RAG obrigatorio: para perguntas onde/como funciona X, chame a MCP tool memory_search (ink-memory) ANTES de ler o codigo-fonte. Se este chat estabelecer uma decisao/convencao/gotcha duravel, registre em .memory/ (ou um novo ADR) antes de encerrar.'\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -Command \"if ($env:TOOL_INPUT_FILE_PATH -like '*\\.memory\\*') { wsl bash bin/scripts/rag/reindex.sh }\""
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "caveman": true
+  },
+  "enabledMcpjsonServers": [
+    "shadcn",
+    "supabase-local",
+    "postgres-local",
+    "supabase-staging",
+    "postgres-staging",
+    "larmony-memory",
+    "github",
+    "railway",
+    "resend"
+  ]
+}

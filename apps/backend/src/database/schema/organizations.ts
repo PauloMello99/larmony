@@ -1,0 +1,104 @@
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  integer,
+  boolean,
+  unique,
+} from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
+import { orgRoleEnum, invitationStatusEnum } from "./enums";
+
+export const organizations = pgTable("organizations", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  slug: text("slug").unique().notNull(),
+  logoUrl: text("logo_url"),
+  // Intervalo (em dias) para lembrar o admin de conferir o estoque. Null = sem lembrete.
+  stockCheckIntervalDays: integer("stock_check_interval_days"),
+  // Suspensão pelo super_admin (PLAT-1): NULL = ativa; preenchido = acesso bloqueado.
+  suspendedAt: timestamp("suspended_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export const orgMemberships = pgTable(
+  "org_memberships",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").notNull(),
+    role: orgRoleEnum("role").notNull().default("employee"),
+    // Módulos liberados ao funcionário (on/off). Owner ignora (acesso total).
+    // Ver modules/organizations/domain/member-permissions.ts.
+    permissions: text("permissions").array().notNull().default([]),
+    // Membro inativo perde acesso à org (OrgMembershipGuard exige enabled).
+    enabled: boolean("enabled").notNull().default(true),
+    joinedAt: timestamp("joined_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [unique().on(t.orgId, t.userId)],
+);
+
+export const orgInvitations = pgTable(
+  "org_invitations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id, { onDelete: "cascade" }),
+    invitedBy: uuid("invited_by").notNull(),
+    email: text("email").notNull(),
+    role: orgRoleEnum("role").notNull().default("employee"),
+    token: text("token")
+      .unique()
+      .notNull()
+      .default(sql`encode(gen_random_bytes(32), 'hex')`),
+    status: invitationStatusEnum("status").notNull().default("pending"),
+    expiresAt: timestamp("expires_at", { withTimezone: true })
+      .notNull()
+      .default(sql`now() + interval '7 days'`),
+    acceptedAt: timestamp("accepted_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [unique().on(t.orgId, t.email)],
+);
+
+export const organizationsRelations = relations(
+  organizations,
+  ({ many }) => ({
+    memberships: many(orgMemberships),
+    invitations: many(orgInvitations),
+  }),
+);
+
+export const orgMembershipsRelations = relations(orgMemberships, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [orgMemberships.orgId],
+    references: [organizations.id],
+  }),
+}));
+
+export const orgInvitationsRelations = relations(orgInvitations, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [orgInvitations.orgId],
+    references: [organizations.id],
+  }),
+}));
+
+export type Organization = typeof organizations.$inferSelect;
+export type NewOrganization = typeof organizations.$inferInsert;
+export type OrgMembership = typeof orgMemberships.$inferSelect;
+export type NewOrgMembership = typeof orgMemberships.$inferInsert;
+export type OrgInvitation = typeof orgInvitations.$inferSelect;
+export type NewOrgInvitation = typeof orgInvitations.$inferInsert;
