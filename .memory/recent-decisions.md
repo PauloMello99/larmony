@@ -4,27 +4,33 @@
 
 | # | Decisão | Data | Status |
 |---|---|---|---|
-| ADR-0001 | Turborepo como estrutura de monorepo | 2026-06-06 | Aceito |
-| ADR-0002 | RAG local com Qdrant + Ollama + MCP Server | 2026-06-06 | Aceito |
-| ADR-0003 | Drizzle ORM com migrator customizado (suporte a rollback) | 2026-06-06 | Aceito |
-| ADR-0004 | Arquitetura NestJS com use-cases por operação | 2026-06-06 | Aceito |
-| ADR-0005 | Multi-tenancy: DB único + org_id + RLS | 2026-06-06 | Aceito |
-| ADR-0006 | Clean Architecture + SOLID no backend NestJS | 2026-06-08 | Aceito |
-| ADR-0007 | Feature-Based Architecture no frontend Next.js | 2026-06-08 | Aceito |
-| ADR-0008 | RAG/memória obrigatória com servidor MCP `ink-memory` | 2026-06-13 | Aceito |
-| ADR-0009 | Feature Flags para liberação controlada de recursos | 2026-06-13 | Aceito |
-| ADR-0010 | Caixa: livro append-only com erratas + saldo por agregação | 2026-06-16 | Aceito |
-| ADR-0011 | Topologia de deploy (staging/prod) + caching in-memory sem Redis | 2026-06-27 | Aceito |
-| ADR-0012 | E-mail transacional: React Email + módulo `mail` dedicado (auth fora do GoTrue) | 2026-06-28 | Aceito |
-| ADR-0013 | super_admin age como owner de qualquer org (bypass no miss-path; banner; audit→PLAT-3) | 2026-06-29 | Aceito |
+| ADR-0001 | Turborepo como estrutura de monorepo | 2026-06-06 | Aceito (re-ratificado Larmony 2026-07) |
+| ADR-0002 | RAG local com Qdrant + Ollama + MCP Server | 2026-06-06 | Aceito (re-ratificado Larmony 2026-07) |
+| ADR-0003 | Drizzle ORM com migrator customizado (suporte a rollback) | 2026-06-06 | Aceito (re-ratificado Larmony 2026-07) |
+| ADR-0004 | Arquitetura NestJS com use-cases por operação | 2026-06-06 | Aceito (re-ratificado Larmony 2026-07) |
+| ADR-0005 | Multi-tenancy: DB único + tenant_id + RLS | 2026-06-06 | Aceito (re-ratificado Larmony 2026-07; tenant = household, ver ADR-0015) |
+| ADR-0006 | Clean Architecture + SOLID no backend NestJS | 2026-06-08 | Aceito (re-ratificado Larmony 2026-07) |
+| ADR-0007 | Feature-Based Architecture no frontend Next.js | 2026-06-08 | Aceito (re-ratificado Larmony 2026-07) |
+| ADR-0008 | RAG/memória obrigatória com servidor MCP `larmony-memory` | 2026-06-13 | Aceito (re-ratificado Larmony 2026-07) |
+| ADR-0009 | Feature Flags para liberação controlada de recursos | 2026-06-13 | Aceito (re-ratificado Larmony 2026-07) |
+| ADR-0010 | Caixa: livro append-only com erratas + saldo por agregação | 2026-06-16 | **Superseded** — domínio de estúdio; transações do Larmony são editáveis |
+| ADR-0011 | Topologia de deploy (staging/prod) + caching in-memory sem Redis | 2026-06-27 | Aceito (re-ratificado Larmony 2026-07) |
+| ADR-0012 | E-mail transacional: React Email + módulo `mail` dedicado | 2026-06-28 | Aceito (re-ratificado Larmony 2026-07) |
+| ADR-0013 | super_admin age como owner de qualquer tenant | 2026-06-29 | Aceito (re-ratificado Larmony 2026-07) |
+| ADR-0014 | Error tracking com Better Stack | 2026-07-01 | Aceito (re-ratificado Larmony 2026-07) |
+| ADR-0015 | Household como unidade de tenancy (adaptação do padrão org) | 2026-07-04 | Aceito |
+| ADR-0016 | Evolução do RAG: bge-m3 + hybrid search + parent-document | 2026-07-04 | Aceito |
+| ADR-0017 | Dinheiro em centavos inteiros em todo o stack | 2026-07-04 | Aceito |
+| ADR-0018 | i18n pt-BR/en com locale no perfil do usuário | 2026-07-04 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
 
-- **2026-06-22 — Roadmap & situação consolidados**: `roadmap.md` é a fonte de follow-up
-  com stakeholders (módulos prontos + backlog tarefa a tarefa, _Planejar_ vs _Backlog_).
-  Espelhado no Notion. Documentação de produto anterior estava defasada.
-- **2026-06-22 — TDD obrigatório por module**: regra em `domain-rules.md` (test-first;
-  unitário + integração por module). Adoção plena é um "ataque de testes" no backlog (TEST-2).
-- **2026-06-22 — Visibilidade por funcionário** concluída em Serviços/Agenda/Caixa
-  (owner vê tudo + lança em nome de). Ver `domain-rules.md` e
-  `docs/testing/employee-visibility-tests.md`.
+- **2026-07-04 — Bootstrap do Larmony**: repo nasceu como cópia da carcaça ink-ops;
+  domínio de estúdio removido (Fase 1); old-larmony é a fonte do domínio, esta
+  arquitetura é a fonte do *como*. Ver `project-overview.md` e `roadmap.md`.
+- **2026-07-04 — Sem permissões por módulo no v1**: households têm 2–4 pessoas;
+  roles `owner`/`member` bastam. `member-permissions.ts` (back) e `MODULE_KEYS`
+  (front) ficam vazios até existir necessidade real.
+- **2026-07-04 — Recorrência fora do v1**: campos e engine só no M9, com design próprio.
+- **TDD obrigatório por module**: regra em `domain-rules.md` (test-first;
+  unitário + integração por module). Herdada da carcaça.

@@ -1,6 +1,6 @@
 # ADR-0013 — super_admin age como owner de qualquer organização
 
-**Status:** Aceito
+**Status:** Aceito — re-ratificado para o Larmony em 2026-07-04
 **Data:** 2026-06-29
 **Origem:** Premissas do produto (camada de administração global / "agir em nome do dono")
 

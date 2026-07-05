@@ -83,7 +83,7 @@ os downs** e **não é preciso configurar nada dentro do Supabase** além das co
 
 ## Passo a passo (staging)
 
-1. **Supabase**: criar projeto `ink-studio-staging`. Copiar URL + anon + service_role e as duas
+1. **Supabase**: criar projeto `larmony-staging`. Copiar URL + anon + service_role e as duas
    connection strings (Session pooler).
 2. **Railway → Environment `staging`** (branch `staging`), com **dois serviços**:
    - **backend**: builder Dockerfile (`apps/backend/Dockerfile`), healthcheck `/health`, vars
@@ -91,7 +91,7 @@ os downs** e **não é preciso configurar nada dentro do Supabase** além das co
    - **frontend**: builder Dockerfile (`apps/frontend/Dockerfile`), var `NEXT_PUBLIC_API_URL` =
      URL pública do backend (build-time).
    - **cron**: serviço dedicado (ver seção Cron abaixo).
-3. **Smoke test**: abrir o frontend, sign-in, `/overview`, criar uma transação. Aguardar o cron
+3. **Smoke test**: abrir o frontend, sign-in, home do household (placeholder). Aguardar o cron
    no próximo `*/15` (ou redeployar o serviço Cron para rodar na hora) e conferir nos logs do Cron
    os status `200`.
 

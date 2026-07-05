@@ -8,7 +8,7 @@ metadata:
 # ADR-0006: Clean Architecture + SOLID no Backend NestJS
 
 **Date:** 2026-06-08
-**Status:** Accepted
+**Status:** Accepted — re-ratified for Larmony on 2026-07-04
 
 ## Context
 

@@ -1,46 +1,63 @@
 ---
 name: project-overview
-description: Visão geral, objetivo e premissas do ink-ops (v2 do Ink House Studio)
+description: O que é o Larmony — visão geral do produto, origem (redesign do old-larmony sobre a carcaça ink-ops) e estado atual do monorepo
 metadata:
   type: project
 ---
 
+# Larmony — Visão Geral
+
 ## O que é
 
-O **Ink Ops** é uma plataforma SaaS multi-tenant de assessoria para estúdios de tatuagem. Reescrita completa do Ink House Studio (v1), transformada em white label. O produto principal na V1 é o sistema de gestão de estúdio. Futuramente, outros produtos serão adicionados (audiovisual, tráfego pago, gestão de redes sociais).
+**Larmony** é uma aplicação web de **controle financeiro doméstico multi-usuário**.
+Um *household* (lar) é a unidade de multi-tenancy: múltiplos membros compartilham
+acesso às mesmas entidades financeiras (transações, categorias, orçamentos, metas,
+contas a pagar), com isolamento por `household_id` via Row Level Security.
 
-A empresa por trás da plataforma é a **Ink House**, cujos sócios (Ruan e João Pedro) também serão super admins da plataforma e terão uma organização própria dentro dela.
+Domínio de produção: **larmony.me** (e-mail transacional via Resend já verificado,
+from `Larmony <team@larmony.me>`).
 
-**Why:** Mercado de estúdios de tatuagem carece de ferramentas administrativas adequadas. A Ink House já tem um sistema funcional (v1) e quer monetizá-lo como produto SaaS.
+**Why:** o old-larmony (v1) funcionava, mas com arquitetura frágil (lógica em
+triggers, frontend falando direto com PostgREST). O redesenvolvimento porta o
+domínio validado para uma arquitetura sustentável.
 
-**How to apply:** Toda decisão técnica deve considerar multi-tenancy desde o início. Nenhum dado pode ser "global" sem `org_id`. O código da v1 não é reaproveitado — apenas as regras de negócio.
+**How to apply:** o old-larmony fornece o *quê* (domínio, regras de negócio);
+a arquitetura deste repo fornece o *como* (Clean Architecture, use-cases, RLS via
+`app_user`, migrations Drizzle). Não voltar aos padrões antigos.
 
-## Referência da v1
+## Origem
 
-Projeto antigo em `C:\Users\Paulo\Documents\Repos\Pessoal\InkHouse\ink-house-studio` — Next.js 14 monolítico com Supabase. Serve como referência de regras de negócio, não de código.
+- **old-larmony** (`C:\Users\Paulo\Documents\Repos\Pessoal\old-larmony`) — v1 do
+  produto: React 19 + Vite + TanStack Router/Query, backend NestJS fino, lógica no
+  Supabase (RLS + triggers + PostgREST), app `reminders` de cron diário. O
+  `CLAUDE.md` de lá é a **fonte de verdade do domínio** (entidades, regras, features).
+- Este repo nasceu como **cópia da carcaça do ink-ops** (monorepo Turborepo com
+  NestJS Clean Architecture + Next.js + Drizzle + Supabase + Railway + Better Stack).
+  O domínio de estúdio de tatuagem foi removido em 2026-07; a infra foi mantida.
 
 ## Estado atual do monorepo
 
-- `apps/backend` — NestJS API (health check, estrutura base)
-- `apps/frontend` — Next.js (pages router)
-- `packages/` — eslint-config, typescript-config, ui (shadcn/Radix), utils (cn), types (placeholder Supabase)
+- `apps/backend` — NestJS 11 com módulos de plataforma: `auth`, `user`,
+  `organizations` (→ vira `households` na fundação do produto), `admin`, `mail`,
+  `notifications`, `health`, `internal-cron` (tick 5min, jobs vazios), `audit`.
+- `apps/frontend` — Next.js (pages router) com features de plataforma: `auth`,
+  `account`, `admin`, `dashboard` (shell + placeholder), `invitations`, `landing`
+  (copy ainda genérica — reescrever no M1), `notifications`, `organizations`.
+- Schema Drizzle e migrations ainda são os herdados do ink-ops — serão
+  **squashados** na fundação do produto (ver [[roadmap]]).
+- Deploy Railway staging: Frontend + Backend + Cron (online).
+- RAG local: Qdrant + Ollama, coleção `larmony_memory`, servidor MCP `larmony-memory`.
 
-## Direcionamentos das reuniões (jun/2026)
+## Premissas
 
-Consolidado em `docs/product/requisitos-e-regras-de-negocio-v1.md` (fontes: reuniões 04/06 e 11/06, Notion). Pontos que afetam decisões técnicas:
-
-- **Comercial:** assinatura recorrente mensal via Stripe; trial + validação com estúdios convidados antes de escalar.
-- **Plataforma:** multiempresa/multitenant + admin global (Assessoria Ink); ambientes separados **dev / homologação / produção**.
-- **Infra assíncrona:** cron jobs/processamento assíncrono para mensagens, campanhas, confirmações e retenção.
-- **Feature Flags:** liberar recursos (e-mail/SMS/notificações) só quando viáveis, controlados pelo super_admin (ver ADR-0009).
-- **Refinamentos de domínio:** origem de cliente como categorias fixas (relatórios cross-org); taxas de cartão calculando líquido no caixa; estoque que reflete a realidade; relatórios segmentados; observações/anexos genéricos por cliente. Detalhe em [[domain-rules]].
-- **Processo:** Notion é o hub de captura de conhecimento; documentação contínua alimenta roadmap e RAG.
+- Uso pessoal/familiar — escala pequena, free tiers (Resend 3k e-mails/mês, 100/dia).
+- i18n: `pt-BR` (padrão) e `en`, locale persistido no perfil do usuário.
+- Dinheiro em **centavos inteiros** (convenção herdada da carcaça — ver ADR-0017).
+- Households têm poucas pessoas (2–4): roles `owner`/`member` bastam; sem permissões
+  por módulo no v1.
 
 ### Especificação feature a feature
 
-`docs/product/features/` documenta **como cada feature deve se comportar** na V1, cruzando
-reuniões + estado atual do ink-ops + comportamento do legado `ink-house-studio` (a portar).
-Começar por `docs/product/features/README.md` (catálogo com status por feature). Specs centrais:
-clientes (03), origens (04), serviços+tipos (05), materiais/estoque (06), caixa/financeiro (07),
-agenda (08); plataforma: orgs (01), auth/papéis (02), relatórios (09), dashboard (10),
-billing (11), auditoria (12), feature flags (13), notificações (14).
+`docs/product/features/` documenta o escopo de cada feature do roadmap (M1–M9),
+destilado do old-larmony. Ver `docs/product/visao-e-dominio-v1.md` para a visão
+consolidada do produto.

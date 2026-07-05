@@ -1,6 +1,6 @@
 # ADR-0002 — RAG local com Qdrant + Ollama + MCP Server
 
-**Status:** Aceito  
+**Status:** Aceito — re-ratificado para o Larmony em 2026-07-04  
 **Data:** 2026-06-06
 
 ## Contexto

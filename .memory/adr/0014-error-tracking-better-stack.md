@@ -1,6 +1,6 @@
 # ADR-0014 — Error tracking com Better Stack (Logtail) no front e no back
 
-**Status:** Aceito
+**Status:** Aceito — re-ratificado para o Larmony em 2026-07-04
 **Data:** 2026-06-30
 
 ## Contexto

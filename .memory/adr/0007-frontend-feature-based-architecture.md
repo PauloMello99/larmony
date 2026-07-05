@@ -8,7 +8,7 @@ metadata:
 # ADR-0007: Feature-Based Architecture no Frontend Next.js
 
 **Date:** 2026-06-08
-**Status:** Accepted
+**Status:** Accepted — re-ratified for Larmony on 2026-07-04
 
 ## Context
 

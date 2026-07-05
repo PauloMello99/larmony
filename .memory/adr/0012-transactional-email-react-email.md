@@ -1,6 +1,6 @@
 # ADR-0012 — E-mail transacional com React Email + módulo `mail` dedicado
 
-**Status:** Aceito
+**Status:** Aceito — re-ratificado para o Larmony em 2026-07-04
 **Data:** 2026-06-28
 
 ## Contexto

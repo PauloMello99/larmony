@@ -8,11 +8,11 @@ metadata:
 # ADR-0005: Multi-Tenancy via Single DB + org_id + Row Level Security
 
 **Date:** 2026-06-06
-**Status:** Accepted
+**Status:** Accepted — re-ratified for Larmony on 2026-07-04
 
 ## Context
 
-ink-ops is a white-label SaaS. Multiple tattoo studios (orgs) share the platform. Their data must be strictly isolated.
+Decisao original (ink-ops): plataforma white-label multi-tenant. No larmony o tenant e o household (lar) — multiplos lares compartilham o banco e os dados devem ser estritamente isolados. Ver ADR-0015.
 
 ## Decision
 

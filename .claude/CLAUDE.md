@@ -1,18 +1,27 @@
-# ink-ops — Referência para Claude Code
+# larmony — Referência para Claude Code
 
 ## O que é
 
-Monorepo Turborepo com pacotes compartilhados de tooling, UI e tipos. `apps/` está vazia — é onde as aplicações concretas vivem. `packages/` tem as libs reutilizáveis.
+**Larmony** — controle financeiro doméstico multi-usuário (households/lares como
+tenant, RLS). Monorepo Turborepo: `apps/backend` (NestJS 11, Clean Architecture),
+`apps/frontend` (Next.js pages router, feature-based), `packages/` com libs
+compartilhadas. Redesenvolvimento do `old-larmony` (mesma pasta pai — fonte de
+verdade do domínio) sobre a carcaça arquitetural herdada do ink-ops.
+
+Visão do produto: `docs/product/visao-e-dominio-v1.md` · roadmap: `.memory/roadmap.md`.
 
 ## Stack
 
 | Camada | Tecnologia |
 |---|---|
-| Monorepo | Turborepo 2 + pnpm 9 workspaces |
+| Monorepo | Turborepo 2 + pnpm workspaces |
 | Linguagem | TypeScript 5 strict |
-| UI | React 19 + Radix UI + Tailwind CSS |
-| Utilitários | clsx + tailwind-merge (`cn()` em `@repo/utils`) |
-| Linting | ESLint 9 + Prettier |
+| Backend | NestJS 11 + Drizzle ORM (migrator custom) + Supabase (auth/RLS) |
+| Frontend | Next.js (pages router) + React 19 + Radix UI + Tailwind CSS |
+| Estado servidor | TanStack React Query (keys em `infrastructure/query/query-keys.ts`) |
+| E-mail | Resend + React Email (módulo `mail`; from `Larmony <team@larmony.me>`) |
+| Telemetria | Better Stack (front + back) |
+| Deploy | Railway (staging: Frontend + Backend + Cron tick 5min) |
 | Tipos DB | Supabase CLI → `@repo/types` |
 
 ## Packages disponíveis
@@ -31,7 +40,11 @@ pnpm build         # build com cache Turborepo
 pnpm lint          # lint com cache
 pnpm check-types   # type-check com cache
 pnpm format        # prettier em todo o repo
+pnpm db:generate   # drizzle-kit generate
+pnpm db:migrate    # aplica migrations (ver ADR-0003)
 ```
+
+Supabase local: `npx supabase start` (API 54321, DB 54322, Studio 54323).
 
 ## Convenções críticas
 
@@ -40,30 +53,37 @@ pnpm format        # prettier em todo o repo
 - Instalar dev dep na raiz: `pnpm add -Dw <pkg>`
 - Merging de classes Tailwind: sempre `cn()`, nunca template string
 - Novas Turborepo tasks devem ser declaradas em `turbo.json`
+- Dinheiro: **centavos inteiros** (`_cents`) em todo o stack (ADR-0017)
+- Backend: um use-case por operação; use-cases nunca importam DRIZZLE direto
+  (regras completas em `.memory/domain-rules.md`)
+- Frontend: mobile-first; regras de UI obrigatórias em `.memory/domain-rules.md`
+- **Estado transitório**: schema/migrations ainda são os herdados do ink-ops —
+  serão squashados no M1 (fundação). Não criar migrations sobre o schema velho.
 
 ## Memória semântica (RAG) — OBRIGATÓRIO
 
 > **Recall primeiro (faça isto antes de ler código).** Para qualquer pergunta
 > "onde/como funciona X", chame a MCP tool `memory_search("sua pergunta")` do servidor
-> **`ink-memory`** **antes** de varrer/ler o código-fonte — ela busca semanticamente o
-> banco de memória (`.memory/`, `docs/`, READMEs dos packages, `CLAUDE.md`) e devolve os
-> trechos relevantes. Só leia o código quando os trechos recuperados forem insuficientes.
-> Use `memory_status()` para confirmar que o índice está populado.
+> **`larmony-memory`** **antes** de varrer/ler o código-fonte — ela busca semanticamente
+> o banco de memória (`.memory/`, `docs/`, READMEs dos packages, `CLAUDE.md`) e devolve
+> os trechos relevantes. Só leia o código quando os trechos recuperados forem
+> insuficientes. Use `memory_status()` para confirmar que o índice está populado.
 
 **Criação (obrigatória quando relevante).** Quando um chat estabelecer algo durável —
 uma decisão, convenção ou *gotcha* — registre-o no arquivo `.memory/` certo (ou um novo
 ADR) **antes de encerrar**. Chats triviais estão isentos; o objetivo é capturar
 conhecimento que vale recall depois, não transcrever tudo.
 
-**Indexação (automática).** O índice é re-atualizado em background no início de cada
-sessão (hook SessionStart), ao fim de cada turno (hook Stop) e imediatamente após
-qualquer escrita em `.memory/` (hook PostToolUse). Stack: Qdrant (Docker, `:6333`) +
-Ollama (`:11434`, `nomic-embed-text`). Setup inicial: `/rag-setup`.
+**Indexação (automática).** O índice é re-atualizado imediatamente após qualquer
+escrita em `.memory/` (hook PostToolUse). Stack: Qdrant (Docker, `:6333`) + Ollama
+(`:11434`), coleção `larmony_memory`. Setup inicial: `/rag-setup`. A evolução do RAG
+(bge-m3, hybrid search, parent-document, indexação de código, hook SessionStart) está
+especificada no ADR-0016 — Fase 3 do bootstrap.
 
-Comandos manuais (raramente necessários — os hooks cuidam disso):
+Comandos manuais (raramente necessários — o hook cuida disso):
 ```powershell
 docker compose -f docker-compose.rag.yml up -d          # subir Qdrant
-wsl ~/ink-ops-rag-venv/bin/python bin/scripts/rag/index.py --no-recreate   # reindex
+wsl ~/larmony-rag-venv/bin/python bin/scripts/rag/index.py --no-recreate   # reindex
 ```
 Ou os slash commands `/memory-index` e `/memory-search`.
 
@@ -73,7 +93,8 @@ Ou os slash commands `/memory-index` e `/memory-search`.
 |---|---|
 | `project-overview.md` | Mudança de escopo ou propósito |
 | `architecture.md` | Nova app adicionada, decisão estrutural |
-| `domain-rules.md` | Nova convenção de código estabelecida |
+| `domain-rules.md` | Nova convenção de código ou regra de domínio |
+| `roadmap.md` | Milestone concluído/replanejado |
 | `recent-decisions.md` | Após criar novo ADR |
 | `adr/NNNN-*.md` | Para cada decisão arquitetural relevante |
 | `sessions/YYYY-MM-DD-*.md` | Resumo de sessão complexa |

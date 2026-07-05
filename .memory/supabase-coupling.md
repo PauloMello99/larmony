@@ -42,8 +42,8 @@ metadata:
 - Porta: `IStorageProvider` (`modules/auth/application/ports/storage-provider.interface.ts`),
   token `STORAGE_PROVIDER`. Impl: `supabase-storage.provider.ts` (bucket `avatars`
   público + `uploadFile`/`createSignedUrl`/`removeFile` genéricos).
-- Consumidores: upload de avatar (auth) e anexos de cliente
-  (`customers/.../customer-attachments`).
+- Consumidores: upload de avatar (auth). (Anexos de cliente saíram com o domínio
+  ink-ops; novos consumidores entram conforme as features do Larmony precisarem.)
 - **Acoplamento residual**: a migration `0010_avatars_bucket.sql` provisiona o bucket via
   `INSERT INTO storage.buckets (...)` — schema `storage.*` é do Supabase. Numa migração,
   o provisionamento do bucket sai do SQL e vira responsabilidade do novo backend (S3, R2…).
@@ -60,7 +60,8 @@ metadata:
   `request.jwt.claims`. O `RlsContext` (`database.module.ts`) faz, por request e dentro de
   uma transação, `SELECT set_config('request.jwt.claims', '{"sub":...}', true)` para que
   `auth.uid()` resolva o usuário. Helpers `is_super_admin`/`is_org_member`/`is_org_owner`
-  derivam disso. Ver [[clean-architecture]] e ADR-0005 (multitenant single-DB RLS).
+  (→ `is_household_*` após o rename do M1) derivam disso. Ver [[clean-architecture]]
+  e ADR-0005 (multitenant single-DB RLS).
 - **Ponte de identidade**: `users.auth_id` (uuid) referencia o usuário de `auth.users` do
   Supabase. Os `created_by` já apontam para `users.id` (app id) desde SEC-2, então o
   domínio não depende do id do provedor — só a tabela `users` guarda o `auth_id`.
@@ -73,7 +74,7 @@ metadata:
 ## 4. Frontend — sem acoplamento
 
 - Nenhum import de `@supabase/*` no `apps/frontend`. Autentica via API do backend e guarda
-  a sessão própria em `localStorage.inkops_session` (ver [[frontend-feature-architecture]]).
+  a sessão própria em `localStorage.larmony_session` (ver [[frontend-feature-architecture]]).
   Migração de provedor é transparente para o front.
 
 ## 5. Variáveis de ambiente (pontos de configuração)

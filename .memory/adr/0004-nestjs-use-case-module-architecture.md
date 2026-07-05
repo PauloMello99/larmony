@@ -8,11 +8,11 @@ metadata:
 # ADR-0004: NestJS Module Architecture — Use-Case Pattern
 
 **Date:** 2026-06-06
-**Status:** Accepted
+**Status:** Accepted — re-ratified for Larmony on 2026-07-04
 
 ## Context
 
-NestJS defaults to a Service layer between controllers and data sources. For ink-ops, the team wanted a more explicit domain operation boundary.
+NestJS defaults to a Service layer between controllers and data sources. For larmony, the team wanted a more explicit domain operation boundary.
 
 ## Decision
 

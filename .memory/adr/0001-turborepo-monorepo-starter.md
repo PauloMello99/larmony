@@ -1,11 +1,11 @@
 # ADR-0001 — Turborepo como estrutura de monorepo
 
-**Status:** Aceito  
+**Status:** Aceito — re-ratificado para o Larmony em 2026-07-04  
 **Data:** 2026-06-06
 
 ## Contexto
 
-O ink-ops precisa hospedar múltiplas aplicações (frontend, backend, libs) que compartilham configurações de tooling, tipos e componentes. Precisamos de uma estrutura que:
+O larmony precisa hospedar múltiplas aplicações (frontend, backend, libs) que compartilham configurações de tooling, tipos e componentes. Precisamos de uma estrutura que:
 - Evite duplicação de configs ESLint/TypeScript entre projetos
 - Cache builds para não recompilar o que não mudou
 - Permita rodar `dev` de todas as apps com um único comando

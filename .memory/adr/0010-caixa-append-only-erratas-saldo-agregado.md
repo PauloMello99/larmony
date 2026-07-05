@@ -1,6 +1,6 @@
 # ADR-0010 — Caixa: livro append-only com erratas e saldo por agregação
 
-**Status:** Aceito
+**Status:** Superseded — decisão de domínio de estúdio (caixa), não aplicável ao Larmony: transações são editáveis/deletáveis (2026-07-04). Mantido como registro histórico.
 **Data:** 2026-06-16
 **Origem:** Spec 07 (Caixa & Financeiro) + reunião 11/06/2026
 

@@ -8,7 +8,7 @@ metadata:
 # ADR-0003: Drizzle ORM with Custom Migrator for Rollback Support
 
 **Date:** 2026-06-06
-**Status:** Accepted
+**Status:** Accepted — re-ratified for Larmony on 2026-07-04
 
 ## Context
 

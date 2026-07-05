@@ -1,12 +1,12 @@
 # ADR-0011 — Topologia de deploy (staging/prod) e estratégia de caching
 
-**Status:** Aceito
+**Status:** Aceito — re-ratificado para o Larmony em 2026-07-04
 **Data:** 2026-06-27 (revisado 2026-06-28: backend Railway-only — Render descartado)
 **Origem:** Sessão de preparação do primeiro deploy de ambiente de teste
 
 ## Contexto
 
-O ink-ops estava pronto em features mas nunca havia ido ao ar. Precisávamos de um primeiro
+O projeto original (ink-ops) estava pronto em features mas nunca havia ido ao ar. Precisávamos de um primeiro
 deploy de teste, de uma topologia de dois ambientes com CI/CD por branch
 (`development → staging → main`) e de uma decisão sobre **caching** (Redis ou não). Levantamento
 dos serviços externos reais:

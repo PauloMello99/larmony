@@ -1,6 +1,6 @@
 # ADR-0009 — Feature Flags para liberação controlada de recursos
 
-**Status:** Aceito
+**Status:** Aceito — re-ratificado para o Larmony em 2026-07-04
 **Data:** 2026-06-13
 **Origem:** Reunião 11/06/2026 (regras de negócio)
 

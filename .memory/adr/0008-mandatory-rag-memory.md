@@ -1,6 +1,6 @@
-# ADR-0008 — RAG/memória obrigatória com servidor MCP `ink-memory`
+# ADR-0008 — RAG/memória obrigatória com servidor MCP `larmony-memory`
 
-**Status:** Aceito
+**Status:** Aceito — re-ratificado para o Larmony em 2026-07-04
 **Data:** 2026-06-13
 **Supersede parcialmente:** ADR-0002 (troca o `mcp-server-qdrant` genérico)
 
@@ -19,7 +19,7 @@ template, sem fundir projetos): `Upstart13/asd/asd-pipeline`.
 
 ## Decisão
 
-1. **Servidor MCP próprio `ink-memory`** (`bin/scripts/rag/mcp_server.py`, FastMCP) expondo
+1. **Servidor MCP próprio `larmony-memory`** (`bin/scripts/rag/mcp_server.py`, FastMCP) expondo
    `memory_search(query, k)` e `memory_status()` — registrado em `.mcp.json`. Substitui o
    `mcp-server-qdrant` genérico.
 2. **Recall obrigatório**: política no `CLAUDE.md` — para perguntas "onde/como funciona X",
@@ -28,7 +28,7 @@ template, sem fundir projetos): `Upstart13/asd/asd-pipeline`.
    background), Stop (reindex em background), PostToolUse (reindex ao escrever em `.memory/`).
 4. **Criação quando relevante**: registrar decisão/convenção/gotcha durável em `.memory/`
    (ou novo ADR) antes de encerrar; chats triviais isentos.
-5. **venv dedicado** `~/ink-ops-rag-venv` (WSL) — evita o shim do pyenv do Windows; usado por
+5. **venv dedicado** `~/larmony-rag-venv` (WSL) — evita o shim do pyenv do Windows; usado por
    hooks, servidor MCP e scripts.
 
 ## Consequências
