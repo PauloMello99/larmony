@@ -44,8 +44,6 @@ export function ResetPasswordForm() {
   const type = searchParams.get("type")
 
   React.useEffect(() => {
-    console.log("Parsed > ", JSON.stringify({ access_token, refresh_token, type },null, 2))
-  
     if (!access_token || type !== "recovery") setTokenError(true)
     else setTokenError(false)
   }, [access_token, refresh_token, searchParams, type])
@@ -73,7 +71,7 @@ export function ResetPasswordForm() {
       <Card className="w-full max-w-sm border-foreground/5 bg-foreground/[0.03]">
         <CardHeader className="text-center">
           <div className="mb-2 text-xl font-bold">
-            ink<span className="text-orange-500">ops</span>
+            <span className="text-primary">lar</span>mony
           </div>
           <CardTitle className="text-xl">Nova senha</CardTitle>
           <CardDescription className="text-foreground/40">
@@ -92,13 +90,13 @@ export function ResetPasswordForm() {
           </CardContent>
         ) : success ? (
           <CardContent className="space-y-4 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/10">
-              <CheckCircle2 className="h-6 w-6 text-orange-400" />
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+              <CheckCircle2 className="h-6 w-6 text-primary" />
             </div>
             <p className="text-sm text-foreground/50">
               Sua senha foi redefinida com sucesso. Você já pode fazer login com a nova senha.
             </p>
-            <Button asChild className="w-full bg-orange-500 text-white hover:bg-orange-600">
+            <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
               <Link href="/auth/login">Ir para o login</Link>
             </Button>
           </CardContent>
@@ -148,7 +146,7 @@ export function ResetPasswordForm() {
               <Button
                 type="submit"
                 disabled={isSubmitting || !access_token}
-                className="w-full bg-orange-500 text-white hover:bg-orange-600"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Redefinir senha

@@ -50,7 +50,7 @@ export function RecoverForm() {
       <Card className="w-full max-w-sm border-foreground/5 bg-foreground/[0.03]">
         <CardHeader className="text-center">
           <div className="mb-2 text-xl font-bold">
-            ink<span className="text-orange-500">ops</span>
+            <span className="text-primary">lar</span>mony
           </div>
           <CardTitle className="text-xl">Recuperar senha</CardTitle>
           <CardDescription className="text-foreground/40">
@@ -60,8 +60,8 @@ export function RecoverForm() {
 
         {sent ? (
           <CardContent className="space-y-4 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/10">
-              <MailCheck className="h-6 w-6 text-orange-400" />
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+              <MailCheck className="h-6 w-6 text-primary" />
             </div>
             <p className="text-sm text-foreground/50">
               Se esse e-mail estiver cadastrado, você receberá um link em breve.
@@ -100,7 +100,7 @@ export function RecoverForm() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-orange-500 text-white hover:bg-orange-600"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Enviar link

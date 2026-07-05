@@ -72,7 +72,7 @@ export function SignupForm() {
       <Card className="w-full max-w-sm border-foreground/5 bg-foreground/[0.03]">
         <CardHeader className="text-center">
           <div className="mb-2 text-xl font-bold">
-            ink<span className="text-orange-500">ops</span>
+            <span className="text-primary">lar</span>mony
           </div>
           <CardTitle className="text-xl">Criar conta</CardTitle>
           <CardDescription className="text-foreground/40">
@@ -155,7 +155,7 @@ export function SignupForm() {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-orange-500 text-white hover:bg-orange-600"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Criar conta
@@ -164,7 +164,7 @@ export function SignupForm() {
               Já tem conta?{" "}
               <Link
                 href={loginHref}
-                className="text-orange-400 hover:text-orange-300"
+                className="text-primary hover:text-orange-300"
               >
                 Entrar
               </Link>
