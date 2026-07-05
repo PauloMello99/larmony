@@ -1,5 +1,6 @@
 import { Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
 import { CronSecretGuard } from "../../common/guards/cron-secret.guard";
+import { CronJobsService } from "./cron-jobs.service";
 
 interface JobResult {
   name: string;
@@ -11,12 +12,14 @@ interface JobResult {
 @Controller("internal/cron")
 @UseGuards(CronSecretGuard)
 export class InternalCronController {
+  constructor(private readonly cronJobs: CronJobsService) {}
+
   @Post("tick")
   @HttpCode(200)
   async tick(): Promise<{ ok: boolean; jobs: JobResult[] }> {
-    // Jobs de domínio são registrados aqui conforme as features do Larmony
-    // ganham cron (ex.: lembretes de contas a pagar — bills).
-    const jobs: Array<{ name: string; run: () => Promise<unknown> }> = [];
+    // Jobs de domínio se registram com @CronJobName no próprio módulo da
+    // feature (ver cron-job.ts) — este controller não muda por feature.
+    const jobs = this.cronJobs.getJobs();
 
     const jobResults = await Promise.all(
       jobs.map(async (job): Promise<JobResult> => {

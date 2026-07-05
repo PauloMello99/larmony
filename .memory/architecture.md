@@ -99,9 +99,28 @@ src/
 ### Cron unificado
 
 Um único endpoint `POST /internal/cron/tick` (protegido por `CronSecretGuard` +
-`CRON_SECRET`), chamado pelo service Cron do Railway a cada 5 minutos. Jobs de
-domínio são registrados no array `jobs` do `InternalCronController` — hoje vazio;
-o primeiro job do Larmony será `send-bill-reminders` (M7).
+`CRON_SECRET`), chamado pelo service Cron do Railway (schedule `*/15`). Jobs de
+domínio se registram por **decorator + DiscoveryService** (padrão do
+`@nestjs/schedule`) — o módulo `internal-cron` não muda por feature:
+
+```ts
+// no módulo da feature (ex.: bills), como provider normal:
+@CronJobName("send-bill-reminders")
+@Injectable()
+export class SendBillRemindersJob implements CronJob {
+  constructor(private readonly useCase: SendBillRemindersUseCase) {}
+  run() { return this.useCase.execute(); }
+}
+```
+
+`CronJobsService` (`modules/internal-cron/cron-jobs.service.ts`) descobre os
+providers decorados no boot; o tick roda todos com isolamento de erro e retorna
+`{ ok, jobs: [{name, status, durationMs}] }`. Hoje não há jobs (`jobs: []`).
+
+| Job planejado | Milestone |
+|---|---|
+| `send-bill-reminders` (lembretes de contas) | M7 |
+| `recurrence-engine` (transações recorrentes) | M9 |
 
 ### Migrations (ver ADR-0003)
 
