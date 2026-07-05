@@ -30,7 +30,11 @@
       "Bash(git add *)",
       "Bash(git commit -m 'chore: baseline pre-bootstrap \\(cópia ink-ops com renames parciais para larmony\\) *)",
       "PowerShell(git checkout -b bootstrap/larmony)",
-      "PowerShell(git add -A)"
+      "PowerShell(git add -A)",
+      "PowerShell(pnpm build)",
+      "PowerShell(pnpm lint)",
+      "PowerShell(pnpm check-types)",
+      "mcp__railway__list_projects"
     ]
   },
   "hooks": {

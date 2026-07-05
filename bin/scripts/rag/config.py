@@ -4,7 +4,7 @@ QDRANT_URL = os.getenv("RAG_QDRANT_URL", "http://localhost:6333")
 OLLAMA_URL = os.getenv("RAG_OLLAMA_URL", "http://localhost:11434")
 EMBED_MODEL = os.getenv("RAG_EMBED_MODEL", "nomic-embed-text")
 EMBED_DIM = int(os.getenv("RAG_EMBED_DIM", "768"))
-COLLECTION = os.getenv("RAG_COLLECTION", "ink_ops_memory")
+COLLECTION = os.getenv("RAG_COLLECTION", "larmony_memory")
 
 INDEX_GLOBS = [
     ".memory/**/*.md",

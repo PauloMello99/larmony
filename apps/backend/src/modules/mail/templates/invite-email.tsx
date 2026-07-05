@@ -8,7 +8,7 @@ export interface InviteEmailProps {
 
 export function InviteEmail({ orgName, acceptUrl }: InviteEmailProps) {
   return (
-    <BaseLayout preview={`Convite para ${orgName} no Ink Ops`}>
+    <BaseLayout preview={`Convite para ${orgName} no Larmony`}>
       <Heading style={sharedStyles.heading}>Você foi convidado 🎉</Heading>
       <Text style={sharedStyles.paragraph}>
         Você foi convidado para participar de <strong>{orgName}</strong> no Ink
@@ -34,7 +34,7 @@ export default function InviteEmailPreview() {
   return (
     <InviteEmail
       orgName="Helena's Ink"
-      acceptUrl="https://app.inkops.app/invite/accept?token=preview-token"
+      acceptUrl="https://app.larmony.me/invite/accept?token=preview-token"
     />
   );
 }

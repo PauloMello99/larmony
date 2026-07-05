@@ -28,7 +28,7 @@ const FOOTER_LINKS = {
 }
 
 const SOCIAL_LINKS = [
-  { Icon: Globe, href: "https://inkops.com.br", label: "Site" },
+  { Icon: Globe, href: "https://larmony.me", label: "Site" },
   { Icon: AtSign, href: "https://instagram.com", label: "Instagram" },
   { Icon: Link2, href: "https://github.com", label: "GitHub" },
 ]
@@ -97,7 +97,7 @@ export function Footer() {
 
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-xs text-white/30">
-            © {new Date().getFullYear()} ink-ops. Todos os direitos reservados.
+            © {new Date().getFullYear()} Larmony. Todos os direitos reservados.
           </p>
 
           <div className="flex items-center gap-4">

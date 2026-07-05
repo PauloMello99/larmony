@@ -46,7 +46,7 @@ interface PhoneInputProps {
 
 /**
  * Country selector + masked national input that stores the value as a single
- * E.164 string. Based on the fastix-web PhoneInput, simplified for ink-ops.
+ * E.164 string. Based on the fastix-web PhoneInput, simplified for Larmony.
  */
 export function PhoneInput({
   value = "",

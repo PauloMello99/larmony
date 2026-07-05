@@ -6,15 +6,9 @@ import { DatabaseModule } from "./database/database.module";
 import { AppCacheModule } from "./common/cache/cache.module";
 import { RlsInterceptor } from "./common/interceptors/rls.interceptor";
 import { AuthModule } from "./modules/auth/auth.module";
-import { CustomersModule } from "./modules/customers/customers.module";
 import { HealthModule } from "./modules/health/health.module";
-import { MaterialsModule } from "./modules/materials/materials.module";
 import { OrganizationsModule } from "./modules/organizations/organizations.module";
-import { CalendarModule } from "./modules/calendar/calendar.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
-import { CashierModule } from "./modules/cashier/cashier.module";
-import { ServicesModule } from "./modules/services/services.module";
-import { OverviewModule } from "./modules/overview/overview.module";
 import { AdminModule } from "./modules/admin/admin.module";
 import { AuditModule } from "./modules/audit/audit.module";
 import { InternalCronModule } from "./modules/internal-cron/internal-cron.module";
@@ -29,14 +23,8 @@ import { TelemetryModule } from "./common/telemetry/telemetry.module";
     DatabaseModule,
     AuthModule,
     HealthModule,
-    MaterialsModule,
-    CustomersModule,
     OrganizationsModule,
-    CalendarModule,
     NotificationsModule,
-    CashierModule,
-    ServicesModule,
-    OverviewModule,
     AdminModule,
     AuditModule,
     InternalCronModule,

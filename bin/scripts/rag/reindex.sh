@@ -5,12 +5,12 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-VENV_PY="$HOME/ink-ops-rag-venv/bin/python"
+VENV_PY="$HOME/larmony-rag-venv/bin/python"
 
 if [ ! -x "$VENV_PY" ]; then
   echo "[rag] venv not found at $VENV_PY — run setup first (see /rag-setup):" >&2
-  echo "  python3 -m venv ~/ink-ops-rag-venv" >&2
-  echo "  ~/ink-ops-rag-venv/bin/python -m pip install -r bin/scripts/rag/requirements.txt" >&2
+  echo "  python3 -m venv ~/larmony-rag-venv" >&2
+  echo "  ~/larmony-rag-venv/bin/python -m pip install -r bin/scripts/rag/requirements.txt" >&2
   exit 1
 fi
 

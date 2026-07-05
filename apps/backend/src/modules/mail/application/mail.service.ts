@@ -51,7 +51,7 @@ export class MailService {
   async sendOrgInvite(input: SendOrgInviteInput): Promise<boolean> {
     return this.dispatch(
       input.to,
-      `Convite para ${input.orgName} no Ink Ops`,
+      `Convite para ${input.orgName} no Larmony`,
       InviteEmail({ orgName: input.orgName, acceptUrl: input.acceptUrl }),
     );
   }
@@ -59,7 +59,7 @@ export class MailService {
   async sendPasswordReset(input: SendPasswordResetInput): Promise<boolean> {
     return this.dispatch(
       input.to,
-      "Redefinir sua senha do Ink Ops",
+      "Redefinir sua senha do Larmony",
       PasswordResetEmail({ name: input.name, resetUrl: input.resetUrl }),
     );
   }
@@ -67,7 +67,7 @@ export class MailService {
   async sendWelcome(input: SendWelcomeInput): Promise<boolean> {
     return this.dispatch(
       input.to,
-      "Bem-vindo ao Ink Ops",
+      "Bem-vindo ao Larmony",
       WelcomeEmail({ name: input.name, appUrl: input.appUrl }),
     );
   }

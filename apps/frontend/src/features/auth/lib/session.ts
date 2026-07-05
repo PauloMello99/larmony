@@ -1,6 +1,6 @@
 import type { StoredSession } from "../types"
 
-const SESSION_KEY = "inkops_session"
+const SESSION_KEY = "larmony_session"
 
 export function saveSession(session: StoredSession): void {
   if (typeof window === "undefined") return

@@ -1,29 +1,23 @@
 /**
- * Permissões de funcionário por **módulo** (on/off). O owner sempre tem acesso
- * total (estas permissões só se aplicam a `employee`). Quem tem acesso a um módulo
- * continua vendo só os próprios registros (escopo por funcionário já existente).
+ * Permissões de membro por **módulo** (on/off). O owner sempre tem acesso
+ * total (estas permissões só se aplicam a membros não-owner).
  *
- * As chaves espelham os hrefs do nav do frontend (services, clients, schedule,
- * stock, cashier) para mapeamento direto.
+ * As chaves espelham os hrefs do nav do frontend para mapeamento direto.
+ * TODO(larmony): definir se o v1 mantém permissões por módulo ou só roles
+ * owner/member (household tem poucas pessoas) — ver plano da Fase 4.
  */
-export const MODULE_KEYS = [
-  "services",
-  "clients",
-  "schedule",
-  "stock",
-  "cashier",
-] as const;
+export const MODULE_KEYS = [] as const;
 
 export type ModuleKey = (typeof MODULE_KEYS)[number];
 
-/** Funcionário novo começa restrito: só o essencial. Owner libera o resto. */
-export const DEFAULT_EMPLOYEE_PERMISSIONS: ModuleKey[] = ["services", "schedule"];
+/** Membro novo começa sem módulos extras; owner libera conforme necessário. */
+export const DEFAULT_EMPLOYEE_PERMISSIONS: ModuleKey[] = [];
 
 export function isModuleKey(value: string): value is ModuleKey {
   return (MODULE_KEYS as readonly string[]).includes(value);
 }
 
-/** Owner tem tudo; funcionário precisa do módulo na lista de permissões. */
+/** Owner tem tudo; membro precisa do módulo na lista de permissões. */
 export function hasModuleAccess(
   role: "owner" | "employee",
   permissions: readonly string[],

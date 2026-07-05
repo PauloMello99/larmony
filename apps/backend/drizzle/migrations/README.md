@@ -1,4 +1,4 @@
-# Migrations — ink-ops backend
+# Migrations — Larmony backend
 
 Migrator próprio (`src/database/migrator.ts`), executado via:
 

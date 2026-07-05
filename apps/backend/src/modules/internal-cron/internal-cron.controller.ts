@@ -1,7 +1,5 @@
 import { Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
 import { CronSecretGuard } from "../../common/guards/cron-secret.guard";
-import { SendAgendaRemindersUseCase } from "../calendar/application/use-cases/send-agenda-reminders.use-case";
-import { SendStockCheckRemindersUseCase } from "../materials/application/use-cases/send-stock-check-reminders.use-case";
 
 interface JobResult {
   name: string;
@@ -13,18 +11,12 @@ interface JobResult {
 @Controller("internal/cron")
 @UseGuards(CronSecretGuard)
 export class InternalCronController {
-  constructor(
-    private readonly sendAgendaReminders: SendAgendaRemindersUseCase,
-    private readonly sendStockCheckReminders: SendStockCheckRemindersUseCase,
-  ) {}
-
   @Post("tick")
   @HttpCode(200)
   async tick(): Promise<{ ok: boolean; jobs: JobResult[] }> {
-    const jobs: Array<{ name: string; run: () => Promise<unknown> }> = [
-      { name: "agenda-reminders", run: () => this.sendAgendaReminders.execute() },
-      { name: "stock-check-reminders", run: () => this.sendStockCheckReminders.execute() },
-    ];
+    // Jobs de domínio são registrados aqui conforme as features do Larmony
+    // ganham cron (ex.: lembretes de contas a pagar — bills).
+    const jobs: Array<{ name: string; run: () => Promise<unknown> }> = [];
 
     const jobResults = await Promise.all(
       jobs.map(async (job): Promise<JobResult> => {

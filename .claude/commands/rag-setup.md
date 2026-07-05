@@ -1,4 +1,4 @@
-Bootstrap (uma vez) do RAG/memória semântica do ink-ops: Ollama + Qdrant + venv dedicado.
+Bootstrap (uma vez) do RAG/memória semântica do larmony: Ollama + Qdrant + venv dedicado.
 
 Tudo roda no WSL. Execute, em ordem:
 
@@ -10,19 +10,19 @@ ollama pull nomic-embed-text
 docker compose -f docker-compose.rag.yml up -d
 
 # 3. venv dedicado + deps (inclui o pacote `mcp` do servidor MCP)
-wsl -e bash -lc "python3 -m venv ~/ink-ops-rag-venv && ~/ink-ops-rag-venv/bin/python -m pip install -r /mnt/c/Users/Paulo/Documents/Repos/Pessoal/ink-ops/bin/scripts/rag/requirements.txt"
+wsl -e bash -lc "python3 -m venv ~/larmony-rag-venv && ~/larmony-rag-venv/bin/python -m pip install -r /mnt/c/Users/Paulo/Documents/Repos/Pessoal/larmony/bin/scripts/rag/requirements.txt"
 
 # 4. Build inicial do índice
-wsl ~/ink-ops-rag-venv/bin/python bin/scripts/rag/index.py
+wsl ~/larmony-rag-venv/bin/python bin/scripts/rag/index.py
 ```
 
 Verifique:
 ```powershell
-docker ps            # deve listar ink-rag-qdrant
+docker ps            # deve listar o container do Qdrant
 ollama list          # deve listar nomic-embed-text
-wsl ~/ink-ops-rag-venv/bin/python bin/scripts/rag/query.py "clean architecture"
+wsl ~/larmony-rag-venv/bin/python bin/scripts/rag/query.py "clean architecture"
 ```
 
-Depois disso, o servidor MCP `ink-memory` (`memory_search` / `memory_status`) fica
-disponível na sessão, e os hooks (SessionStart / Stop / PostToolUse) mantêm o índice
+Depois disso, o servidor MCP `larmony-memory` (`memory_search` / `memory_status`) fica
+disponível na sessão, e o hook PostToolUse (escritas em `.memory/`) mantém o índice
 fresco automaticamente. Dashboard do Qdrant: http://localhost:6333/dashboard

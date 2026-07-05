@@ -9,17 +9,17 @@ export interface WelcomeEmailProps {
 
 export function WelcomeEmail({ name, appUrl }: WelcomeEmailProps) {
   return (
-    <BaseLayout preview="Bem-vindo ao Ink Ops">
+    <BaseLayout preview="Bem-vindo ao Larmony">
       <Heading style={sharedStyles.heading}>Bem-vindo, {name}! 👋</Heading>
       <Text style={sharedStyles.paragraph}>
-        Sua conta no <strong>Ink Ops</strong> está pronta. Agora você pode criar
+        Sua conta no <strong>Larmony</strong> está pronta. Agora você pode criar
         seu estúdio, convidar a equipe e gerenciar estoque, agenda e clientes num
         só lugar.
       </Text>
       {appUrl ? (
         <Section style={{ textAlign: "center", margin: "24px 0" }}>
           <Button href={appUrl} style={sharedStyles.button}>
-            Acessar o Ink Ops
+            Acessar o Larmony
           </Button>
         </Section>
       ) : null}
@@ -32,5 +32,5 @@ export function WelcomeEmail({ name, appUrl }: WelcomeEmailProps) {
 
 // Default export para a preview do `react-email` (email dev).
 export default function WelcomeEmailPreview() {
-  return <WelcomeEmail name="Paulo" appUrl="https://app.inkops.app" />;
+  return <WelcomeEmail name="Paulo" appUrl="https://app.larmony.me" />;
 }

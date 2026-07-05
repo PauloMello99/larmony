@@ -1,16 +1,20 @@
-import { useEffect } from "react"
-import { useRouter } from "next/router"
+import type { ReactElement } from "react"
+import type { NextPageWithLayout } from "@/pages/_app"
+import { AuthGuard } from "@/features/auth/components/auth-guard"
+import { OrgLayout, OrgPagePlaceholder } from "@/features/dashboard"
 
-// Redirect /dashboard/org/[orgSlug] → /dashboard/org/[orgSlug]/overview
-export default function OrgIndex() {
-  const router = useRouter()
-  const { orgSlug } = router.query as { orgSlug?: string }
+// Home da organização — placeholder até as features do Larmony existirem.
+const OrgIndexPage: NextPageWithLayout = () => (
+  <OrgPagePlaceholder
+    title="Overview"
+    description="O resumo do seu lar aparecerá aqui"
+  />
+)
 
-  useEffect(() => {
-    if (orgSlug) {
-      void router.replace(`/dashboard/org/${orgSlug}/overview`)
-    }
-  }, [orgSlug, router])
+OrgIndexPage.getLayout = (page: ReactElement) => (
+  <AuthGuard>
+    <OrgLayout>{page}</OrgLayout>
+  </AuthGuard>
+)
 
-  return null
-}
+export default OrgIndexPage

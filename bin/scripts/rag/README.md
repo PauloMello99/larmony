@@ -1,19 +1,18 @@
-# Memory-bank RAG (local, ink-ops)
+# Memory-bank RAG (local, larmony)
 
 Busca semântica sobre `.memory/`, `docs/`, os `README.md` dos packages e `.claude/CLAUDE.md`.
-**Não** indexa código-fonte (último recurso, lido sob demanda). Tooling local do ink-ops.
+**Não** indexa código-fonte (último recurso, lido sob demanda). Tooling local do larmony.
 
 Stack: **Qdrant** (Docker, `localhost:6333`) + **Ollama** (`localhost:11434`) servindo
-**nomic-embed-text** (768d, cosine). Coleção: `ink_ops_memory`.
+**nomic-embed-text** (768d, cosine). Coleção: `larmony_memory`.
 
 A recall é **obrigatória**: para perguntas "onde/como funciona X", chame a MCP tool
-`memory_search(...)` (servidor `ink-memory`) **antes** de ler o código. O índice é
-re-atualizado automaticamente no início de cada sessão (hook SessionStart).
+`memory_search(...)` (servidor `larmony-memory`) **antes** de ler o código.
 
 ## Setup (uma vez) — WSL
 
 Ollama nativo no WSL (`nomic-embed-text`), Qdrant no Docker Desktop (exposto em
-`localhost:6333`) e um venv dedicado em `~/ink-ops-rag-venv`. Use sempre o venv —
+`localhost:6333`) e um venv dedicado em `~/larmony-rag-venv`. Use sempre o venv —
 `python`/`pip3` "puros" no WSL podem resolver para o shim do pyenv do Windows.
 
 ```bash
@@ -24,12 +23,12 @@ ollama pull nomic-embed-text
 docker compose -f docker-compose.rag.yml up -d
 
 # 3. venv dedicado + deps (inclui o pacote `mcp` do servidor MCP)
-REPO=/mnt/c/Users/Paulo/Documents/Repos/Pessoal/ink-ops
-python3 -m venv ~/ink-ops-rag-venv
-~/ink-ops-rag-venv/bin/python -m pip install -r "$REPO/bin/scripts/rag/requirements.txt"
+REPO=/mnt/c/Users/Paulo/Documents/Repos/Pessoal/larmony
+python3 -m venv ~/larmony-rag-venv
+~/larmony-rag-venv/bin/python -m pip install -r "$REPO/bin/scripts/rag/requirements.txt"
 
 # 4. Build inicial do índice
-~/ink-ops-rag-venv/bin/python "$REPO/bin/scripts/rag/index.py"
+~/larmony-rag-venv/bin/python "$REPO/bin/scripts/rag/index.py"
 ```
 
 Ou rode o slash command `/rag-setup` (documenta os passos acima).
@@ -38,20 +37,20 @@ Ou rode o slash command `/rag-setup` (documenta os passos acima).
 
 ```bash
 # Rebuild completo (recria a coleção)
-~/ink-ops-rag-venv/bin/python bin/scripts/rag/index.py
+~/larmony-rag-venv/bin/python bin/scripts/rag/index.py
 
 # Upsert incremental (o que os hooks rodam)
-~/ink-ops-rag-venv/bin/python bin/scripts/rag/index.py --no-recreate
+~/larmony-rag-venv/bin/python bin/scripts/rag/index.py --no-recreate
 
 # Consulta manual (CLI)
-~/ink-ops-rag-venv/bin/python bin/scripts/rag/query.py "onde vivem os use-cases de materiais?"
+~/larmony-rag-venv/bin/python bin/scripts/rag/query.py "como funciona o multi-tenancy?"
 ```
 
 IDs de chunk são determinísticos — reindexar sobrescreve em vez de duplicar.
 
-## Servidor MCP (`ink-memory`)
+## Servidor MCP (`larmony-memory`)
 
-`mcp_server.py` expõe duas tools para a sessão Claude (config em `.claude/settings.json`):
+`mcp_server.py` expõe duas tools para a sessão Claude (config em `.mcp.json`):
 
 | Tool | Função |
 |---|---|
@@ -62,9 +61,9 @@ IDs de chunk são determinísticos — reindexar sobrescreve em vez de duplicar.
 
 | Hook | Ação |
 |---|---|
-| SessionStart | `docker compose up -d` + reindex incremental em background |
-| Stop | reindex incremental em background (rede de segurança) |
 | PostToolUse (Write/Edit em `.memory/`) | reindex incremental imediato |
+
+(SessionStart entra na evolução do RAG — ver roadmap.)
 
 ## Variáveis de ambiente (overrides)
 
@@ -73,7 +72,7 @@ IDs de chunk são determinísticos — reindexar sobrescreve em vez de duplicar.
 | `RAG_QDRANT_URL` | `http://localhost:6333` |
 | `RAG_OLLAMA_URL` | `http://localhost:11434` |
 | `RAG_EMBED_MODEL` | `nomic-embed-text` |
-| `RAG_COLLECTION` | `ink_ops_memory` |
+| `RAG_COLLECTION` | `larmony_memory` |
 
 ## O que é indexado
 

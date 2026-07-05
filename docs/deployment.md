@@ -130,11 +130,11 @@ Por ambiente (production e staging), crie um serviço `Cron`:
 
 ```bash
 # backend — sobe até falhar na config DATABASE_URL (valida que a imagem carrega)
-docker build -f apps/backend/Dockerfile -t ink-ops-backend .
-docker run --rm ink-ops-backend
+docker build -f apps/backend/Dockerfile -t larmony-backend .
+docker run --rm larmony-backend
 
 # frontend — NEXT_PUBLIC_API_URL é build-time
 docker build -f apps/frontend/Dockerfile \
-  --build-arg NEXT_PUBLIC_API_URL=http://localhost:3001 -t ink-ops-frontend .
-docker run --rm -e PORT=3000 -p 3000:3000 ink-ops-frontend
+  --build-arg NEXT_PUBLIC_API_URL=http://localhost:3001 -t larmony-frontend .
+docker run --rm -e PORT=3000 -p 3000:3000 larmony-frontend
 ```

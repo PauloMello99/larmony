@@ -1,6 +1,6 @@
 # /new-module
 
-Scaffold a new NestJS module following the ink-ops architecture pattern.
+Scaffold a new NestJS module following the larmony architecture pattern.
 
 ## Usage
 

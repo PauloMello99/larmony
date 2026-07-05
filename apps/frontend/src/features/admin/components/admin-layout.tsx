@@ -60,7 +60,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-5 w-5 text-orange-400" />
           <span className="text-sm font-semibold text-foreground">
-            inkops <span className="text-foreground/40">· Plataforma</span>
+            larmony <span className="text-foreground/40">· Plataforma</span>
           </span>
         </div>
         <div className="flex items-center gap-1">

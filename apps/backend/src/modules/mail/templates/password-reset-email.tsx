@@ -9,11 +9,11 @@ export interface PasswordResetEmailProps {
 
 export function PasswordResetEmail({ name, resetUrl }: PasswordResetEmailProps) {
   return (
-    <BaseLayout preview="Redefina sua senha do Ink Ops">
+    <BaseLayout preview="Redefina sua senha do Larmony">
       <Heading style={sharedStyles.heading}>Redefinir senha</Heading>
       <Text style={sharedStyles.paragraph}>
         {name ? `Olá, ${name}. ` : "Olá. "}
-        Recebemos um pedido para redefinir a senha da sua conta no Ink Ops.
+        Recebemos um pedido para redefinir a senha da sua conta no Larmony.
         Clique no botão abaixo para escolher uma nova senha.
       </Text>
       <Section style={{ textAlign: "center", margin: "24px 0" }}>
@@ -39,7 +39,7 @@ export default function PasswordResetEmailPreview() {
   return (
     <PasswordResetEmail
       name="Paulo"
-      resetUrl="https://app.inkops.app/auth/reset-password#access_token=preview"
+      resetUrl="https://app.larmony.me/auth/reset-password#access_token=preview"
     />
   );
 }

@@ -1,4 +1,4 @@
-"""Stdio MCP server exposing the ink-ops memory bank as agent-callable tools.
+"""Stdio MCP server exposing the larmony memory bank as agent-callable tools.
 
 Wraps the same retrieval path as query.py so a live Claude session can recall project
 knowledge mid-chat instead of re-reading whole memory files or scanning source.
@@ -7,10 +7,10 @@ knowledge mid-chat instead of re-reading whole memory files or scanning source.
     memory_status()            -> collection point count, so the agent can tell whether the
                                   index is empty/stale before trusting a search
 
-Launched via .claude/settings.json (server name "ink-memory"). Local context-retrieval
-tooling for ink-ops only. Run standalone for a smoke test:
+Launched via .mcp.json (server name "larmony-memory"). Local context-retrieval
+tooling for larmony only. Run standalone for a smoke test:
 
-    ~/ink-ops-rag-venv/bin/python bin/scripts/rag/mcp_server.py
+    ~/larmony-rag-venv/bin/python bin/scripts/rag/mcp_server.py
 """
 import sys
 from pathlib import Path
@@ -26,7 +26,7 @@ from qdrant_store import build_filter, get_client
 
 _SNIPPET_CHARS = 600
 
-mcp = FastMCP("ink-memory")
+mcp = FastMCP("larmony-memory")
 
 
 @mcp.tool()
@@ -37,7 +37,7 @@ def memory_search(
     document: str | None = None,
     section: str | None = None,
 ) -> str:
-    """Semantic search over the ink-ops memory bank (.memory/, docs/, package READMEs, CLAUDE.md).
+    """Semantic search over the larmony memory bank (.memory/, docs/, package READMEs, CLAUDE.md).
 
     Call this BEFORE reading source code to answer "where/how does X work" questions.
     Returns the top-k most relevant chunks with their type, section breadcrumb and cosine score.

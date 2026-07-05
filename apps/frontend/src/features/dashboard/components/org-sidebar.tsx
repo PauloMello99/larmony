@@ -142,7 +142,7 @@ export function OrgSidebar({ org, mobileOpen = false, onMobileClose }: OrgSideba
                         disabled={!collapsed}
                       >
                         <Link
-                          href={`${basePath}/${item.href}`}
+                          href={item.href ? `${basePath}/${item.href}` : basePath}
                           onClick={onMobileClose}
                           className={cn(
                             "flex items-center rounded-md py-2 text-sm transition-colors",

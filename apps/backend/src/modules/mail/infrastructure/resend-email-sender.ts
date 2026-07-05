@@ -26,7 +26,7 @@ export class ResendEmailSender implements IEmailSender {
     const apiKey = config.get<string>("RESEND_API_KEY") ?? "";
     this.from =
       config.get<string>("NOTIFICATIONS_FROM_EMAIL") ??
-      "Ink Ops <no-reply@inkops.local>";
+      "Larmony <no-reply@larmony.local>";
     this.enabled = flag && apiKey.length > 0;
     this.client = this.enabled ? new Resend(apiKey) : null;
   }

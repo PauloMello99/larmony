@@ -5,7 +5,7 @@
 #
 # Build a partir da RAIZ do repo:
 #   docker build -f apps/frontend/Dockerfile \
-#     --build-arg NEXT_PUBLIC_API_URL=https://api.exemplo.com -t ink-ops-frontend .
+#     --build-arg NEXT_PUBLIC_API_URL=https://api.exemplo.com -t larmony-frontend .
 #
 # IMPORTANTE: NEXT_PUBLIC_API_URL é inlinado no bundle em BUILD TIME — precisa
 # estar presente no build (no Railway, é passado como variável do serviço).
