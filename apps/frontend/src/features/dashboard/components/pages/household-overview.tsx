@@ -22,6 +22,7 @@ import {
   trendPercent,
   useHouseholdOverview,
   type BudgetProgress,
+  type GoalProgress,
   type RecentTransaction,
   type UpcomingBill,
 } from "@/features/dashboard/hooks/use-household-overview"
@@ -161,6 +162,31 @@ function BillRow({ bill }: { bill: UpcomingBill }) {
   )
 }
 
+function GoalRow({ goal }: { goal: GoalProgress }) {
+  const pct = goal.targetCents > 0 ? Math.round((goal.savedCents / goal.targetCents) * 100) : 0
+  const done = goal.savedCents >= goal.targetCents
+
+  return (
+    <li className="px-4 py-2.5">
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: goal.color }} />
+          <span className="truncate text-sm text-foreground">{goal.name}</span>
+        </div>
+        <span className="shrink-0 text-xs text-muted-foreground">
+          {formatCentsToBRL(goal.savedCents)} / {formatCentsToBRL(goal.targetCents)}
+        </span>
+      </div>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-foreground/[0.06]">
+        <div
+          className={cn("h-full rounded-full", done ? "bg-success" : "bg-primary")}
+          style={{ width: `${Math.min(pct, 100)}%` }}
+        />
+      </div>
+    </li>
+  )
+}
+
 function BudgetRow({ budget }: { budget: BudgetProgress }) {
   const { t } = useTranslation("dashboard")
   const pct = budget.limitCents > 0 ? Math.round((budget.spentCents / budget.limitCents) * 100) : 0
@@ -212,7 +238,7 @@ export function HouseholdOverview() {
   const transactions = overview?.recentTransactions ?? []
   const bills = overview?.upcomingBills ?? []
   const budgets = overview?.budgets ?? []
-  const goals = overview?.goals ?? { savedCents: 0, activeCount: 0 }
+  const goals = overview?.goals ?? { savedCents: 0, activeCount: 0, top: [] }
 
   return (
     <div className="flex flex-col gap-6">
@@ -353,6 +379,12 @@ export function HouseholdOverview() {
               <div className="space-y-2 p-4">
                 <Skeleton className="h-8 w-full" />
               </div>
+            ) : goals.top.length > 0 ? (
+              <ul className="divide-y divide-foreground/[0.06]">
+                {goals.top.map((g) => (
+                  <GoalRow key={g.id} goal={g} />
+                ))}
+              </ul>
             ) : (
               <EmptyState
                 icon={Target}

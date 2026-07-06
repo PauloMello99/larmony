@@ -36,10 +36,18 @@ export interface BudgetProgress {
   spentCents: number
 }
 
+export interface GoalProgress {
+  id: string
+  name: string
+  color: string
+  savedCents: number
+  targetCents: number
+}
+
 export interface HouseholdOverview {
   currentMonth: MonthTotals
   previousMonth: MonthTotals
-  goals: { savedCents: number; activeCount: number }
+  goals: { savedCents: number; activeCount: number; top: GoalProgress[] }
   upcomingBills: UpcomingBill[]
   recentTransactions: RecentTransaction[]
   budgets: BudgetProgress[]

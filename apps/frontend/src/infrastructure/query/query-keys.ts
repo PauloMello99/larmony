@@ -61,6 +61,15 @@ export const queryKeys = {
     list: (householdId: string) => ["bills", householdId, "list"] as const,
   },
 
+  // ─── Goals ──────────────────────────────────────────────────────────────
+  goals: {
+    all: (householdId: string) => ["goals", householdId] as const,
+    list: (householdId: string) => ["goals", householdId, "list"] as const,
+    /** Aninhada sob o prefixo do lar — `goals.all` invalida o histórico junto. */
+    contributions: (householdId: string, goalId: string) =>
+      ["goals", householdId, "contributions", goalId] as const,
+  },
+
   // ─── Admin (plataforma / super_admin) ──────────────────────────────────────
   admin: {
     all: ["admin"] as const,
