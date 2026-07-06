@@ -63,7 +63,7 @@ export function HouseholdsContent() {
           {households.map((household) => (
             <li key={household.id}>
               <Link
-                href={`/dashboard/household/${household.slug}/overview`}
+                href={`/dashboard/household/${household.slug}`}
                 className="group flex items-center justify-between rounded-xl border border-foreground/5 bg-foreground/[0.02] px-4 py-3.5 transition-all hover:border-foreground/10 hover:bg-foreground/[0.05] sm:px-5 sm:py-4"
               >
                 <div className="flex items-center gap-3 sm:gap-4">
