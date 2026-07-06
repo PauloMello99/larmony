@@ -1,62 +1,65 @@
 ---
 name: roadmap
-description: Roadmap do Larmony — fases do bootstrap e milestones de features (M1–M9), cada um vira um plano próprio
+description: Roadmap do Larmony — bootstrap concluído, auditoria de milestones M1–M9 com estado real, esforço e estimativas (snapshot 2026-07-06)
 metadata:
   type: project
 ---
 
 # Roadmap — Larmony
 
-> Snapshot de **2026-07-04** (bootstrap do projeto). Cada milestone de feature (M1–M9)
-> vira um plano de implementação próprio antes de começar.
+> Snapshot de **2026-07-06** (auditoria pós-bootstrap). Cada milestone vira um
+> plano de implementação próprio antes de começar. Esforço em dias-de-dev
+> aproximados (dev sênior + agente).
 
-## Bootstrap (em andamento)
+## Bootstrap — CONCLUÍDO ✅
 
 | Fase | Escopo | Status |
 |---|---|---|
-| 0 — Preparação | branch `bootstrap/larmony`, baseline verde | ✅ |
-| 1 — Cleanup | remover domínio ink-ops, manter shell de infra; renames RAG/branding | ✅ |
-| 2 — Redocumentação | `.memory/`, ADRs re-ratificados, `docs/`, `CLAUDE.md` | em andamento |
-| 3 — Evolução do RAG | bge-m3, chunking token-aware, parent-document, hybrid search, indexar código, hook SessionStart | ✅ |
-| 4 — Fundação do produto | rename org→household, schema `finance/`, squash de migrations + RLS (baseline 0000+0001), i18n base (next-i18next + `users.locale` + PATCH /auth/me) | ✅ (2026-07-05) |
+| 0 — Preparação | branch, baseline verde | ✅ |
+| 1 — Cleanup | domínio ink-ops removido, shell de infra mantido | ✅ |
+| 2 — Redocumentação | `.memory/`, ADRs 0001–0018, `docs/`, `CLAUDE.md` | ✅ |
+| 3 — Evolução do RAG | bge-m3, parent-document, hybrid, código indexado, SessionStart | ✅ |
+| 4 — Fundação | org→household, schema `finance/`, baseline 0000+0001 RLS, i18n base | ✅ |
+| Extras | cron registry (@CronJobName + DiscoveryService), GuestGuard, shell teal + IA completa do sidebar, placeholders M2–M8 | ✅ (2026-07-05) |
 
-## Milestones de features (cada um = plano próprio)
+## Auditoria de milestones (2026-07-06)
 
-| M | Feature | Escopo resumido |
-|---|---|---|
-| M1 | **Households core** | fluxo signup→setup de lar, convites revisados, switcher multi-lar, seletor de idioma no Account + namespaces i18n por feature, landing com copy do Larmony (rename org→household e fundação i18n já feitos na Fase 4) |
-| M2 | **Categories + Transactions simples** | CRUD de categorias (13 defaults por use-case) e transações (income/expense, filtros mês/tipo/categoria, Sheet lateral) |
-| M3 | **Dashboard** | resumo mensal (receitas/despesas/saldo), últimas 5 transações, contas ≤7 dias, atalhos |
-| M4 | **Parcelamento + rateio** | installment_groups (N parcelas), transaction_members (split igual/específico), coluna Pessoa |
-| M5 | **Budgets** | limite mensal por categoria, spending derivado, navegação mês/ano |
-| M6 | **Goals** | metas + contribuições, progresso derivado por SUM, badge concluída |
-| M7 | **Bills + lembretes** | CRUD de contas, use-case `send-bill-reminders` plugado no tick do internal-cron, guarda mensal via `reminder_last_sent_at` |
-| M8 | **Relatórios** | vista mensal (6 meses + pie + por pessoa via `person_id`) e anual (12 meses) |
-| M9 | **Recorrência** | schema + engine de transações recorrentes — a lacuna eterna do old-larmony; design próprio |
+| M | Feature | Estado real | O que falta | Esforço |
+|---|---|---|---|---|
+| M1 | Households core | **~85%** — rename ponta a ponta, convites funcionais, switcher, GuestGuard, i18n base, shell teal | seletor de idioma no Account, onboarding signup→criar lar guiado, landing com copy Larmony | **S** (0,5–1d) |
+| M2 | Categories + Transactions | schema pronto + 13 defaults semeadas; **0% módulo/UI** | módulos backend (CRUD use-cases) + telas (lista, filtros mês/tipo/categoria, Sheet lateral) | **L** (3–5d) |
+| M3 | Dashboard | esqueleto visual pronto (Frente B); **endpoint overview + KPIs reais em entrega** (sessão 2026-07-06) | pós-endpoint: só evoluções visuais conforme dados reais surgirem no M2 | **M→S** |
+| M4 | Parcelamento + rateio | schema pronto (installment_groups, transaction_members); 0% lógica | use-cases (criar N parcelas, split igual/específico com sobra determinística ADR-0017) + UI no Sheet | **M** (2–3d) |
+| M5 | Budgets | schema pronto (unique household+categoria+mês+ano); 0% | módulo + tela (grid com progress, spending derivado em tempo real) | **M** (1,5–2d) |
+| M6 | Goals | schema pronto; 0% | módulo + tela (cards, aportes via dialog, progresso derivado por SUM) | **M** (1,5–2d) |
+| M7 | Bills + lembretes | schema pronto; **fatia cron em entrega** (job send-bill-reminders + dedup bill×mês, sessão 2026-07-06) | CRUD/telas de bills, "lançar como transação", config de lembrete na UI | **S/M** (1–1,5d pós-fatia) |
+| M8 | Relatórios | 0% (Recharts já é dependência) | use-cases de agregação (mensal 6m, anual 12m, por pessoa via person_id) + telas bar/pie | **M/L** (2–4d) |
+| M9 | Recorrência | fora do schema **por design** (nunca existiu no old-larmony) | design próprio: modelo de regra, engine no tick do cron, edição de série vs ocorrência, relação com bills | **L** (3–5d) |
+
+**Ordem sugerida de execução:** M1 (fechar) → M2 → M3 (fechar) → M5 → M7 (fechar) → M6 → M4 → M8 → M9.
+Racional: M2 destrava dados reais para tudo; budgets/bills têm mais valor doméstico imediato que parcelamento.
+
+## Qualidade — testes (sessão 2026-07-06)
+
+- Backend: Jest + supertest — unit (use-cases com fakes) + integração por
+  funcionalidade contra Supabase local (auth, households, invitations,
+  isolamento RLS, cron/dedup).
+- Frontend: Playwright — fluxo principal (signup→lar→overview→nav) + convite.
+- Regra: **toda feature nova de milestone entrega seus specs junto** (test-first
+  por módulo, ver domain-rules).
 
 ## Fora de escopo do v1
 
 - Permissões por módulo (roles owner/member bastam).
 - Billing/assinatura (módulo `subscriptions` fica como shell).
-- OAuth Google/Apple (old-larmony tinha; reavaliar após M1 — auth atual é e-mail/senha).
+- OAuth Google/Apple (reavaliar após M1 — auth atual é e-mail/senha).
 - Ledger append-only de transações (ADR-0010 superseded).
 
-## Infra — estado 2026-07-05
+## Infra — estado 2026-07-06
 
-- **Git resolvido**: origin → PauloMello99/larmony, `main` com histórico limpo
-  (6 commits), v1 preservada em `legacy/v1`.
-- **Staging provisionado** no Railway novo (projeto `Larmony`, env `staging`):
-  services Backend (backend-staging-f229.up.railway.app), Frontend
-  (frontend-staging-5b93.up.railway.app) e Cron (alpine), conectados a
-  `PauloMello99/larmony@main` via `RAILWAY_DOCKERFILE_PATH`. Supabase staging:
-  `larmony-staging` (`ubpcmccdvldspoyfoark`, sa-east-1).
-- **Pendências manuais do staging** (dashboard):
-  1. Backend vars: `DATABASE_URL`/`DATABASE_APP_URL` (senha do DB) e
-     `SUPABASE_SERVICE_ROLE_KEY`.
-  2. Cron: Start Command (curl no tick via private networking — ver
-     docs/deployment.md §Cron), Cron Schedule `*/15 * * * *`, restart NEVER.
-  3. Redeploy Backend/Frontend após as vars (primeiro deploy falha por design
-     sem DATABASE_URL).
-- **v1 produção**: fica como está (decisão 2026-07-05) — services trackeiam
-  `main`; builds futuros falharão sem derrubar a produção (Railway serve o
-  último deploy bom).
+- **Git**: origin → PauloMello99/larmony, `main` com histórico limpo; v1 em `legacy/v1`.
+- **Staging VERDE**: Railway (Backend backend-staging-f229 + Frontend
+  frontend-staging-5b93 + Cron) × Supabase `larmony-staging`
+  (ubpcmccdvldspoyfoark). Baseline de migrations aplicado, RLS on, health/tick ok.
+- **v1 produção**: intocada (decisão 2026-07-05); services trackeiam `main`,
+  builds futuros falham sem derrubar o deploy servido.
