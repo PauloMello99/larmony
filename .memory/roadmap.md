@@ -22,7 +22,7 @@ metadata:
 | 4 — Fundação | org→household, schema `finance/`, baseline 0000+0001 RLS, i18n base | ✅ |
 | Extras | cron registry (@CronJobName + DiscoveryService), GuestGuard, shell teal + IA completa do sidebar, placeholders M2–M8 | ✅ (2026-07-05) |
 
-## Auditoria de milestones (2026-07-06, atualizada pós M1+M2)
+## Auditoria de milestones (2026-07-06, atualizada pós M1+M2+M5)
 
 | M | Feature | Estado real | O que falta | Esforço |
 |---|---|---|---|---|
@@ -30,24 +30,27 @@ metadata:
 | M2 | Categories + Transactions | **✅ entregue (2026-07-06)** — backend CRUD completo (`households/:id/categories` e `/transactions`, RLS via DRIZZLE, filtros mês/ano/tipo/categoria, join de nomes) + frontend completo (Sheet de criar/editar, Table+cards responsivos, CurrencyInput/DatePicker, filtros) | nada — M4 estende com parcelamento/rateio depois | — |
 | M3 | Dashboard | **✅ entregue (2026-07-06)** — `GET /households/:id/overview` + frontend com trends/progress/skeletons; **confirmado que para de mostrar zero automaticamente** assim que M2 populou dados reais, sem nenhuma mudança no endpoint | nada — evolui sozinho conforme M4-M7 populam mais tabelas | — |
 | M4 | Parcelamento + rateio | schema pronto (installment_groups, transaction_members); 0% lógica | use-cases (criar N parcelas, split igual/específico com sobra determinística ADR-0017) + UI no Sheet de transação (M2 já aceita os campos como nulos) | **M** (2–3d) |
-| M5 | Budgets | schema pronto (unique household+categoria+mês+ano); 0% | módulo + tela (grid com progress, spending derivado em tempo real) | **M** (1,5–2d) |
+| M5 | Budgets | **✅ entregue (2026-07-06)** — backend CRUD (`households/:id/budgets?month=&year=`, RLS via DRIZZLE) com **spending derivado em runtime** (join correlacionado budgets→transactions, só `type='expense'`, sem persistir); update só do limite (categoria/período imutáveis), 409 na duplicata (unique) + frontend (grid de cards com progress bar, badge "Excedido", period nav mês/ano, Select filtrado por tipo+não-orçadas) | nada — evolui com M2 povoando transações | — |
 | M6 | Goals | schema pronto; 0% | módulo + tela (cards, aportes via dialog, progresso derivado por SUM) | **M** (1,5–2d) |
 | M7 | Bills + lembretes | schema pronto; fatia cron entregue (job send-bill-reminders + dedup bill×mês, sessão 2026-07-06) | CRUD/telas de bills, "lançar como transação", config de lembrete na UI | **S/M** (1–1,5d) |
 | M8 | Relatórios | 0% (Recharts já é dependência) | use-cases de agregação (mensal 6m, anual 12m, por pessoa via person_id) + telas bar/pie | **M/L** (2–4d) |
 | M9 | Recorrência | fora do schema **por design** (nunca existiu no old-larmony) | design próprio: modelo de regra, engine no tick do cron, edição de série vs ocorrência, relação com bills | **L** (3–5d) |
 
-**Ordem sugerida de execução (M1 e M2 concluídos):** M5 → M7 (fechar) → M6 → M4 → M8 → M9.
-Racional: budgets/bills têm mais valor doméstico imediato que parcelamento; M4 (rateio) fica mais rico depois que budgets/bills existirem para consumir a mesma base de transações.
+**Ordem sugerida de execução (M1, M2 e M5 concluídos):** M7 (fechar) → M6 → M4 → M8 → M9.
+Racional: bills tem valor doméstico imediato e a fatia cron já existe; M6 (goals) é gêmeo de M5 (padrão CRUD + derivado por SUM); M4 (rateio) fica mais rico depois que budgets/bills consumirem a mesma base de transações.
 
 ## Qualidade — testes (sessão 2026-07-06)
 
 - Backend: Jest + supertest — unit (use-cases com fakes) + integração por
   funcionalidade contra Supabase local (auth, households, invitations,
-  isolamento RLS, cron/dedup, categories, transactions). 26 e2e + 12 unit.
+  isolamento RLS, cron/dedup, categories, transactions, budgets). 32 e2e + 12 unit.
 - Frontend: Playwright — fluxo principal (signup→lar→overview→nav) + convite +
   locale da conta + onboarding + categories (CRUD) + transactions (CRUD,
-  filtros, e a promessa cross-milestone do overview deixando de mostrar
-  zero). 16 specs.
+  filtros, promessa cross-milestone do overview) + budgets (CRUD com spending
+  derivado refletindo despesa + badge Excedido). 19 specs.
+  Gotcha: a suíte cheia serial (19 specs, cada um re-logando) tem flakiness
+  ambiental no dev server (Next/Turbopack ocasionalmente trava no login sob
+  carga); cada spec passa isolado. Em CI usar build de produção deve estabilizar.
 - Regra: **toda feature nova de milestone entrega seus specs junto** (test-first
   por módulo, ver domain-rules).
 - Padrão de repositório confirmado para escrita autenticada: `DRIZZLE`
@@ -56,7 +59,13 @@ Racional: budgets/bills têm mais valor doméstico imediato que parcelamento; M4
   bootstrap (sign-up, criação do primeiro membership) e jobs sem request
   context (cron). Resolução de `authId → users.id` (para `createdBy`/
   `personId` em transactions) é feita no controller via `GetMeUseCase`,
-  nunca dentro do use-case.
+  nunca dentro do use-case. **Violação de unique (código pg 23505)**: o Drizzle
+  embrulha o erro do pg — inspecionar `err` E `err.cause` ao mapear para uma
+  DomainException (ver `drizzle-budget.repository.ts`).
+- **Spending/derivados nunca persistidos**: budget spending e (futuro) goal
+  progress são calculados em runtime via join/SUM correlacionado com o range
+  do período. O padrão canônico do join está no overview `budgetsProgress` e
+  replicado em `drizzle-budget.repository.ts` (sem acoplar os dois módulos).
 
 ## Fora de escopo do v1
 
