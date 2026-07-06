@@ -11,6 +11,7 @@ import { HouseholdsModule } from "./modules/households/households.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
 import { AdminModule } from "./modules/admin/admin.module";
 import { AuditModule } from "./modules/audit/audit.module";
+import { BillsModule } from "./modules/bills/bills.module";
 import { InternalCronModule } from "./modules/internal-cron/internal-cron.module";
 import { TelemetryModule } from "./common/telemetry/telemetry.module";
 
@@ -27,6 +28,7 @@ import { TelemetryModule } from "./common/telemetry/telemetry.module";
     NotificationsModule,
     AdminModule,
     AuditModule,
+    BillsModule,
     InternalCronModule,
   ],
   providers: [

@@ -1,5 +1,10 @@
 # 07 — Contas a pagar (M7)
 
+> **Fatia cron entregue (2026-07-06)**: módulo `bills` mínimo (repo admin) +
+> `SendBillRemindersUseCase` + job `send-bill-reminders` no tick, com dedup
+> bill×mês via `reminder_last_sent_at` (gravado antes do envio) e notificação
+> in-app + e-mail para todos os membros. Falta: CRUD/telas + "lançar como transação".
+
 ## Escopo
 
 - CRUD de bill: nome, `amount_cents`, `due_day` (1–31), categoria opcional,

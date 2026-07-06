@@ -117,10 +117,10 @@ export class SendBillRemindersJob implements CronJob {
 providers decorados no boot; o tick roda todos com isolamento de erro e retorna
 `{ ok, jobs: [{name, status, durationMs}] }`. Hoje não há jobs (`jobs: []`).
 
-| Job planejado | Milestone |
+| Job | Status |
 |---|---|
-| `send-bill-reminders` (lembretes de contas) | M7 |
-| `recurrence-engine` (transações recorrentes) | M9 |
+| `send-bill-reminders` (lembretes de contas) | ✅ entregue (fatia cron do M7, 2026-07-06) — `modules/bills/application/jobs/send-bill-reminders.job.ts`; dedup por contexto **bill×mês** via `reminder_last_sent_at` gravado ANTES do envio (e-mail best-effort nunca duplica); janela = próximo vencimento (dueDay clampado ao fim do mês) − hoje == reminderDaysBefore |
+| `recurrence-engine` (transações recorrentes) | planejado — M9 |
 
 ### Migrations (ver ADR-0003)
 
