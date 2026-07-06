@@ -17,5 +17,6 @@ import { TransactionsController } from "./interface/transactions.controller";
     UpdateTransactionUseCase,
     DeleteTransactionUseCase,
   ],
+  exports: [CreateTransactionUseCase],
 })
 export class TransactionsModule {}

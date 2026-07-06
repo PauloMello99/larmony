@@ -43,4 +43,5 @@ export const DOMAIN_CODE_TO_STATUS: Record<string, number> = {
   CATEGORY_NOT_FOUND: HttpStatus.NOT_FOUND,
   BUDGET_NOT_FOUND: HttpStatus.NOT_FOUND,
   BUDGET_ALREADY_EXISTS: HttpStatus.CONFLICT,
+  BILL_NOT_FOUND: HttpStatus.NOT_FOUND,
 };

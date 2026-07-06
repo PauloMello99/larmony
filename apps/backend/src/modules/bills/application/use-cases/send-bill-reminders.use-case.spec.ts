@@ -28,6 +28,11 @@ function makeUseCase(bills: BillEntity[]) {
     findActiveWithReminder: jest.fn().mockResolvedValue(bills),
     markReminderSent: jest.fn().mockResolvedValue(undefined),
     findHouseholdMemberUserIds: jest.fn().mockResolvedValue(["user-a", "user-b"]),
+    findAllByHousehold: jest.fn().mockResolvedValue([]),
+    findForLaunch: jest.fn().mockResolvedValue(null),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
   };
   const notifications = { notify: jest.fn().mockResolvedValue({}) };
   const config = { get: jest.fn().mockReturnValue("http://localhost:3000") };
