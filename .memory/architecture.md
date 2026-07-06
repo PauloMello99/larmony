@@ -84,7 +84,7 @@ src/
     ├── categories/                # CRUD de categorias (M2)
     ├── transactions/              # CRUD de transações com filtros (M2)
     ├── budgets/                   # CRUD de orçamentos + spending derivado (M5)
-    ├── bills/                     # fatia cron (M7) — job de lembrete; CRUD completo ainda não entregue
+    ├── bills/                     # CRUD + lançar como transação + job de lembrete (M7 completo)
     ├── admin/                     # super_admin de plataforma (ADR-0013)
     ├── mail/                      # Resend + React Email (ADR-0012)
     ├── notifications/             # notificações in-app + e-mail
@@ -119,7 +119,7 @@ export class SendBillRemindersJob implements CronJob {
 
 `CronJobsService` (`modules/internal-cron/cron-jobs.service.ts`) descobre os
 providers decorados no boot; o tick roda todos com isolamento de erro e retorna
-`{ ok, jobs: [{name, status, durationMs}] }`. Hoje não há jobs (`jobs: []`).
+`{ ok, jobs: [{name, status, durationMs}] }`.
 
 | Job | Status |
 |---|---|
