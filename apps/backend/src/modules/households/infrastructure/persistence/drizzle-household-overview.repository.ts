@@ -5,6 +5,7 @@ import * as schema from "../../../../database/schema";
 import { daysBetween, monthBounds, nextDueDate, toISODate } from "../../../../common/finance/due-date";
 import type {
   BudgetProgress,
+  GoalProgress,
   HouseholdOverviewData,
   IHouseholdOverviewRepository,
   MonthTotals,
@@ -64,20 +65,34 @@ export class DrizzleHouseholdOverviewRepository implements IHouseholdOverviewRep
 
   private async goalsSummary(
     householdId: string,
-  ): Promise<{ savedCents: number; activeCount: number }> {
+  ): Promise<{ savedCents: number; activeCount: number; top: GoalProgress[] }> {
     const rows = await this.db
       .select({
+        id: schema.goals.id,
+        name: schema.goals.name,
+        color: schema.goals.color,
         targetAmountCents: schema.goals.targetAmountCents,
         savedCents: sql<number>`coalesce(sum(${schema.goalContributions.amountCents}), 0)::int`,
       })
       .from(schema.goals)
       .leftJoin(schema.goalContributions, eq(schema.goalContributions.goalId, schema.goals.id))
       .where(eq(schema.goals.householdId, householdId))
-      .groupBy(schema.goals.id, schema.goals.targetAmountCents);
+      .groupBy(schema.goals.id);
 
     const savedCents = rows.reduce((sum, r) => sum + r.savedCents, 0);
     const activeCount = rows.filter((r) => r.savedCents < r.targetAmountCents).length;
-    return { savedCents, activeCount };
+    // Top 3 por % de progresso (mesmo padrão do top-3 de budgets).
+    const top = rows
+      .map((r) => ({
+        id: r.id,
+        name: r.name,
+        color: r.color,
+        savedCents: r.savedCents,
+        targetCents: r.targetAmountCents,
+      }))
+      .sort((a, b) => b.savedCents / b.targetCents - a.savedCents / a.targetCents)
+      .slice(0, 3);
+    return { savedCents, activeCount, top };
   }
 
   private async upcomingBills(householdId: string, now: Date): Promise<UpcomingBill[]> {
