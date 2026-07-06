@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import {
   KeyRound,
+  Languages,
   Loader2,
   MailCheck,
   Monitor,
@@ -18,6 +19,7 @@ import {
   Upload,
 } from "lucide-react"
 import { useTheme } from "next-themes"
+import { useTranslation } from "react-i18next"
 import { useMe } from "@/features/auth"
 import { useAuth } from "@/features/auth"
 import { clearSession } from "@/features/auth/lib/session"
@@ -31,6 +33,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/ui/select"
 import {
   Dialog,
   DialogContent,
@@ -358,6 +367,74 @@ export function AppearanceSection() {
             )
           })}
         </div>
+      </section>
+    </div>
+  )
+}
+
+/* ── Idioma ─────────────────────────────────────────────────────── */
+
+const LOCALE_VALUES = ["pt-BR", "en"] as const
+
+export function LocaleSection() {
+  const router = useRouter()
+  const { t } = useTranslation("common")
+  const { me, loading, updateMe } = useMe()
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleChange(value: string) {
+    setError(null)
+    setSaving(true)
+    try {
+      await updateMe({ locale: value as "pt-BR" | "en" })
+      await router.replace(router.asPath, router.asPath, { locale: value })
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Não foi possível trocar o idioma.",
+      )
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className="grid gap-6">
+      <SectionHeader
+        title={t("locale.label")}
+        description="Escolha o idioma da interface e dos e-mails."
+      />
+      <section className="max-w-lg rounded-xl border border-border bg-foreground/[0.02] p-5">
+        <div className="flex items-center gap-2">
+          <Languages className="h-4 w-4 text-primary" />
+          <h3 className="text-sm font-medium">{t("locale.label")}</h3>
+        </div>
+        {loading ? (
+          <div className="mt-4 flex items-center gap-2 text-sm text-foreground/40">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Carregando…
+          </div>
+        ) : (
+          <div className="mt-4 max-w-xs">
+            <Select
+              value={me?.locale ?? "pt-BR"}
+              onValueChange={handleChange}
+              disabled={saving}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {LOCALE_VALUES.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {t(`locale.${value}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+          </div>
+        )}
       </section>
     </div>
   )

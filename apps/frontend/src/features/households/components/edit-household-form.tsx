@@ -43,9 +43,9 @@ export function EditHouseholdForm({ household, onSubmit }: EditHouseholdFormProp
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nome da lar</FormLabel>
+              <FormLabel>Nome do lar</FormLabel>
               <FormControl>
-                <Input placeholder="Ex: Studio Ink" autoComplete="off" {...field} />
+                <Input placeholder="Ex: Casa da Família" autoComplete="off" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

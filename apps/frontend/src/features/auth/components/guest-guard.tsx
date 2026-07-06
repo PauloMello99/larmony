@@ -56,7 +56,12 @@ export function GuestGuard({ children, allowRecoveryToken = false }: GuestGuardP
       return
     }
 
-    void router.replace("/dashboard/households")
+    // Onboarding (M1b): quem acabou de se cadastrar (sem convite/redirect) ganha
+    // o Sheet de criar o primeiro lar já aberto na lista.
+    const isFreshSignup = router.pathname === "/auth/signup"
+    void router.replace(
+      isFreshSignup ? "/dashboard/households?welcome=1" : "/dashboard/households",
+    )
   }, [router, router.isReady, user, loading, allowedByToken])
 
   if (loading) {

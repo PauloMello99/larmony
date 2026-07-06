@@ -1,5 +1,6 @@
 import * as React from "react"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { PlusCircle, Building2, ChevronRight } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Badge } from "@/shared/components/ui/badge"
@@ -13,9 +14,29 @@ const ROLE_LABELS: Record<string, string> = {
 }
 
 export function HouseholdsContent() {
+  const router = useRouter()
   const [createOpen, setCreateOpen] = React.useState(false)
-  const { households } = useHouseholds()
+  const { households, loading } = useHouseholds()
   const { createHousehold } = useHouseholdMutations()
+  const isWelcome = router.query.welcome === "1"
+  const autoOpened = React.useRef(false)
+
+  // Onboarding (M1b): recém-cadastrado sem lares ainda → abre o Sheet de criar
+  // lar automaticamente, uma única vez.
+  React.useEffect(() => {
+    if (!isWelcome || loading || autoOpened.current) return
+    if (households.length === 0) {
+      autoOpened.current = true
+      setCreateOpen(true)
+    }
+  }, [isWelcome, loading, households])
+
+  function handleCreateOpenChange(open: boolean) {
+    setCreateOpen(open)
+    if (!open && isWelcome) {
+      void router.replace("/dashboard/households", undefined, { shallow: true })
+    }
+  }
 
   async function handleCreate(values: CreateHouseholdFormValues) {
     await createHousehold(values)
@@ -48,7 +69,18 @@ export function HouseholdsContent() {
       {households.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-foreground/10 py-16 text-center sm:py-20">
           <Building2 className="mb-4 h-10 w-10 text-foreground/20" />
-          <p className="text-sm text-foreground/40">Nenhum lar ainda.</p>
+          {isWelcome ? (
+            <>
+              <p className="text-base font-medium text-foreground">
+                Bem-vindo(a) ao Larmony!
+              </p>
+              <p className="mt-1 text-sm text-foreground/40">
+                Vamos criar o primeiro lar para organizar as finanças da sua casa.
+              </p>
+            </>
+          ) : (
+            <p className="text-sm text-foreground/40">Nenhum lar ainda.</p>
+          )}
           <Button
             className="mt-4 w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
             size="sm"
@@ -92,7 +124,7 @@ export function HouseholdsContent() {
 
       <CreateHouseholdForm
         open={createOpen}
-        onOpenChange={setCreateOpen}
+        onOpenChange={handleCreateOpenChange}
         onSubmit={handleCreate}
       />
     </div>

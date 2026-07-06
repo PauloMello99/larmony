@@ -3,18 +3,18 @@ import { Check } from "lucide-react"
 import { Badge } from "@/shared/components/ui/badge"
 
 const STATS = [
-  { value: "500+", label: "Estúdios ativos" },
-  { value: "98%", label: "Satisfação" },
-  { value: "12k+", label: "Agendamentos/mês" },
-  { value: "R$2M+", label: "Processados" },
+  { value: "100%", label: "Centavos exatos, sem arredondamento" },
+  { value: "∞", label: "Membros por lar" },
+  { value: "PT-BR / EN", label: "Idiomas disponíveis" },
+  { value: "RLS", label: "Dados isolados por lar" },
 ]
 
 const BULLETS = [
-  "Interface projetada para o contexto de artistas independentes",
+  "Interface projetada para o dia a dia financeiro de uma casa",
   "Sem contratos de longo prazo — cancele quando quiser",
-  "Suporte via WhatsApp em português",
+  "Convide quem mora com você para dividir as finanças",
   "Atualizações contínuas baseadas no feedback dos usuários",
-  "Dados seguros com criptografia e backups automáticos",
+  "Dados seguros com isolamento por lar e backups automáticos",
 ]
 
 export function About() {
@@ -33,14 +33,14 @@ export function About() {
               </Badge>
             </div>
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
-              Feito por quem
+              Feito para quem
               <br />
-              <span className="text-primary">entende o ofício</span>
+              <span className="text-primary">divide as contas de casa</span>
             </h2>
             <p className="mt-6 leading-relaxed text-white/50">
-              Construído com e para artistas. Sabemos que sua energia deve ir para
-              o trabalho criativo, não para planilhas e anotações perdidas.
-              O Larmony cuida da gestão para você focar no que realmente importa.
+              Construído para famílias e casais. Sabemos que organizar as finanças
+              do lar não deveria depender de planilhas soltas e anotações perdidas.
+              O Larmony cuida do controle para você focar no que realmente importa.
             </p>
 
             <ul className="mt-8 space-y-3">

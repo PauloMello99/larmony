@@ -1,50 +1,50 @@
 import * as React from "react"
 import {
-  CalendarDays,
-  Users,
-  DollarSign,
+  ArrowLeftRight,
+  Target,
+  PiggyBank,
   BarChart3,
   Bell,
-  ShieldCheck,
+  Users,
 } from "lucide-react"
 import { Badge } from "@/shared/components/ui/badge"
 
 const FEATURES = [
   {
-    icon: CalendarDays,
-    title: "Agendamentos inteligentes",
+    icon: ArrowLeftRight,
+    title: "Transações organizadas",
     description:
-      "Calendário visual com bloqueio automático, lembretes por WhatsApp e confirmações digitais.",
+      "Categorize receitas e despesas, divida gastos entre quem mora na casa e acompanhe tudo em tempo real.",
   },
   {
-    icon: Users,
-    title: "Gestão de clientes",
+    icon: PiggyBank,
+    title: "Orçamentos por categoria",
     description:
-      "Histórico completo por cliente — sessões, fotos, notas e ficha de anamnese.",
+      "Defina limites mensais por categoria e veja o quanto já foi gasto, com alerta quando estourar.",
   },
   {
-    icon: DollarSign,
-    title: "Financeiro simplificado",
+    icon: Target,
+    title: "Metas de economia",
     description:
-      "Controle de receitas, despesas, comissões e relatórios por período em um clique.",
+      "Crie metas para a viagem, a reforma ou a reserva de emergência e acompanhe o progresso junto com o lar.",
   },
   {
     icon: BarChart3,
-    title: "Relatórios e métricas",
+    title: "Dashboard com KPIs reais",
     description:
-      "Dashboards com taxa de ocupação, ticket médio e performance por profissional.",
+      "Saldo do mês, comparação com o mês anterior, contas a vencer e orçamentos em um único painel.",
   },
   {
     icon: Bell,
-    title: "Notificações automáticas",
+    title: "Lembretes de contas",
     description:
-      "Lembretes de consulta, confirmações de pagamento e follow-ups pós-sessão.",
+      "Nunca mais esqueça uma conta a pagar — notificação in-app e por e-mail antes do vencimento.",
   },
   {
-    icon: ShieldCheck,
-    title: "Multi-estúdio seguro",
+    icon: Users,
+    title: "Feito para o lar",
     description:
-      "Gerencie múltiplas unidades com permissões por perfil — dono, gerente ou artista.",
+      "Convide quem mora com você, cada um com seu papel, e organizem as finanças domésticas juntos.",
   },
 ]
 
@@ -66,8 +66,8 @@ export function FeaturesSection() {
             Tudo que você precisa
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-white/50">
-            Projetado para o dia a dia de artistas independentes e estúdios em
-            crescimento.
+            Projetado para o dia a dia de quem organiza as finanças de casa,
+            sozinho ou com a família.
           </p>
         </div>
 
