@@ -4,6 +4,12 @@
 > `SendBillRemindersUseCase` + job `send-bill-reminders` no tick, com dedup
 > bill×mês via `reminder_last_sent_at` (gravado antes do envio) e notificação
 > in-app + e-mail para todos os membros. Falta: CRUD/telas + "lançar como transação".
+>
+> **Validado ao vivo (2026-07-06)**: seed de bill com janela de disparo exata →
+> 1º tick cria a notificação in-app + loga o e-mail (no-op, flag off) e grava
+> `reminder_last_sent_at`; 2º e 3º ticks no mesmo mês → **zero notificações
+> novas** (`count=1` após 3 ticks). Dedup por contexto bill×mês confirmado
+> sem mocks, direto no banco local.
 
 ## Escopo
 
