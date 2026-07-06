@@ -5,8 +5,8 @@ Uma spec-esqueleto por milestone do roadmap (`.memory/roadmap.md`). Cada spec de
 
 | # | Feature | Milestone | Status |
 |---|---|---|---|
-| [01](01-households-core.md) | Households core (tenancy, convites, switcher, i18n) | M1 | 🚧 ~85% (falta seletor de idioma, onboarding, landing) |
-| [02](02-categorias-e-transacoes.md) | Categorias + Transações | M2 | 🔲 não iniciado (schema pronto) |
+| [01](01-households-core.md) | Households core (tenancy, convites, switcher, i18n) | M1 | ✅ 100% (idioma no Account, onboarding, landing com copy de finanças) |
+| [02](02-categorias-e-transacoes.md) | Categorias + Transações | M2 | ✅ entregue (CRUD completo, backend + frontend) |
 | [03](03-dashboard.md) | Dashboard | M3 | ✅ entregue (endpoint overview + KPIs reais no frontend) |
 | [04](04-parcelamento-e-rateio.md) | Parcelamento + Rateio | M4 | 🔲 não iniciado (schema pronto) |
 | [05](05-orcamentos.md) | Orçamentos (budgets) | M5 | 🔲 não iniciado (schema pronto) |

@@ -80,7 +80,10 @@ src/
 └── modules/
     ├── auth/                      # sign-up/in/out, refresh, forgot/reset; IAuthProvider port
     ├── user/                      # get-me etc.
-    ├── organizations/             # multi-tenant shell (→ vira households na fundação)
+    ├── households/                # tenancy (multi-lar), membros, convites, overview (M3)
+    ├── categories/                # CRUD de categorias (M2)
+    ├── transactions/              # CRUD de transações com filtros (M2)
+    ├── bills/                     # fatia cron (M7) — job de lembrete; CRUD completo ainda não entregue
     ├── admin/                     # super_admin de plataforma (ADR-0013)
     ├── mail/                      # Resend + React Email (ADR-0012)
     ├── notifications/             # notificações in-app + e-mail
@@ -133,10 +136,23 @@ providers decorados no boot; o tick roda todos com isolamento de erro e retorna
 
 **Regra crítica de hash**: o migrator faz `sha256(rawSqlContent)` — não modifique o `.sql` gerado após criação.
 
-**Estado transitório**: o schema (`database/schema/`) e as migrations atuais ainda
-são os herdados do ink-ops (tabelas de estúdio órfãs, sem módulos que as usem).
-Serão substituídos por um **baseline squashado** do domínio Larmony na fundação
-do produto (ver [[roadmap]] M1) — não criar migrations novas sobre o schema velho.
+### Padrão de conexão para escrita autenticada (DRIZZLE vs DRIZZLE_ADMIN)
+
+Confirmado ao construir `categories`/`transactions` (M2): **toda escrita de um
+módulo household-scoped usa `DRIZZLE`** (a conexão RLS-enforced — o
+`RlsInterceptor`, global, seta `request.jwt.claims = {sub: authId}` antes do
+handler rodar, então `is_household_member(household_id)` é avaliado pelo
+Postgres em cada INSERT/UPDATE/DELETE). Não é preciso reverificar membership
+no use-case quando o controller já usa `HouseholdMembershipGuard`.
+
+`DRIZZLE_ADMIN` (BYPASSRLS) fica só para os dois casos que o RLS não cobre:
+bootstrap (sign-up, criar o primeiro `household_membership` antes de existir
+qualquer membership) e jobs de cron (sem request context, logo sem claims).
+
+Resolução de `authId` (Supabase auth id) → `users.id` (interno, usado em FKs
+como `transactions.createdBy`/`personId`) é feita **no controller**, via
+`GetMeUseCase`, e passada como parâmetro simples para o use-case — nunca o
+use-case resolve isso sozinho (mantém use-cases livres de import de `AuthUser`).
 
 ### Supabase local
 

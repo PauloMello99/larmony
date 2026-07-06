@@ -1,15 +1,15 @@
 ---
 name: roadmap
-description: Roadmap do Larmony — bootstrap concluído, auditoria de milestones M1–M9 com estado real, esforço e estimativas (snapshot 2026-07-06)
+description: Roadmap do Larmony — M1 fechado e M2 (Categories+Transactions) entregue; auditoria de milestones M1–M9 com estado real, esforço e estimativas (snapshot 2026-07-06)
 metadata:
   type: project
 ---
 
 # Roadmap — Larmony
 
-> Snapshot de **2026-07-06** (auditoria pós-bootstrap). Cada milestone vira um
-> plano de implementação próprio antes de começar. Esforço em dias-de-dev
-> aproximados (dev sênior + agente).
+> Snapshot de **2026-07-06** (atualizado após fechar M1 e entregar M2). Cada
+> milestone vira um plano de implementação próprio antes de começar. Esforço
+> em dias-de-dev aproximados (dev sênior + agente).
 
 ## Bootstrap — CONCLUÍDO ✅
 
@@ -22,31 +22,41 @@ metadata:
 | 4 — Fundação | org→household, schema `finance/`, baseline 0000+0001 RLS, i18n base | ✅ |
 | Extras | cron registry (@CronJobName + DiscoveryService), GuestGuard, shell teal + IA completa do sidebar, placeholders M2–M8 | ✅ (2026-07-05) |
 
-## Auditoria de milestones (2026-07-06)
+## Auditoria de milestones (2026-07-06, atualizada pós M1+M2)
 
 | M | Feature | Estado real | O que falta | Esforço |
 |---|---|---|---|---|
-| M1 | Households core | **~85%** — rename ponta a ponta, convites funcionais, switcher, GuestGuard, i18n base, shell teal | seletor de idioma no Account, onboarding signup→criar lar guiado, landing com copy Larmony | **S** (0,5–1d) |
-| M2 | Categories + Transactions | schema pronto + 13 defaults semeadas; **0% módulo/UI** | módulos backend (CRUD use-cases) + telas (lista, filtros mês/tipo/categoria, Sheet lateral) | **L** (3–5d) |
-| M3 | Dashboard | **✅ entregue (2026-07-06)** — `GET /households/:id/overview` (mês corrente+anterior, metas, contas ≤7d, orçamentos, 5 transações recentes) + overview do frontend com trends, progress bars e skeletons | nada — evolui sozinho conforme M2/M4-M7 populam as tabelas | — |
-| M4 | Parcelamento + rateio | schema pronto (installment_groups, transaction_members); 0% lógica | use-cases (criar N parcelas, split igual/específico com sobra determinística ADR-0017) + UI no Sheet | **M** (2–3d) |
+| M1 | Households core | **✅ 100% (2026-07-06)** — rename ponta a ponta, convites, switcher, GuestGuard, i18n base, shell teal, seletor de idioma no Account, onboarding signup→criar lar (`?welcome=1` auto-abre o Sheet), landing com copy de finanças domésticas | nada | — |
+| M2 | Categories + Transactions | **✅ entregue (2026-07-06)** — backend CRUD completo (`households/:id/categories` e `/transactions`, RLS via DRIZZLE, filtros mês/ano/tipo/categoria, join de nomes) + frontend completo (Sheet de criar/editar, Table+cards responsivos, CurrencyInput/DatePicker, filtros) | nada — M4 estende com parcelamento/rateio depois | — |
+| M3 | Dashboard | **✅ entregue (2026-07-06)** — `GET /households/:id/overview` + frontend com trends/progress/skeletons; **confirmado que para de mostrar zero automaticamente** assim que M2 populou dados reais, sem nenhuma mudança no endpoint | nada — evolui sozinho conforme M4-M7 populam mais tabelas | — |
+| M4 | Parcelamento + rateio | schema pronto (installment_groups, transaction_members); 0% lógica | use-cases (criar N parcelas, split igual/específico com sobra determinística ADR-0017) + UI no Sheet de transação (M2 já aceita os campos como nulos) | **M** (2–3d) |
 | M5 | Budgets | schema pronto (unique household+categoria+mês+ano); 0% | módulo + tela (grid com progress, spending derivado em tempo real) | **M** (1,5–2d) |
 | M6 | Goals | schema pronto; 0% | módulo + tela (cards, aportes via dialog, progresso derivado por SUM) | **M** (1,5–2d) |
-| M7 | Bills + lembretes | schema pronto; **fatia cron em entrega** (job send-bill-reminders + dedup bill×mês, sessão 2026-07-06) | CRUD/telas de bills, "lançar como transação", config de lembrete na UI | **S/M** (1–1,5d pós-fatia) |
+| M7 | Bills + lembretes | schema pronto; fatia cron entregue (job send-bill-reminders + dedup bill×mês, sessão 2026-07-06) | CRUD/telas de bills, "lançar como transação", config de lembrete na UI | **S/M** (1–1,5d) |
 | M8 | Relatórios | 0% (Recharts já é dependência) | use-cases de agregação (mensal 6m, anual 12m, por pessoa via person_id) + telas bar/pie | **M/L** (2–4d) |
 | M9 | Recorrência | fora do schema **por design** (nunca existiu no old-larmony) | design próprio: modelo de regra, engine no tick do cron, edição de série vs ocorrência, relação com bills | **L** (3–5d) |
 
-**Ordem sugerida de execução:** M1 (fechar) → M2 → M3 (fechar) → M5 → M7 (fechar) → M6 → M4 → M8 → M9.
-Racional: M2 destrava dados reais para tudo; budgets/bills têm mais valor doméstico imediato que parcelamento.
+**Ordem sugerida de execução (M1 e M2 concluídos):** M5 → M7 (fechar) → M6 → M4 → M8 → M9.
+Racional: budgets/bills têm mais valor doméstico imediato que parcelamento; M4 (rateio) fica mais rico depois que budgets/bills existirem para consumir a mesma base de transações.
 
 ## Qualidade — testes (sessão 2026-07-06)
 
 - Backend: Jest + supertest — unit (use-cases com fakes) + integração por
   funcionalidade contra Supabase local (auth, households, invitations,
-  isolamento RLS, cron/dedup).
-- Frontend: Playwright — fluxo principal (signup→lar→overview→nav) + convite.
+  isolamento RLS, cron/dedup, categories, transactions). 26 e2e + 12 unit.
+- Frontend: Playwright — fluxo principal (signup→lar→overview→nav) + convite +
+  locale da conta + onboarding + categories (CRUD) + transactions (CRUD,
+  filtros, e a promessa cross-milestone do overview deixando de mostrar
+  zero). 16 specs.
 - Regra: **toda feature nova de milestone entrega seus specs junto** (test-first
   por módulo, ver domain-rules).
+- Padrão de repositório confirmado para escrita autenticada: `DRIZZLE`
+  (RLS-enforced, claims setadas pelo `RlsInterceptor` global) é o padrão para
+  toda escrita de módulo household-scoped; `DRIZZLE_ADMIN` fica reservado a
+  bootstrap (sign-up, criação do primeiro membership) e jobs sem request
+  context (cron). Resolução de `authId → users.id` (para `createdBy`/
+  `personId` em transactions) é feita no controller via `GetMeUseCase`,
+  nunca dentro do use-case.
 
 ## Fora de escopo do v1
 
