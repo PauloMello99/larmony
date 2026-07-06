@@ -13,6 +13,7 @@ import {
   TrendingUp,
 } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
+import { formatCentsToBRL } from "@/shared/lib/currency"
 import { EmptyState } from "@/shared/components/ui/empty-state"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { useMe } from "@/features/auth/hooks/use-me"
@@ -32,8 +33,6 @@ import {
  * estiverem vazias (antes do M2), os valores chegam zerados e as seções
  * mostram empty states ricos.
  */
-
-const BRL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" })
 
 function greetingKey(hour: number): string {
   if (hour < 12) return "overview.goodMorning"
@@ -79,7 +78,7 @@ function SummaryCard({ label, valueCents, icon: Icon, tone = "neutral", trend, l
             tone === "neutral" && "text-foreground",
           )}
         >
-          {BRL.format(valueCents / 100)}
+          {formatCentsToBRL(valueCents)}
         </p>
       )}
       {trend !== null && trend !== undefined && !loading && (
@@ -134,7 +133,7 @@ function TransactionRow({ tx }: { tx: RecentTransaction }) {
       </div>
       <span className={cn("shrink-0 text-sm font-semibold", isIncome ? "text-success" : "text-destructive")}>
         {isIncome ? "+" : "−"}
-        {BRL.format(tx.amountCents / 100)}
+        {formatCentsToBRL(tx.amountCents)}
       </span>
     </li>
   )
@@ -156,7 +155,7 @@ function BillRow({ bill }: { bill: UpcomingBill }) {
         </p>
       </div>
       <span className="shrink-0 text-sm font-semibold text-foreground">
-        {BRL.format(bill.amountCents / 100)}
+        {formatCentsToBRL(bill.amountCents)}
       </span>
     </li>
   )
@@ -180,7 +179,7 @@ function BudgetRow({ budget }: { budget: BudgetProgress }) {
           )}
         </div>
         <span className="shrink-0 text-xs text-muted-foreground">
-          {BRL.format(budget.spentCents / 100)} / {BRL.format(budget.limitCents / 100)}
+          {formatCentsToBRL(budget.spentCents)} / {formatCentsToBRL(budget.limitCents)}
         </span>
       </div>
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-foreground/[0.06]">
