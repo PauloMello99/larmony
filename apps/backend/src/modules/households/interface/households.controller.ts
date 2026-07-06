@@ -135,7 +135,7 @@ export class HouseholdsController {
       inviterAuthId: authUser.id,
       inviterUserId: user.id,
       email: dto.email,
-      role: dto.role,
+      role: dto.role ?? "member",
     });
   }
 
