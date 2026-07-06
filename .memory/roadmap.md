@@ -22,7 +22,7 @@ metadata:
 | 4 — Fundação | org→household, schema `finance/`, baseline 0000+0001 RLS, i18n base | ✅ |
 | Extras | cron registry (@CronJobName + DiscoveryService), GuestGuard, shell teal + IA completa do sidebar, placeholders M2–M8 | ✅ (2026-07-05) |
 
-## Auditoria de milestones (2026-07-06, atualizada pós M1+M2+M5+M7)
+## Auditoria de milestones (2026-07-06, atualizada pós M1+M2+M5+M6+M7)
 
 | M | Feature | Estado real | O que falta | Esforço |
 |---|---|---|---|---|
@@ -31,28 +31,35 @@ metadata:
 | M3 | Dashboard | **✅ entregue (2026-07-06)** — `GET /households/:id/overview` + frontend com trends/progress/skeletons; **confirmado que para de mostrar zero automaticamente** assim que M2 populou dados reais, sem nenhuma mudança no endpoint | nada — evolui sozinho conforme M4-M7 populam mais tabelas | — |
 | M4 | Parcelamento + rateio | schema pronto (installment_groups, transaction_members); 0% lógica | use-cases (criar N parcelas, split igual/específico com sobra determinística ADR-0017) + UI no Sheet de transação (M2 já aceita os campos como nulos) | **M** (2–3d) |
 | M5 | Budgets | **✅ entregue (2026-07-06)** — backend CRUD (`households/:id/budgets?month=&year=`, RLS via DRIZZLE) com **spending derivado em runtime** (join correlacionado budgets→transactions, só `type='expense'`, sem persistir); update só do limite (categoria/período imutáveis), 409 na duplicata (unique) + frontend (grid de cards com progress bar, badge "Excedido", period nav mês/ano, Select filtrado por tipo+não-orçadas) | nada — evolui com M2 povoando transações | — |
-| M6 | Goals | schema pronto; 0% | módulo + tela (cards, aportes via dialog, progresso derivado por SUM) | **M** (1,5–2d) |
+| M6 | Goals | **✅ entregue (2026-07-06)** — backend CRUD (`households/:id/goals`, RLS via DRIZZLE) + sub-recurso `/:goalId/contributions` (add/list com `authorName`/delete, aportes positivos, escopo via goal pai); **savedCents derivado por SUM em runtime** (nunca persistido); overview estendido aditivamente com `goals.top` (top-3 por %) e a seção "Metas ativas" agora renderiza GoalRow (corrigido o EmptyState incondicional) + frontend (grid de cards com progress, badge "Concluída" em success, dialog de aporte com histórico e exclusão, DatePicker com `startMonth`/`endMonth` opcionais p/ data alvo futura) | nada | — |
 | M7 | Bills + lembretes | **✅ entregue (2026-07-06)** — CRUD completo (`households/:id/bills`, RLS via DRIZZLE) somado à fatia cron já existente (repo agora injeta DRIZZLE+DRIZZLE_ADMIN no mesmo repositório); "lançar como transação" via `LaunchBillAsTransactionUseCase` reusando `CreateTransactionUseCase` (bills nunca geram transaction automaticamente — launch é sempre ação explícita, a bill nunca é consumida); frontend com seções Ativas/Inativas, Switch inline, alerta amber ≤7 dias, Select de lembrete {1,3,7,15} | nada | — |
 | M8 | Relatórios | 0% (Recharts já é dependência) | use-cases de agregação (mensal 6m, anual 12m, por pessoa via person_id) + telas bar/pie | **M/L** (2–4d) |
 | M9 | Recorrência | fora do schema **por design** (nunca existiu no old-larmony) | design próprio: modelo de regra, engine no tick do cron, edição de série vs ocorrência, relação com bills | **L** (3–5d) |
 
-**Ordem sugerida de execução (M1, M2, M5 e M7 concluídos):** M6 → M4 → M8 → M9.
-Racional: M6 (goals) é gêmeo de M5 (padrão CRUD + derivado por SUM); M4 (rateio) fica mais rico agora que budgets/bills consomem a mesma base de transações.
+**Ordem sugerida de execução (M1, M2, M5, M6 e M7 concluídos):** M4 → M8 → M9.
+Racional: M4 (parcelamento/rateio) completa o modelo de transações antes dos
+relatórios (M8) agregarem por pessoa; M9 (recorrência) fecha o v1 reusando o
+cron registry.
 
 ## Qualidade — testes (sessão 2026-07-06)
 
 - Backend: Jest + supertest — unit (use-cases com fakes) + integração por
   funcionalidade contra Supabase local (auth, households, invitations,
-  isolamento RLS, cron/dedup, categories, transactions, budgets, bills).
-  37 e2e + 12 unit.
+  isolamento RLS, cron/dedup, categories, transactions, budgets, bills, goals).
+  44 e2e + 12 unit.
 - Frontend: Playwright — fluxo principal (signup→lar→overview→nav) + convite +
   locale da conta + onboarding + categories (CRUD) + transactions (CRUD,
   filtros, promessa cross-milestone do overview) + budgets (CRUD com spending
   derivado refletindo despesa + badge Excedido) + bills (CRUD, lançar como
-  transação sem consumir a bill, toggle ativa/inativa). 22 specs.
-  Gotcha: a suíte cheia serial (22 specs, cada um re-logando) tem flakiness
+  transação sem consumir a bill, toggle ativa/inativa) + goals (aportes,
+  Concluída, exclusão de aporte recuando o progresso). 25 specs.
+  Gotcha: a suíte cheia serial (cada spec re-logando) tem flakiness
   ambiental no dev server (Next/Turbopack ocasionalmente trava no login sob
   carga); cada spec passa isolado. Em CI usar build de produção deve estabilizar.
+- **Placeholder de referência nos E2E**: `fluxo-principal.e2e.ts` valida "um
+  placeholder renderiza" apontando para uma feature ainda não entregue — a cada
+  milestone entregue, mover a asserção para o próximo placeholder (hoje:
+  Relatórios/M8; quando M8 sair, sobra M9 ou remove-se a asserção).
 - **Estender um módulo existente sem quebrá-lo**: ao completar o CRUD de bills
   sobre a fatia cron já entregue, o repositório passou a injetar `DRIZZLE`
   (CRUD) + `DRIZZLE_ADMIN` (os métodos do cron, renomeados de `this.db` para

@@ -84,6 +84,7 @@ src/
     ├── categories/                # CRUD de categorias (M2)
     ├── transactions/              # CRUD de transações com filtros (M2)
     ├── budgets/                   # CRUD de orçamentos + spending derivado (M5)
+    ├── goals/                     # CRUD de metas + aportes; savedCents derivado por SUM (M6)
     ├── bills/                     # CRUD + lançar como transação + job de lembrete (M7 completo)
     ├── admin/                     # super_admin de plataforma (ADR-0013)
     ├── mail/                      # Resend + React Email (ADR-0012)
