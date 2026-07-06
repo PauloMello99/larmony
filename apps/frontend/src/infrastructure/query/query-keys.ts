@@ -21,6 +21,8 @@ export const queryKeys = {
     detail: (householdId: string) => ["households", "detail", householdId] as const,
     /** Single household resolved by slug (super_admin deep-link) */
     bySlug: (slug: string) => ["households", "by-slug", slug] as const,
+    /** KPIs do dashboard (mês corrente/anterior, metas, contas, orçamentos) */
+    overview: (householdId: string) => ["households", "overview", householdId] as const,
   },
 
   // ─── Members & Invitations ─────────────────────────────────────────────────

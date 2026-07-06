@@ -18,6 +18,7 @@ import type { AuthUser } from "../../auth/application/ports/auth-provider.interf
 import { GetMeUseCase } from "../../user/application/use-cases/get-me.use-case";
 import { ListUserHouseholdsUseCase } from "../application/use-cases/list-user-households.use-case";
 import { GetHouseholdUseCase } from "../application/use-cases/get-household.use-case";
+import { GetHouseholdOverviewUseCase } from "../application/use-cases/get-household-overview.use-case";
 import { ResolveHouseholdBySlugUseCase } from "../application/use-cases/resolve-household-by-slug.use-case";
 import { CreateHouseholdUseCase } from "../application/use-cases/create-household.use-case";
 import { UpdateHouseholdUseCase } from "../application/use-cases/update-household.use-case";
@@ -46,6 +47,7 @@ export class HouseholdsController {
     private readonly getMe: GetMeUseCase,
     private readonly listUserHouseholds: ListUserHouseholdsUseCase,
     private readonly getHousehold: GetHouseholdUseCase,
+    private readonly getHouseholdOverview: GetHouseholdOverviewUseCase,
     private readonly resolveHouseholdBySlug: ResolveHouseholdBySlugUseCase,
     private readonly createHousehold: CreateHouseholdUseCase,
     private readonly updateHousehold: UpdateHouseholdUseCase,
@@ -85,6 +87,15 @@ export class HouseholdsController {
     @CurrentUser() user: AuthUser,
   ) {
     return this.getHousehold.execute(householdId, user.id);
+  }
+
+  /** KPIs do dashboard (mês corrente + anterior, metas, contas, orçamentos). */
+  @Get(":householdId/overview")
+  overview(
+    @Param("householdId", ParseUUIDPipe) householdId: string,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.getHouseholdOverview.execute(householdId, user.id);
   }
 
   @Patch(":householdId")

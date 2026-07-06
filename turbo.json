@@ -27,6 +27,7 @@
     "clean:reset": {}
   },
   "globalEnv": [
+    "CI",
     "PORT",
     "NODE_ENV",
     "RUN_MIGRATIONS",

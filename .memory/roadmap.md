@@ -28,7 +28,7 @@ metadata:
 |---|---|---|---|---|
 | M1 | Households core | **~85%** — rename ponta a ponta, convites funcionais, switcher, GuestGuard, i18n base, shell teal | seletor de idioma no Account, onboarding signup→criar lar guiado, landing com copy Larmony | **S** (0,5–1d) |
 | M2 | Categories + Transactions | schema pronto + 13 defaults semeadas; **0% módulo/UI** | módulos backend (CRUD use-cases) + telas (lista, filtros mês/tipo/categoria, Sheet lateral) | **L** (3–5d) |
-| M3 | Dashboard | esqueleto visual pronto (Frente B); **endpoint overview + KPIs reais em entrega** (sessão 2026-07-06) | pós-endpoint: só evoluções visuais conforme dados reais surgirem no M2 | **M→S** |
+| M3 | Dashboard | **✅ entregue (2026-07-06)** — `GET /households/:id/overview` (mês corrente+anterior, metas, contas ≤7d, orçamentos, 5 transações recentes) + overview do frontend com trends, progress bars e skeletons | nada — evolui sozinho conforme M2/M4-M7 populam as tabelas | — |
 | M4 | Parcelamento + rateio | schema pronto (installment_groups, transaction_members); 0% lógica | use-cases (criar N parcelas, split igual/específico com sobra determinística ADR-0017) + UI no Sheet | **M** (2–3d) |
 | M5 | Budgets | schema pronto (unique household+categoria+mês+ano); 0% | módulo + tela (grid com progress, spending derivado em tempo real) | **M** (1,5–2d) |
 | M6 | Goals | schema pronto; 0% | módulo + tela (cards, aportes via dialog, progresso derivado por SUM) | **M** (1,5–2d) |

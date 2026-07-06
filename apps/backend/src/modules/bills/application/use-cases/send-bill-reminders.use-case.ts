@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { dateOnly, daysBetween, nextDueDate } from "../../../../common/finance/due-date";
 import { NotificationService } from "../../../notifications/application/notification.service";
 import { BillEntity } from "../../domain/bill.entity";
 import {
@@ -16,33 +17,8 @@ export interface SendBillRemindersResult {
   skippedDedup: number;
 }
 
-/** Último dia do mês de `year`/`monthIndex` (monthIndex 0-based). */
-function lastDayOfMonth(year: number, monthIndex: number): number {
-  return new Date(year, monthIndex + 1, 0).getDate();
-}
-
-/** Data-only (meia-noite local) — comparações de dias sem efeito de horário. */
-function dateOnly(d: Date): Date {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-}
-
-/**
- * Próximo vencimento da bill a partir de `today` (inclusive): dia `dueDay`
- * clampado ao fim do mês; se já passou neste mês, o do mês seguinte.
- */
-export function nextDueDate(dueDay: number, today: Date): Date {
-  const base = dateOnly(today);
-  const clamp = (y: number, m: number) =>
-    new Date(y, m, Math.min(dueDay, lastDayOfMonth(y, m)));
-
-  const thisMonth = clamp(base.getFullYear(), base.getMonth());
-  if (thisMonth >= base) return thisMonth;
-  return clamp(base.getFullYear(), base.getMonth() + 1);
-}
-
-function daysBetween(from: Date, to: Date): number {
-  return Math.round((dateOnly(to).getTime() - dateOnly(from).getTime()) / 86_400_000);
-}
+// Reexportado para compat dos specs existentes (fonte única em common/finance).
+export { nextDueDate } from "../../../../common/finance/due-date";
 
 /** Guarda anti-duplicata: já enviou lembrete desta bill no mês-calendário de `now`? */
 export function alreadySentThisMonth(bill: BillEntity, now: Date): boolean {
