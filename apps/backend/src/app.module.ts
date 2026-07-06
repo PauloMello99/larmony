@@ -14,6 +14,7 @@ import { AuditModule } from "./modules/audit/audit.module";
 import { BillsModule } from "./modules/bills/bills.module";
 import { CategoriesModule } from "./modules/categories/categories.module";
 import { TransactionsModule } from "./modules/transactions/transactions.module";
+import { BudgetsModule } from "./modules/budgets/budgets.module";
 import { InternalCronModule } from "./modules/internal-cron/internal-cron.module";
 import { TelemetryModule } from "./common/telemetry/telemetry.module";
 
@@ -33,6 +34,7 @@ import { TelemetryModule } from "./common/telemetry/telemetry.module";
     BillsModule,
     CategoriesModule,
     TransactionsModule,
+    BudgetsModule,
     InternalCronModule,
   ],
   providers: [
