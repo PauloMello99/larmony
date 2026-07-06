@@ -35,6 +35,19 @@ export const queryKeys = {
     invitations: (householdId: string) => ["members", householdId, "invitations"] as const,
   },
 
+  // ─── Categories ─────────────────────────────────────────────────────────
+  categories: {
+    all: (householdId: string) => ["categories", householdId] as const,
+    list: (householdId: string) => ["categories", householdId, "list"] as const,
+  },
+
+  // ─── Transactions ───────────────────────────────────────────────────────
+  transactions: {
+    all: (householdId: string) => ["transactions", householdId] as const,
+    list: (householdId: string, filters?: Record<string, unknown>) =>
+      ["transactions", householdId, "list", filters ?? {}] as const,
+  },
+
   // ─── Admin (plataforma / super_admin) ──────────────────────────────────────
   admin: {
     all: ["admin"] as const,
