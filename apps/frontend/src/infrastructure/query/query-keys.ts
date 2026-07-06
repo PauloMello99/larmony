@@ -55,6 +55,12 @@ export const queryKeys = {
       ["budgets", householdId, "list", filters ?? {}] as const,
   },
 
+  // ─── Bills ──────────────────────────────────────────────────────────────
+  bills: {
+    all: (householdId: string) => ["bills", householdId] as const,
+    list: (householdId: string) => ["bills", householdId, "list"] as const,
+  },
+
   // ─── Admin (plataforma / super_admin) ──────────────────────────────────────
   admin: {
     all: ["admin"] as const,
