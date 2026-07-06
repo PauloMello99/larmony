@@ -60,9 +60,9 @@ test("sidebar tem a IA completa e os placeholders renderizam", async ({ page }) 
   await page.waitForURL(/\/transactions$/)
   await expect(page.getByRole("button", { name: "Nova transação" })).toBeVisible()
 
-  // Orçamentos ainda não foi entregue — continua placeholder.
-  await sidebar.getByRole("link", { name: "Orçamentos", exact: true }).click()
-  await page.waitForURL(/\/budgets$/)
+  // Metas (M6) ainda não foi entregue — continua placeholder.
+  await sidebar.getByRole("link", { name: "Metas", exact: true }).click()
+  await page.waitForURL(/\/goals$/)
   await expect(page.getByText(/em construção|chega no/i).first()).toBeVisible()
 })
 

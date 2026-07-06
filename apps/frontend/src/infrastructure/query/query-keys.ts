@@ -48,6 +48,13 @@ export const queryKeys = {
       ["transactions", householdId, "list", filters ?? {}] as const,
   },
 
+  // ─── Budgets ────────────────────────────────────────────────────────────
+  budgets: {
+    all: (householdId: string) => ["budgets", householdId] as const,
+    list: (householdId: string, filters?: Record<string, unknown>) =>
+      ["budgets", householdId, "list", filters ?? {}] as const,
+  },
+
   // ─── Admin (plataforma / super_admin) ──────────────────────────────────────
   admin: {
     all: ["admin"] as const,
