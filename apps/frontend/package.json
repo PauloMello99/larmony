@@ -9,6 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
+    "test:e2e": "playwright test --config e2e/playwright.config.ts",
     "check-types": "tsc --noEmit",
     "clean": "pnpm -r exec rm -rf dist .turbo .next",
     "clean:reset": "pnpm clean && pnpm -r exec rm -rf node_modules"
@@ -40,6 +41,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "^4",

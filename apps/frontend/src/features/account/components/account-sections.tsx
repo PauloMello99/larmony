@@ -440,7 +440,7 @@ export function DangerSection() {
                   Esta ação é{" "}
                   <span className="font-semibold text-red-400">irreversível</span>.
                   Seus dados pessoais serão permanentemente removidos. Se você
-                  ainda for proprietário de alguma lar, a exclusão será
+                  ainda for proprietário de algum lar, a exclusão será
                   bloqueada.
                 </DialogDescription>
               </DialogHeader>

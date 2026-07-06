@@ -133,7 +133,7 @@ export function HouseholdSettingsPage({ householdId }: HouseholdSettingsPageProp
           <div className="mb-4">
             <h2 className="text-lg font-semibold">Transferir Lar</h2>
             <p className="text-sm text-foreground/50">
-              Transfira a propriedade desta lar para outro membro.
+              Transfira a propriedade deste lar para outro membro.
             </p>
           </div>
           <div className="rounded-lg border border-foreground/[0.06] bg-foreground/[0.02] p-5">
@@ -166,7 +166,7 @@ export function HouseholdSettingsPage({ householdId }: HouseholdSettingsPageProp
               <div>
                 <p className="text-sm font-medium">Excluir lar</p>
                 <p className="text-xs text-foreground/40">
-                  Remove permanentemente todos os dados desta lar.
+                  Remove permanentemente todos os dados deste lar.
                 </p>
               </div>
               <DeleteHouseholdDialog household={household} onConfirm={handleDelete} />

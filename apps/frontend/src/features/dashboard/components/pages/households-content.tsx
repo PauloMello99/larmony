@@ -31,7 +31,7 @@ export function HouseholdsContent() {
             Lares
           </h1>
           <p className="mt-1 text-sm text-foreground/40">
-            Selecione uma lar para continuar
+            Selecione um lar para continuar
           </p>
         </div>
         <Button
@@ -40,7 +40,7 @@ export function HouseholdsContent() {
           onClick={() => setCreateOpen(true)}
         >
           <PlusCircle className="mr-2 h-4 w-4" />
-          Nova lar
+          Novo lar
         </Button>
       </div>
 
@@ -48,7 +48,7 @@ export function HouseholdsContent() {
       {households.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-foreground/10 py-16 text-center sm:py-20">
           <Building2 className="mb-4 h-10 w-10 text-foreground/20" />
-          <p className="text-sm text-foreground/40">Nenhuma lar ainda.</p>
+          <p className="text-sm text-foreground/40">Nenhum lar ainda.</p>
           <Button
             className="mt-4 w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
             size="sm"

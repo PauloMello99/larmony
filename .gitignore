@@ -51,3 +51,7 @@ docker-compose.rag.yml
 # Python
 **/__pycache__/
 **/.venv/
+
+# Playwright
+apps/frontend/test-results/
+apps/frontend/playwright-report/
