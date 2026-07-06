@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { dateOnly, daysBetween, nextDueDate } from "../../../../common/finance/due-date";
+import { daysBetween, nextDueDate } from "../../../../common/finance/due-date";
 import { NotificationService } from "../../../notifications/application/notification.service";
 import { BillEntity } from "../../domain/bill.entity";
 import {
