@@ -60,10 +60,10 @@ test("sidebar tem a IA completa e os placeholders renderizam", async ({ page }) 
   await page.waitForURL(/\/transactions$/)
   await expect(page.getByRole("button", { name: "Nova transação" })).toBeVisible()
 
-  // Relatórios (M8) ainda não foi entregue — continua placeholder.
+  // Relatórios (M8) — tela real com gráficos.
   await sidebar.getByRole("link", { name: "Relatórios", exact: true }).click()
   await page.waitForURL(/\/reports$/)
-  await expect(page.getByText(/em construção|chega no/i).first()).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Relatórios" })).toBeVisible()
 })
 
 test("GuestGuard: logado, /auth/login redireciona ao dashboard", async ({ page }) => {

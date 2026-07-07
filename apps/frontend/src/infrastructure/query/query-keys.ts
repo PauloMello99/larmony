@@ -73,6 +73,14 @@ export const queryKeys = {
       ["goals", householdId, "contributions", goalId] as const,
   },
 
+  // ─── Reports ────────────────────────────────────────────────────────────
+  reports: {
+    all: (householdId: string) => ["reports", householdId] as const,
+    monthly: (householdId: string) => ["reports", householdId, "monthly"] as const,
+    annual: (householdId: string, year: number) =>
+      ["reports", householdId, "annual", year] as const,
+  },
+
   // ─── Admin (plataforma / super_admin) ──────────────────────────────────────
   admin: {
     all: ["admin"] as const,
