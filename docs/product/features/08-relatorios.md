@@ -11,3 +11,11 @@
 - Gasto por pessoa usa `person_id` (não `created_by`); empty state explica como
   atribuir pessoa às transações.
 - Agregações no backend (use-cases de relatório), Recharts no frontend.
+- Pizza e gasto por pessoa referem-se ao **mês corrente**; a série de 6 meses
+  cobre a tendência.
+
+## Status
+
+✅ **Entregue (2026-07-06)** — módulo `reports` no backend
+(`GET /households/:id/reports/monthly` e `/annual?year=`), feature `reports` no
+frontend com Recharts, testes e2e backend + Playwright.

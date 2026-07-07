@@ -34,3 +34,11 @@
 - **2026-07-04 — Recorrência fora do v1**: campos e engine só no M9, com design próprio.
 - **TDD obrigatório por module**: regra em `domain-rules.md` (test-first;
   unitário + integração por module). Herdada da carcaça.
+- **2026-07-07 — M8 Relatórios entregue**: módulo `reports` (backend) +
+  `features/reports` (frontend Recharts). Endpoints `GET
+  /households/:id/reports/monthly` e `/annual?year=`. Agregação read-only sem
+  schema novo; gasto por pessoa via `person_id`. Validado no browser com dados
+  reais (bar 6m, donut categoria, lista pessoa, vista anual com cards + nav ano).
+- **2026-07-07 — Dev Turbopack cache corrompido**: se `/dashboard/household/[slug]`
+  retorna 404 no dev, o `404.tsx` manda de volta para `/dashboard/households`.
+  Fix: `pnpm --filter frontend dev:reset`. Build de produção não é afetado.

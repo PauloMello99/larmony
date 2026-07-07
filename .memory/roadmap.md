@@ -1,13 +1,13 @@
 ---
 name: roadmap
-description: Roadmap do Larmony — M1 fechado e M2 (Categories+Transactions) entregue; auditoria de milestones M1–M9 com estado real, esforço e estimativas (snapshot 2026-07-06)
+description: Roadmap do Larmony — M1–M8 entregues; auditoria de milestones M1–M9 (snapshot 2026-07-07)
 metadata:
   type: project
 ---
 
 # Roadmap — Larmony
 
-> Snapshot de **2026-07-06** (atualizado após fechar M1 e entregar M2). Cada
+> Snapshot de **2026-07-07** (M8 Relatórios entregue e validado no browser). Cada
 > milestone vira um plano de implementação próprio antes de começar. Esforço
 > em dias-de-dev aproximados (dev sênior + agente).
 
@@ -22,7 +22,7 @@ metadata:
 | 4 — Fundação | org→household, schema `finance/`, baseline 0000+0001 RLS, i18n base | ✅ |
 | Extras | cron registry (@CronJobName + DiscoveryService), GuestGuard, shell teal + IA completa do sidebar, placeholders M2–M8 | ✅ (2026-07-05) |
 
-## Auditoria de milestones (2026-07-06, atualizada pós M1+M2+M4+M5+M6+M7)
+## Auditoria de milestones (2026-07-07, M1–M8 concluídos)
 
 | M | Feature | Estado real | O que falta | Esforço |
 |---|---|---|---|---|
@@ -33,34 +33,33 @@ metadata:
 | M5 | Budgets | **✅ entregue (2026-07-06)** — backend CRUD (`households/:id/budgets?month=&year=`, RLS via DRIZZLE) com **spending derivado em runtime** (join correlacionado budgets→transactions, só `type='expense'`, sem persistir); update só do limite (categoria/período imutáveis), 409 na duplicata (unique) + frontend (grid de cards com progress bar, badge "Excedido", period nav mês/ano, Select filtrado por tipo+não-orçadas) | nada — evolui com M2 povoando transações | — |
 | M6 | Goals | **✅ entregue (2026-07-06)** — backend CRUD (`households/:id/goals`, RLS via DRIZZLE) + sub-recurso `/:goalId/contributions` (add/list com `authorName`/delete, aportes positivos, escopo via goal pai); **savedCents derivado por SUM em runtime** (nunca persistido); overview estendido aditivamente com `goals.top` (top-3 por %) e a seção "Metas ativas" agora renderiza GoalRow (corrigido o EmptyState incondicional) + frontend (grid de cards com progress, badge "Concluída" em success, dialog de aporte com histórico e exclusão, DatePicker com `startMonth`/`endMonth` opcionais p/ data alvo futura) | nada | — |
 | M7 | Bills + lembretes | **✅ entregue (2026-07-06)** — CRUD completo (`households/:id/bills`, RLS via DRIZZLE) somado à fatia cron já existente (repo agora injeta DRIZZLE+DRIZZLE_ADMIN no mesmo repositório); "lançar como transação" via `LaunchBillAsTransactionUseCase` reusando `CreateTransactionUseCase` (bills nunca geram transaction automaticamente — launch é sempre ação explícita, a bill nunca é consumida); frontend com seções Ativas/Inativas, Switch inline, alerta amber ≤7 dias, Select de lembrete {1,3,7,15} | nada | — |
-| M8 | Relatórios | 0% (Recharts já é dependência) | use-cases de agregação (mensal 6m, anual 12m, por pessoa via person_id) + telas bar/pie | **M/L** (2–4d) |
+| M8 | Relatórios | **✅ entregue (2026-07-06)** — módulo `reports` read-only: `GET /reports/monthly` (série 6m + pizza categoria + gasto por pessoa no mês corrente via `person_id`) + `GET /reports/annual?year=` (12m + totais); frontend Recharts (bar/pie/lista), toggle Mensal/Anual, navegação de ano | nada | — |
 | M9 | Recorrência | fora do schema **por design** (nunca existiu no old-larmony) | design próprio: modelo de regra, engine no tick do cron, edição de série vs ocorrência, relação com bills | **L** (3–5d) |
 
-**Ordem sugerida de execução (M1, M2, M4, M5, M6 e M7 concluídos):** M8 → M9.
-Racional: M8 (relatórios) agrega o que os módulos anteriores já populam (incl.
-gasto por pessoa via `transaction_members`); M9 (recorrência) fecha o v1
-reusando o cron registry. **Todo o núcleo financeiro do v1 está entregue.**
+**Ordem sugerida de execução (M1–M8 concluídos):** M9.
+Racional: M9 (recorrência) fecha o v1 reusando o cron registry. **Todo o núcleo
+financeiro + relatórios do v1 estão entregues.**
 
-## Qualidade — testes (sessão 2026-07-06)
+## Qualidade — testes (sessão 2026-07-07)
 
 - Backend: Jest + supertest — unit (use-cases com fakes) + integração por
   funcionalidade contra Supabase local (auth, households, invitations,
   isolamento RLS, cron/dedup, categories, transactions, budgets, bills, goals,
-  parcelamento+rateio). 52 e2e + 12 unit.
+  parcelamento+rateio, **reports**). 55 e2e + 12 unit.
 - Frontend: Playwright — fluxo principal (signup→lar→overview→nav) + convite +
   locale da conta + onboarding + categories (CRUD) + transactions (CRUD,
   filtros, promessa cross-milestone do overview) + budgets (CRUD com spending
   derivado refletindo despesa + badge Excedido) + bills (CRUD, lançar como
   transação sem consumir a bill, toggle ativa/inativa) + goals (aportes,
   Concluída, exclusão de aporte recuando o progresso) + parcelamento/rateio
-  (badges N/M+Rateio, excluir série). 28 specs.
+  (badges N/M+Rateio, excluir série) + reports (mensal/anual, toggle, nav ano). 29 specs.
   Gotcha: a suíte cheia serial (cada spec re-logando) tem flakiness
   ambiental no dev server (Next/Turbopack ocasionalmente trava no login sob
   carga); cada spec passa isolado. Em CI usar build de produção deve estabilizar.
 - **Placeholder de referência nos E2E**: `fluxo-principal.e2e.ts` valida "um
   placeholder renderiza" apontando para uma feature ainda não entregue — a cada
   milestone entregue, mover a asserção para o próximo placeholder (hoje:
-  Relatórios/M8; quando M8 sair, sobra M9 ou remove-se a asserção).
+  Recorrência/M9; quando M9 sair, remove-se a asserção).
 - **Estender um módulo existente sem quebrá-lo**: ao completar o CRUD de bills
   sobre a fatia cron já entregue, o repositório passou a injetar `DRIZZLE`
   (CRUD) + `DRIZZLE_ADMIN` (os métodos do cron, renomeados de `this.db` para
@@ -87,6 +86,41 @@ reusando o cron registry. **Todo o núcleo financeiro do v1 está entregue.**
   progress são calculados em runtime via join/SUM correlacionado com o range
   do período. O padrão canônico do join está no overview `budgetsProgress` e
   replicado em `drizzle-budget.repository.ts` (sem acoplar os dois módulos).
+- **M8 reports — padrões confirmados**: módulo read-only `reports` (1 feature =
+  1 módulo); agregação no `DrizzleReportRepository` via `to_char(date,'YYYY-MM')`
+  + `groupBy(type)` (reusa padrão `monthTotals` do overview); pizza/pessoa só no
+  mês corrente; gasto por pessoa via `person_id` (não `created_by` nem rateio);
+  e2e usa datas relativas a `new Date()` (janela rolling de 6m); frontend Recharts
+  em `features/reports/` com `queryKeys.reports.{monthly,annual}`.
+- **Gotcha — empty-state não pode esconder navegação**: a vista anual é
+  navegável por ano; o `hasNoData` global da `ReportsPage` inicialmente também
+  cobria a anual, escondendo a `AnnualView` (e seus botões ‹ ›) sempre que o
+  ano corrente vinha vazio — o usuário ficava sem como voltar a um ano com
+  dados. Corrigido: `hasNoData` só se aplica à vista **mensal** (janela fixa,
+  sem navegação); a anual sempre renderiza `AnnualView`, que trata "sem
+  movimentação neste ano" internamente sem esconder a navegação. Regra geral:
+  qualquer empty-state que substitua uma view inteira precisa considerar se
+  essa view tem estado navegável (período/página) que o usuário precisaria
+  para sair do estado vazio.
+- **`apps/frontend/e2e/manual-qa-battery.e2e.ts` não tem `afterAll` de limpeza**
+  (arquivo exploratório, roda isolado sob demanda, não faz parte da suíte
+  regular). Cada execução deixa um household `"Lar QA Manual..."` + usuários
+  `@e2e.larmony.local` no Supabase local **sem remover depois** — na próxima
+  vez que qualquer spec padrão (`*.e2e-spec.ts` do backend) tentar
+  `cleanupByEmailPattern`, a query falha com
+  `violates foreign key constraint "transactions_created_by_users_id_fk"`
+  porque o cleanup batch deleta por e-mail, não por suite, e a transação órfã
+  ainda referencia o usuário. Sintoma: **todas** as suítes e2e do backend
+  passam nos testes mas a suíte inteira aparece como `failed` (erro só no
+  `afterAll`). Fix: `DELETE FROM households WHERE name LIKE 'Lar QA Manual%'`
+  (cascade limpa o resto) antes de rodar a suíte de novo. Não rodar esse
+  arquivo como parte da verificação de rotina de um milestone.
+- **Dev Turbopack — gotcha (2026-07-07)**: cache corrompido em `apps/frontend/.next`
+  pode fazer rotas dinâmicas (`/dashboard/household/[slug]/*`) retornarem 404
+  (`PageNotFoundError: Cannot find module for page`). O `404.tsx` redireciona tudo
+  para `/dashboard/households` — parece bug de auth/layout, mas é rota ausente no
+  dev. Fix: `pnpm --filter frontend dev:reset` (ou apagar `.next` + reiniciar).
+  `pnpm build` continua verde; CI não é afetado.
 
 ## Fora de escopo do v1
 

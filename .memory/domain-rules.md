@@ -194,12 +194,18 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
   quando `dias_até_vencimento == reminder_days_before` e ainda não enviou no mês.
 - Dashboard destaca contas com vencimento em ≤7 dias (alerta visual amber).
 
-### Relatórios
+### Relatórios (reports) — M8 ✅
 
 - Vista **mensal**: bar chart rolling de 6 meses + pie por categoria + gasto por pessoa.
 - Vista **anual**: bar chart dos 12 meses + totais + navegação de ano.
 - Gasto por pessoa usa `person_id` (não `created_by`); empty state explica como
   atribuir pessoa às transações.
+- **Implementação**: módulo `reports` (não estender `households`); 3 queries
+  paralelas no mensal (série 6m + categoria + pessoa), 1 query no anual; pizza e
+  pessoa referem-se ao **mês corrente**; cores receita=`--success`,
+  despesa=`--destructive`; sem auditoria (read-only).
+- **Frontend**: `features/reports/` — `ReportsPage`, `MonthlyView`, `AnnualView`,
+  hooks `useMonthlyReport`/`useAnnualReport`, `queryKeys.reports`.
 
 ### i18n
 
@@ -215,6 +221,5 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
 
 ### Pendências não bloqueantes para V1
 
-- Rename `organization` → `household` ponta a ponta (M1 — ver [[roadmap]]).
-- Squash das migrations herdadas + baseline do schema finance (M1).
-- Landing page com copy do Larmony (hoje é copy genérica renomeada).
+- Landing page com copy do Larmony (hoje já tem copy de finanças domésticas).
+- Recorrência (M9) — único milestone restante.

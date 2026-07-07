@@ -86,6 +86,7 @@ src/
     ├── budgets/                   # CRUD de orçamentos + spending derivado (M5)
     ├── goals/                     # CRUD de metas + aportes; savedCents derivado por SUM (M6)
     ├── bills/                     # CRUD + lançar como transação + job de lembrete (M7 completo)
+    ├── reports/                   # agregações read-only mensal/anual (M8)
     ├── admin/                     # super_admin de plataforma (ADR-0013)
     ├── mail/                      # Resend + React Email (ADR-0012)
     ├── notifications/             # notificações in-app + e-mail
@@ -165,11 +166,20 @@ use-case resolve isso sozinho (mantém use-cases livres de import de `AuthUser`)
 ## Frontend — feature-based (ver ADR-0007)
 
 - `src/features/<feature>/` com `components/`, `hooks/`, `schemas/`, `types/`, `index.ts`
-- `src/pages/` só monta features + layouts (`AuthGuard`, `OrgLayout`)
+- `src/pages/` só monta features + layouts (`AuthGuard`, `HouseholdLayout`)
 - Estado servidor: TanStack React Query; keys centralizadas em
   `src/infrastructure/query/query-keys.ts`
 - O frontend **não** fala com Supabase — só com a API do backend
   (sessão própria em `localStorage.larmony_session`)
+- **Reports (M8)**: `features/reports/` — Recharts (bar/pie), toggle Mensal/Anual,
+  `ReportTooltip` com `formatCentsToBRL`; reusa `usePrefersReducedMotion` do admin.
+
+### Dev local — gotcha Turbopack
+
+Se rotas `/dashboard/household/[householdSlug]/*` retornam 404 no `next dev`
+(`PageNotFoundError: Cannot find module for page`), o `404.tsx` redireciona para
+`/dashboard/households` (parece loop de auth). Corrigir com
+`pnpm --filter frontend dev:reset` (limpa `.next`). Build de produção OK.
 
 ## Tipagem
 
