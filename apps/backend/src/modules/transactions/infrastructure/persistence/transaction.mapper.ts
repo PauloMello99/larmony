@@ -11,6 +11,9 @@ interface TransactionRow {
   description: string;
   date: string;
   notes: string | null;
+  installmentGroupId: string | null;
+  installmentNumber: number | null;
+  installmentCount: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,6 +31,9 @@ export class TransactionMapper {
       description: row.description,
       date: row.date,
       notes: row.notes,
+      installmentGroupId: row.installmentGroupId,
+      installmentNumber: row.installmentNumber,
+      installmentCount: row.installmentCount,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
     });

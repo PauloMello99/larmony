@@ -37,3 +37,16 @@ export function monthBounds(ref: Date): { start: Date; end: Date } {
 export function toISODate(d: Date): string {
   return dateOnly(d).toISOString().slice(0, 10);
 }
+
+/**
+ * Avança `iso` (yyyy-MM-dd) em `months` meses, clampando o dia ao fim do mês
+ * destino (ex.: 31/01 + 1 mês → 28/02). Usado nas datas das parcelas.
+ */
+export function addMonthsISO(iso: string, months: number): string {
+  const [y, m, d] = iso.split("-").map(Number) as [number, number, number];
+  const targetMonthIndex = m - 1 + months;
+  const year = y + Math.floor(targetMonthIndex / 12);
+  const monthIndex = ((targetMonthIndex % 12) + 12) % 12;
+  const day = Math.min(d, lastDayOfMonth(year, monthIndex));
+  return toISODate(new Date(year, monthIndex, day));
+}

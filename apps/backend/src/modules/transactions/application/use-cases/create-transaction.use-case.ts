@@ -3,7 +3,9 @@ import type { TransactionEntity, TransactionType } from "../../domain/transactio
 import {
   ITransactionRepository,
   TRANSACTION_REPOSITORY,
+  type TransactionMemberInput,
 } from "../../domain/transaction.repository.interface";
+import { assertValidSplit } from "../../domain/split-validation";
 import { AuditService } from "../../../audit/audit.service";
 
 export interface CreateTransactionInput {
@@ -14,6 +16,8 @@ export interface CreateTransactionInput {
   categoryId?: string;
   personId?: string;
   notes?: string;
+  /** Rateio opcional (share null = divisão igual). */
+  members?: TransactionMemberInput[];
 }
 
 @Injectable()
@@ -30,16 +34,23 @@ export class CreateTransactionUseCase {
     userId: string,
     input: CreateTransactionInput,
   ): Promise<TransactionEntity> {
-    const transaction = await this.transactionRepo.create(householdId, {
-      createdBy: userId,
-      personId: input.personId ?? userId,
-      categoryId: input.categoryId ?? null,
-      type: input.type,
-      amountCents: input.amountCents,
-      description: input.description,
-      date: input.date,
-      notes: input.notes ?? null,
-    });
+    const members = input.members ?? [];
+    assertValidSplit(members, input.amountCents);
+
+    const transaction = await this.transactionRepo.create(
+      householdId,
+      {
+        createdBy: userId,
+        personId: input.personId ?? userId,
+        categoryId: input.categoryId ?? null,
+        type: input.type,
+        amountCents: input.amountCents,
+        description: input.description,
+        date: input.date,
+        notes: input.notes ?? null,
+      },
+      members.length > 0 ? members : undefined,
+    );
 
     await this.auditService.logByAuthId(authId, {
       householdId,

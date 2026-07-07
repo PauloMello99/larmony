@@ -11,6 +11,9 @@ export interface TransactionEntityProps {
   description: string;
   date: string;
   notes: string | null;
+  installmentGroupId: string | null;
+  installmentNumber: number | null;
+  installmentCount: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,6 +29,9 @@ export class TransactionEntity {
   readonly description: string;
   readonly date: string;
   readonly notes: string | null;
+  readonly installmentGroupId: string | null;
+  readonly installmentNumber: number | null;
+  readonly installmentCount: number | null;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -40,6 +46,9 @@ export class TransactionEntity {
     this.description = props.description;
     this.date = props.date;
     this.notes = props.notes;
+    this.installmentGroupId = props.installmentGroupId;
+    this.installmentNumber = props.installmentNumber;
+    this.installmentCount = props.installmentCount;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
   }

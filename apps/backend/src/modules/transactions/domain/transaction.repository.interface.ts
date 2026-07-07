@@ -27,8 +27,28 @@ export interface TransactionListItem {
   categoryIcon: string | null;
   personId: string | null;
   personName: string | null;
+  installmentGroupId: string | null;
+  installmentNumber: number | null;
+  installmentCount: number | null;
+  /** Nº de participantes no rateio (0 = sem rateio). */
+  memberCount: number;
   createdAt: Date;
   updatedAt: Date;
+}
+
+/** Participante do rateio na entrada (share null = divisão igual). */
+export interface TransactionMemberInput {
+  userId: string;
+  shareAmountCents: number | null;
+}
+
+/** Participante do rateio resolvido (com nome + fatia efetiva calculada). */
+export interface TransactionMemberItem {
+  userId: string;
+  userName: string | null;
+  shareAmountCents: number | null;
+  /** Fatia efetiva: específico → o valor; igual → split determinístico do amount. */
+  effectiveShareCents: number;
 }
 
 export interface CreateTransactionData {
@@ -40,6 +60,22 @@ export interface CreateTransactionData {
   description: string;
   date: string;
   notes?: string | null;
+}
+
+export interface CreateInstallmentData {
+  createdBy: string;
+  personId: string | null;
+  categoryId?: string | null;
+  type: TransactionType;
+  /** Total da série; dividido em `count` parcelas (1ª absorve a sobra). */
+  totalAmountCents: number;
+  description: string;
+  /** Data da 1ª parcela; as demais avançam mês a mês. */
+  firstDate: string;
+  count: number;
+  notes?: string | null;
+  /** Rateio igual replicado em cada parcela (shares null). */
+  members?: TransactionMemberInput[];
 }
 
 export interface UpdateTransactionData {
@@ -58,7 +94,27 @@ export interface ITransactionRepository {
     filters: ListTransactionsFilters,
   ): Promise<{ items: TransactionListItem[]; total: number }>;
   findById(id: string, householdId: string): Promise<TransactionEntity | null>;
-  create(householdId: string, data: CreateTransactionData): Promise<TransactionEntity>;
+  /** Cria uma transação; se `members`, grava o rateio junto. */
+  create(
+    householdId: string,
+    data: CreateTransactionData,
+    members?: TransactionMemberInput[],
+  ): Promise<TransactionEntity>;
+  /** Cria o grupo de parcelamento + N transações (atômico). Retorna as parcelas. */
+  createInstallment(
+    householdId: string,
+    data: CreateInstallmentData,
+  ): Promise<TransactionEntity[]>;
   update(id: string, householdId: string, data: UpdateTransactionData): Promise<TransactionEntity>;
   delete(id: string, householdId: string): Promise<void>;
+  /** Substitui o rateio de uma transação (delete + reinsert). */
+  replaceMembers(
+    id: string,
+    householdId: string,
+    members: TransactionMemberInput[],
+  ): Promise<void>;
+  /** Aportes do rateio, com nome e fatia efetiva. Escopado via transaction pai. */
+  findMembers(id: string, householdId: string): Promise<TransactionMemberItem[]>;
+  /** Exclui a série inteira (cascade nas parcelas + rateios). */
+  deleteInstallmentGroup(groupId: string, householdId: string): Promise<void>;
 }
