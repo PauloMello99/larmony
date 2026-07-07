@@ -25,6 +25,24 @@ function formatDate(iso: string): string {
   return `${d}/${m}/${y}`
 }
 
+function TxBadges({ tx }: { tx: Transaction }) {
+  if (!tx.installmentCount && tx.memberCount === 0) return null
+  return (
+    <span className="ml-2 inline-flex gap-1 align-middle">
+      {tx.installmentCount && (
+        <span className="rounded-full bg-foreground/[0.06] px-1.5 py-0.5 text-[10px] font-medium text-foreground/60">
+          {tx.installmentNumber}/{tx.installmentCount}
+        </span>
+      )}
+      {tx.memberCount > 0 && (
+        <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+          Rateio
+        </span>
+      )}
+    </span>
+  )
+}
+
 function TransactionActions({
   transaction,
   onEdit,
@@ -93,7 +111,10 @@ export function TransactionList({ transactions, onEdit, onDelete }: TransactionL
           <TableBody>
             {transactions.map((tx) => (
               <TableRow key={tx.id}>
-                <TableCell className="px-4 font-medium">{tx.description}</TableCell>
+                <TableCell className="px-4 font-medium">
+                  {tx.description}
+                  <TxBadges tx={tx} />
+                </TableCell>
                 <TableCell className="px-4">
                   {tx.categoryName ? (
                     <span className="inline-flex items-center gap-1.5 text-sm text-foreground/60">
@@ -135,7 +156,10 @@ export function TransactionList({ transactions, onEdit, onDelete }: TransactionL
             className="flex items-center gap-3 rounded-lg border border-foreground/10 bg-foreground/[0.02] p-3"
           >
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">{tx.description}</p>
+              <p className="truncate text-sm font-medium">
+                {tx.description}
+                <TxBadges tx={tx} />
+              </p>
               <p className="truncate text-xs text-foreground/40">
                 {tx.categoryName ?? "Sem categoria"} · {formatDate(tx.date)}
               </p>

@@ -10,4 +10,16 @@ export const transactionSchema = z.object({
   notes: z.string().max(1000).optional(),
 })
 
-export type TransactionFormValues = z.infer<typeof transactionSchema>
+export interface MemberShareInput {
+  userId: string
+  shareAmountCents: number | null
+}
+
+/**
+ * Payload submetido à API — as chaves base vêm do zod; `installmentCount` e
+ * `members` são compostas pela UI (toggles/modo) fora da validação do form.
+ */
+export type TransactionFormValues = z.infer<typeof transactionSchema> & {
+  installmentCount?: number
+  members?: MemberShareInput[]
+}

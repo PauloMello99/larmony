@@ -15,8 +15,19 @@ export interface Transaction {
   categoryIcon: string | null
   personId: string | null
   personName: string | null
+  installmentGroupId: string | null
+  installmentNumber: number | null
+  installmentCount: number | null
+  memberCount: number
   createdAt: string
   updatedAt: string
+}
+
+export interface TransactionMember {
+  userId: string
+  userName: string | null
+  shareAmountCents: number | null
+  effectiveShareCents: number
 }
 
 export interface TransactionListResponse {

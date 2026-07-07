@@ -46,6 +46,9 @@ export const queryKeys = {
     all: (householdId: string) => ["transactions", householdId] as const,
     list: (householdId: string, filters?: Record<string, unknown>) =>
       ["transactions", householdId, "list", filters ?? {}] as const,
+    /** Rateio de uma transação — aninhado sob o prefixo do lar. */
+    members: (householdId: string, transactionId: string) =>
+      ["transactions", householdId, "members", transactionId] as const,
   },
 
   // ─── Budgets ────────────────────────────────────────────────────────────

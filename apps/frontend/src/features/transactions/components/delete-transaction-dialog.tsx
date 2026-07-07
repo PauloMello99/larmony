@@ -16,22 +16,26 @@ interface DeleteTransactionDialogProps {
   transaction: Transaction | null
   onOpenChange: (open: boolean) => void
   onConfirm: () => Promise<void>
+  /** Exclui a série inteira (só quando a transação é uma parcela). */
+  onConfirmSeries: () => Promise<void>
 }
 
 export function DeleteTransactionDialog({
   transaction,
   onOpenChange,
   onConfirm,
+  onConfirmSeries,
 }: DeleteTransactionDialogProps) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<"one" | "series" | null>(null)
+  const isInstallment = !!transaction?.installmentGroupId
 
-  async function handleConfirm() {
-    setLoading(true)
+  async function run(kind: "one" | "series", fn: () => Promise<void>) {
+    setLoading(kind)
     try {
-      await onConfirm()
+      await fn()
       onOpenChange(false)
     } finally {
-      setLoading(false)
+      setLoading(null)
     }
   }
 
@@ -41,19 +45,39 @@ export function DeleteTransactionDialog({
         <DialogHeader>
           <DialogTitle>Excluir transação</DialogTitle>
           <DialogDescription>
-            Tem certeza que deseja excluir{" "}
-            <span className="font-medium text-foreground">{transaction?.description}</span>?
-            Esta ação é <span className="font-semibold text-red-400">irreversível</span>.
+            {isInstallment ? (
+              <>
+                <span className="font-medium text-foreground">{transaction?.description}</span> é
+                a parcela {transaction?.installmentNumber}/{transaction?.installmentCount}. Excluir
+                só esta parcela ou a série inteira?
+              </>
+            ) : (
+              <>
+                Tem certeza que deseja excluir{" "}
+                <span className="font-medium text-foreground">{transaction?.description}</span>?
+                Esta ação é <span className="font-semibold text-red-400">irreversível</span>.
+              </>
+            )}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
+          {isInstallment && (
+            <Button
+              variant="outline"
+              disabled={loading !== null}
+              onClick={() => run("series", onConfirmSeries)}
+              className="w-full sm:w-auto"
+            >
+              {loading === "series" ? "Excluindo…" : "Excluir série inteira"}
+            </Button>
+          )}
           <Button
             variant="destructive"
-            disabled={loading}
-            onClick={handleConfirm}
+            disabled={loading !== null}
+            onClick={() => run("one", onConfirm)}
             className="w-full sm:w-auto"
           >
-            {loading ? "Excluindo…" : "Excluir"}
+            {loading === "one" ? "Excluindo…" : isInstallment ? "Excluir esta parcela" : "Excluir"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -25,7 +25,7 @@ export function TransactionsPage() {
   const [filters, setFilters] = useState<TransactionFilters>(currentFilters)
   const { categories } = useCategories(householdId)
   const { transactions, loading } = useTransactions(householdId, filters)
-  const { createTransaction, updateTransaction, deleteTransaction } =
+  const { createTransaction, updateTransaction, deleteTransaction, deleteSeries } =
     useTransactionMutations(householdId)
 
   const [formOpen, setFormOpen] = useState(false)
@@ -107,6 +107,9 @@ export function TransactionsPage() {
         onOpenChange={(open) => !open && setDeleting(null)}
         onConfirm={async () => {
           if (deleting) await deleteTransaction(deleting.id)
+        }}
+        onConfirmSeries={async () => {
+          if (deleting?.installmentGroupId) await deleteSeries(deleting.installmentGroupId)
         }}
       />
     </div>
