@@ -22,37 +22,38 @@ metadata:
 | 4 — Fundação | org→household, schema `finance/`, baseline 0000+0001 RLS, i18n base | ✅ |
 | Extras | cron registry (@CronJobName + DiscoveryService), GuestGuard, shell teal + IA completa do sidebar, placeholders M2–M8 | ✅ (2026-07-05) |
 
-## Auditoria de milestones (2026-07-06, atualizada pós M1+M2+M5+M6+M7)
+## Auditoria de milestones (2026-07-06, atualizada pós M1+M2+M4+M5+M6+M7)
 
 | M | Feature | Estado real | O que falta | Esforço |
 |---|---|---|---|---|
 | M1 | Households core | **✅ 100% (2026-07-06)** — rename ponta a ponta, convites, switcher, GuestGuard, i18n base, shell teal, seletor de idioma no Account, onboarding signup→criar lar (`?welcome=1` auto-abre o Sheet), landing com copy de finanças domésticas | nada | — |
 | M2 | Categories + Transactions | **✅ entregue (2026-07-06)** — backend CRUD completo (`households/:id/categories` e `/transactions`, RLS via DRIZZLE, filtros mês/ano/tipo/categoria, join de nomes) + frontend completo (Sheet de criar/editar, Table+cards responsivos, CurrencyInput/DatePicker, filtros) | nada — M4 estende com parcelamento/rateio depois | — |
 | M3 | Dashboard | **✅ entregue (2026-07-06)** — `GET /households/:id/overview` + frontend com trends/progress/skeletons; **confirmado que para de mostrar zero automaticamente** assim que M2 populou dados reais, sem nenhuma mudança no endpoint | nada — evolui sozinho conforme M4-M7 populam mais tabelas | — |
-| M4 | Parcelamento + rateio | schema pronto (installment_groups, transaction_members); 0% lógica | use-cases (criar N parcelas, split igual/específico com sobra determinística ADR-0017) + UI no Sheet de transação (M2 já aceita os campos como nulos) | **M** (2–3d) |
+| M4 | Parcelamento + rateio | **✅ entregue (2026-07-06)** — estende `transactions` (aditivo): parcelamento (POST com `installmentCount>1` → grupo + N transações atômicas, valor=total dividido por `splitEqually` com 1ª absorvendo a sobra, datas mês a mês; DELETE `/installment-groups/:id` cascade) + rateio (`transaction_members` via `members[]`, share null=igual/valor=específico, GET `/:id/members` com `effectiveShareCents`, replace no update). **Combinado permitido só com rateio igual** (específico+parcela → 422). Frontend: form com toggles Parcelar/Dividir, `RateioField` inline (igual/específico), badges N/M+Rateio, delete "esta parcela vs série" | nada | — |
 | M5 | Budgets | **✅ entregue (2026-07-06)** — backend CRUD (`households/:id/budgets?month=&year=`, RLS via DRIZZLE) com **spending derivado em runtime** (join correlacionado budgets→transactions, só `type='expense'`, sem persistir); update só do limite (categoria/período imutáveis), 409 na duplicata (unique) + frontend (grid de cards com progress bar, badge "Excedido", period nav mês/ano, Select filtrado por tipo+não-orçadas) | nada — evolui com M2 povoando transações | — |
 | M6 | Goals | **✅ entregue (2026-07-06)** — backend CRUD (`households/:id/goals`, RLS via DRIZZLE) + sub-recurso `/:goalId/contributions` (add/list com `authorName`/delete, aportes positivos, escopo via goal pai); **savedCents derivado por SUM em runtime** (nunca persistido); overview estendido aditivamente com `goals.top` (top-3 por %) e a seção "Metas ativas" agora renderiza GoalRow (corrigido o EmptyState incondicional) + frontend (grid de cards com progress, badge "Concluída" em success, dialog de aporte com histórico e exclusão, DatePicker com `startMonth`/`endMonth` opcionais p/ data alvo futura) | nada | — |
 | M7 | Bills + lembretes | **✅ entregue (2026-07-06)** — CRUD completo (`households/:id/bills`, RLS via DRIZZLE) somado à fatia cron já existente (repo agora injeta DRIZZLE+DRIZZLE_ADMIN no mesmo repositório); "lançar como transação" via `LaunchBillAsTransactionUseCase` reusando `CreateTransactionUseCase` (bills nunca geram transaction automaticamente — launch é sempre ação explícita, a bill nunca é consumida); frontend com seções Ativas/Inativas, Switch inline, alerta amber ≤7 dias, Select de lembrete {1,3,7,15} | nada | — |
 | M8 | Relatórios | 0% (Recharts já é dependência) | use-cases de agregação (mensal 6m, anual 12m, por pessoa via person_id) + telas bar/pie | **M/L** (2–4d) |
 | M9 | Recorrência | fora do schema **por design** (nunca existiu no old-larmony) | design próprio: modelo de regra, engine no tick do cron, edição de série vs ocorrência, relação com bills | **L** (3–5d) |
 
-**Ordem sugerida de execução (M1, M2, M5, M6 e M7 concluídos):** M4 → M8 → M9.
-Racional: M4 (parcelamento/rateio) completa o modelo de transações antes dos
-relatórios (M8) agregarem por pessoa; M9 (recorrência) fecha o v1 reusando o
-cron registry.
+**Ordem sugerida de execução (M1, M2, M4, M5, M6 e M7 concluídos):** M8 → M9.
+Racional: M8 (relatórios) agrega o que os módulos anteriores já populam (incl.
+gasto por pessoa via `transaction_members`); M9 (recorrência) fecha o v1
+reusando o cron registry. **Todo o núcleo financeiro do v1 está entregue.**
 
 ## Qualidade — testes (sessão 2026-07-06)
 
 - Backend: Jest + supertest — unit (use-cases com fakes) + integração por
   funcionalidade contra Supabase local (auth, households, invitations,
-  isolamento RLS, cron/dedup, categories, transactions, budgets, bills, goals).
-  44 e2e + 12 unit.
+  isolamento RLS, cron/dedup, categories, transactions, budgets, bills, goals,
+  parcelamento+rateio). 52 e2e + 12 unit.
 - Frontend: Playwright — fluxo principal (signup→lar→overview→nav) + convite +
   locale da conta + onboarding + categories (CRUD) + transactions (CRUD,
   filtros, promessa cross-milestone do overview) + budgets (CRUD com spending
   derivado refletindo despesa + badge Excedido) + bills (CRUD, lançar como
   transação sem consumir a bill, toggle ativa/inativa) + goals (aportes,
-  Concluída, exclusão de aporte recuando o progresso). 25 specs.
+  Concluída, exclusão de aporte recuando o progresso) + parcelamento/rateio
+  (badges N/M+Rateio, excluir série). 28 specs.
   Gotcha: a suíte cheia serial (cada spec re-logando) tem flakiness
   ambiental no dev server (Next/Turbopack ocasionalmente trava no login sob
   carga); cada spec passa isolado. Em CI usar build de produção deve estabilizar.

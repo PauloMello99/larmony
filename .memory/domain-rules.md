@@ -141,13 +141,23 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
 - Um parcelamento (ex.: 12x de R$100) cria **uma transaction por parcela**, todas
   ligadas a um `installment_group` (que guarda descrição e total), com
   `installment_number` (1..n) e `installment_count`.
+- O valor informado é o **total**; dividido por `splitEqually`
+  (`common/finance/split.ts`) — **1ª parcela absorve a sobra** de centavos
+  (ADR-0017). Datas avançam mês a mês (`addMonthsISO`, clamp de dia).
+- Excluir 1 parcela remove só aquela transaction; excluir a **série** =
+  `DELETE .../installment-groups/:groupId` (cascade nas parcelas + rateios).
+  Não há "editar série inteira" nem converter única↔parcelada no v1.
 
 #### Rateio (divisão entre membros)
 
 - Pivot `transaction_members` (`transaction_id`, `user_id`, `share_amount_cents`).
-- `share_amount_cents` **NULL = divisão igual** entre os membros listados;
-  valor preenchido = fatia específica.
-- Unique `(transaction_id, user_id)`.
+- `share_amount_cents` **NULL = divisão igual** entre os membros listados
+  (fatia efetiva calculada no read por `splitEqually`); valor preenchido =
+  fatia específica (a soma tem de bater com o `amount_cents`, senão 422).
+- Unique `(transaction_id, user_id)`. Update substitui a lista inteira.
+- **Combinar parcela + rateio é permitido, mas só rateio IGUAL** (cada parcela
+  dividida igualmente entre os membros). Rateio específico + parcelamento → 422
+  (evita split 2D parcela×membro; fora do v1).
 
 #### Recorrência
 
