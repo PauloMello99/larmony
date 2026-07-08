@@ -55,9 +55,9 @@ export function CreateHouseholdForm({
         <Form {...form}>
           <form onSubmit={handleSubmit} className="flex h-full flex-col">
             <SheetHeader>
-              <SheetTitle>Nova lar</SheetTitle>
+              <SheetTitle>Novo lar</SheetTitle>
               <SheetDescription>
-                Crie um espaço para o seu estúdio. Você será o proprietário.
+                Crie um espaço para o seu lar. Você será o proprietário.
               </SheetDescription>
             </SheetHeader>
 
@@ -73,7 +73,7 @@ export function CreateHouseholdForm({
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Ex: Studio Ink"
+                          placeholder="Ex: Casa da Família"
                           autoComplete="off"
                           autoFocus
                           {...field}

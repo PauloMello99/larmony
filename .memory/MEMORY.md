@@ -2,7 +2,7 @@
 
 - [Project Overview](project-overview.md) — O que é o Larmony, origem (old-larmony + carcaça ink-ops), estado atual do monorepo
 - [Architecture](architecture.md) — Estrutura de pastas, NestJS Clean Architecture, Drizzle migrations, cron unificado, Supabase local, Turborepo
-- [Domain Rules](domain-rules.md) — Households, transações (parcelamento/rateio), metas, orçamentos, bills + convenções obrigatórias de backend/frontend
+- [Domain Rules](domain-rules.md) — Households, transações (parcelamento/rateio), metas, orçamentos, bills, recorrência (M9) + convenções obrigatórias de backend/frontend
 - [Roadmap](roadmap.md) — Fases do bootstrap + milestones M1–M9 (cada um vira plano próprio)
 - [Recent Decisions](recent-decisions.md) — Índice rápido de todos os ADRs
 - [Supabase Coupling](supabase-coupling.md) — Mapa de acoplamento ao Supabase (auth/storage/RLS) e sign-up atômico
@@ -27,3 +27,4 @@
 - [ADR-0016: Evolução do RAG](adr/0016-rag-evolution-bge-m3-hybrid-parent.md) — bge-m3, hybrid, parent-document, código
 - [ADR-0017: Centavos inteiros](adr/0017-money-integer-cents.md) — dinheiro sem float em todo o stack
 - [ADR-0018: i18n pt-BR/en](adr/0018-i18n-locale-no-perfil.md) — locale persistido no perfil
+- [ADR-0019: Recorrência (engine no cron via DRIZZLE_ADMIN)](adr/0019-recurrence-engine-cron-admin-write.md) — modelo simples sem RRULE, geração no tick, sem reuso do use-case request-scoped

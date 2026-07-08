@@ -5,6 +5,7 @@ export * from "./subscriptions";
 export * from "./notifications";
 export * from "./audit";
 export * from "./finance/categories";
+export * from "./finance/recurrences";
 export * from "./finance/transactions";
 export * from "./finance/goals";
 export * from "./finance/budgets";

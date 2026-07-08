@@ -16,21 +16,21 @@ export function Hero() {
             variant="outline"
             className="border-primary/30 bg-primary/10 text-primary"
           >
-            ✦ Novo — Agendamentos automáticos com IA
+            ✦ Novo — Lembretes automáticos de contas
           </Badge>
         </div>
 
         {/* Headline — mobile-first sizing */}
         <h1 className="mx-auto max-w-4xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl md:text-7xl">
-          Gestão completa para
+          Controle financeiro
           <br />
-          <span className="text-primary">estúdios criativos</span>
+          <span className="text-primary">do seu lar</span>
         </h1>
 
         {/* Subtitle */}
         <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-white/60 sm:mt-6 sm:text-lg">
-          Agendamentos, clientes, financeiro e equipe em um único lugar.
-          Construído para tatuadores, fotógrafos e artistas independentes.
+          Transações, orçamentos, metas e contas a pagar em um único lugar.
+          Construído para famílias e casais que dividem as finanças de casa.
         </p>
 
         {/* CTAs */}
@@ -82,7 +82,7 @@ export function Hero() {
                 <div className="flex-1 bg-[#0d0d0f] p-4 sm:p-5 md:p-6">
                   {/* Stats row */}
                   <div className="mb-4 grid grid-cols-3 gap-2 sm:mb-6 sm:gap-4">
-                    {["Agendamentos", "Clientes", "Receita"].map((label, i) => (
+                    {["Receitas", "Despesas", "Saldo"].map((label, i) => (
                       <div
                         key={label}
                         className="rounded-lg border border-white/5 bg-white/[0.02] p-2.5 sm:rounded-xl sm:p-4"

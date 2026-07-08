@@ -1,12 +1,11 @@
 import type { ReactElement } from "react"
 import type { NextPageWithLayout } from "@/pages/_app"
 import { AuthGuard } from "@/features/auth/components/auth-guard"
-import { HouseholdLayout, FeaturePlaceholder, FEATURE_PAGES } from "@/features/dashboard"
+import { HouseholdLayout } from "@/features/dashboard"
+import { GoalsPage as GoalsPageContent } from "@/features/goals"
 import { makeI18nProps } from "@/shared/lib/i18n"
 
-const feature = FEATURE_PAGES.find((f) => f.href === "goals")!
-
-const GoalsPage: NextPageWithLayout = () => <FeaturePlaceholder feature={feature} />
+const GoalsPage: NextPageWithLayout = () => <GoalsPageContent />
 
 GoalsPage.getLayout = (page: ReactElement) => (
   <AuthGuard>

@@ -21,6 +21,8 @@ export const queryKeys = {
     detail: (householdId: string) => ["households", "detail", householdId] as const,
     /** Single household resolved by slug (super_admin deep-link) */
     bySlug: (slug: string) => ["households", "by-slug", slug] as const,
+    /** KPIs do dashboard (mês corrente/anterior, metas, contas, orçamentos) */
+    overview: (householdId: string) => ["households", "overview", householdId] as const,
   },
 
   // ─── Members & Invitations ─────────────────────────────────────────────────
@@ -31,6 +33,58 @@ export const queryKeys = {
     list: (householdId: string) => ["members", householdId, "list"] as const,
     /** Pending invitations */
     invitations: (householdId: string) => ["members", householdId, "invitations"] as const,
+  },
+
+  // ─── Categories ─────────────────────────────────────────────────────────
+  categories: {
+    all: (householdId: string) => ["categories", householdId] as const,
+    list: (householdId: string) => ["categories", householdId, "list"] as const,
+  },
+
+  // ─── Transactions ───────────────────────────────────────────────────────
+  transactions: {
+    all: (householdId: string) => ["transactions", householdId] as const,
+    list: (householdId: string, filters?: Record<string, unknown>) =>
+      ["transactions", householdId, "list", filters ?? {}] as const,
+    /** Rateio de uma transação — aninhado sob o prefixo do lar. */
+    members: (householdId: string, transactionId: string) =>
+      ["transactions", householdId, "members", transactionId] as const,
+  },
+
+  // ─── Budgets ────────────────────────────────────────────────────────────
+  budgets: {
+    all: (householdId: string) => ["budgets", householdId] as const,
+    list: (householdId: string, filters?: Record<string, unknown>) =>
+      ["budgets", householdId, "list", filters ?? {}] as const,
+  },
+
+  // ─── Bills ──────────────────────────────────────────────────────────────
+  bills: {
+    all: (householdId: string) => ["bills", householdId] as const,
+    list: (householdId: string) => ["bills", householdId, "list"] as const,
+  },
+
+  // ─── Recurrences ──────────────────────────────────────────────────────────
+  recurrences: {
+    all: (householdId: string) => ["recurrences", householdId] as const,
+    list: (householdId: string) => ["recurrences", householdId, "list"] as const,
+  },
+
+  // ─── Goals ──────────────────────────────────────────────────────────────
+  goals: {
+    all: (householdId: string) => ["goals", householdId] as const,
+    list: (householdId: string) => ["goals", householdId, "list"] as const,
+    /** Aninhada sob o prefixo do lar — `goals.all` invalida o histórico junto. */
+    contributions: (householdId: string, goalId: string) =>
+      ["goals", householdId, "contributions", goalId] as const,
+  },
+
+  // ─── Reports ────────────────────────────────────────────────────────────
+  reports: {
+    all: (householdId: string) => ["reports", householdId] as const,
+    monthly: (householdId: string) => ["reports", householdId, "monthly"] as const,
+    annual: (householdId: string, year: number) =>
+      ["reports", householdId, "annual", year] as const,
   },
 
   // ─── Admin (plataforma / super_admin) ──────────────────────────────────────

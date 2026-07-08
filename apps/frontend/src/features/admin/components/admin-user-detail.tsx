@@ -124,7 +124,7 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
         </h2>
         {user.memberships.length === 0 ? (
           <p className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] px-4 py-8 text-center text-sm text-foreground/40">
-            Este usuário não pertence a nenhuma lar.
+            Este usuário não pertence a nenhum lar.
           </p>
         ) : (
           <div className="overflow-hidden rounded-xl border border-foreground/[0.06]">

@@ -11,6 +11,13 @@ import { HouseholdsModule } from "./modules/households/households.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
 import { AdminModule } from "./modules/admin/admin.module";
 import { AuditModule } from "./modules/audit/audit.module";
+import { BillsModule } from "./modules/bills/bills.module";
+import { CategoriesModule } from "./modules/categories/categories.module";
+import { TransactionsModule } from "./modules/transactions/transactions.module";
+import { BudgetsModule } from "./modules/budgets/budgets.module";
+import { GoalsModule } from "./modules/goals/goals.module";
+import { ReportsModule } from "./modules/reports/reports.module";
+import { RecurrencesModule } from "./modules/recurrences/recurrences.module";
 import { InternalCronModule } from "./modules/internal-cron/internal-cron.module";
 import { TelemetryModule } from "./common/telemetry/telemetry.module";
 
@@ -27,6 +34,13 @@ import { TelemetryModule } from "./common/telemetry/telemetry.module";
     NotificationsModule,
     AdminModule,
     AuditModule,
+    BillsModule,
+    CategoriesModule,
+    TransactionsModule,
+    BudgetsModule,
+    GoalsModule,
+    ReportsModule,
+    RecurrencesModule,
     InternalCronModule,
   ],
   providers: [

@@ -45,6 +45,14 @@ export const categoryTypeEnum = pgEnum("category_type", [
   "both",
 ]);
 
+// Periodicidade de uma regra de recorrência (M9). "a cada N períodos" via
+// coluna `interval`; cobre quinzenal (weekly×2), trimestral/semestral (monthly×N).
+export const recurrenceFrequencyEnum = pgEnum("recurrence_frequency", [
+  "weekly",
+  "monthly",
+  "yearly",
+]);
+
 export const genderEnum = pgEnum("gender", ["male", "female", "other"]);
 
 export const notificationTypeEnum = pgEnum("notification_type", [

@@ -8,7 +8,6 @@ import { Separator } from "@/shared/components/ui/separator"
 const FOOTER_LINKS = {
   Produto: [
     { label: "Recursos", href: "#recursos" },
-    { label: "Integrações", href: "#integracoes" },
     { label: "Preços", href: "#precos" },
     { label: "Changelog", href: "#" },
     { label: "Roadmap", href: "#" },
@@ -45,8 +44,8 @@ export function Footer() {
               <span className="text-primary">lar</span>mony
             </Link>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/40">
-              Gestão completa para estúdios criativos. Agendamentos, clientes e
-              financeiro em um só lugar.
+              Controle financeiro do seu lar. Transações, orçamentos e metas
+              em um só lugar.
             </p>
 
             {/* Newsletter */}

@@ -35,16 +35,16 @@ a arquitetura deste repo fornece o *como* (Clean Architecture, use-cases, RLS vi
   NestJS Clean Architecture + Next.js + Drizzle + Supabase + Railway + Better Stack).
   O domínio de estúdio de tatuagem foi removido em 2026-07; a infra foi mantida.
 
-## Estado atual do monorepo
+## Estado atual do monorepo (2026-07-07)
 
-- `apps/backend` — NestJS 11 com módulos de plataforma: `auth`, `user`,
-  `organizations` (→ vira `households` na fundação do produto), `admin`, `mail`,
-  `notifications`, `health`, `internal-cron` (tick 5min, jobs vazios), `audit`.
-- `apps/frontend` — Next.js (pages router) com features de plataforma: `auth`,
-  `account`, `admin`, `dashboard` (shell + placeholder), `invitations`, `landing`
-  (copy ainda genérica — reescrever no M1), `notifications`, `organizations`.
-- Schema Drizzle e migrations ainda são os herdados do ink-ops — serão
-  **squashados** na fundação do produto (ver [[roadmap]]).
+- `apps/backend` — NestJS 11: `auth`, `user`, `households`, `categories`,
+  `transactions`, `budgets`, `goals`, `bills`, `reports`, **`recurrences` (M9)**,
+  `admin`, `mail`, `notifications`, `audit`, `internal-cron` (tick +
+  `send-bill-reminders` + `recurrence-engine`).
+- `apps/frontend` — Next.js (pages router): features `auth`, `account`, `admin`,
+  `dashboard`, `households`, `categories`, `transactions`, `budgets`, `goals`,
+  `bills`, `reports`, **`recurrences` (M9)**, `invitations`, `landing`.
+- Milestones **M1–M9 entregues — v1 COMPLETO** (2026-07-08).
 - Deploy Railway staging: Frontend + Backend + Cron (online).
 - RAG local: Qdrant + Ollama, coleção `larmony_memory`, servidor MCP `larmony-memory`.
 

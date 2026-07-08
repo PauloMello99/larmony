@@ -141,19 +141,46 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
 - Um parcelamento (ex.: 12x de R$100) cria **uma transaction por parcela**, todas
   ligadas a um `installment_group` (que guarda descrição e total), com
   `installment_number` (1..n) e `installment_count`.
+- O valor informado é o **total**; dividido por `splitEqually`
+  (`common/finance/split.ts`) — **1ª parcela absorve a sobra** de centavos
+  (ADR-0017). Datas avançam mês a mês (`addMonthsISO`, clamp de dia).
+- Excluir 1 parcela remove só aquela transaction; excluir a **série** =
+  `DELETE .../installment-groups/:groupId` (cascade nas parcelas + rateios).
+  Não há "editar série inteira" nem converter única↔parcelada no v1.
 
 #### Rateio (divisão entre membros)
 
 - Pivot `transaction_members` (`transaction_id`, `user_id`, `share_amount_cents`).
-- `share_amount_cents` **NULL = divisão igual** entre os membros listados;
-  valor preenchido = fatia específica.
-- Unique `(transaction_id, user_id)`.
+- `share_amount_cents` **NULL = divisão igual** entre os membros listados
+  (fatia efetiva calculada no read por `splitEqually`); valor preenchido =
+  fatia específica (a soma tem de bater com o `amount_cents`, senão 422).
+- Unique `(transaction_id, user_id)`. Update substitui a lista inteira.
+- **Combinar parcela + rateio é permitido, mas só rateio IGUAL** (cada parcela
+  dividida igualmente entre os membros). Rateio específico + parcelamento → 422
+  (evita split 2D parcela×membro; fora do v1).
 
-#### Recorrência
+#### Recorrência (M9 ✅ 2026-07-08)
 
-- **Fora do v1.** O old-larmony tinha campos (`is_recurring`, `recurrence_rule`,
-  `parent_id`) mas nunca implementou a lógica. Entra por último no roadmap (M9),
-  com design próprio — não incluir os campos no schema até lá.
+- Regra na tabela `recurrences` (schema novo — o old-larmony só tinha campos
+  natimortos): `frequency ∈ {weekly,monthly,yearly}` + `interval` ("a cada N";
+  **sem RRULE**), `startDate`, `endDate?` (fim opcional), `nextRunDate` (cursor),
+  `isActive`, `type`/`amountCents`/`description`/`categoryId?`/`personId?`.
+- **Gera transações automaticamente** (≠ bills, que é definição estática +
+  lembrete manual — coexistem, não se sobrepõem). O job `recurrence-engine`
+  (tick do cron) materializa **cada ocorrência na sua data** (`next_run_date <=
+  hoje`), não pré-materializa futuro. A transação gerada tem `recurrence_id`
+  (FK SET NULL — histórico sobrevive à exclusão da regra) e badge "Recorrente".
+- **Sem rateio e sem parcelamento no v1** (precedente do M4 sobre explosão 2D).
+- `startDate` deve ser **hoje ou futuro** (sem backfill histórico surpresa; 422
+  `RECURRENCE_START_DATE_IN_PAST`) e `endDate` (se houver) não pode ser anterior
+  a `startDate` (422 `RECURRENCE_INVALID_DATE_RANGE`). `startDate` é imutável no
+  update (troca = deletar+criar); `nextRunDate` é gerido só pelo engine/reativação.
+- **Editar a regra afeta só ocorrências futuras**; transações já geradas são
+  transações comuns (editáveis/deletáveis à parte). Pausar = `isActive=false`;
+  **reativar re-ancora `nextRunDate`** para a próxima ocorrência >= hoje (não
+  gera de uma vez o período pausado).
+- **Idempotência**: o engine **avança o cursor ANTES de inserir** (gaps-over-dups,
+  espelha o mark-before-send de bills). Ver detalhes/gotchas em `roadmap.md`.
 
 ### Metas (goals)
 
@@ -184,12 +211,18 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
   quando `dias_até_vencimento == reminder_days_before` e ainda não enviou no mês.
 - Dashboard destaca contas com vencimento em ≤7 dias (alerta visual amber).
 
-### Relatórios
+### Relatórios (reports) — M8 ✅
 
 - Vista **mensal**: bar chart rolling de 6 meses + pie por categoria + gasto por pessoa.
 - Vista **anual**: bar chart dos 12 meses + totais + navegação de ano.
 - Gasto por pessoa usa `person_id` (não `created_by`); empty state explica como
   atribuir pessoa às transações.
+- **Implementação**: módulo `reports` (não estender `households`); 3 queries
+  paralelas no mensal (série 6m + categoria + pessoa), 1 query no anual; pizza e
+  pessoa referem-se ao **mês corrente**; cores receita=`--success`,
+  despesa=`--destructive`; sem auditoria (read-only).
+- **Frontend**: `features/reports/` — `ReportsPage`, `MonthlyView`, `AnnualView`,
+  hooks `useMonthlyReport`/`useAnnualReport`, `queryKeys.reports`.
 
 ### i18n
 
@@ -205,6 +238,5 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
 
 ### Pendências não bloqueantes para V1
 
-- Rename `organization` → `household` ponta a ponta (M1 — ver [[roadmap]]).
-- Squash das migrations herdadas + baseline do schema finance (M1).
-- Landing page com copy do Larmony (hoje é copy genérica renomeada).
+- Landing page com copy do Larmony (hoje já tem copy de finanças domésticas).
+- **v1 COMPLETO (2026-07-08)** — M1–M9 entregues; nenhum milestone restante.

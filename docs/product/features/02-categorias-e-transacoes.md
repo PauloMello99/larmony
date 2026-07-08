@@ -1,5 +1,22 @@
 # 02 — Categorias + Transações (M2)
 
+> **Entregue (2026-07-06)**: CRUD completo dos dois recursos.
+> `households/:householdId/categories` e `.../transactions` (RLS via
+> `DRIZZLE`, guard `HouseholdMembershipGuard` — qualquer membro ativo cria/
+> edita/deleta). Delete de categoria não bloqueia por `isDefault` nem por
+> ter transações vinculadas (schema já resolve via `ON DELETE SET NULL`).
+> `createdBy`/`personId` resolvidos de `authId` para `users.id` no controller
+> via `GetMeUseCase` (nunca dentro do use-case). Frontend: Sheet de criar/
+> editar (Table desktop + cards mobile), `CurrencyInput`/`DatePicker`
+> compartilhados, filtros de mês/ano/tipo/categoria na listagem de
+> transações. Confirmado que o overview do dashboard (M3) para de mostrar
+> zero automaticamente assim que a primeira transação é criada, sem
+> nenhuma mudança no endpoint/repositório do overview.
+>
+> Fora desta entrega (fica para M4): `installment_group_id`/`number`/`count`
+> aceitos como nulos nos DTOs; `transaction_members` não é populada — cada
+> transação tem só um `personId` (default: o próprio autor).
+
 ## Escopo
 
 - CRUD de categorias: nome, `type` (`income`/`expense`/`both`), cor; 13 defaults

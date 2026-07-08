@@ -6,6 +6,7 @@
     "budgets": "Orçamentos",
     "goals": "Metas",
     "bills": "Contas",
+    "recurrences": "Recorrências",
     "reports": "Relatórios",
     "members": "Membros",
     "settings": "Configurações",
@@ -35,7 +36,15 @@
     "emptyGoals": "Nenhuma meta ativa",
     "emptyGoalsHint": "Crie metas para acompanhar seus objetivos.",
     "emptyBudgets": "Nenhum orçamento definido",
-    "emptyBudgetsHint": "Defina limites de gasto por categoria."
+    "emptyBudgetsHint": "Defina limites de gasto por categoria.",
+    "vsLastMonth": "vs. mês anterior",
+    "goalsActive": "{{count}} meta ativa",
+    "goalsActive_plural": "{{count}} metas ativas",
+    "dueToday": "Vence hoje",
+    "dueInDays": "Em {{count}} dia",
+    "dueInDays_plural": "Em {{count}} dias",
+    "budgetOver": "Excedido",
+    "seeAllTransactions": "Ver todas"
   },
   "placeholders": {
     "arriving": "Chega no {{milestone}}",

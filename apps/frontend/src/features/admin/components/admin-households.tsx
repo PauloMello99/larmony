@@ -219,8 +219,8 @@ export function AdminHouseholds() {
             <Building2 className="h-6 w-6 text-foreground/20" />
             <p className="text-sm text-foreground/50">
               {households.length === 0
-                ? "Nenhuma lar ainda."
-                : "Nenhuma lar corresponde à busca."}
+                ? "Nenhum lar ainda."
+                : "Nenhum lar corresponde à busca."}
             </p>
           </div>
         )}

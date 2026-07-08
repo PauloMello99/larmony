@@ -52,12 +52,10 @@ export function SignupForm() {
 
   const onSubmit = async (data: SignupFormValues) => {
     try {
+      // O redirect pós-signup (households com onboarding, ou invite/accept) é
+      // responsabilidade do GuestGuard que envolve esta página — evita a corrida
+      // entre este push e o próprio redirect do guard.
       await signUp(data.name, data.email, data.password)
-      await router.push(
-        inviteToken
-          ? `/invite/accept?token=${encodeURIComponent(inviteToken)}`
-          : "/dashboard/households",
-      )
     } catch {
       setError("root", { message: "Não foi possível criar a conta. Tente novamente." })
     }
@@ -76,7 +74,7 @@ export function SignupForm() {
           </div>
           <CardTitle className="text-xl">Criar conta</CardTitle>
           <CardDescription className="text-foreground/40">
-            Comece a gerenciar seu estúdio gratuitamente
+            Comece a organizar as finanças do seu lar gratuitamente
           </CardDescription>
         </CardHeader>
 

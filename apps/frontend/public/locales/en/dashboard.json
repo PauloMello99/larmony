@@ -6,6 +6,7 @@
     "budgets": "Budgets",
     "goals": "Goals",
     "bills": "Bills",
+    "recurrences": "Recurring",
     "reports": "Reports",
     "members": "Members",
     "settings": "Settings",
@@ -35,7 +36,15 @@
     "emptyGoals": "No active goals",
     "emptyGoalsHint": "Create goals to track your objectives.",
     "emptyBudgets": "No budgets set",
-    "emptyBudgetsHint": "Set spending limits per category."
+    "emptyBudgetsHint": "Set spending limits per category.",
+    "vsLastMonth": "vs. last month",
+    "goalsActive": "{{count}} active goal",
+    "goalsActive_plural": "{{count}} active goals",
+    "dueToday": "Due today",
+    "dueInDays": "In {{count}} day",
+    "dueInDays_plural": "In {{count}} days",
+    "budgetOver": "Over budget",
+    "seeAllTransactions": "See all"
   },
   "placeholders": {
     "arriving": "Arriving in {{milestone}}",

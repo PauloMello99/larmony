@@ -1,5 +1,13 @@
 # 01 — Households core (M1)
 
+> **Fechado (2026-07-06)**: seletor de idioma no Account (Select pt-BR/en,
+> troca via `router.replace(locale)` recarrega a UI na hora); onboarding
+> pós-signup (`?welcome=1` na lista de lares auto-abre o Sheet de criar lar,
+> sem rota nova — `GuestGuard` é o único dono do redirect pós-signup, evita
+> a corrida com o `router.push` do próprio form); landing com copy de
+> finanças domésticas (hero/features/about/pricing reescritos, seção de
+> integrações fabricadas removida por não existir no produto).
+
 ## Escopo
 
 - Rename `organization` → `household` ponta a ponta (schema, módulo, guards, helpers

@@ -80,7 +80,14 @@ src/
 └── modules/
     ├── auth/                      # sign-up/in/out, refresh, forgot/reset; IAuthProvider port
     ├── user/                      # get-me etc.
-    ├── organizations/             # multi-tenant shell (→ vira households na fundação)
+    ├── households/                # tenancy (multi-lar), membros, convites, overview (M3)
+    ├── categories/                # CRUD de categorias (M2)
+    ├── transactions/              # CRUD + filtros (M2) + parcelamento/rateio (M4)
+    ├── budgets/                   # CRUD de orçamentos + spending derivado (M5)
+    ├── goals/                     # CRUD de metas + aportes; savedCents derivado por SUM (M6)
+    ├── bills/                     # CRUD + lançar como transação + job de lembrete (M7 completo)
+    ├── reports/                   # agregações read-only mensal/anual (M8)
+    ├── recurrences/               # regras de recorrência + engine no cron (M9)
     ├── admin/                     # super_admin de plataforma (ADR-0013)
     ├── mail/                      # Resend + React Email (ADR-0012)
     ├── notifications/             # notificações in-app + e-mail
@@ -115,12 +122,12 @@ export class SendBillRemindersJob implements CronJob {
 
 `CronJobsService` (`modules/internal-cron/cron-jobs.service.ts`) descobre os
 providers decorados no boot; o tick roda todos com isolamento de erro e retorna
-`{ ok, jobs: [{name, status, durationMs}] }`. Hoje não há jobs (`jobs: []`).
+`{ ok, jobs: [{name, status, durationMs}] }`.
 
-| Job planejado | Milestone |
+| Job | Status |
 |---|---|
-| `send-bill-reminders` (lembretes de contas) | M7 |
-| `recurrence-engine` (transações recorrentes) | M9 |
+| `send-bill-reminders` (lembretes de contas) | ✅ entregue (fatia cron do M7, 2026-07-06) — `modules/bills/application/jobs/send-bill-reminders.job.ts`; dedup por contexto **bill×mês** via `reminder_last_sent_at` gravado ANTES do envio (e-mail best-effort nunca duplica); janela = próximo vencimento (dueDay clampado ao fim do mês) − hoje == reminderDaysBefore |
+| `recurrence-engine` (transações recorrentes) | ✅ entregue (M9, 2026-07-08) — `modules/recurrences/application/jobs/recurrence-engine.job.ts`; gera as ocorrências vencidas (`next_run_date <= hoje`) das regras ativas, catch-up bounded, **avança o cursor ANTES de inserir** (gaps-over-dups); grava via `CreateGeneratedTransactionUseCase` (DRIZZLE_ADMIN, sem auditoria) |
 
 ### Migrations (ver ADR-0003)
 
@@ -133,10 +140,30 @@ providers decorados no boot; o tick roda todos com isolamento de erro e retorna
 
 **Regra crítica de hash**: o migrator faz `sha256(rawSqlContent)` — não modifique o `.sql` gerado após criação.
 
-**Estado transitório**: o schema (`database/schema/`) e as migrations atuais ainda
-são os herdados do ink-ops (tabelas de estúdio órfãs, sem módulos que as usem).
-Serão substituídos por um **baseline squashado** do domínio Larmony na fundação
-do produto (ver [[roadmap]] M1) — não criar migrations novas sobre o schema velho.
+### Padrão de conexão para escrita autenticada (DRIZZLE vs DRIZZLE_ADMIN)
+
+Confirmado ao construir `categories`/`transactions` (M2): **toda escrita de um
+módulo household-scoped usa `DRIZZLE`** (a conexão RLS-enforced — o
+`RlsInterceptor`, global, seta `request.jwt.claims = {sub: authId}` antes do
+handler rodar, então `is_household_member(household_id)` é avaliado pelo
+Postgres em cada INSERT/UPDATE/DELETE). Não é preciso reverificar membership
+no use-case quando o controller já usa `HouseholdMembershipGuard`.
+
+`DRIZZLE_ADMIN` (BYPASSRLS) fica só para os dois casos que o RLS não cobre:
+bootstrap (sign-up, criar o primeiro `household_membership` antes de existir
+qualquer membership) e jobs de cron (sem request context, logo sem claims).
+
+Resolução de `authId` (Supabase auth id) → `users.id` (interno, usado em FKs
+como `transactions.createdBy`/`personId`) é feita **no controller**, via
+`GetMeUseCase`, e passada como parâmetro simples para o use-case — nunca o
+use-case resolve isso sozinho (mantém use-cases livres de import de `AuthUser`).
+
+**Exceção do cron (M9)**: escrita disparada por job (sem request context) **não
+pode** usar `DRIZZLE` (RLS nega sem claims). Por isso `DrizzleTransactionRepository`
+injeta também `DRIZZLE_ADMIN` e expõe `createGenerated` (usado só pelo
+recurrence-engine), espelhando o split `this.db`/`this.admin` de `DrizzleBillRepository`.
+O `CreateGeneratedTransactionUseCase` (exportado pelo `TransactionsModule`) é o
+ponto de reuso cross-módulo para o cron — sem auditoria (evento de sistema).
 
 ### Supabase local
 
@@ -147,11 +174,20 @@ do produto (ver [[roadmap]] M1) — não criar migrations novas sobre o schema v
 ## Frontend — feature-based (ver ADR-0007)
 
 - `src/features/<feature>/` com `components/`, `hooks/`, `schemas/`, `types/`, `index.ts`
-- `src/pages/` só monta features + layouts (`AuthGuard`, `OrgLayout`)
+- `src/pages/` só monta features + layouts (`AuthGuard`, `HouseholdLayout`)
 - Estado servidor: TanStack React Query; keys centralizadas em
   `src/infrastructure/query/query-keys.ts`
 - O frontend **não** fala com Supabase — só com a API do backend
   (sessão própria em `localStorage.larmony_session`)
+- **Reports (M8)**: `features/reports/` — Recharts (bar/pie), toggle Mensal/Anual,
+  `ReportTooltip` com `formatCentsToBRL`; reusa `usePrefersReducedMotion` do admin.
+
+### Dev local — gotcha Turbopack
+
+Se rotas `/dashboard/household/[householdSlug]/*` retornam 404 no `next dev`
+(`PageNotFoundError: Cannot find module for page`), o `404.tsx` redireciona para
+`/dashboard/households` (parece loop de auth). Corrigir com
+`pnpm --filter frontend dev:reset` (limpa `.next`). Build de produção OK.
 
 ## Tipagem
 

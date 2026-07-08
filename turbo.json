@@ -17,10 +17,17 @@
       "cache": false,
       "persistent": true
     },
+    "test": {
+      "dependsOn": []
+    },
+    "test:e2e": {
+      "cache": false
+    },
     "clean": {},
     "clean:reset": {}
   },
   "globalEnv": [
+    "CI",
     "PORT",
     "NODE_ENV",
     "RUN_MIGRATIONS",

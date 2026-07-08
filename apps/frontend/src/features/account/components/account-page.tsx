@@ -3,12 +3,13 @@
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { ArrowLeft, User, KeyRound, Palette, Trash2 } from "lucide-react"
+import { ArrowLeft, User, KeyRound, Languages, Palette, Trash2 } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import {
   AccessSection,
   AppearanceSection,
   DangerSection,
+  LocaleSection,
   ProfileSection,
 } from "./account-sections"
 
@@ -16,6 +17,7 @@ const SECTIONS = [
   { id: "profile", label: "Perfil", icon: User, Section: ProfileSection },
   { id: "access", label: "Acesso", icon: KeyRound, Section: AccessSection },
   { id: "appearance", label: "Tema", icon: Palette, Section: AppearanceSection },
+  { id: "locale", label: "Idioma", icon: Languages, Section: LocaleSection },
   { id: "danger", label: "Apagar Conta", icon: Trash2, Section: DangerSection },
 ] as const
 

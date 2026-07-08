@@ -1,14 +1,13 @@
 import type { ReactElement } from "react"
 import type { NextPageWithLayout } from "@/pages/_app"
 import { AuthGuard } from "@/features/auth/components/auth-guard"
-import { HouseholdLayout, FeaturePlaceholder, FEATURE_PAGES } from "@/features/dashboard"
+import { HouseholdLayout } from "@/features/dashboard"
+import { ReportsPage } from "@/features/reports"
 import { makeI18nProps } from "@/shared/lib/i18n"
 
-const feature = FEATURE_PAGES.find((f) => f.href === "reports")!
+const Page: NextPageWithLayout = () => <ReportsPage />
 
-const ReportsPage: NextPageWithLayout = () => <FeaturePlaceholder feature={feature} />
-
-ReportsPage.getLayout = (page: ReactElement) => (
+Page.getLayout = (page: ReactElement) => (
   <AuthGuard>
     <HouseholdLayout>{page}</HouseholdLayout>
   </AuthGuard>
@@ -16,4 +15,4 @@ ReportsPage.getLayout = (page: ReactElement) => (
 
 export const getServerSideProps = makeI18nProps(["common", "dashboard"])
 
-export default ReportsPage
+export default Page

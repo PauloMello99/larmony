@@ -22,6 +22,7 @@
 | ADR-0016 | Evolução do RAG: bge-m3 + hybrid search + parent-document | 2026-07-04 | Aceito |
 | ADR-0017 | Dinheiro em centavos inteiros em todo o stack | 2026-07-04 | Aceito |
 | ADR-0018 | i18n pt-BR/en com locale no perfil do usuário | 2026-07-04 | Aceito |
+| ADR-0019 | Recorrência: modelo simples + engine no cron gravando via DRIZZLE_ADMIN | 2026-07-08 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
 
@@ -34,3 +35,22 @@
 - **2026-07-04 — Recorrência fora do v1**: campos e engine só no M9, com design próprio.
 - **TDD obrigatório por module**: regra em `domain-rules.md` (test-first;
   unitário + integração por module). Herdada da carcaça.
+- **2026-07-07 — M8 Relatórios entregue**: módulo `reports` (backend) +
+  `features/reports` (frontend Recharts). Endpoints `GET
+  /households/:id/reports/monthly` e `/annual?year=`. Agregação read-only sem
+  schema novo; gasto por pessoa via `person_id`. Validado no browser com dados
+  reais (bar 6m, donut categoria, lista pessoa, vista anual com cards + nav ano).
+- **2026-07-07 — Dev Turbopack cache corrompido**: se `/dashboard/household/[slug]`
+  retorna 404 no dev, o `404.tsx` manda de volta para `/dashboard/households`.
+  Fix: `pnpm --filter frontend dev:reset`. Build de produção não é afetado.
+- **2026-07-08 — M9 Recorrência entregue → v1 COMPLETO**: módulo `recurrences`
+  (backend + frontend). Modelo simples (`frequency` weekly/monthly/yearly +
+  `interval`, sem RRULE), engine no tick do cron gerando ocorrências vencidas.
+  Decisão-chave: o engine **não reusa `CreateTransactionUseCase`** (grava via
+  `DRIZZLE` RLS request-scoped, morto no cron) — em vez disso
+  `DrizzleTransactionRepository` ganhou `DRIZZLE_ADMIN` + `createGenerated`,
+  exposto por `CreateGeneratedTransactionUseCase` (sem auditoria). Idempotência
+  por **avançar-cursor-antes-de-inserir** (gaps-over-dups). Sem rateio/
+  parcelamento no v1. Migration `0002_recurrences` (hand-written + RLS). Detalhes
+  e gotchas em `roadmap.md`/`architecture.md`/`domain-rules.md`. Migration + specs
+  validados no Supabase local (9 e2e + 11 unit + regressão cron/transactions verde).

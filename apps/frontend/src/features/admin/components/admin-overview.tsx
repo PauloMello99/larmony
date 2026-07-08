@@ -206,7 +206,7 @@ export function AdminOverview() {
             </div>
           ) : (
             <div className="flex h-64 items-center justify-center text-sm text-foreground/40">
-              Nenhuma lar ainda.
+              Nenhum lar ainda.
             </div>
           )}
         </div>

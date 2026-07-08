@@ -13,6 +13,7 @@ import { transactionTypeEnum } from "../enums";
 import { households } from "../households";
 import { users } from "../users";
 import { categories } from "./categories";
+import { recurrences } from "./recurrences";
 
 // Agrupa as N parcelas de um parcelamento (ex.: 12x de R$100).
 export const installmentGroups = pgTable("installment_groups", {
@@ -28,7 +29,8 @@ export const installmentGroups = pgTable("installment_groups", {
 });
 
 // Entidade central: cada gasto/receita. Editável/deletável (sem ledger —
-// ADR-0010 superseded). Recorrência fica FORA do v1 (entra no M9).
+// ADR-0010 superseded). `recurrenceId` liga a tx gerada pelo engine de
+// recorrência (M9) à sua regra; SET NULL preserva o histórico se a regra sumir.
 export const transactions = pgTable(
   "transactions",
   {
@@ -59,6 +61,10 @@ export const transactions = pgTable(
     ),
     installmentNumber: integer("installment_number"),
     installmentCount: integer("installment_count"),
+    // Regra de recorrência que gerou esta tx (M9). NULL = criada pelo usuário.
+    recurrenceId: uuid("recurrence_id").references(() => recurrences.id, {
+      onDelete: "set null",
+    }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -107,6 +113,10 @@ export const transactionsRelations = relations(transactions, ({ one, many }) => 
   installmentGroup: one(installmentGroups, {
     fields: [transactions.installmentGroupId],
     references: [installmentGroups.id],
+  }),
+  recurrence: one(recurrences, {
+    fields: [transactions.recurrenceId],
+    references: [recurrences.id],
   }),
   members: many(transactionMembers),
 }));

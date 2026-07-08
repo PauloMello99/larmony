@@ -9,6 +9,7 @@ export interface UpdateMeBody {
   name?: string
   email?: string
   avatarUrl?: string | null
+  locale?: "pt-BR" | "en"
 }
 
 export function useMe() {

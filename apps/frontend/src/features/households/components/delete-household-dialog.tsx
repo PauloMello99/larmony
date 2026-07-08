@@ -58,7 +58,7 @@ export function DeleteHouseholdDialog({ household, onConfirm }: DeleteHouseholdD
           <DialogTitle>Excluir lar</DialogTitle>
           <DialogDescription>
             Esta ação é <span className="font-semibold text-red-400">irreversível</span>.
-            Todos os dados da lar serão permanentemente excluídos.
+            Todos os dados do lar serão permanentemente excluídos.
           </DialogDescription>
         </DialogHeader>
 

@@ -5,6 +5,7 @@ import { MailModule } from "../mail/mail.module";
 import { HouseholdsInfrastructureModule } from "./infrastructure/households-infrastructure.module";
 import { ListUserHouseholdsUseCase } from "./application/use-cases/list-user-households.use-case";
 import { GetHouseholdUseCase } from "./application/use-cases/get-household.use-case";
+import { GetHouseholdOverviewUseCase } from "./application/use-cases/get-household-overview.use-case";
 import { ResolveHouseholdBySlugUseCase } from "./application/use-cases/resolve-household-by-slug.use-case";
 import { CreateHouseholdUseCase } from "./application/use-cases/create-household.use-case";
 import { UpdateHouseholdUseCase } from "./application/use-cases/update-household.use-case";
@@ -30,6 +31,7 @@ import { InvitationsController } from "./interface/invitations.controller";
   providers: [
     ListUserHouseholdsUseCase,
     GetHouseholdUseCase,
+    GetHouseholdOverviewUseCase,
     ResolveHouseholdBySlugUseCase,
     CreateHouseholdUseCase,
     UpdateHouseholdUseCase,
