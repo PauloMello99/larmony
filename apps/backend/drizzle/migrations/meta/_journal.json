@@ -29,6 +29,13 @@
       "when": 1783241797153,
       "tag": "0003_user_onboarding",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1783241797154,
+      "tag": "0004_users_select_household_peers",
+      "breakpoints": true
     }
   ]
 }

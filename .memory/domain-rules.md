@@ -111,6 +111,14 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
   `is_super_admin`) sobre `auth.uid()`, executando como role `app_user` NOBYPASSRLS
   com `set_config('request.jwt.claims', ...)` por request (ver ADR-0005/0015).
   `household_id` **nunca** vem do cliente em inserts — sempre derivado da sessão.
+- **Gotcha (RLS + `users`):** a policy base `users_select` só deixa o usuário ver a
+  própria linha (`auth.uid() = auth_id`). Qualquer query RLS-scoped que faça
+  `INNER JOIN` em `users` (ex.: listar membros do lar) **descarta silenciosamente**
+  os co-membros. Corrigido na migration `0004` com o helper `SECURITY DEFINER`
+  `shares_household_with(uuid)` + a policy permissiva `users_select_household_peers`
+  (OR com a base): co-membros de um mesmo lar passam a se enxergar. RLS é por linha,
+  não por coluna (co-membros leem a linha inteira de `users`; a app só seleciona
+  `name`/`email`).
 
 ### Convites
 
