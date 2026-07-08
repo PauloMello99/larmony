@@ -30,6 +30,8 @@ export interface TransactionListItem {
   installmentGroupId: string | null;
   installmentNumber: number | null;
   installmentCount: number | null;
+  /** Regra de recorrência que gerou a tx (M9). NULL = criada pelo usuário. */
+  recurrenceId: string | null;
   /** Nº de participantes no rateio (0 = sem rateio). */
   memberCount: number;
   createdAt: Date;
@@ -78,6 +80,23 @@ export interface CreateInstallmentData {
   members?: TransactionMemberInput[];
 }
 
+/**
+ * Dados para uma transação gerada por regra de recorrência (M9). Escrita fora de
+ * request context (cron) → o repositório usa DRIZZLE_ADMIN. Sempre single (sem
+ * parcelamento/rateio no v1); `recurrenceId` liga a tx à regra.
+ */
+export interface CreateGeneratedData {
+  recurrenceId: string;
+  createdBy: string;
+  personId: string | null;
+  categoryId: string | null;
+  type: TransactionType;
+  amountCents: number;
+  description: string;
+  date: string;
+  notes: string | null;
+}
+
 export interface UpdateTransactionData {
   personId?: string | null;
   categoryId?: string | null;
@@ -105,6 +124,15 @@ export interface ITransactionRepository {
     householdId: string,
     data: CreateInstallmentData,
   ): Promise<TransactionEntity[]>;
+  /**
+   * Cria uma transação gerada por recorrência (M9) via conexão ADMIN — usada
+   * pelo engine no cron, sem request/RLS context. Escopo garantido pelo
+   * `householdId` da própria regra.
+   */
+  createGenerated(
+    householdId: string,
+    data: CreateGeneratedData,
+  ): Promise<TransactionEntity>;
   update(id: string, householdId: string, data: UpdateTransactionData): Promise<TransactionEntity>;
   delete(id: string, householdId: string): Promise<void>;
   /** Substitui o rateio de uma transação (delete + reinsert). */

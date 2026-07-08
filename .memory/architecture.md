@@ -87,6 +87,7 @@ src/
     ├── goals/                     # CRUD de metas + aportes; savedCents derivado por SUM (M6)
     ├── bills/                     # CRUD + lançar como transação + job de lembrete (M7 completo)
     ├── reports/                   # agregações read-only mensal/anual (M8)
+    ├── recurrences/               # regras de recorrência + engine no cron (M9)
     ├── admin/                     # super_admin de plataforma (ADR-0013)
     ├── mail/                      # Resend + React Email (ADR-0012)
     ├── notifications/             # notificações in-app + e-mail
@@ -126,7 +127,7 @@ providers decorados no boot; o tick roda todos com isolamento de erro e retorna
 | Job | Status |
 |---|---|
 | `send-bill-reminders` (lembretes de contas) | ✅ entregue (fatia cron do M7, 2026-07-06) — `modules/bills/application/jobs/send-bill-reminders.job.ts`; dedup por contexto **bill×mês** via `reminder_last_sent_at` gravado ANTES do envio (e-mail best-effort nunca duplica); janela = próximo vencimento (dueDay clampado ao fim do mês) − hoje == reminderDaysBefore |
-| `recurrence-engine` (transações recorrentes) | planejado — M9 |
+| `recurrence-engine` (transações recorrentes) | ✅ entregue (M9, 2026-07-08) — `modules/recurrences/application/jobs/recurrence-engine.job.ts`; gera as ocorrências vencidas (`next_run_date <= hoje`) das regras ativas, catch-up bounded, **avança o cursor ANTES de inserir** (gaps-over-dups); grava via `CreateGeneratedTransactionUseCase` (DRIZZLE_ADMIN, sem auditoria) |
 
 ### Migrations (ver ADR-0003)
 
@@ -156,6 +157,13 @@ Resolução de `authId` (Supabase auth id) → `users.id` (interno, usado em FKs
 como `transactions.createdBy`/`personId`) é feita **no controller**, via
 `GetMeUseCase`, e passada como parâmetro simples para o use-case — nunca o
 use-case resolve isso sozinho (mantém use-cases livres de import de `AuthUser`).
+
+**Exceção do cron (M9)**: escrita disparada por job (sem request context) **não
+pode** usar `DRIZZLE` (RLS nega sem claims). Por isso `DrizzleTransactionRepository`
+injeta também `DRIZZLE_ADMIN` e expõe `createGenerated` (usado só pelo
+recurrence-engine), espelhando o split `this.db`/`this.admin` de `DrizzleBillRepository`.
+O `CreateGeneratedTransactionUseCase` (exportado pelo `TransactionsModule`) é o
+ponto de reuso cross-módulo para o cron — sem auditoria (evento de sistema).
 
 ### Supabase local
 

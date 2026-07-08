@@ -38,12 +38,13 @@ a arquitetura deste repo fornece o *como* (Clean Architecture, use-cases, RLS vi
 ## Estado atual do monorepo (2026-07-07)
 
 - `apps/backend` — NestJS 11: `auth`, `user`, `households`, `categories`,
-  `transactions`, `budgets`, `goals`, `bills`, **`reports` (M8)**, `admin`, `mail`,
-  `notifications`, `audit`, `internal-cron` (tick + `send-bill-reminders`).
+  `transactions`, `budgets`, `goals`, `bills`, `reports`, **`recurrences` (M9)**,
+  `admin`, `mail`, `notifications`, `audit`, `internal-cron` (tick +
+  `send-bill-reminders` + `recurrence-engine`).
 - `apps/frontend` — Next.js (pages router): features `auth`, `account`, `admin`,
   `dashboard`, `households`, `categories`, `transactions`, `budgets`, `goals`,
-  `bills`, **`reports` (M8)**, `invitations`, `landing`.
-- Milestones **M1–M8 entregues**; falta **M9 (Recorrência)** para fechar o v1.
+  `bills`, `reports`, **`recurrences` (M9)**, `invitations`, `landing`.
+- Milestones **M1–M9 entregues — v1 COMPLETO** (2026-07-08).
 - Deploy Railway staging: Frontend + Backend + Cron (online).
 - RAG local: Qdrant + Ollama, coleção `larmony_memory`, servidor MCP `larmony-memory`.
 

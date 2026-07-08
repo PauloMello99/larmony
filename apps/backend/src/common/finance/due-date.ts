@@ -50,3 +50,12 @@ export function addMonthsISO(iso: string, months: number): string {
   const day = Math.min(d, lastDayOfMonth(year, monthIndex));
   return toISODate(new Date(year, monthIndex, day));
 }
+
+/**
+ * Avança `iso` (yyyy-MM-dd) em `days` dias-calendário (sem clamp — o dia corre
+ * normalmente para o mês/ano seguinte). Usado na recorrência semanal (M9).
+ */
+export function addDaysISO(iso: string, days: number): string {
+  const [y, m, d] = iso.split("-").map(Number) as [number, number, number];
+  return toISODate(new Date(y, m - 1, d + days));
+}

@@ -159,11 +159,28 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
   dividida igualmente entre os membros). Rateio específico + parcelamento → 422
   (evita split 2D parcela×membro; fora do v1).
 
-#### Recorrência
+#### Recorrência (M9 ✅ 2026-07-08)
 
-- **Fora do v1.** O old-larmony tinha campos (`is_recurring`, `recurrence_rule`,
-  `parent_id`) mas nunca implementou a lógica. Entra por último no roadmap (M9),
-  com design próprio — não incluir os campos no schema até lá.
+- Regra na tabela `recurrences` (schema novo — o old-larmony só tinha campos
+  natimortos): `frequency ∈ {weekly,monthly,yearly}` + `interval` ("a cada N";
+  **sem RRULE**), `startDate`, `endDate?` (fim opcional), `nextRunDate` (cursor),
+  `isActive`, `type`/`amountCents`/`description`/`categoryId?`/`personId?`.
+- **Gera transações automaticamente** (≠ bills, que é definição estática +
+  lembrete manual — coexistem, não se sobrepõem). O job `recurrence-engine`
+  (tick do cron) materializa **cada ocorrência na sua data** (`next_run_date <=
+  hoje`), não pré-materializa futuro. A transação gerada tem `recurrence_id`
+  (FK SET NULL — histórico sobrevive à exclusão da regra) e badge "Recorrente".
+- **Sem rateio e sem parcelamento no v1** (precedente do M4 sobre explosão 2D).
+- `startDate` deve ser **hoje ou futuro** (sem backfill histórico surpresa; 422
+  `RECURRENCE_START_DATE_IN_PAST`) e `endDate` (se houver) não pode ser anterior
+  a `startDate` (422 `RECURRENCE_INVALID_DATE_RANGE`). `startDate` é imutável no
+  update (troca = deletar+criar); `nextRunDate` é gerido só pelo engine/reativação.
+- **Editar a regra afeta só ocorrências futuras**; transações já geradas são
+  transações comuns (editáveis/deletáveis à parte). Pausar = `isActive=false`;
+  **reativar re-ancora `nextRunDate`** para a próxima ocorrência >= hoje (não
+  gera de uma vez o período pausado).
+- **Idempotência**: o engine **avança o cursor ANTES de inserir** (gaps-over-dups,
+  espelha o mark-before-send de bills). Ver detalhes/gotchas em `roadmap.md`.
 
 ### Metas (goals)
 
@@ -222,4 +239,4 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
 ### Pendências não bloqueantes para V1
 
 - Landing page com copy do Larmony (hoje já tem copy de finanças domésticas).
-- Recorrência (M9) — único milestone restante.
+- **v1 COMPLETO (2026-07-08)** — M1–M9 entregues; nenhum milestone restante.

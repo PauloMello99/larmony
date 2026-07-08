@@ -1,14 +1,14 @@
 ---
 name: roadmap
-description: Roadmap do Larmony — M1–M8 entregues; auditoria de milestones M1–M9 (snapshot 2026-07-07)
+description: Roadmap do Larmony — M1–M9 entregues, v1 COMPLETO (snapshot 2026-07-08)
 metadata:
   type: project
 ---
 
 # Roadmap — Larmony
 
-> Snapshot de **2026-07-07** (M8 Relatórios entregue e validado no browser). Cada
-> milestone vira um plano de implementação próprio antes de começar. Esforço
+> Snapshot de **2026-07-08** (M9 Recorrência entregue — **v1 COMPLETO**). Cada
+> milestone virou um plano de implementação próprio antes de começar. Esforço
 > em dias-de-dev aproximados (dev sênior + agente).
 
 ## Bootstrap — CONCLUÍDO ✅
@@ -34,11 +34,10 @@ metadata:
 | M6 | Goals | **✅ entregue (2026-07-06)** — backend CRUD (`households/:id/goals`, RLS via DRIZZLE) + sub-recurso `/:goalId/contributions` (add/list com `authorName`/delete, aportes positivos, escopo via goal pai); **savedCents derivado por SUM em runtime** (nunca persistido); overview estendido aditivamente com `goals.top` (top-3 por %) e a seção "Metas ativas" agora renderiza GoalRow (corrigido o EmptyState incondicional) + frontend (grid de cards com progress, badge "Concluída" em success, dialog de aporte com histórico e exclusão, DatePicker com `startMonth`/`endMonth` opcionais p/ data alvo futura) | nada | — |
 | M7 | Bills + lembretes | **✅ entregue (2026-07-06)** — CRUD completo (`households/:id/bills`, RLS via DRIZZLE) somado à fatia cron já existente (repo agora injeta DRIZZLE+DRIZZLE_ADMIN no mesmo repositório); "lançar como transação" via `LaunchBillAsTransactionUseCase` reusando `CreateTransactionUseCase` (bills nunca geram transaction automaticamente — launch é sempre ação explícita, a bill nunca é consumida); frontend com seções Ativas/Inativas, Switch inline, alerta amber ≤7 dias, Select de lembrete {1,3,7,15} | nada | — |
 | M8 | Relatórios | **✅ entregue (2026-07-06)** — módulo `reports` read-only: `GET /reports/monthly` (série 6m + pizza categoria + gasto por pessoa no mês corrente via `person_id`) + `GET /reports/annual?year=` (12m + totais); frontend Recharts (bar/pie/lista), toggle Mensal/Anual, navegação de ano | nada | — |
-| M9 | Recorrência | fora do schema **por design** (nunca existiu no old-larmony) | design próprio: modelo de regra, engine no tick do cron, edição de série vs ocorrência, relação com bills | **L** (3–5d) |
+| M9 | Recorrência | **✅ entregue (2026-07-08)** — módulo `recurrences` (backend + frontend). Regra com `frequency ∈ {weekly,monthly,yearly}` + `interval` ("a cada N"; sem RRULE) e `start/end/nextRunDate`; engine `recurrence-engine` no tick do cron gera as ocorrências vencidas (catch-up bounded, **avança o cursor ANTES de inserir** = gaps-over-dups) via `CreateGeneratedTransactionUseCase` (DRIZZLE_ADMIN, sem auditoria). Transação gerada tem `recurrence_id` (FK SET NULL → histórico sobrevive à exclusão da regra) e badge "Recorrente". **Sem rateio nem parcelamento no v1**; `startDate` >= hoje (sem backfill); reativação re-ancora `nextRunDate` para não gerar o gap pausado. Frontend `features/recurrences` (Sheet + lista ativas/inativas, toggle pausar) | nada | — |
 
-**Ordem sugerida de execução (M1–M8 concluídos):** M9.
-Racional: M9 (recorrência) fecha o v1 reusando o cron registry. **Todo o núcleo
-financeiro + relatórios do v1 estão entregues.**
+**M1–M9 concluídos — v1 COMPLETO (2026-07-08).** Todo o núcleo financeiro +
+relatórios + recorrência entregues. Não há milestone pendente no roadmap do v1.
 
 ## Qualidade — testes (sessão 2026-07-07)
 
@@ -56,10 +55,12 @@ financeiro + relatórios do v1 estão entregues.**
   Gotcha: a suíte cheia serial (cada spec re-logando) tem flakiness
   ambiental no dev server (Next/Turbopack ocasionalmente trava no login sob
   carga); cada spec passa isolado. Em CI usar build de produção deve estabilizar.
-- **Placeholder de referência nos E2E**: `fluxo-principal.e2e.ts` valida "um
-  placeholder renderiza" apontando para uma feature ainda não entregue — a cada
-  milestone entregue, mover a asserção para o próximo placeholder (hoje:
-  Recorrência/M9; quando M9 sair, remove-se a asserção).
+- **Placeholder de referência nos E2E (obsoleto)**: já não há asserção de
+  placeholder de Recorrência em `fluxo-principal.e2e.ts` (foi removida antes do
+  M9). `FEATURE_PAGES` em `features/dashboard/lib/nav.ts` também está defasado
+  (lista até M8, `bills` marcado M7 mesmo com página real) — metadados de
+  placeholder não são mais usados por nenhuma rota. Nada a "mover"; ao entregar
+  M9 adicionou-se nav + página + specs reais.
 - **Estender um módulo existente sem quebrá-lo**: ao completar o CRUD de bills
   sobre a fatia cron já entregue, o repositório passou a injetar `DRIZZLE`
   (CRUD) + `DRIZZLE_ADMIN` (os métodos do cron, renomeados de `this.db` para
@@ -73,6 +74,27 @@ financeiro + relatórios do v1 estão entregues.**
   qualquer ponte entre domínios financeiros (ex.: M9 recorrência → transactions).
 - Regra: **toda feature nova de milestone entrega seus specs junto** (test-first
   por módulo, ver domain-rules).
+- **M9 recorrência — reconciliação do reuso cross-módulo (importante)**: o engine
+  roda no cron (sem request context), e `CreateTransactionUseCase` grava via
+  `DRIZZLE` (RLS request-scoped) → **não pode ser reusado no cron** (o proxy cai
+  no pool sem claims e o RLS nega tudo). Solução que honra a intenção da memória
+  ("M9 → transactions") sem quebrar o RLS: `DrizzleTransactionRepository` ganhou
+  `DRIZZLE_ADMIN` + método `createGenerated` (mesmo split `this.db`/`this.admin`
+  de bills), exposto por um `CreateGeneratedTransactionUseCase` **sem auditoria**
+  (evento de sistema, sem authId) que o `TransactionsModule` exporta. Regra geral:
+  **qualquer escrita disparada por cron usa DRIZZLE_ADMIN**, nunca o use-case
+  request-scoped — reusar use-case cross-módulo só vale quando o consumidor roda
+  em request context (como `LaunchBillAsTransactionUseCase`).
+- **M9 engine — idempotência (ticks sequenciais) sem transação cross-repo**: o
+  loop de catch-up **avança `next_run_date` ANTES de inserir a transação**
+  (espelha o mark-before-send de bills). Crash entre as duas escritas PULA uma
+  ocorrência (gap visível/corrigível) em vez de DUPLICAR (corrupção silenciosa
+  de relatórios/orçamentos). Protege re-tick **sequencial** (o caso real: 1 só
+  serviço Cron, tick em ms), **não** ticks concorrentes — se a topologia mudar,
+  usar índice único parcial `(recurrence_id, date) WHERE recurrence_id IS NOT
+  NULL` (considerado e adiado). Teto de segurança por regra loga (não silencia).
+  **Gotcha de teste**: o driver `pg` devolve coluna `date` como `Date`, não
+  string — comparar `next_run_date` no e2e exige `::text` no SELECT.
 - Padrão de repositório confirmado para escrita autenticada: `DRIZZLE`
   (RLS-enforced, claims setadas pelo `RlsInterceptor` global) é o padrão para
   toda escrita de módulo household-scoped; `DRIZZLE_ADMIN` fica reservado a

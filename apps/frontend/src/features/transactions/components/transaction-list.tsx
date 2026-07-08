@@ -26,7 +26,7 @@ function formatDate(iso: string): string {
 }
 
 function TxBadges({ tx }: { tx: Transaction }) {
-  if (!tx.installmentCount && tx.memberCount === 0) return null
+  if (!tx.installmentCount && tx.memberCount === 0 && !tx.recurrenceId) return null
   return (
     <span className="ml-2 inline-flex gap-1 align-middle">
       {tx.installmentCount && (
@@ -37,6 +37,11 @@ function TxBadges({ tx }: { tx: Transaction }) {
       {tx.memberCount > 0 && (
         <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
           Rateio
+        </span>
+      )}
+      {tx.recurrenceId && (
+        <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+          Recorrente
         </span>
       )}
     </span>

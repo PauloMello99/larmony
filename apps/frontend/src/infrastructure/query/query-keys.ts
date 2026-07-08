@@ -64,6 +64,12 @@ export const queryKeys = {
     list: (householdId: string) => ["bills", householdId, "list"] as const,
   },
 
+  // ─── Recurrences ──────────────────────────────────────────────────────────
+  recurrences: {
+    all: (householdId: string) => ["recurrences", householdId] as const,
+    list: (householdId: string) => ["recurrences", householdId, "list"] as const,
+  },
+
   // ─── Goals ──────────────────────────────────────────────────────────────
   goals: {
     all: (householdId: string) => ["goals", householdId] as const,

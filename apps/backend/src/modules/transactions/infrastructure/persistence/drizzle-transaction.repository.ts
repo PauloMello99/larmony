@@ -1,10 +1,15 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { and, desc, eq, gte, lt, sql, type SQL } from "drizzle-orm";
-import { DRIZZLE, type DrizzleDB } from "../../../../database/database.module";
+import {
+  DRIZZLE,
+  DRIZZLE_ADMIN,
+  type DrizzleDB,
+} from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
 import { monthBounds, toISODate, addMonthsISO } from "../../../../common/finance/due-date";
 import { splitEqually } from "../../../../common/finance/split";
 import type {
+  CreateGeneratedData,
   CreateInstallmentData,
   CreateTransactionData,
   ITransactionRepository,
@@ -21,7 +26,12 @@ import { TransactionMapper } from "./transaction.mapper";
 
 @Injectable()
 export class DrizzleTransactionRepository implements ITransactionRepository {
-  constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
+  constructor(
+    // CRUD request-scoped (RLS-enforced).
+    @Inject(DRIZZLE) private readonly db: DrizzleDB,
+    // Geração por recorrência roda no cron (sem request/RLS context) → admin.
+    @Inject(DRIZZLE_ADMIN) private readonly admin: DrizzleDB,
+  ) {}
 
   async findAllByHousehold(
     householdId: string,
@@ -61,6 +71,7 @@ export class DrizzleTransactionRepository implements ITransactionRepository {
           installmentGroupId: schema.transactions.installmentGroupId,
           installmentNumber: schema.transactions.installmentNumber,
           installmentCount: schema.transactions.installmentCount,
+          recurrenceId: schema.transactions.recurrenceId,
           memberCount: sql<number>`(select count(*)::int from ${schema.transactionMembers} where ${schema.transactionMembers.transactionId} = ${schema.transactions.id})`,
           createdAt: schema.transactions.createdAt,
           updatedAt: schema.transactions.updatedAt,
@@ -187,6 +198,30 @@ export class DrizzleTransactionRepository implements ITransactionRepository {
 
       return rows.map((row) => TransactionMapper.toDomain(row));
     });
+  }
+
+  async createGenerated(
+    householdId: string,
+    data: CreateGeneratedData,
+  ): Promise<TransactionEntity> {
+    const [row] = await this.admin
+      .insert(schema.transactions)
+      .values({
+        householdId,
+        createdBy: data.createdBy,
+        personId: data.personId,
+        categoryId: data.categoryId ?? null,
+        type: data.type,
+        amountCents: data.amountCents,
+        description: data.description,
+        date: data.date,
+        notes: data.notes ?? null,
+        recurrenceId: data.recurrenceId,
+      })
+      .returning();
+
+    if (!row) throw new Error("Failed to create generated transaction");
+    return TransactionMapper.toDomain(row);
   }
 
   async update(
