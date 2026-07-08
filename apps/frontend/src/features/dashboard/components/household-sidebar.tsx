@@ -153,6 +153,7 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
                         <Link
                           href={item.href ? `${basePath}/${item.href}` : basePath}
                           onClick={onMobileClose}
+                          data-tour={item.dataTour}
                           className={cn(
                             "flex items-center rounded-md py-2 text-sm transition-colors",
                             // Desktop collapsed: icon only, centered

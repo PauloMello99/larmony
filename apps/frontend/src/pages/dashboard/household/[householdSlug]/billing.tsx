@@ -16,4 +16,4 @@ export default function BillingRedirect() {
   return null
 }
 
-export const getServerSideProps = makeI18nProps(["common", "dashboard"])
+export const getServerSideProps = makeI18nProps(["common", "dashboard", "onboarding"])

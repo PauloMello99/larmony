@@ -1,0 +1,135 @@
+{
+  "nav": {
+    "back": "Voltar",
+    "skip": "Pular",
+    "next": "Próximo",
+    "done": "Entendi",
+    "step": "Passo {{current}} de {{total}}"
+  },
+  "sidebar": {
+    "welcome": {
+      "title": "Bem-vindo ao Larmony!",
+      "body": "Vamos fazer um tour rápido pelo menu lateral para você saber onde fica cada funcionalidade do seu lar."
+    },
+    "overview": {
+      "title": "Visão geral",
+      "body": "O resumo do seu lar: saldo do mês, orçamentos, metas e contas próximas do vencimento, tudo em um só lugar."
+    },
+    "transactions": {
+      "title": "Transações",
+      "body": "Todas as receitas e despesas lançadas no lar, com filtros por mês, categoria e tipo."
+    },
+    "categories": {
+      "title": "Categorias",
+      "body": "Organizam suas transações, orçamentos e recorrências. Seu lar já vem com 13 categorias padrão."
+    },
+    "budgets": {
+      "title": "Orçamentos",
+      "body": "Defina um limite de gasto mensal por categoria e acompanhe o quanto já foi gasto."
+    },
+    "goals": {
+      "title": "Metas",
+      "body": "Crie metas de poupança com valor alvo e registre aportes até alcançar o objetivo."
+    },
+    "bills": {
+      "title": "Contas a pagar",
+      "body": "Cadastre contas fixas com dia de vencimento e receba lembretes por e-mail."
+    },
+    "recurrences": {
+      "title": "Recorrências",
+      "body": "Configure lançamentos automáticos que se repetem, como salário ou assinaturas."
+    },
+    "reports": {
+      "title": "Relatórios",
+      "body": "Gráficos mensais e anuais com a evolução das finanças do seu lar."
+    },
+    "settings": {
+      "title": "Configurações",
+      "body": "Gerencie as informações do seu lar e convide outros membros."
+    }
+  },
+  "overview": {
+    "intro": {
+      "title": "Visão geral do seu lar",
+      "body": "Este painel mostra um resumo rápido: saldo do mês, orçamentos, metas e contas próximas do vencimento. Ele evolui sozinho conforme você usa o Larmony."
+    }
+  },
+  "transactions": {
+    "intro": {
+      "title": "Transações",
+      "body": "Aqui ficam todas as receitas e despesas do lar. Use os filtros para encontrar lançamentos por mês, categoria ou tipo."
+    },
+    "new": {
+      "title": "Nova transação",
+      "body": "Clique aqui para lançar uma receita ou despesa a qualquer momento."
+    }
+  },
+  "transactionForm": {
+    "intro": {
+      "title": "Como lançar uma transação",
+      "body": "Preencha os dados básicos e use os campos abaixo para categorizar, parcelar ou dividir o gasto com outras pessoas do lar."
+    },
+    "category": {
+      "title": "Categoria",
+      "body": "Classifique a transação (ex.: Mercado, Transporte) para acompanhar os gastos nos relatórios e orçamentos. É opcional."
+    },
+    "person": {
+      "title": "Pessoa",
+      "body": "Indique quem realizou o gasto — diferente de quem está registrando. Relatórios por pessoa usam este campo. Sem seleção, assume-se você."
+    },
+    "installments": {
+      "title": "Parcelar",
+      "body": "Ative para dividir o valor total em várias parcelas mensais. O Larmony cria uma transação para cada parcela, ligadas à mesma série."
+    },
+    "split": {
+      "title": "Dividir entre membros",
+      "body": "Ative para ratear o valor entre os membros do lar — igualmente ou com um valor específico para cada um."
+    }
+  },
+  "categories": {
+    "intro": {
+      "title": "Categorias",
+      "body": "Categorias classificam suas transações, orçamentos e recorrências. Seu lar já vem com 13 categorias padrão, e você pode criar as suas."
+    }
+  },
+  "budgets": {
+    "intro": {
+      "title": "Orçamentos",
+      "body": "Defina um limite de gasto mensal por categoria. O Larmony calcula automaticamente quanto já foi gasto e avisa quando você ultrapassa o limite."
+    }
+  },
+  "goals": {
+    "intro": {
+      "title": "Metas",
+      "body": "Crie metas de poupança com um valor alvo e, opcionalmente, uma data. Registre aportes ao longo do tempo até alcançar o objetivo."
+    }
+  },
+  "bills": {
+    "intro": {
+      "title": "Contas a pagar",
+      "body": "Cadastre contas fixas (aluguel, internet, assinaturas) com dia de vencimento e receba lembretes por e-mail. Lançar uma conta como transação é sempre manual."
+    }
+  },
+  "recurrences": {
+    "intro": {
+      "title": "Recorrências",
+      "body": "Configure lançamentos automáticos que se repetem, como um salário mensal. O Larmony gera as transações na data certa, sem você precisar lançar manualmente."
+    }
+  },
+  "reports": {
+    "intro": {
+      "title": "Relatórios",
+      "body": "Acompanhe a evolução das finanças do lar com gráficos mensais e anuais, gastos por categoria e por pessoa."
+    }
+  },
+  "settings": {
+    "intro": {
+      "title": "Configurações",
+      "body": "Aqui você gerencia as informações do seu lar."
+    },
+    "members": {
+      "title": "Membros",
+      "body": "Convide outras pessoas para gerenciar as finanças do lar com você. Cada membro pode lançar e visualizar transações, orçamentos e metas."
+    }
+  }
+}

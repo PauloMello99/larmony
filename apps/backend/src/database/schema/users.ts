@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, date } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, date, jsonb } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { platformRoleEnum, genderEnum } from "./enums";
 import { householdMemberships } from "./households";
@@ -15,6 +15,11 @@ export const users = pgTable("users", {
   gender: genderEnum("gender"),
   // Idioma da UI e dos e-mails (ADR-0018): pt-BR (default) | en.
   locale: text("locale").notNull().default("pt-BR"),
+  // Tours de onboarding já concluídos: mapa { [tourKey]: maiorVersãoVista }.
+  onboarding: jsonb("onboarding")
+    .$type<Record<string, number>>()
+    .notNull()
+    .default({}),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

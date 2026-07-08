@@ -60,6 +60,7 @@ export function TransactionsPage() {
           </p>
         </div>
         <Button
+          data-tour="tx-new-button"
           className="w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
           size="sm"
           onClick={openCreate}

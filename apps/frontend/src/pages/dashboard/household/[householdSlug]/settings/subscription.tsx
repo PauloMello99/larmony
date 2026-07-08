@@ -40,4 +40,4 @@ SettingsSubscriptionPage.getLayout = (page: ReactElement) => (
 
 export default SettingsSubscriptionPage
 
-export const getServerSideProps = makeI18nProps(["common", "dashboard"])
+export const getServerSideProps = makeI18nProps(["common", "dashboard", "onboarding"])

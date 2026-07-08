@@ -13,6 +13,8 @@ export interface UserEntityProps {
   gender: Gender | null;
   /** Idioma da UI/e-mails (ADR-0018): pt-BR | en. */
   locale: string;
+  /** Tours de onboarding concluídos: { [tourKey]: maiorVersãoVista }. */
+  onboarding: Record<string, number>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -41,6 +43,7 @@ export class UserEntity {
   readonly birthDate: string | null;
   readonly gender: Gender | null;
   readonly locale: string;
+  readonly onboarding: Record<string, number>;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -55,6 +58,7 @@ export class UserEntity {
     this.birthDate = props.birthDate;
     this.gender = props.gender;
     this.locale = props.locale;
+    this.onboarding = props.onboarding;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
   }

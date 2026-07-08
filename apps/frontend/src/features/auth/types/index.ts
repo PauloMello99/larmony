@@ -16,6 +16,8 @@ export interface Me {
   birthDate: string | null
   gender: "male" | "female" | "other" | null
   locale: "pt-BR" | "en"
+  /** Tours de onboarding concluídos: { [tourKey]: maiorVersãoVista }. */
+  onboarding: Record<string, number>
   createdAt: string
   updatedAt: string
 }

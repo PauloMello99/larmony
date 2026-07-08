@@ -78,4 +78,20 @@ export class DrizzleUserRepository implements IUserRepository {
       .returning();
     return UserMapper.toDomain(row!);
   }
+
+  async mergeOnboarding(
+    authId: string,
+    patch: Record<string, number>,
+  ): Promise<UserEntity> {
+    const [row] = await this.db
+      .update(schema.users)
+      .set({
+        // Merge atômico via operador jsonb `||` (patch sobrescreve as chaves iguais).
+        onboarding: sql`${schema.users.onboarding} || ${JSON.stringify(patch)}::jsonb`,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.users.authId, authId))
+      .returning();
+    return UserMapper.toDomain(row!);
+  }
 }

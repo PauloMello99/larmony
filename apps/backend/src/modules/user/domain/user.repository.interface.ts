@@ -9,6 +9,14 @@ export interface IUserRepository {
   findByEmail(email: string): Promise<UserEntity | null>;
   create(data: CreateUserData): Promise<UserEntity>;
   update(authId: string, data: UpdateUserData): Promise<UserEntity>;
+  /**
+   * Faz merge (jsonb `||`) do patch no mapa `onboarding` do usuário — atômico,
+   * sem read-modify-write. Ex.: `{ sidebar: 1 }`.
+   */
+  mergeOnboarding(
+    authId: string,
+    patch: Record<string, number>,
+  ): Promise<UserEntity>;
   /** Remove o registro do usuário (exclusão de conta). Bypassa RLS. */
   delete(authId: string): Promise<void>;
 }

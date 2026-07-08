@@ -41,6 +41,8 @@ export interface NavItem {
   roles?: Array<"owner" | "member">
   /** When set, the member needs this module permission (owner ignores). */
   module?: ModuleKey
+  /** `data-tour` attribute for the sidebar onboarding spotlight (see features/onboarding). */
+  dataTour?: string
 }
 
 export interface NavSection {
@@ -56,20 +58,20 @@ export interface NavSection {
 export const HOUSEHOLD_NAV_SECTIONS: NavSection[] = [
   {
     items: [
-      { labelKey: "nav.overview", href: "", icon: LayoutGrid },
-      { labelKey: "nav.transactions", href: "transactions", icon: ArrowLeftRight },
-      { labelKey: "nav.categories", href: "categories", icon: Tags },
-      { labelKey: "nav.budgets", href: "budgets", icon: PiggyBank },
-      { labelKey: "nav.goals", href: "goals", icon: Target },
-      { labelKey: "nav.bills", href: "bills", icon: ReceiptText },
-      { labelKey: "nav.recurrences", href: "recurrences", icon: Repeat },
-      { labelKey: "nav.reports", href: "reports", icon: ChartPie },
+      { labelKey: "nav.overview", href: "", icon: LayoutGrid, dataTour: "nav-overview" },
+      { labelKey: "nav.transactions", href: "transactions", icon: ArrowLeftRight, dataTour: "nav-transactions" },
+      { labelKey: "nav.categories", href: "categories", icon: Tags, dataTour: "nav-categories" },
+      { labelKey: "nav.budgets", href: "budgets", icon: PiggyBank, dataTour: "nav-budgets" },
+      { labelKey: "nav.goals", href: "goals", icon: Target, dataTour: "nav-goals" },
+      { labelKey: "nav.bills", href: "bills", icon: ReceiptText, dataTour: "nav-bills" },
+      { labelKey: "nav.recurrences", href: "recurrences", icon: Repeat, dataTour: "nav-recurrences" },
+      { labelKey: "nav.reports", href: "reports", icon: ChartPie, dataTour: "nav-reports" },
     ],
   },
   {
     labelKey: "nav.sectionHousehold",
     items: [
-      { labelKey: "nav.settings", href: "settings", icon: Settings, roles: ["owner"] },
+      { labelKey: "nav.settings", href: "settings", icon: Settings, roles: ["owner"], dataTour: "nav-settings" },
     ],
   },
 ]

@@ -11,6 +11,8 @@ import { HouseholdProvider } from "@/features/dashboard/components/household-con
 import { useHouseholds, useResolveHouseholdBySlug } from "@/features/dashboard/hooks/use-households"
 import { useMe } from "@/features/auth/hooks/use-me"
 import { useTranslation } from "react-i18next"
+import { OnboardingProvider } from "@/features/onboarding/providers/onboarding-provider"
+import { TourRenderer } from "@/features/onboarding/components/tour-renderer"
 import {
   PAGE_LABEL_KEYS,
   isOwnerOnlyPath,
@@ -127,6 +129,7 @@ export function HouseholdLayout({ children }: HouseholdLayoutProps) {
 
   return (
     <HouseholdProvider household={household} actingAsAdmin={actingAsAdmin}>
+      <OnboardingProvider onRequestMobileNav={setMobileOpen}>
       <div className="flex h-screen flex-col overflow-hidden bg-background">
         {actingAsAdmin ? (
           // Funcionário ou não-membro agindo com poderes de plataforma → aviso forte.
@@ -172,6 +175,8 @@ export function HouseholdLayout({ children }: HouseholdLayoutProps) {
           </main>
         </div>
       </div>
+      <TourRenderer />
+      </OnboardingProvider>
     </HouseholdProvider>
   )
 }

@@ -27,4 +27,4 @@ MembersRedirectPage.getLayout = (page: ReactElement) => (
 
 export default MembersRedirectPage
 
-export const getServerSideProps = makeI18nProps(["common", "dashboard"])
+export const getServerSideProps = makeI18nProps(["common", "dashboard", "onboarding"])

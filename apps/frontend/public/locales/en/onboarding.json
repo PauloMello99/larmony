@@ -1,0 +1,135 @@
+{
+  "nav": {
+    "back": "Back",
+    "skip": "Skip",
+    "next": "Next",
+    "done": "Got it",
+    "step": "Step {{current}} of {{total}}"
+  },
+  "sidebar": {
+    "welcome": {
+      "title": "Welcome to Larmony!",
+      "body": "Let's take a quick tour of the sidebar so you know where everything in your household lives."
+    },
+    "overview": {
+      "title": "Overview",
+      "body": "Your household's summary: this month's balance, budgets, goals, and upcoming bills, all in one place."
+    },
+    "transactions": {
+      "title": "Transactions",
+      "body": "Every income and expense logged for the household, with filters by month, category, and type."
+    },
+    "categories": {
+      "title": "Categories",
+      "body": "Categories organize your transactions, budgets, and recurrences. Your household starts with 13 default categories."
+    },
+    "budgets": {
+      "title": "Budgets",
+      "body": "Set a monthly spending limit per category and track how much has been spent."
+    },
+    "goals": {
+      "title": "Goals",
+      "body": "Create savings goals with a target amount and log contributions until you reach it."
+    },
+    "bills": {
+      "title": "Bills",
+      "body": "Register recurring bills with a due day and get email reminders."
+    },
+    "recurrences": {
+      "title": "Recurrences",
+      "body": "Set up automatic entries that repeat, like a salary or a subscription."
+    },
+    "reports": {
+      "title": "Reports",
+      "body": "Monthly and yearly charts showing how your household's finances evolve."
+    },
+    "settings": {
+      "title": "Settings",
+      "body": "Manage your household's information and invite other members."
+    }
+  },
+  "overview": {
+    "intro": {
+      "title": "Your household overview",
+      "body": "This dashboard gives you a quick summary: this month's balance, budgets, goals, and upcoming bills. It fills in as you use Larmony."
+    }
+  },
+  "transactions": {
+    "intro": {
+      "title": "Transactions",
+      "body": "This is where every income and expense for the household lives. Use the filters to find entries by month, category, or type."
+    },
+    "new": {
+      "title": "New transaction",
+      "body": "Click here to log an income or expense at any time."
+    }
+  },
+  "transactionForm": {
+    "intro": {
+      "title": "How to log a transaction",
+      "body": "Fill in the basics, then use the fields below to categorize, split into installments, or divide the expense with other members of the household."
+    },
+    "category": {
+      "title": "Category",
+      "body": "Classify the transaction (e.g., Groceries, Transport) so it shows up correctly in reports and budgets. It's optional."
+    },
+    "person": {
+      "title": "Person",
+      "body": "Who actually made the expense — different from who's registering it. Per-person reports use this field. If left blank, it defaults to you."
+    },
+    "installments": {
+      "title": "Installments",
+      "body": "Turn this on to split the total amount into several monthly installments. Larmony creates one transaction per installment, linked to the same series."
+    },
+    "split": {
+      "title": "Split between members",
+      "body": "Turn this on to divide the amount among household members, either equally or with a specific value for each."
+    }
+  },
+  "categories": {
+    "intro": {
+      "title": "Categories",
+      "body": "Categories classify your transactions, budgets, and recurrences. Your household starts with 13 default categories, and you can create your own."
+    }
+  },
+  "budgets": {
+    "intro": {
+      "title": "Budgets",
+      "body": "Set a monthly spending limit per category. Larmony automatically calculates how much has been spent and warns you when you go over."
+    }
+  },
+  "goals": {
+    "intro": {
+      "title": "Goals",
+      "body": "Create savings goals with a target amount and, optionally, a date. Log contributions over time until you reach the goal."
+    }
+  },
+  "bills": {
+    "intro": {
+      "title": "Bills",
+      "body": "Register fixed bills (rent, internet, subscriptions) with a due day and get email reminders. Logging a bill as a transaction is always manual."
+    }
+  },
+  "recurrences": {
+    "intro": {
+      "title": "Recurrences",
+      "body": "Set up automatic entries that repeat, like a monthly salary. Larmony generates the transactions on the right date, so you don't have to log them by hand."
+    }
+  },
+  "reports": {
+    "intro": {
+      "title": "Reports",
+      "body": "Track how your household's finances evolve with monthly and yearly charts, spending by category, and spending by person."
+    }
+  },
+  "settings": {
+    "intro": {
+      "title": "Settings",
+      "body": "This is where you manage your household's information."
+    },
+    "members": {
+      "title": "Members",
+      "body": "Invite other people to manage the household's finances with you. Every member can log and view transactions, budgets, and goals."
+    }
+  }
+}

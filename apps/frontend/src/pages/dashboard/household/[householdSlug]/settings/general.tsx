@@ -20,4 +20,4 @@ GeneralSettingsPage.getLayout = (page: ReactElement) => (
 
 export default GeneralSettingsPage
 
-export const getServerSideProps = makeI18nProps(["common", "dashboard"])
+export const getServerSideProps = makeI18nProps(["common", "dashboard", "onboarding"])

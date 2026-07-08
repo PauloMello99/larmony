@@ -38,6 +38,7 @@ import { DatePicker } from "@/shared/components/ui/date-picker"
 import { formatCentsToBRL } from "@/shared/lib/currency"
 import { useCategories } from "@/features/categories/hooks/use-categories"
 import { useMembers } from "@/features/households/hooks/use-members"
+import { useOnboarding } from "@/features/onboarding/providers/onboarding-provider"
 import { transactionSchema, type TransactionFormValues } from "../schemas/transaction.schemas"
 import { useTransactionMembers } from "../hooks/use-transaction-members"
 import { RateioField, type RateioMode } from "./rateio-field"
@@ -73,6 +74,7 @@ export function TransactionForm({
   const isEditing = !!transaction
   const { categories } = useCategories(householdId)
   const { members } = useMembers(householdId)
+  const { startTour, isTourSeen, activeTour } = useOnboarding()
 
   // Rateio ao editar: carrega os aportes existentes da transação.
   const editingRateado = isEditing && (transaction?.memberCount ?? 0) > 0
@@ -126,6 +128,13 @@ export function TransactionForm({
       }
     }
   }, [open, transaction, form, editingRateado])
+
+  // Tour do formulário — só na criação, e só quando nenhum outro tour está ativo.
+  useEffect(() => {
+    if (!open || isEditing || activeTour || isTourSeen("transaction-form")) return
+    const id = requestAnimationFrame(() => startTour("transaction-form"))
+    return () => cancelAnimationFrame(id)
+  }, [open, isEditing, activeTour, isTourSeen, startTour])
 
   // Inicializa o rateio ao editar, quando os aportes chegam.
   useEffect(() => {
@@ -271,7 +280,7 @@ export function TransactionForm({
                   control={form.control}
                   name="categoryId"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem data-tour="tx-field-category">
                       <FormLabel>Categoria</FormLabel>
                       <Select value={field.value} onValueChange={field.onChange}>
                         <FormControl>
@@ -296,7 +305,7 @@ export function TransactionForm({
                   control={form.control}
                   name="personId"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem data-tour="tx-field-person">
                       <FormLabel>Pessoa</FormLabel>
                       <Select value={field.value} onValueChange={field.onChange}>
                         <FormControl>
@@ -338,7 +347,10 @@ export function TransactionForm({
 
               {/* Parcelamento (só na criação) */}
               {!isEditing && (
-                <div className="flex flex-col gap-3 rounded-lg border border-foreground/[0.08] p-3">
+                <div
+                  data-tour="tx-field-installments"
+                  className="flex flex-col gap-3 rounded-lg border border-foreground/[0.08] p-3"
+                >
                   <div className="flex items-center justify-between">
                     <Label htmlFor="tx-parcelar" className="text-sm font-normal">
                       Parcelar
@@ -367,7 +379,7 @@ export function TransactionForm({
               )}
 
               {/* Rateio */}
-              <div className="flex flex-col gap-3">
+              <div data-tour="tx-field-split" className="flex flex-col gap-3">
                 <div className="flex items-center justify-between rounded-lg border border-foreground/[0.08] p-3">
                   <Label htmlFor="tx-rateio" className="text-sm font-normal">
                     Dividir entre membros

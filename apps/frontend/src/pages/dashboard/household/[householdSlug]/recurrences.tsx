@@ -13,6 +13,6 @@ RecurrencesPage.getLayout = (page: ReactElement) => (
   </AuthGuard>
 )
 
-export const getServerSideProps = makeI18nProps(["common", "dashboard"])
+export const getServerSideProps = makeI18nProps(["common", "dashboard", "onboarding"])
 
 export default RecurrencesPage

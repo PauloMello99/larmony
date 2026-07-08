@@ -144,6 +144,14 @@ relatórios + recorrência entregues. Não há milestone pendente no roadmap do 
   dev. Fix: `pnpm --filter frontend dev:reset` (ou apagar `.next` + reiniciar).
   `pnpm build` continua verde; CI não é afetado.
 
+## Pós-v1
+
+| Feature | Estado | Notas |
+|---|---|---|
+| Onboarding (tour guiado) | **✅ entregue (2026-07-08)** | Backend: `users.onboarding` (jsonb `{ [tourKey]: maiorVersãoVista }`), `POST /auth/me/onboarding` (merge atômico via `||`). Frontend: `features/onboarding/` — registro central `lib/tours.ts` (steps `modal` \| `spotlight`, versionados), `OnboardingProvider` (auto-start: tour `sidebar` primeiro, depois o da aba via `route-tour.ts`; tour do formulário de transação dispara manualmente ao abrir o Sheet), `TourRenderer` + componentes custom (sem lib externa — Dialog para modal, overlay+card fixo para spotlight, alvo localizado por `data-tour`, pulado se ausente no DOM). Monta em `HouseholdLayout`. i18n em `public/locales/{pt-BR,en}/onboarding.json`, precisa constar em **todo** `makeI18nProps([...])` das páginas do household (o tour do menu pode disparar em qualquer uma). Bump de `version` em `tours.ts` = re-exibe para quem já viu. |
+
+**Gotcha — migration criada não é migration aplicada**: gerar o arquivo SQL (`drizzle-kit generate` ou manual) e registrar no `_journal.json` não roda a migration no Postgres local — é preciso `pnpm --filter backend db:migrate` explicitamente. Sintoma: `GET /auth/me` (ou qualquer query que toque a coluna nova) quebra com 500 "Failed query" mesmo com o código do backend correto, porque a coluna não existe de fato na tabela. Sempre confirmar com `\d <tabela>` no psql (ou rodar a migration) antes de testar uma feature que depende de uma migration nova.
+
 ## Fora de escopo do v1
 
 - Permissões por módulo (roles owner/member bastam).
