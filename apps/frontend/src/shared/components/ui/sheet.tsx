@@ -50,6 +50,7 @@ function SheetContent({
   children,
   side = "right",
   showCloseButton = true,
+  onInteractOutside,
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left"
@@ -60,6 +61,16 @@ function SheetContent({
       <SheetOverlay />
       <SheetPrimitive.Content
         data-slot="sheet-content"
+        onInteractOutside={(event) => {
+          // Overlays de onboarding (spotlight/modal) não são layers do Radix, então a
+          // detecção de "clique fora" do Sheet os trata como externos e fecha o Sheet
+          // ao clicar em botões do tour (ex.: "Próximo"). Ignora cliques ali.
+          if (event.target instanceof Element && event.target.closest("[data-tour-overlay]")) {
+            event.preventDefault()
+            return
+          }
+          onInteractOutside?.(event)
+        }}
         className={cn(
           "fixed z-50 flex flex-col gap-4 bg-popover shadow-2xl transition ease-in-out outline-none",
           "border-foreground/[0.08] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-300",

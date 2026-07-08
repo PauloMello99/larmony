@@ -138,7 +138,14 @@ export function TourSpotlightStep({ step, stepIndex, totalSteps }: TourSpotlight
   const isLast = stepIndex === totalSteps - 1
 
   return (
-    <div className="fixed inset-0 z-[70]">
+    // data-tour-overlay: reconhecido por SheetContent/DialogContent para ignorar
+    // este overlay na detecção de clique-fora (ver shared/components/ui/sheet.tsx).
+    // pointer-events-auto: com um Sheet/Dialog modal aberto por baixo, o Radix força
+    // document.body.style.pointerEvents = "none" (só reabilita no próprio Content dele,
+    // por ser layer do Radix); sem essa classe, este overlay herdaria "none" do body e
+    // o botão "Próximo" ficaria inclicável de verdade (o clique cairia no backdrop do
+    // Sheet por trás, fechando-o).
+    <div className="pointer-events-auto fixed inset-0 z-[70]" data-tour-overlay>
       <div
         className="pointer-events-none fixed rounded-md"
         style={{

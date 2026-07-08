@@ -28,6 +28,7 @@ export function TourModalStep({ step, stepIndex, totalSteps }: TourModalStepProp
     <Dialog open onOpenChange={(open) => !open && close()}>
       <DialogContent
         className="z-[70] sm:max-w-md"
+        data-tour-overlay
         showCloseButton={false}
         onEscapeKeyDown={close}
         onInteractOutside={(e) => e.preventDefault()}
