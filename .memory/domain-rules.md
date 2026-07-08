@@ -236,10 +236,24 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
 
 ### i18n
 
-- Idiomas: `pt-BR` (padrão) e `en`. Locale persistido em `users.locale`.
-- Trocar idioma atualiza banco + estado + i18n do frontend na hora.
+- Idiomas: `pt-BR` (padrão) e `en`. Locale persistido em `users.locale` **e** no
+  cookie `NEXT_LOCALE` (o que o Next.js honra na detecção). Fonte única da lista de
+  locales: `apps/frontend/src/shared/lib/locale.ts` (`SUPPORTED_LOCALES`/`DEFAULT_LOCALE`);
+  `next-i18next.config.js` espelha manualmente (é `.js`, não importa TS).
+- **Gotcha (persistência):** o Next.js só consulta o cookie `NEXT_LOCALE` para
+  redirecionar a **raiz** (`/`) — rotas profundas não-prefixadas (`/auth/login`,
+  `/dashboard/...`) são servidas no `defaultLocale`, ignorando o cookie. Por isso há um
+  **`middleware.ts`** que redireciona qualquer path não-prefixado para a variante do
+  locale do cookie (cobre SSR de páginas públicas E autenticadas, sem flash).
+  `LocaleSection` seta o cookie ao trocar; `useLocaleSync` (montado em `AuthGuard`)
+  reconcilia `users.locale` → cookie após o login; `_document` deriva `<html lang>` do
+  locale ativo. Verificado: cookie `en` + `/auth/login` → 302 → `/en/auth/login`, `lang="en"`.
+- Formatação: use `shared/lib/format.ts` (`useActiveLocale` + `formatDate`/`formatNumber`,
+  sensíveis ao locale ativo do router). Moeda continua **BRL fixa** (`formatCentsToBRL`).
+- **Estado do rollout:** scaffold `next-i18next` pronto; features `dashboard`+`auth(login)`
+  usam `t()`. Demais telas ainda são pt-BR hardcoded — rollout tela-a-tela pendente
+  (plano em fases; e-mails e strings de backend são tracks separados).
 - E-mails transacionais respeitam o locale do destinatário.
-- Moeda: formatação BRL (`formatBRL`), datas com locale ptBR do date-fns.
 
 ### Qualidade — Testes (TDD obrigatório)
 

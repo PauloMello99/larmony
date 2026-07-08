@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/router"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import { Loader2 } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import {
@@ -28,6 +29,7 @@ function queryParam(value: string | string[] | undefined): string {
 }
 
 export function LoginForm() {
+  const { t } = useTranslation("auth")
   const { signIn } = useAuth()
   const router = useRouter()
   const inviteToken = queryParam(router.query.invite)
@@ -58,7 +60,7 @@ export function LoginForm() {
           : "/dashboard/households",
       )
     } catch {
-      setError("root", { message: "E-mail ou senha inválidos" })
+      setError("root", { message: t("login.invalidCredentials") })
     }
   }
 
@@ -73,9 +75,9 @@ export function LoginForm() {
           <div className="mb-2 text-xl font-bold">
             <span className="text-primary">lar</span>mony
           </div>
-          <CardTitle className="text-xl">Entrar</CardTitle>
+          <CardTitle className="text-xl">{t("login.title")}</CardTitle>
           <CardDescription className="text-foreground/40">
-            Acesse sua conta para continuar
+            {t("login.subtitle")}
           </CardDescription>
         </CardHeader>
 
@@ -88,11 +90,11 @@ export function LoginForm() {
             )}
 
             <div className="space-y-1.5">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email">{t("login.emailLabel")}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="seu@email.com"
+                placeholder={t("login.emailPlaceholder")}
                 autoComplete="email"
                 aria-invalid={!!errors.email}
                 {...register("email")}
@@ -104,12 +106,12 @@ export function LoginForm() {
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Senha</Label>
+                <Label htmlFor="password">{t("login.passwordLabel")}</Label>
                 <Link
                   href="/auth/recover"
                   className="text-xs text-foreground/40 hover:text-foreground"
                 >
-                  Esqueceu a senha?
+                  {t("login.forgotPassword")}
                 </Link>
               </div>
               <Input
@@ -133,15 +135,15 @@ export function LoginForm() {
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Entrar
+              {t("login.submit")}
             </Button>
             <p className="text-center text-sm text-foreground/40">
-              Não tem conta?{" "}
+              {t("login.noAccount")}{" "}
               <Link
                 href={signupHref}
                 className="text-primary hover:text-orange-300"
               >
-                Criar conta
+                {t("login.createAccount")}
               </Link>
             </p>
           </CardFooter>

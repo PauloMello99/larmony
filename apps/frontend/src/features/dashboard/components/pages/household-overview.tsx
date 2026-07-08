@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { formatCentsToBRL } from "@/shared/lib/currency"
+import { formatDate, useActiveLocale } from "@/shared/lib/format"
 import { EmptyState } from "@/shared/components/ui/empty-state"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { useMe } from "@/features/auth/hooks/use-me"
@@ -101,24 +102,29 @@ function SectionCard({
   title,
   action,
   children,
+  className,
+  bodyClassName,
 }: {
   title: string
   action?: React.ReactNode
   children: React.ReactNode
+  className?: string
+  bodyClassName?: string
 }) {
   return (
-    <section className="rounded-xl border border-foreground/[0.06] bg-card">
+    <section className={cn("flex flex-col rounded-xl border border-foreground/[0.06] bg-card", className)}>
       <header className="flex items-center justify-between border-b border-foreground/[0.06] px-4 py-3">
         <h2 className="text-sm font-semibold text-foreground">{title}</h2>
         {action}
       </header>
-      {children}
+      <div className={cn("flex-1", bodyClassName)}>{children}</div>
     </section>
   )
 }
 
 function TransactionRow({ tx }: { tx: RecentTransaction }) {
   const isIncome = tx.type === "income"
+  const locale = useActiveLocale()
   return (
     <li className="flex items-center gap-3 px-4 py-2.5">
       <span
@@ -128,7 +134,7 @@ function TransactionRow({ tx }: { tx: RecentTransaction }) {
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm text-foreground">{tx.description}</p>
         <p className="text-xs text-muted-foreground">
-          {new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" }).format(new Date(tx.date))}
+          {formatDate(tx.date, locale, { day: "2-digit", month: "short" })}
           {tx.categoryName ? ` · ${tx.categoryName}` : ""}
         </p>
       </div>
@@ -220,13 +226,14 @@ function BudgetRow({ budget }: { budget: BudgetProgress }) {
 
 export function HouseholdOverview() {
   const { t } = useTranslation("dashboard")
+  const locale = useActiveLocale()
   const { me } = useMe()
   const { household } = useCurrentHousehold()
   const { overview, loading } = useHouseholdOverview(household.id)
 
   const now = new Date()
   const firstName = (me?.name ?? "").split(" ")[0]
-  const dateLabel = new Intl.DateTimeFormat("pt-BR", { dateStyle: "full" }).format(now)
+  const dateLabel = formatDate(now, locale, { dateStyle: "full" })
   const base = `/dashboard/household/${household.slug}`
 
   const income = overview?.currentMonth.incomeCents ?? 0
@@ -286,8 +293,9 @@ export function HouseholdOverview() {
 
       {/* Conteúdo: transações recentes (2/3) + coluna lateral (1/3) */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="flex lg:col-span-2">
           <SectionCard
+            className="h-full w-full"
             title={t("overview.recentTransactions")}
             action={
               transactions.length > 0 ? (
@@ -315,7 +323,7 @@ export function HouseholdOverview() {
                 title={t("overview.emptyTransactions")}
                 description={t("overview.emptyTransactionsHint")}
                 action={{ href: `${base}/transactions`, label: t("nav.transactions") }}
-                className="min-h-[16rem]"
+                className="h-full min-h-[16rem]"
               />
             )}
           </SectionCard>

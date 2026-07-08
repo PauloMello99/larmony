@@ -53,6 +53,7 @@ import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { cn } from "@/shared/lib/utils"
+import { setLocaleCookie } from "@/shared/lib/locale"
 
 function SectionHeader({
   title,
@@ -387,8 +388,11 @@ export function LocaleSection() {
     setError(null)
     setSaving(true)
     try {
-      await updateMe({ locale: value as "pt-BR" | "en" })
-      await router.replace(router.asPath, router.asPath, { locale: value })
+      const locale = value as "pt-BR" | "en"
+      await updateMe({ locale })
+      // Persiste no cookie de detecção para o idioma sobreviver a reloads.
+      setLocaleCookie(locale)
+      await router.replace(router.asPath, router.asPath, { locale })
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Não foi possível trocar o idioma.",
