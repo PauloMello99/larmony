@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Sheet,
@@ -31,7 +32,7 @@ import {
 import { Button } from "@/shared/components/ui/button"
 import { CurrencyInput } from "@/shared/components/ui/currency-input"
 import { useCategories } from "@/features/categories/hooks/use-categories"
-import { createBudgetSchema, type CreateBudgetFormValues } from "../schemas/budget.schemas"
+import { makeCreateBudgetSchema, type CreateBudgetFormValues } from "../schemas/budget.schemas"
 import type { Budget } from "../types"
 
 interface BudgetFormProps {
@@ -52,6 +53,8 @@ export function BudgetForm({
   budgetedCategoryIds,
   onSubmit,
 }: BudgetFormProps) {
+  const { t } = useTranslation("budgets")
+  const { t: tCommon } = useTranslation("common")
   const isEditing = !!budget
   const { categories } = useCategories(householdId)
 
@@ -61,8 +64,9 @@ export function BudgetForm({
     (c) => (c.type === "expense" || c.type === "both") && !budgetedCategoryIds.includes(c.id),
   )
 
+  const schema = useMemo(() => makeCreateBudgetSchema(t), [t])
   const form = useForm<CreateBudgetFormValues>({
-    resolver: zodResolver(createBudgetSchema),
+    resolver: zodResolver(schema),
     defaultValues: { categoryId: "", amountCents: 0 },
   })
 
@@ -87,10 +91,8 @@ export function BudgetForm({
         <Form {...form}>
           <form onSubmit={handleSubmit} className="flex h-full flex-col">
             <SheetHeader>
-              <SheetTitle>{isEditing ? "Editar orçamento" : "Novo orçamento"}</SheetTitle>
-              <SheetDescription>
-                Defina um limite mensal de gasto para uma categoria.
-              </SheetDescription>
+              <SheetTitle>{isEditing ? t("form.editTitle") : t("form.createTitle")}</SheetTitle>
+              <SheetDescription>{t("form.description")}</SheetDescription>
             </SheetHeader>
 
             <SheetBody className="flex flex-col gap-4 py-6">
@@ -99,7 +101,7 @@ export function BudgetForm({
                 name="categoryId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Categoria</FormLabel>
+                    <FormLabel>{t("form.categoryLabel")}</FormLabel>
                     {isEditing ? (
                       <div className="flex h-10 items-center gap-2 rounded-md border border-foreground/[0.08] bg-foreground/[0.02] px-3 text-sm text-foreground/70">
                         <span
@@ -108,14 +110,14 @@ export function BudgetForm({
                         />
                         {budget?.categoryName}
                         <span className="ml-auto text-xs text-foreground/30">
-                          (imutável)
+                          {t("form.categoryImmutable")}
                         </span>
                       </div>
                     ) : (
                       <Select value={field.value} onValueChange={field.onChange}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Escolha uma categoria" />
+                            <SelectValue placeholder={t("form.categoryPlaceholder")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -144,7 +146,7 @@ export function BudgetForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Limite mensal <span className="text-red-400">*</span>
+                      {t("form.limitLabel")} <span className="text-red-400">*</span>
                     </FormLabel>
                     <FormControl>
                       <CurrencyInput value={field.value} onChange={field.onChange} />
@@ -158,7 +160,7 @@ export function BudgetForm({
             <SheetFooter>
               <SheetClose asChild>
                 <Button type="button" variant="outline" className="w-full sm:w-auto">
-                  Cancelar
+                  {tCommon("actions.cancel")}
                 </Button>
               </SheetClose>
               <Button
@@ -167,10 +169,10 @@ export function BudgetForm({
                 className="w-full sm:w-auto"
               >
                 {form.formState.isSubmitting
-                  ? "Salvando…"
+                  ? t("form.saving")
                   : isEditing
-                    ? "Salvar alterações"
-                    : "Criar orçamento"}
+                    ? t("form.saveChanges")
+                    : t("form.create")}
               </Button>
             </SheetFooter>
           </form>

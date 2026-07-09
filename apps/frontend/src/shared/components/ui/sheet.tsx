@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { XIcon } from "lucide-react"
 import { Dialog as SheetPrimitive } from "radix-ui"
 import { cn } from "@/shared/lib/utils"
@@ -50,16 +51,28 @@ function SheetContent({
   children,
   side = "right",
   showCloseButton = true,
+  onInteractOutside,
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left"
   showCloseButton?: boolean
 }) {
+  const { t } = useTranslation("common")
   return (
     <SheetPortal>
       <SheetOverlay />
       <SheetPrimitive.Content
         data-slot="sheet-content"
+        onInteractOutside={(event) => {
+          // Overlays de onboarding (spotlight/modal) não são layers do Radix, então a
+          // detecção de "clique fora" do Sheet os trata como externos e fecha o Sheet
+          // ao clicar em botões do tour (ex.: "Próximo"). Ignora cliques ali.
+          if (event.target instanceof Element && event.target.closest("[data-tour-overlay]")) {
+            event.preventDefault()
+            return
+          }
+          onInteractOutside?.(event)
+        }}
         className={cn(
           "fixed z-50 flex flex-col gap-4 bg-popover shadow-2xl transition ease-in-out outline-none",
           "border-foreground/[0.08] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-300",
@@ -79,7 +92,7 @@ function SheetContent({
         {showCloseButton && (
           <SheetPrimitive.Close className="absolute top-4 right-4 rounded-md p-1 text-foreground/40 opacity-70 transition-opacity hover:text-foreground hover:opacity-100 focus:outline-none disabled:pointer-events-none">
             <XIcon className="h-4 w-4" />
-            <span className="sr-only">Fechar</span>
+            <span className="sr-only">{t("actions.close")}</span>
           </SheetPrimitive.Close>
         )}
       </SheetPrimitive.Content>

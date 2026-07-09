@@ -1,0 +1,123 @@
+{
+  "roles": {
+    "owner": "Proprietário",
+    "member": "Membro"
+  },
+  "validation": {
+    "nameMin": "Mínimo 2 caracteres",
+    "nameMax": "Máximo 80 caracteres",
+    "emailInvalid": "E-mail inválido"
+  },
+  "settings": {
+    "loading": "Carregando…",
+    "notFound": "Lar não encontrada.",
+    "generalTitle": "Informações gerais",
+    "generalDescription": "Nome e identificador público da lar.",
+    "nameLabel": "Nome",
+    "slugLabel": "Slug",
+    "membersTitle": "Membros",
+    "membersDescription": "Gerencie quem tem acesso a esta lar.",
+    "invite": "Convidar",
+    "transferTitle": "Transferir Lar",
+    "transferDescription": "Transfira a propriedade deste lar para outro membro.",
+    "transferProse": "A titularidade passa para o membro escolhido. Você se torna membro com acesso total aos módulos.",
+    "dangerTitle": "Zona de perigo",
+    "dangerDescription": "Ações irreversíveis. Prossiga com cautela.",
+    "deleteTitle": "Excluir lar",
+    "deleteDescription": "Remove permanentemente todos os dados deste lar."
+  },
+  "members": {
+    "title": "Membros ({{count}})",
+    "pendingInvitations": "Convites pendentes ({{count}})",
+    "nameHeader": "Nome",
+    "emailHeader": "E-mail",
+    "roleHeader": "Função",
+    "you": "(você)",
+    "invitationMeta": "{{role}} · expira {{date}}",
+    "actions": {
+      "permissions": "Permissões",
+      "makeOwner": "Tornar proprietário",
+      "makeMember": "Tornar membro",
+      "enable": "Ativar",
+      "disable": "Desativar",
+      "remove": "Remover"
+    }
+  },
+  "modules": {
+    "services": "Serviços",
+    "clients": "Clientes",
+    "schedule": "Agenda",
+    "stock": "Estoque",
+    "cashier": "Caixa"
+  },
+  "roleDialog": {
+    "title": "Alterar função",
+    "description": "Altere a função de <span>{{name}}</span>.",
+    "newRoleLabel": "Nova função",
+    "saving": "Salvando…"
+  },
+  "permissionsDialog": {
+    "title": "Permissões do membro",
+    "description": "Escolha os módulos que <span>{{name}}</span> pode acessar. Em cada módulo, o membro vê apenas os próprios registros.",
+    "saving": "Salvando…",
+    "submit": "Salvar permissões"
+  },
+  "removeDialog": {
+    "title": "Remover membro",
+    "description": "Tem certeza que deseja remover <span>{{name}}</span> da lar?",
+    "removing": "Removendo…",
+    "submit": "Remover"
+  },
+  "transferDialog": {
+    "trigger": "Transferir",
+    "title": "Transferir lar",
+    "description": "Escolha o membro que se tornará o novo proprietário. Você passará a ter função de <span>membro</span> com acesso total aos módulos.",
+    "newOwnerLabel": "Novo proprietário",
+    "selectPlaceholder": "Selecione um membro",
+    "memberOption": "{{name}} ({{email}})",
+    "error": "Não foi possível transferir a lar.",
+    "submitting": "Transferindo…",
+    "submit": "Transferir titularidade"
+  },
+  "deleteDialog": {
+    "trigger": "Excluir lar",
+    "title": "Excluir lar",
+    "description": "Esta ação é <span>irreversível</span>. Todos os dados do lar serão permanentemente excluídos.",
+    "confirmLabel": "Digite <span>{{name}}</span> para confirmar:",
+    "deleting": "Excluindo…",
+    "submit": "Excluir permanentemente"
+  },
+  "createForm": {
+    "title": "Novo lar",
+    "description": "Crie um espaço para o seu lar. Você será o proprietário.",
+    "nameLabel": "Nome",
+    "namePlaceholder": "Ex: Casa da Família",
+    "submitting": "Criando…",
+    "submit": "Criar lar"
+  },
+  "editForm": {
+    "nameLabel": "Nome do lar",
+    "namePlaceholder": "Ex: Casa da Família",
+    "slugLabel": "Identificador (slug)",
+    "slugHint": "Gerado automaticamente — não pode ser alterado.",
+    "saving": "Salvando…",
+    "submit": "Salvar alterações"
+  },
+  "inviteForm": {
+    "title": "Convidar membro",
+    "description": "O convite será enviado por e-mail com um link de acesso.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "nome@exemplo.com",
+    "roleLabel": "Função",
+    "rolePlaceholder": "Selecione uma função",
+    "submitting": "Enviando…",
+    "submit": "Enviar convite"
+  },
+  "subscription": {
+    "title": "Assinatura",
+    "description": "Plano, histórico de cobrança e gerenciamento da assinatura desta lar.",
+    "managementTitle": "Gerenciamento de assinatura",
+    "comingSoon": "Em breve",
+    "managementDescription": "Aqui você poderá visualizar o histórico de faturas, trocar de plano, atualizar o método de pagamento e cancelar a assinatura desta lar."
+  }
+}

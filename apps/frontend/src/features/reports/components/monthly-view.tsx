@@ -1,6 +1,13 @@
 "use client"
 
-import { BarChart3, PieChart as PieChartIcon, Users } from "lucide-react"
+import {
+  BarChart3,
+  ChevronLeft,
+  ChevronRight,
+  PieChart as PieChartIcon,
+  Users,
+} from "lucide-react"
+import { useTranslation } from "react-i18next"
 import {
   Bar,
   BarChart,
@@ -15,10 +22,18 @@ import {
   YAxis,
 } from "recharts"
 import { usePrefersReducedMotion } from "@/features/admin/lib/use-prefers-reduced-motion"
+import { Button } from "@/shared/components/ui/button"
 import { formatCentsToBRL } from "@/shared/lib/currency"
+import { useActiveLocale } from "@/shared/lib/format"
 import { fmtMonthLabel, fmtMonthLong } from "../lib/format"
-import type { MonthlyReport } from "../types"
+import type { MonthRef, MonthlyReport } from "../types"
 import { ReportTooltip } from "./report-tooltip"
+
+/** Desloca um mês de referência em `delta` meses, com virada de ano. */
+function shiftMonth(ref: MonthRef, delta: number): MonthRef {
+  const d = new Date(ref.year, ref.month - 1 + delta, 1)
+  return { year: d.getFullYear(), month: d.getMonth() + 1 }
+}
 
 const COLORS = {
   income: "var(--success)",
@@ -43,13 +58,26 @@ function formatAxisCents(value: number): string {
 
 interface MonthlyViewProps {
   report: MonthlyReport
+  monthRef: MonthRef
+  onMonthChange: (ref: MonthRef) => void
 }
 
-export function MonthlyView({ report }: MonthlyViewProps) {
+export function MonthlyView({ report, monthRef, onMonthChange }: MonthlyViewProps) {
+  const { t } = useTranslation("reports")
+  const locale = useActiveLocale()
   const reducedMotion = usePrefersReducedMotion()
 
+  const now = new Date()
+  // Não deixa navegar para o futuro (não há dados adiante do mês corrente).
+  const isCurrentOrFuture =
+    monthRef.year > now.getFullYear() ||
+    (monthRef.year === now.getFullYear() && monthRef.month >= now.getMonth() + 1)
+  // Rótulo do seletor derivado do estado (atualiza no clique, sem esperar o
+  // fetch); os títulos dos gráficos usam report.refMonth (o dado exibido).
+  const navLabel = `${fmtMonthLong(monthRef.month, locale)} ${monthRef.year}`
+
   const barData = report.months.map((m) => ({
-    label: fmtMonthLabel(m.year, m.month),
+    label: fmtMonthLabel(m.year, m.month, locale),
     Receita: m.incomeCents,
     Despesa: m.expenseCents,
   }))
@@ -62,15 +90,41 @@ export function MonthlyView({ report }: MonthlyViewProps) {
     report.byPerson[0]?.name === "Sem pessoa" &&
     (report.byPerson[0]?.amountCents ?? 0) > 0
 
-  const refLabel = `${fmtMonthLong(report.refMonth.month)} ${report.refMonth.year}`
+  const refLabel = `${fmtMonthLong(report.refMonth.month, locale)} ${report.refMonth.year}`
 
   return (
     <div className="space-y-4">
+      {/* Seletor de mês de referência */}
+      <div className="flex items-center justify-center gap-3">
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-8 w-8"
+          onClick={() => onMonthChange(shiftMonth(monthRef, -1))}
+          aria-label={t("monthly.prevMonth")}
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <span className="min-w-[9rem] text-center text-sm font-semibold capitalize tabular-nums text-foreground">
+          {navLabel}
+        </span>
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-8 w-8"
+          onClick={() => onMonthChange(shiftMonth(monthRef, 1))}
+          aria-label={t("monthly.nextMonth")}
+          disabled={isCurrentOrFuture}
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+
       {/* Série 6 meses */}
       <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
         <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
           <BarChart3 className="h-4 w-4 text-primary" />
-          Receita × Despesa · últimos 6 meses
+          {t("monthly.seriesTitle")}
         </div>
         {hasSeries ? (
           <div className="h-64">
@@ -94,12 +148,14 @@ export function MonthlyView({ report }: MonthlyViewProps) {
                 <Legend wrapperStyle={{ fontSize: 12 }} />
                 <Bar
                   dataKey="Receita"
+                  name={t("chart.income")}
                   fill={COLORS.income}
                   radius={[4, 4, 0, 0]}
                   isAnimationActive={!reducedMotion}
                 />
                 <Bar
                   dataKey="Despesa"
+                  name={t("chart.expense")}
                   fill={COLORS.expense}
                   radius={[4, 4, 0, 0]}
                   isAnimationActive={!reducedMotion}
@@ -109,7 +165,7 @@ export function MonthlyView({ report }: MonthlyViewProps) {
           </div>
         ) : (
           <div className="flex h-64 items-center justify-center text-sm text-foreground/40">
-            Sem movimentação nos últimos 6 meses.
+            {t("monthly.seriesEmpty")}
           </div>
         )}
       </div>
@@ -119,7 +175,7 @@ export function MonthlyView({ report }: MonthlyViewProps) {
         <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
           <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
             <PieChartIcon className="h-4 w-4 text-primary" />
-            Despesas por categoria · {refLabel}
+            {t("monthly.byCategory", { ref: refLabel })}
           </div>
           {categoryTotal > 0 ? (
             <div className="h-64">
@@ -149,7 +205,7 @@ export function MonthlyView({ report }: MonthlyViewProps) {
             </div>
           ) : (
             <div className="flex h-64 items-center justify-center text-sm text-foreground/40">
-              Nenhuma despesa neste mês.
+              {t("monthly.noExpenses")}
             </div>
           )}
         </div>
@@ -158,14 +214,13 @@ export function MonthlyView({ report }: MonthlyViewProps) {
         <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
           <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
             <Users className="h-4 w-4 text-primary" />
-            Gasto por pessoa · {refLabel}
+            {t("monthly.byPerson", { ref: refLabel })}
           </div>
           {personTotal > 0 ? (
             <div className="space-y-3">
               {allUnassigned && (
                 <p className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs text-amber-600 dark:text-amber-400">
-                  Para ver quem gastou o quê, atribua uma pessoa ao criar ou editar
-                  cada transação.
+                  {t("monthly.assignPersonHint")}
                 </p>
               )}
               {report.byPerson.map((person, i) => {
@@ -191,7 +246,7 @@ export function MonthlyView({ report }: MonthlyViewProps) {
             </div>
           ) : (
             <div className="flex h-64 items-center justify-center text-sm text-foreground/40">
-              Nenhuma despesa neste mês.
+              {t("monthly.noExpenses")}
             </div>
           )}
         </div>

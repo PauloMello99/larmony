@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Trans, useTranslation } from "react-i18next"
 import {
   Dialog,
   DialogContent,
@@ -19,6 +20,8 @@ interface DeleteGoalDialogProps {
 }
 
 export function DeleteGoalDialog({ goal, onOpenChange, onConfirm }: DeleteGoalDialogProps) {
+  const { t } = useTranslation("goals")
+  const { t: tCommon } = useTranslation("common")
   const [loading, setLoading] = useState(false)
 
   async function handleConfirm() {
@@ -35,10 +38,14 @@ export function DeleteGoalDialog({ goal, onOpenChange, onConfirm }: DeleteGoalDi
     <Dialog open={!!goal} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Excluir meta</DialogTitle>
+          <DialogTitle>{t("deleteDialog.title")}</DialogTitle>
           <DialogDescription>
-            Excluir <span className="font-medium text-foreground">{goal?.name}</span>? O
-            histórico de aportes será apagado junto — essa ação não pode ser desfeita.
+            <Trans
+              t={t}
+              i18nKey="deleteDialog.description"
+              values={{ name: goal?.name ?? "" }}
+              components={{ span: <span className="font-medium text-foreground" /> }}
+            />
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -48,7 +55,7 @@ export function DeleteGoalDialog({ goal, onOpenChange, onConfirm }: DeleteGoalDi
             onClick={handleConfirm}
             className="w-full sm:w-auto"
           >
-            {loading ? "Excluindo…" : "Excluir"}
+            {loading ? t("deleteDialog.deleting") : tCommon("actions.delete")}
           </Button>
         </DialogFooter>
       </DialogContent>

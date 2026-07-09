@@ -1,5 +1,6 @@
 "use client"
 
+import { useTranslation } from "react-i18next"
 import {
   Select,
   SelectContent,
@@ -7,13 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select"
+import { monthName, useActiveLocale } from "@/shared/lib/format"
 import type { Category } from "@/features/categories/types"
 import type { TransactionFilters, TransactionType } from "../types"
-
-const MONTH_LABEL = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
-]
 
 const ALL = "all"
 
@@ -28,8 +25,15 @@ export function TransactionFiltersBar({
   onChange,
   categories,
 }: TransactionFiltersBarProps) {
+  const { t } = useTranslation("transactions")
+  const locale = useActiveLocale()
   const now = new Date()
   const years = Array.from({ length: 5 }, (_, i) => now.getFullYear() - i)
+  // Intl devolve o mês em minúsculas no pt-BR; capitaliza para manter o visual.
+  const months = Array.from({ length: 12 }, (_, i) => {
+    const name = monthName(i, locale)
+    return name.charAt(0).toLocaleUpperCase(locale) + name.slice(1)
+  })
 
   return (
     <div className="mb-4 flex flex-wrap gap-2">
@@ -37,11 +41,11 @@ export function TransactionFiltersBar({
         value={String(filters.month ?? now.getMonth() + 1)}
         onValueChange={(v) => onChange({ ...filters, month: Number(v) })}
       >
-        <SelectTrigger className="w-36" aria-label="Filtrar por mês">
+        <SelectTrigger className="w-36" aria-label={t("filters.byMonth")}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          {MONTH_LABEL.map((label, i) => (
+          {months.map((label, i) => (
             <SelectItem key={label} value={String(i + 1)}>
               {label}
             </SelectItem>
@@ -53,7 +57,7 @@ export function TransactionFiltersBar({
         value={String(filters.year ?? now.getFullYear())}
         onValueChange={(v) => onChange({ ...filters, year: Number(v) })}
       >
-        <SelectTrigger className="w-24" aria-label="Filtrar por ano">
+        <SelectTrigger className="w-24" aria-label={t("filters.byYear")}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -71,13 +75,13 @@ export function TransactionFiltersBar({
           onChange({ ...filters, type: v === ALL ? undefined : (v as TransactionType) })
         }
       >
-        <SelectTrigger className="w-32" aria-label="Filtrar por tipo">
+        <SelectTrigger className="w-32" aria-label={t("filters.byType")}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={ALL}>Tipo: todos</SelectItem>
-          <SelectItem value="income">Receita</SelectItem>
-          <SelectItem value="expense">Despesa</SelectItem>
+          <SelectItem value={ALL}>{t("filters.typeAll")}</SelectItem>
+          <SelectItem value="income">{t("filters.typeIncome")}</SelectItem>
+          <SelectItem value="expense">{t("filters.typeExpense")}</SelectItem>
         </SelectContent>
       </Select>
 
@@ -87,11 +91,11 @@ export function TransactionFiltersBar({
           onChange({ ...filters, categoryId: v === ALL ? undefined : v })
         }
       >
-        <SelectTrigger className="w-40" aria-label="Filtrar por categoria">
+        <SelectTrigger className="w-40" aria-label={t("filters.byCategory")}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={ALL}>Categoria: todas</SelectItem>
+          <SelectItem value={ALL}>{t("filters.categoryAll")}</SelectItem>
           {categories.map((c) => (
             <SelectItem key={c.id} value={c.id}>
               {c.name}

@@ -1,6 +1,8 @@
 "use client";
 
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Sheet,
@@ -23,7 +25,7 @@ import {
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import {
-  createHouseholdSchema,
+  makeCreateHouseholdSchema,
   type CreateHouseholdFormValues,
 } from "../schemas/household.schemas";
 
@@ -38,8 +40,11 @@ export function CreateHouseholdForm({
   onOpenChange,
   onSubmit,
 }: CreateHouseholdFormProps) {
+  const { t } = useTranslation("households");
+  const { t: tCommon } = useTranslation("common");
+  const schema = useMemo(() => makeCreateHouseholdSchema(t), [t]);
   const form = useForm<CreateHouseholdFormValues>({
-    resolver: zodResolver(createHouseholdSchema),
+    resolver: zodResolver(schema),
     defaultValues: { name: "" },
   });
 
@@ -55,9 +60,9 @@ export function CreateHouseholdForm({
         <Form {...form}>
           <form onSubmit={handleSubmit} className="flex h-full flex-col">
             <SheetHeader>
-              <SheetTitle>Novo lar</SheetTitle>
+              <SheetTitle>{t("createForm.title")}</SheetTitle>
               <SheetDescription>
-                Crie um espaço para o seu lar. Você será o proprietário.
+                {t("createForm.description")}
               </SheetDescription>
             </SheetHeader>
 
@@ -69,11 +74,11 @@ export function CreateHouseholdForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Nome <span className="text-red-400">*</span>
+                        {t("createForm.nameLabel")} <span className="text-red-400">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Ex: Casa da Família"
+                          placeholder={t("createForm.namePlaceholder")}
                           autoComplete="off"
                           autoFocus
                           {...field}
@@ -93,7 +98,7 @@ export function CreateHouseholdForm({
                   variant="outline"
                   className="w-full sm:w-auto"
                 >
-                  Cancelar
+                  {tCommon("actions.cancel")}
                 </Button>
               </SheetClose>
               <Button
@@ -101,7 +106,7 @@ export function CreateHouseholdForm({
                 disabled={form.formState.isSubmitting}
                 className="w-full sm:w-auto"
               >
-                {form.formState.isSubmitting ? "Criando…" : "Criar lar"}
+                {form.formState.isSubmitting ? t("createForm.submitting") : t("createForm.submit")}
               </Button>
             </SheetFooter>
           </form>

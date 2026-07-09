@@ -1,5 +1,6 @@
 import * as React from "react"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import { ChevronRight, Menu } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { NotificationBell } from "@/features/notifications"
@@ -19,6 +20,7 @@ interface TopHeaderProps {
 }
 
 export function TopHeader({ breadcrumbs, onMobileMenuToggle }: TopHeaderProps) {
+  const { t } = useTranslation("dashboard")
   return (
     // relative + z-10: elevates the header's stacking context above the sidebar so
     // the HouseholdSwitcher dropdown (absolute, z-50 within this context) paints on top.
@@ -31,7 +33,7 @@ export function TopHeader({ breadcrumbs, onMobileMenuToggle }: TopHeaderProps) {
           <button
             onClick={onMobileMenuToggle}
             className="flex h-8 w-8 items-center justify-center rounded-md text-foreground/50 transition-colors hover:bg-foreground/[0.06] hover:text-foreground md:hidden"
-            aria-label="Abrir menu"
+            aria-label={t("chrome.openMenu")}
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -39,7 +41,7 @@ export function TopHeader({ breadcrumbs, onMobileMenuToggle }: TopHeaderProps) {
 
         {/* Logo */}
         <Link
-          href="/dashboard/households"
+          href="/households"
           className="shrink-0 text-sm font-bold tracking-tight"
         >
           <span className="text-primary">lar</span>mony

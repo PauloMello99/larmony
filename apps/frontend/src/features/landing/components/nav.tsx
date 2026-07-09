@@ -4,6 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
+import { LocaleSwitcher } from "@/shared/components/locale-switcher"
 import { cn } from "@/shared/lib/utils"
 
 const NAV_LINKS = [
@@ -47,6 +48,7 @@ export function Nav() {
 
         {/* Right: CTAs + hamburger */}
         <div className="flex items-center gap-2">
+          <LocaleSwitcher className="text-white/70 hover:text-white" />
           <Button
             variant="outline"
             size="sm"

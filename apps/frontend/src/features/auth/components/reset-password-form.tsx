@@ -4,6 +4,7 @@ import * as React from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import { CheckCircle2, Loader2 } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import {
@@ -18,16 +19,18 @@ import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { useAuth } from "@/features/auth/hooks/use-auth"
 import {
-  resetPasswordSchema,
+  makeResetPasswordSchema,
   type ResetPasswordFormValues,
 } from "@/features/auth/schemas/auth.schemas"
 import { useSearchParams } from "next/navigation"
 
 export function ResetPasswordForm() {
+  const { t } = useTranslation("auth")
   const { resetPassword } = useAuth()
   const searchParams = useSearchParams()
   const [tokenError, setTokenError] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
+  const resetPasswordSchema = React.useMemo(() => makeResetPasswordSchema(t), [t])
 
   const {
     register,
@@ -51,7 +54,7 @@ export function ResetPasswordForm() {
   const onSubmit = async (data: ResetPasswordFormValues) => {
     if (!access_token) {
       setError("root", {
-        message: "Não foi possível redefinir a senha. Falha ao encontrar token de acesso.",
+        message: t("resetPassword.missingToken"),
       })
       return
     }
@@ -61,7 +64,7 @@ export function ResetPasswordForm() {
       setSuccess(true)
     } catch {
       setError("root", {
-        message: "Não foi possível redefinir a senha. O link pode ter expirado.",
+        message: t("resetPassword.error"),
       })
     }
   }
@@ -73,19 +76,19 @@ export function ResetPasswordForm() {
           <div className="mb-2 text-xl font-bold">
             <span className="text-primary">lar</span>mony
           </div>
-          <CardTitle className="text-xl">Nova senha</CardTitle>
+          <CardTitle className="text-xl">{t("resetPassword.title")}</CardTitle>
           <CardDescription className="text-foreground/40">
-            Defina uma nova senha para sua conta
+            {t("resetPassword.subtitle")}
           </CardDescription>
         </CardHeader>
 
         {tokenError ? (
           <CardContent className="space-y-4 text-center">
             <p className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              Link inválido ou expirado. Solicite um novo link de recuperação.
+              {t("resetPassword.invalidLink")}
             </p>
             <Button asChild variant="outline" className="w-full border-foreground/10">
-              <Link href="/auth/recover">Solicitar novo link</Link>
+              <Link href="/auth/recover">{t("resetPassword.requestNewLink")}</Link>
             </Button>
           </CardContent>
         ) : success ? (
@@ -94,10 +97,10 @@ export function ResetPasswordForm() {
               <CheckCircle2 className="h-6 w-6 text-primary" />
             </div>
             <p className="text-sm text-foreground/50">
-              Sua senha foi redefinida com sucesso. Você já pode fazer login com a nova senha.
+              {t("resetPassword.successMessage")}
             </p>
             <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-              <Link href="/auth/login">Ir para o login</Link>
+              <Link href="/auth/login">{t("resetPassword.goToLogin")}</Link>
             </Button>
           </CardContent>
         ) : (
@@ -110,7 +113,7 @@ export function ResetPasswordForm() {
               )}
 
               <div className="space-y-1.5">
-                <Label htmlFor="password">Nova senha</Label>
+                <Label htmlFor="password">{t("resetPassword.passwordLabel")}</Label>
                 <Input
                   id="password"
                   type="password"
@@ -125,7 +128,9 @@ export function ResetPasswordForm() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="confirmPassword">Confirmar senha</Label>
+                <Label htmlFor="confirmPassword">
+                  {t("resetPassword.confirmPasswordLabel")}
+                </Label>
                 <Input
                   id="confirmPassword"
                   type="password"
@@ -149,11 +154,11 @@ export function ResetPasswordForm() {
                 className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Redefinir senha
+                {t("resetPassword.submit")}
               </Button>
               <p className="text-center text-sm text-foreground/40">
                 <Link href="/auth/login" className="hover:text-foreground">
-                  ← Voltar ao login
+                  ← {t("resetPassword.backToLogin")}
                 </Link>
               </p>
             </CardFooter>

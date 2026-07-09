@@ -9,11 +9,36 @@
     "delete": "Excluir",
     "edit": "Editar",
     "create": "Criar",
-    "confirm": "Confirmar"
+    "confirm": "Confirmar",
+    "close": "Fechar",
+    "clear": "Limpar",
+    "all": "Tudo",
+    "back": "Voltar"
+  },
+  "export": {
+    "title": "Exportar CSV",
+    "button": "Exportar",
+    "fields": "Campos do CSV",
+    "download": "Baixar CSV"
+  },
+  "filters": {
+    "label": "Filtros",
+    "advanced": "Filtros avançados",
+    "min": "Mín",
+    "max": "Máx"
+  },
+  "datePicker": {
+    "placeholder": "Selecione uma data"
+  },
+  "notifications": {
+    "title": "Notificações",
+    "markAll": "Marcar todas",
+    "empty": "Nenhuma notificação."
   },
   "locale": {
     "label": "Idioma",
     "pt-BR": "Português (Brasil)",
-    "en": "English"
+    "en": "English",
+    "es": "Español"
   }
 }

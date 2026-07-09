@@ -7,11 +7,12 @@ import {
 } from "../../domain/transaction.repository.interface";
 
 /**
- * Cria uma transação gerada por regra de recorrência (M9). Reusado pelo engine
- * no tick do cron (fora de request context), por isso escreve via DRIZZLE_ADMIN
- * no repositório e **não** registra auditoria — geração é evento de sistema,
- * sem authId (ver plano M9 §5). Exportado pelo TransactionsModule para o módulo
- * `recurrences` injetar diretamente (mesmo padrão de CreateTransactionUseCase).
+ * Cria uma transação gerada por um lançamento programado no modo `auto`
+ * (ADR-0020). Reusado pelo engine no tick do cron (fora de request context),
+ * por isso escreve via DRIZZLE_ADMIN no repositório e **não** registra
+ * auditoria — geração é evento de sistema, sem authId. Exportado pelo
+ * TransactionsModule para o módulo `scheduled-transactions` injetar
+ * diretamente (mesmo padrão de CreateTransactionUseCase).
  */
 @Injectable()
 export class CreateGeneratedTransactionUseCase {

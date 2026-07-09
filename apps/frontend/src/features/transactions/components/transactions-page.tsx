@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { ArrowLeftRight, PlusCircle } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Skeleton } from "@/shared/components/ui/skeleton"
@@ -21,6 +22,7 @@ function currentFilters(): TransactionFilters {
 }
 
 export function TransactionsPage() {
+  const { t } = useTranslation("transactions")
   const { householdId } = useCurrentHousehold()
   const [filters, setFilters] = useState<TransactionFilters>(currentFilters)
   const { categories } = useCategories(householdId)
@@ -54,18 +56,17 @@ export function TransactionsPage() {
     <div className="mx-auto max-w-4xl">
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold text-foreground sm:text-2xl">Transações</h1>
-          <p className="mt-1 text-sm text-foreground/40">
-            Receitas e despesas do lar
-          </p>
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
+          <p className="mt-1 text-sm text-foreground/40">{t("page.description")}</p>
         </div>
         <Button
+          data-tour="tx-new-button"
           className="w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
           size="sm"
           onClick={openCreate}
         >
           <PlusCircle className="mr-2 h-4 w-4" />
-          Nova transação
+          {t("page.newTransaction")}
         </Button>
       </div>
 
@@ -80,14 +81,14 @@ export function TransactionsPage() {
       ) : transactions.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-foreground/10 py-16 text-center sm:py-20">
           <ArrowLeftRight className="mb-4 h-10 w-10 text-foreground/20" />
-          <p className="text-sm text-foreground/40">Nenhuma transação neste período.</p>
+          <p className="text-sm text-foreground/40">{t("page.empty")}</p>
           <Button
             className="mt-4 w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
             size="sm"
             onClick={openCreate}
           >
             <PlusCircle className="mr-2 h-4 w-4" />
-            Lançar transação
+            {t("page.emptyCta")}
           </Button>
         </div>
       ) : (

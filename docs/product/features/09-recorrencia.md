@@ -1,4 +1,15 @@
-# 09 — Recorrência (M9)
+# 09 — Recorrência (M9) — Superseded
+
+> **Superseded pelo ADR-0020 (2026-07-09)**: unificado com Contas a pagar
+> (`07-contas-a-pagar.md`) na feature "Lançamentos programados" — ver
+> [`10-lancamentos-programados.md`](10-lancamentos-programados.md). O módulo
+> `recurrences` e a rota `/recurrences` não existem mais; recorrências antigas
+> foram migradas para `scheduled_transaction_entries` com `posting_mode='auto'`
+> (preservando `id`).
+>
+> Conteúdo original (skeleton pré-implementação) preservado abaixo por histórico.
+
+---
 
 ## Escopo
 

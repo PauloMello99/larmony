@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Trans, useTranslation } from "react-i18next"
 import {
   Dialog,
   DialogContent,
@@ -19,6 +20,8 @@ interface DeleteBudgetDialogProps {
 }
 
 export function DeleteBudgetDialog({ budget, onOpenChange, onConfirm }: DeleteBudgetDialogProps) {
+  const { t } = useTranslation("budgets")
+  const { t: tCommon } = useTranslation("common")
   const [loading, setLoading] = useState(false)
 
   async function handleConfirm() {
@@ -35,11 +38,14 @@ export function DeleteBudgetDialog({ budget, onOpenChange, onConfirm }: DeleteBu
     <Dialog open={!!budget} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Excluir orçamento</DialogTitle>
+          <DialogTitle>{t("deleteDialog.title")}</DialogTitle>
           <DialogDescription>
-            Remover o orçamento de{" "}
-            <span className="font-medium text-foreground">{budget?.categoryName}</span> deste
-            mês? As transações não são afetadas.
+            <Trans
+              t={t}
+              i18nKey="deleteDialog.description"
+              values={{ name: budget?.categoryName ?? "" }}
+              components={{ span: <span className="font-medium text-foreground" /> }}
+            />
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -49,7 +55,7 @@ export function DeleteBudgetDialog({ budget, onOpenChange, onConfirm }: DeleteBu
             onClick={handleConfirm}
             className="w-full sm:w-auto"
           >
-            {loading ? "Excluindo…" : "Excluir"}
+            {loading ? t("deleteDialog.deleting") : tCommon("actions.delete")}
           </Button>
         </DialogFooter>
       </DialogContent>

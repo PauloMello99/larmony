@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Trans, useTranslation } from "react-i18next"
 import {
   Dialog,
   DialogContent,
@@ -23,6 +24,8 @@ export function DeleteCategoryDialog({
   onOpenChange,
   onConfirm,
 }: DeleteCategoryDialogProps) {
+  const { t } = useTranslation("categories")
+  const { t: tCommon } = useTranslation("common")
   const [loading, setLoading] = useState(false)
 
   async function handleConfirm() {
@@ -39,11 +42,14 @@ export function DeleteCategoryDialog({
     <Dialog open={!!category} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Excluir categoria</DialogTitle>
+          <DialogTitle>{t("deleteDialog.title")}</DialogTitle>
           <DialogDescription>
-            Tem certeza que deseja excluir{" "}
-            <span className="font-medium text-foreground">{category?.name}</span>? Transações
-            já lançadas nela ficam sem categoria — nenhuma é apagada.
+            <Trans
+              t={t}
+              i18nKey="deleteDialog.description"
+              values={{ name: category?.name ?? "" }}
+              components={{ span: <span className="font-medium text-foreground" /> }}
+            />
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -53,7 +59,7 @@ export function DeleteCategoryDialog({
             onClick={handleConfirm}
             className="w-full sm:w-auto"
           >
-            {loading ? "Excluindo…" : "Excluir"}
+            {loading ? t("deleteDialog.deleting") : tCommon("actions.delete")}
           </Button>
         </DialogFooter>
       </DialogContent>

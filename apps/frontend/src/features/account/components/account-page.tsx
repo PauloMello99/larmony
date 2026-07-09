@@ -3,6 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { useTranslation } from "react-i18next"
 import { ArrowLeft, User, KeyRound, Languages, Palette, Trash2 } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import {
@@ -14,21 +15,23 @@ import {
 } from "./account-sections"
 
 const SECTIONS = [
-  { id: "profile", label: "Perfil", icon: User, Section: ProfileSection },
-  { id: "access", label: "Acesso", icon: KeyRound, Section: AccessSection },
-  { id: "appearance", label: "Tema", icon: Palette, Section: AppearanceSection },
-  { id: "locale", label: "Idioma", icon: Languages, Section: LocaleSection },
-  { id: "danger", label: "Apagar Conta", icon: Trash2, Section: DangerSection },
+  { id: "profile", labelKey: "nav.profile", icon: User, Section: ProfileSection },
+  { id: "access", labelKey: "nav.access", icon: KeyRound, Section: AccessSection },
+  { id: "appearance", labelKey: "nav.appearance", icon: Palette, Section: AppearanceSection },
+  { id: "locale", labelKey: "nav.locale", icon: Languages, Section: LocaleSection },
+  { id: "danger", labelKey: "nav.danger", icon: Trash2, Section: DangerSection },
 ] as const
 
 export function AccountPage() {
+  const { t } = useTranslation("account")
+  const { t: tCommon } = useTranslation("common")
   const router = useRouter()
   const [active, setActive] = React.useState<string>(SECTIONS[0].id)
 
   // Item 7 — volta para onde estávamos; fallback p/ as lares.
   function handleBack() {
     if (window.history.length > 1) router.back()
-    else void router.push("/dashboard/households")
+    else void router.push("/households")
   }
 
   // Deep-link via #hash: rola para a seção ao montar e quando o hash muda.
@@ -74,13 +77,13 @@ export function AccountPage() {
         className="flex items-center gap-1.5 text-sm text-foreground/50 transition-colors hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
-        Voltar
+        {tCommon("actions.back")}
       </button>
 
       <div className="flex min-h-full flex-col gap-6 md:flex-row md:gap-8">
         {/* Mobile: barra de âncoras horizontal */}
         <nav className="flex gap-1 overflow-x-auto border-b border-foreground/[0.06] pb-3 md:hidden">
-          {SECTIONS.map(({ id, label }) => {
+          {SECTIONS.map(({ id, labelKey }) => {
             const isDanger = id === "danger"
             const isActive = active === id
             return (
@@ -98,7 +101,7 @@ export function AccountPage() {
                       : "text-foreground/50 hover:bg-foreground/[0.04] hover:text-foreground",
                 )}
               >
-                {label}
+                {t(labelKey)}
               </Link>
             )
           })}
@@ -108,10 +111,10 @@ export function AccountPage() {
         <aside className="hidden w-48 shrink-0 md:block">
           <div className="sticky top-6">
             <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-foreground/25">
-              Minha Conta
+              {t("nav.title")}
             </p>
             <ul className="space-y-0.5">
-              {SECTIONS.map(({ id, label, icon: Icon }) => {
+              {SECTIONS.map(({ id, labelKey, icon: Icon }) => {
                 const isDanger = id === "danger"
                 const isActive = active === id
                 return (
@@ -141,7 +144,7 @@ export function AccountPage() {
                               : "text-foreground/40",
                         )}
                       />
-                      {label}
+                      {t(labelKey)}
                     </Link>
                   </li>
                 )

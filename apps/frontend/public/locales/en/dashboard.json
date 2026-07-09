@@ -5,8 +5,7 @@
     "categories": "Categories",
     "budgets": "Budgets",
     "goals": "Goals",
-    "bills": "Bills",
-    "recurrences": "Recurring",
+    "scheduledTransactions": "Scheduled entries",
     "reports": "Reports",
     "members": "Members",
     "settings": "Settings",
@@ -23,47 +22,82 @@
     "incomeMonth": "Income this month",
     "expensesMonth": "Expenses this month",
     "balanceMonth": "Balance this month",
-    "goalsTotal": "Saved in goals",
+    "goalsTotal": "Saved for goals",
     "recentTransactions": "Recent transactions",
     "seeAll": "See all",
-    "upcomingBills": "Upcoming bills",
+    "upcomingEntries": "Upcoming entries",
     "activeGoals": "Active goals",
     "budgets": "Budgets",
     "emptyTransactions": "No transactions yet",
-    "emptyTransactionsHint": "Your household's entries will show up here.",
-    "emptyBills": "No bills due soon",
-    "emptyBillsHint": "Add recurring bills to get reminders.",
+    "emptyTransactionsHint": "Your household transactions will appear here.",
+    "emptyEntries": "No upcoming entries",
+    "emptyEntriesHint": "Add manual entries to receive reminders.",
     "emptyGoals": "No active goals",
     "emptyGoalsHint": "Create goals to track your objectives.",
     "emptyBudgets": "No budgets set",
-    "emptyBudgetsHint": "Set spending limits per category.",
+    "emptyBudgetsHint": "Set spending limits by category.",
     "vsLastMonth": "vs. last month",
-    "goalsActive": "{{count}} active goal",
-    "goalsActive_plural": "{{count}} active goals",
+    "goalsActive_one": "{{count}} active goal",
+    "goalsActive_other": "{{count}} active goals",
     "dueToday": "Due today",
-    "dueInDays": "In {{count}} day",
-    "dueInDays_plural": "In {{count}} days",
+    "dueInDays_one": "In {{count}} day",
+    "dueInDays_other": "In {{count}} days",
     "budgetOver": "Over budget",
     "seeAllTransactions": "See all"
   },
+  "userMenu": {
+    "account": "My Account",
+    "language": "Language",
+    "platformPanel": "Platform panel",
+    "signOut": "Sign out"
+  },
+  "switcher": {
+    "label": "Households",
+    "viewAll": "View all households"
+  },
+  "roles": {
+    "owner": "Owner",
+    "member": "Member"
+  },
+  "chrome": {
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "expandMenu": "Expand menu",
+    "collapseMenu": "Collapse menu"
+  },
+  "householdsList": {
+    "title": "Households",
+    "subtitle": "Select a household to continue",
+    "new": "New household",
+    "create": "Create household",
+    "empty": "No households yet.",
+    "welcomeTitle": "Welcome to Larmony!",
+    "welcomeHint": "Let's create your first household to organize your home finances."
+  },
+  "adminBanner": {
+    "managingAs": "You are managing <strong>{{name}}</strong> as super_admin.",
+    "backToPanel": "Back to panel",
+    "superAccess": "Super_admin access"
+  },
   "placeholders": {
-    "arriving": "Arriving in {{milestone}}",
+    "arriving": "Arriving at {{milestone}}",
     "underConstruction": "Under construction",
+    "comingSoon": "This section will be available soon",
     "transactions": {
       "title": "Transactions",
-      "description": "Your household's income and expenses: entries with category, person, installments and member splits."
+      "description": "Money coming in and going out of your household: entries with categories, people involved, installments, and splits among members."
     },
     "categories": {
       "title": "Categories",
-      "description": "Organize household finances with income and expense categories, colors and icons."
+      "description": "Organize household finances using income and expense categories, colors, and icons."
     },
     "budgets": {
       "title": "Budgets",
-      "description": "Set monthly spending limits per category and track how much has been used."
+      "description": "Set monthly spending limits by category and track how much has been used."
     },
     "goals": {
       "title": "Goals",
-      "description": "Save money for household objectives and track each goal's progress."
+      "description": "Save money for household objectives and track progress toward each goal."
     },
     "bills": {
       "title": "Bills",
@@ -71,7 +105,7 @@
     },
     "reports": {
       "title": "Reports",
-      "description": "Monthly and yearly analysis of household finances, by category and by person."
+      "description": "Monthly and annual analysis of household finances, broken down by category and person."
     }
   }
 }

@@ -5,8 +5,7 @@
     "categories": "Categorias",
     "budgets": "Orçamentos",
     "goals": "Metas",
-    "bills": "Contas",
-    "recurrences": "Recorrências",
+    "scheduledTransactions": "Lançamentos",
     "reports": "Relatórios",
     "members": "Membros",
     "settings": "Configurações",
@@ -26,29 +25,64 @@
     "goalsTotal": "Guardado em metas",
     "recentTransactions": "Transações recentes",
     "seeAll": "Ver todas",
-    "upcomingBills": "Contas próximas",
+    "upcomingEntries": "Próximos lançamentos",
     "activeGoals": "Metas ativas",
     "budgets": "Orçamentos",
     "emptyTransactions": "Nenhuma transação ainda",
     "emptyTransactionsHint": "Os lançamentos do seu lar aparecerão aqui.",
-    "emptyBills": "Nenhuma conta por vencer",
-    "emptyBillsHint": "Cadastre contas fixas para receber lembretes.",
+    "emptyEntries": "Nenhum lançamento por vencer",
+    "emptyEntriesHint": "Cadastre lançamentos manuais para receber lembretes.",
     "emptyGoals": "Nenhuma meta ativa",
     "emptyGoalsHint": "Crie metas para acompanhar seus objetivos.",
     "emptyBudgets": "Nenhum orçamento definido",
     "emptyBudgetsHint": "Defina limites de gasto por categoria.",
     "vsLastMonth": "vs. mês anterior",
-    "goalsActive": "{{count}} meta ativa",
-    "goalsActive_plural": "{{count}} metas ativas",
+    "goalsActive_one": "{{count}} meta ativa",
+    "goalsActive_other": "{{count}} metas ativas",
     "dueToday": "Vence hoje",
-    "dueInDays": "Em {{count}} dia",
-    "dueInDays_plural": "Em {{count}} dias",
+    "dueInDays_one": "Em {{count}} dia",
+    "dueInDays_other": "Em {{count}} dias",
     "budgetOver": "Excedido",
     "seeAllTransactions": "Ver todas"
+  },
+  "userMenu": {
+    "account": "Minha Conta",
+    "language": "Idioma",
+    "platformPanel": "Painel da plataforma",
+    "signOut": "Sair"
+  },
+  "switcher": {
+    "label": "Lares",
+    "viewAll": "Ver todos os lares"
+  },
+  "roles": {
+    "owner": "Proprietário",
+    "member": "Membro"
+  },
+  "chrome": {
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "expandMenu": "Expandir menu",
+    "collapseMenu": "Recolher menu"
+  },
+  "householdsList": {
+    "title": "Lares",
+    "subtitle": "Selecione um lar para continuar",
+    "new": "Novo lar",
+    "create": "Criar lar",
+    "empty": "Nenhum lar ainda.",
+    "welcomeTitle": "Bem-vindo(a) ao Larmony!",
+    "welcomeHint": "Vamos criar o primeiro lar para organizar as finanças da sua casa."
+  },
+  "adminBanner": {
+    "managingAs": "Você está gerenciando <strong>{{name}}</strong> como super_admin.",
+    "backToPanel": "Voltar ao painel",
+    "superAccess": "Acesso de super_admin"
   },
   "placeholders": {
     "arriving": "Chega no {{milestone}}",
     "underConstruction": "Em construção",
+    "comingSoon": "Esta seção estará disponível em breve",
     "transactions": {
       "title": "Transações",
       "description": "Entradas e saídas do seu lar: lançamentos com categoria, pessoa, parcelamento e rateio entre membros."

@@ -1,6 +1,12 @@
 # ADR-0019 — Recorrência: modelo simples + engine no cron gravando via DRIZZLE_ADMIN
 
-**Status:** Aceito
+**Status:** Superseded pelo ADR-0020 (2026-07-09) — bills e recurrences foram
+unificados em "lançamentos programados" (`scheduled_transaction_entries`); o
+ponto 3 abaixo ("bills e recurrences permanecem conceitos distintos") não é
+mais válido. O modelo de cadência (sem RRULE), o engine no cron via
+`DRIZZLE_ADMIN`/`CreateGeneratedTransactionUseCase` e o princípio de
+idempotência (avançar cursor antes de inserir) sobrevivem inalterados no
+módulo `scheduled-transactions`.
 **Data:** 2026-07-08
 
 ## Contexto

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation, Trans } from "react-i18next"
 import { Trash2 } from "lucide-react"
 import {
   Dialog,
@@ -22,6 +23,7 @@ interface DeleteHouseholdDialogProps {
 }
 
 export function DeleteHouseholdDialog({ household, onConfirm }: DeleteHouseholdDialogProps) {
+  const { t } = useTranslation("households")
   const [open, setOpen] = useState(false)
   const [confirmation, setConfirmation] = useState("")
   const [loading, setLoading] = useState(false)
@@ -50,23 +52,29 @@ export function DeleteHouseholdDialog({ household, onConfirm }: DeleteHouseholdD
       <DialogTrigger asChild>
         <Button variant="destructive" size="sm" className="w-full sm:w-auto">
           <Trash2 className="h-4 w-4" />
-          Excluir lar
+          {t("deleteDialog.trigger")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Excluir lar</DialogTitle>
+          <DialogTitle>{t("deleteDialog.title")}</DialogTitle>
           <DialogDescription>
-            Esta ação é <span className="font-semibold text-red-400">irreversível</span>.
-            Todos os dados do lar serão permanentemente excluídos.
+            <Trans
+              t={t}
+              i18nKey="deleteDialog.description"
+              components={{ span: <span className="font-semibold text-red-400" /> }}
+            />
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-3">
           <Label htmlFor="delete-confirm">
-            Digite{" "}
-            <span className="font-mono text-foreground/80">{household.name}</span> para
-            confirmar:
+            <Trans
+              t={t}
+              i18nKey="deleteDialog.confirmLabel"
+              values={{ name: household.name }}
+              components={{ span: <span className="font-mono text-foreground/80" /> }}
+            />
           </Label>
           <Input
             id="delete-confirm"
@@ -84,7 +92,7 @@ export function DeleteHouseholdDialog({ household, onConfirm }: DeleteHouseholdD
             onClick={handleDelete}
             className="w-full sm:w-auto"
           >
-            {loading ? "Excluindo…" : "Excluir permanentemente"}
+            {loading ? t("deleteDialog.deleting") : t("deleteDialog.submit")}
           </Button>
         </DialogFooter>
       </DialogContent>

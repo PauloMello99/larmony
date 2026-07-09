@@ -1,3 +1,5 @@
+import type { AppLocale } from "@/shared/lib/locale"
+
 export interface AuthUser {
   id: string
   email: string
@@ -15,7 +17,9 @@ export interface Me {
   avatarUrl: string | null
   birthDate: string | null
   gender: "male" | "female" | "other" | null
-  locale: "pt-BR" | "en"
+  locale: AppLocale
+  /** Tours de onboarding concluídos: { [tourKey]: maiorVersãoVista }. */
+  onboarding: Record<string, number>
   createdAt: string
   updatedAt: string
 }

@@ -16,7 +16,7 @@ test("signup sem convite abre o Sheet de criar lar automaticamente", async ({ pa
   await page.fill("#confirmPassword", password)
   await page.click('button[type="submit"]')
 
-  await page.waitForURL(/\/dashboard\/households\?welcome=1/, { timeout: 20_000 })
+  await page.waitForURL(/\/households\?welcome=1/, { timeout: 20_000 })
   await expect(page.getByText("Bem-vindo(a) ao Larmony!")).toBeVisible()
 
   // Sheet de criar lar já aberto, sem precisar clicar em nada.
@@ -25,5 +25,5 @@ test("signup sem convite abre o Sheet de criar lar automaticamente", async ({ pa
 
   // Fechar o Sheet limpa o query param.
   await page.keyboard.press("Escape")
-  await page.waitForURL(/\/dashboard\/households$/)
+  await page.waitForURL(/\/households$/)
 })

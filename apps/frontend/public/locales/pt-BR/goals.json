@@ -1,0 +1,59 @@
+{
+  "page": {
+    "title": "Metas",
+    "subtitle": "Objetivos de poupança do lar, com aportes de todos",
+    "newGoal": "Nova meta",
+    "empty": "Nenhuma meta ainda.",
+    "createGoal": "Criar meta"
+  },
+  "form": {
+    "editTitle": "Editar meta",
+    "createTitle": "Nova meta",
+    "description": "Metas de poupança do lar — o progresso vem dos aportes.",
+    "nameLabel": "Nome",
+    "namePlaceholder": "Ex: Viagem",
+    "targetAmountLabel": "Valor alvo",
+    "colorLabel": "Cor",
+    "targetDateLabel": "Data alvo",
+    "noTargetDate": "Sem data alvo",
+    "clearTargetDate": "Limpar data alvo",
+    "descriptionLabel": "Descrição",
+    "descriptionPlaceholder": "Opcional",
+    "saving": "Salvando…",
+    "saveChanges": "Salvar alterações",
+    "create": "Criar meta"
+  },
+  "card": {
+    "done": "Concluída",
+    "contributions": "Aportes",
+    "contribute": "Aportar",
+    "ofTarget": "de {{value}}",
+    "progress": "{{pct}}%",
+    "progressWithDate": "{{pct}}% · até {{date}}"
+  },
+  "contributionDialog": {
+    "title": "Aportes — {{name}}",
+    "summary": "{{saved}} de {{target}} guardados.",
+    "amountLabel": "Valor",
+    "dateLabel": "Data",
+    "notesLabel": "Notas",
+    "notesPlaceholder": "Opcional",
+    "submitting": "Aportando…",
+    "submit": "Aportar",
+    "history": "Histórico",
+    "empty": "Nenhum aporte ainda.",
+    "deleteContribution": "Excluir aporte"
+  },
+  "deleteDialog": {
+    "title": "Excluir meta",
+    "description": "Excluir <span>{{name}}</span>? O histórico de aportes será apagado junto — essa ação não pode ser desfeita.",
+    "deleting": "Excluindo…"
+  },
+  "validation": {
+    "nameRequired": "Nome é obrigatório",
+    "nameMax": "Máximo 80 caracteres",
+    "amountRequired": "Informe um valor",
+    "dateRequired": "Informe a data",
+    "colorInvalid": "Cor inválida"
+  }
+}

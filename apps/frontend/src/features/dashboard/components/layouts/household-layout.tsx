@@ -10,7 +10,9 @@ import { HouseholdSwitcher } from "@/features/dashboard/components/household-swi
 import { HouseholdProvider } from "@/features/dashboard/components/household-context"
 import { useHouseholds, useResolveHouseholdBySlug } from "@/features/dashboard/hooks/use-households"
 import { useMe } from "@/features/auth/hooks/use-me"
-import { useTranslation } from "react-i18next"
+import { Trans, useTranslation } from "react-i18next"
+import { OnboardingProvider } from "@/features/onboarding/providers/onboarding-provider"
+import { TourRenderer } from "@/features/onboarding/components/tour-renderer"
 import {
   PAGE_LABEL_KEYS,
   isOwnerOnlyPath,
@@ -27,8 +29,8 @@ interface HouseholdLayoutProps {
 /**
  * Builds breadcrumb items for household pages, including settings sub-pages.
  *
- * /dashboard/household/[householdSlug]/overview          → [HouseholdSwitcher, "Overview"]
- * /dashboard/household/[householdSlug]/settings/billing  → [HouseholdSwitcher, "Configurações", "Cobrança"]
+ * /households/[householdSlug]/overview          → [HouseholdSwitcher, "Overview"]
+ * /households/[householdSlug]/settings/billing  → [HouseholdSwitcher, "Configurações", "Cobrança"]
  */
 function buildHouseholdCrumbs(
   pathname: string,
@@ -44,7 +46,7 @@ function buildHouseholdCrumbs(
   if (segments[0] === "settings") {
     crumbs.push({
       label: t("nav.settings"),
-      href: `/dashboard/household/${slug}/settings`,
+      href: `/households/${slug}/settings`,
     })
     const subKey = segments[1] ? PAGE_LABEL_KEYS[segments[1]] : undefined
     if (subKey) crumbs.push({ label: t(subKey) })
@@ -96,7 +98,7 @@ export function HouseholdLayout({ children }: HouseholdLayoutProps) {
   React.useEffect(() => {
     if (!householdSlug || loading || listHousehold) return
     if (!isSuper || (!resolving && notFound)) {
-      void router.replace("/dashboard/households")
+      void router.replace("/households")
     }
   }, [householdSlug, loading, listHousehold, isSuper, resolving, notFound, router])
 
@@ -111,7 +113,7 @@ export function HouseholdLayout({ children }: HouseholdLayoutProps) {
     const lacksModule =
       isModuleKey(seg) && !canAccessModule(household.role, household.permissions, seg)
     if (isOwnerOnlyPath(currentSubpath) || lacksModule) {
-      void router.replace(`/dashboard/household/${household.slug}`)
+      void router.replace(`/households/${household.slug}`)
     }
   }, [household, currentSubpath, router])
 
@@ -127,33 +129,37 @@ export function HouseholdLayout({ children }: HouseholdLayoutProps) {
 
   return (
     <HouseholdProvider household={household} actingAsAdmin={actingAsAdmin}>
+      <OnboardingProvider onRequestMobileNav={setMobileOpen}>
       <div className="flex h-screen flex-col overflow-hidden bg-background">
         {actingAsAdmin ? (
           // Funcionário ou não-membro agindo com poderes de plataforma → aviso forte.
           <div className="flex shrink-0 items-center justify-center gap-2 bg-warning/15 px-4 py-1.5 text-center text-xs text-warning sm:text-sm">
             <ShieldAlert className="h-4 w-4 shrink-0" />
             <span>
-              Você está gerenciando{" "}
-              <strong className="font-semibold">{household.name}</strong> como
-              super_admin.
+              <Trans
+                t={t}
+                i18nKey="adminBanner.managingAs"
+                values={{ name: household.name }}
+                components={{ strong: <strong className="font-semibold" /> }}
+              />
             </span>
             <Link
               href={`/admin/households/${household.id}`}
               className="shrink-0 font-medium underline underline-offset-2 hover:opacity-80"
             >
-              Voltar ao painel
+              {t("adminBanner.backToPanel")}
             </Link>
           </div>
         ) : superOwner ? (
           // Dono real + super_admin → indicador sutil de contexto de plataforma.
           <div className="flex shrink-0 items-center justify-center gap-1.5 bg-foreground/[0.04] px-4 py-1 text-center text-[11px] text-foreground/40">
             <ShieldAlert className="h-3 w-3 shrink-0" />
-            <span>Acesso de super_admin</span>
+            <span>{t("adminBanner.superAccess")}</span>
             <Link
               href="/admin"
               className="shrink-0 underline underline-offset-2 hover:text-foreground/70"
             >
-              Painel da plataforma
+              {t("userMenu.platformPanel")}
             </Link>
           </div>
         ) : null}
@@ -172,6 +178,8 @@ export function HouseholdLayout({ children }: HouseholdLayoutProps) {
           </main>
         </div>
       </div>
+      <TourRenderer />
+      </OnboardingProvider>
     </HouseholdProvider>
   )
 }

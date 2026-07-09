@@ -4,6 +4,7 @@ import * as React from "react"
 import { useRouter } from "next/router"
 import { Loader2 } from "lucide-react"
 import { useAuth } from "@/features/auth/hooks/use-auth"
+import { useLocaleSync } from "@/features/auth/hooks/use-locale-sync"
 
 interface AuthGuardProps {
   children: React.ReactNode
@@ -12,6 +13,9 @@ interface AuthGuardProps {
 export function AuthGuard({ children }: AuthGuardProps) {
   const { user, loading } = useAuth()
   const router = useRouter()
+
+  // Reconcilia users.locale ↔ locale ativo do Next.js (persistência via cookie).
+  useLocaleSync()
 
   React.useEffect(() => {
     if (!loading && !user) {

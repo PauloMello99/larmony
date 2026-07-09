@@ -1,0 +1,44 @@
+{
+  "app": {
+    "name": "Larmony",
+    "tagline": "Organice sus finanzas de su hogar"
+  },
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "clear": "Limpiar",
+    "all": "Todo",
+    "back": "Volver"
+  },
+  "export": {
+    "title": "Exportar CSV",
+    "button": "Exportar",
+    "fields": "Campos del CSV",
+    "download": "Descargar CSV"
+  },
+  "filters": {
+    "label": "Filtros",
+    "advanced": "Filtros avanzados",
+    "min": "Mín",
+    "max": "Máx"
+  },
+  "datePicker": {
+    "placeholder": "Seleccione una fecha"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "markAll": "Marcar todas",
+    "empty": "No hay notificaciones."
+  },
+  "locale": {
+    "label": "Idioma",
+    "pt-BR": "Português (Brasil)",
+    "en": "English",
+    "es": "Español"
+  }
+}

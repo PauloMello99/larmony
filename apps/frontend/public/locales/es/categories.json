@@ -1,0 +1,58 @@
+{
+  "page": {
+    "title": "Categorías",
+    "subtitle": "Organiza tus transacciones, presupuestos y cuentas por categoría",
+    "newCategory": "Nueva categoría",
+    "empty": "Aún no hay categorías.",
+    "createCategory": "Crear categoría"
+  },
+  "types": {
+    "income": "Ingreso",
+    "expense": "Gastos",
+    "both": "Ambos"
+  },
+  "form": {
+    "editTitle": "Editar categoría",
+    "createTitle": "Nueva categoría",
+    "description": "Las categorías organizan tus transacciones, presupuestos y cuentas.",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Ej: Mascotas",
+    "typeLabel": "Tipo",
+    "colorLabel": "Color",
+    "iconLabel": "Icono",
+    "iconPlaceholder": "Seleccionar",
+    "saving": "Guardando…",
+    "saveChanges": "Guardar cambios",
+    "create": "Crear categoría"
+  },
+  "list": {
+    "headerName": "Nombre",
+    "headerType": "Tipo",
+    "defaultSuffix": "(predeterminado)"
+  },
+  "deleteDialog": {
+    "title": "Eliminar categoría",
+    "description": "¿Está seguro de que desea eliminar <span>{{name}}</span>? Las transacciones ya registradas en esta categoría quedarán sin categoría; no se eliminará ninguna.",
+    "deleting": "Eliminando…"
+  },
+  "icons": {
+    "banknote": "Dinero",
+    "briefcase": "Trabajo",
+    "trendingUp": "Inversiones",
+    "utensilsCrossed": "Comida",
+    "home": "Vivienda",
+    "car": "Transporte",
+    "heart": "Salud",
+    "bookOpen": "Educación",
+    "gamepad2": "Ocio",
+    "shirt": "Ropa",
+    "refreshCw": "Suscripciones",
+    "circlePlus": "Otros (entrada)",
+    "circleMinus": "Otros (salida)"
+  },
+  "validation": {
+    "nameRequired": "El nombre es obligatorio",
+    "nameMax": "Máximo 60 caracteres",
+    "colorInvalid": "Color no válido"
+  }
+}

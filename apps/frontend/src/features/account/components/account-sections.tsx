@@ -1,10 +1,11 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/router"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import type { TFunction } from "i18next"
 import {
   KeyRound,
   Languages,
@@ -19,7 +20,7 @@ import {
   Upload,
 } from "lucide-react"
 import { useTheme } from "next-themes"
-import { useTranslation } from "react-i18next"
+import { Trans, useTranslation } from "react-i18next"
 import { useMe } from "@/features/auth"
 import { useAuth } from "@/features/auth"
 import { clearSession } from "@/features/auth/lib/session"
@@ -53,6 +54,12 @@ import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { cn } from "@/shared/lib/utils"
+import {
+  DEFAULT_LOCALE,
+  SUPPORTED_LOCALES,
+  applyLocale,
+  type AppLocale,
+} from "@/shared/lib/locale"
 
 function SectionHeader({
   title,
@@ -71,14 +78,16 @@ function SectionHeader({
 
 /* ── Perfil ─────────────────────────────────────────────────────── */
 
-const profileSchema = z.object({
-  name: z.string().min(1, "Nome é obrigatório").max(120),
-  email: z.string().email("E-mail inválido"),
-})
-type ProfileFormValues = z.infer<typeof profileSchema>
+const makeProfileSchema = (t: TFunction) =>
+  z.object({
+    name: z.string().min(1, t("validation.nameRequired")).max(120),
+    email: z.string().email(t("validation.invalidEmail")),
+  })
+type ProfileFormValues = z.infer<ReturnType<typeof makeProfileSchema>>
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024
 
 export function ProfileSection() {
+  const { t } = useTranslation("account")
   const { me, loading, updateMe, uploadAvatar } = useMe()
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -86,6 +95,8 @@ export function ProfileSection() {
   const [avatarError, setAvatarError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const initialized = useRef(false)
+
+  const profileSchema = useMemo(() => makeProfileSchema(t), [t])
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -106,9 +117,7 @@ export function ProfileSection() {
       await updateMe({ name: values.name, email: values.email })
       setSaved(true)
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Não foi possível salvar o perfil.",
-      )
+      setError(err instanceof Error ? err.message : t("profile.saveError"))
     }
   })
 
@@ -118,18 +127,20 @@ export function ProfileSection() {
     if (!file) return
     setAvatarError(null)
     if (!file.type.startsWith("image/")) {
-      setAvatarError("Selecione um arquivo de imagem.")
+      setAvatarError(t("profile.avatarInvalidType"))
       return
     }
     if (file.size > MAX_AVATAR_BYTES) {
-      setAvatarError("A imagem deve ter no máximo 5 MB.")
+      setAvatarError(t("profile.avatarTooLarge"))
       return
     }
     setAvatarUploading(true)
     try {
       await uploadAvatar(file)
     } catch (err) {
-      setAvatarError(err instanceof Error ? err.message : "Falha ao enviar a foto.")
+      setAvatarError(
+        err instanceof Error ? err.message : t("profile.avatarUploadError"),
+      )
     } finally {
       setAvatarUploading(false)
     }
@@ -138,13 +149,13 @@ export function ProfileSection() {
   return (
     <div className="grid gap-6">
       <SectionHeader
-        title="Perfil"
-        description="Gerencie seu nome, e-mail e foto de perfil."
+        title={t("profile.title")}
+        description={t("profile.description")}
       />
       {loading ? (
         <div className="flex items-center justify-center py-12 text-foreground/40">
           <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-          Carregando…
+          {t("profile.loading")}
         </div>
       ) : (
         <div className="grid max-w-lg gap-6">
@@ -153,7 +164,7 @@ export function ProfileSection() {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={me.avatarUrl}
-                alt="Foto de perfil"
+                alt={t("profile.avatarAlt")}
                 className="h-16 w-16 rounded-full object-cover"
               />
             ) : (
@@ -181,13 +192,15 @@ export function ProfileSection() {
                 ) : (
                   <Upload className="h-4 w-4" />
                 )}
-                {avatarUploading ? "Enviando…" : "Enviar foto"}
+                {avatarUploading
+                  ? t("profile.avatarUploading")
+                  : t("profile.avatarUpload")}
               </Button>
               {avatarError ? (
                 <span className="text-xs text-red-400">{avatarError}</span>
               ) : (
                 <span className="text-xs text-foreground/30">
-                  PNG, JPG, WEBP ou GIF · até 5 MB.
+                  {t("profile.avatarHint")}
                 </span>
               )}
             </div>
@@ -201,7 +214,8 @@ export function ProfileSection() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Nome <span className="text-red-400">*</span>
+                      {t("profile.nameLabel")}{" "}
+                      <span className="text-red-400">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input autoComplete="name" {...field} />
@@ -216,14 +230,15 @@ export function ProfileSection() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      E-mail <span className="text-red-400">*</span>
+                      {t("profile.emailLabel")}{" "}
+                      <span className="text-red-400">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input type="email" autoComplete="email" {...field} />
                     </FormControl>
                     <FormDescription className="flex items-center gap-1 text-foreground/30">
                       <ShieldCheck className="h-3 w-3" />
-                      Alterar o e-mail muda também seu login.
+                      {t("profile.emailHint")}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -231,13 +246,13 @@ export function ProfileSection() {
               />
               {error && <p className="text-sm text-red-400">{error}</p>}
               {saved && (
-                <p className="text-sm text-emerald-400">Perfil atualizado.</p>
+                <p className="text-sm text-emerald-400">{t("profile.saved")}</p>
               )}
               <div>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
                   {form.formState.isSubmitting
-                    ? "Salvando…"
-                    : "Salvar alterações"}
+                    ? t("profile.submitting")
+                    : t("profile.submit")}
                 </Button>
               </div>
             </form>
@@ -251,6 +266,7 @@ export function ProfileSection() {
 /* ── Acesso ─────────────────────────────────────────────────────── */
 
 export function AccessSection() {
+  const { t } = useTranslation("account")
   const { user, forgotPassword } = useAuth()
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -264,7 +280,7 @@ export function AccessSection() {
       await forgotPassword(user.email)
       setSent(true)
     } catch {
-      setError("Não foi possível enviar o e-mail. Tente novamente.")
+      setError(t("access.error"))
     } finally {
       setLoading(false)
     }
@@ -273,35 +289,36 @@ export function AccessSection() {
   return (
     <div className="grid gap-6">
       <SectionHeader
-        title="Acesso"
-        description="Gerencie sua senha e segurança de acesso."
+        title={t("access.title")}
+        description={t("access.description")}
       />
       <section className="max-w-lg rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-5">
         <div className="flex items-center gap-2">
           <KeyRound className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-medium">Alterar senha</h3>
+          <h3 className="text-sm font-medium">{t("access.changePassword")}</h3>
         </div>
         {sent ? (
           <div className="mt-4 flex items-start gap-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
             <MailCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
             <div className="text-sm text-foreground/70">
-              Enviamos um link para <strong>{user?.email}</strong>. Abra-o para
-              definir uma nova senha — a sessão é recuperada com segurança pelo
-              próprio link do e-mail.
+              <Trans
+                t={t}
+                i18nKey="access.sentMessage"
+                values={{ email: user?.email ?? "" }}
+                components={{ strong: <strong /> }}
+              />
             </div>
           </div>
         ) : (
           <>
             <p className="mt-2 text-sm text-foreground/50">
-              Por segurança, a troca de senha é feita por um link enviado ao seu
-              e-mail. Ao clicar no link, você abre a tela de nova senha com a
-              sessão recuperada automaticamente.
+              {t("access.explanation")}
             </p>
             {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
             <div className="mt-4">
               <Button onClick={handleRequest} disabled={loading || !user?.email}>
                 {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-                Enviar link de alteração
+                {t("access.submit")}
               </Button>
             </div>
           </>
@@ -314,12 +331,13 @@ export function AccessSection() {
 /* ── Tema / Aparência ───────────────────────────────────────────── */
 
 const THEME_OPTIONS = [
-  { value: "light", label: "Claro", icon: Sun },
-  { value: "dark", label: "Escuro", icon: Moon },
-  { value: "system", label: "Sistema", icon: Monitor },
+  { value: "light", labelKey: "appearance.light", icon: Sun },
+  { value: "dark", labelKey: "appearance.dark", icon: Moon },
+  { value: "system", labelKey: "appearance.system", icon: Monitor },
 ] as const
 
 export function AppearanceSection() {
+  const { t } = useTranslation("account")
   const { theme, setTheme } = useTheme()
   // next-themes só resolve no cliente; evita mismatch de hidratação.
   const [mounted, setMounted] = useState(false)
@@ -329,19 +347,19 @@ export function AppearanceSection() {
   return (
     <div className="grid gap-6">
       <SectionHeader
-        title="Tema"
-        description="Personalize a aparência do painel."
+        title={t("appearance.title")}
+        description={t("appearance.description")}
       />
       <section className="max-w-lg rounded-xl border border-border bg-foreground/[0.02] p-5">
         <div className="flex items-center gap-2">
           <Palette className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-medium">Tema</h3>
+          <h3 className="text-sm font-medium">{t("appearance.cardTitle")}</h3>
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
-          Escolha entre claro, escuro ou automático (segue o sistema).
+          {t("appearance.cardDescription")}
         </p>
         <div className="mt-4 grid grid-cols-3 gap-2">
-          {THEME_OPTIONS.map(({ value, label, icon: Icon }) => {
+          {THEME_OPTIONS.map(({ value, labelKey, icon: Icon }) => {
             const active = current === value
             return (
               <button
@@ -362,7 +380,7 @@ export function AppearanceSection() {
                     active ? "text-primary" : "text-muted-foreground",
                   )}
                 />
-                {label}
+                {t(labelKey)}
               </button>
             )
           })}
@@ -374,11 +392,9 @@ export function AppearanceSection() {
 
 /* ── Idioma ─────────────────────────────────────────────────────── */
 
-const LOCALE_VALUES = ["pt-BR", "en"] as const
-
 export function LocaleSection() {
-  const router = useRouter()
   const { t } = useTranslation("common")
+  const { t: tAccount } = useTranslation("account")
   const { me, loading, updateMe } = useMe()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -387,12 +403,13 @@ export function LocaleSection() {
     setError(null)
     setSaving(true)
     try {
-      await updateMe({ locale: value as "pt-BR" | "en" })
-      await router.replace(router.asPath, router.asPath, { locale: value })
+      const locale = value as AppLocale
+      // Cookie + updateMe({locale}) + reload no mesmo caminho (ver shared/lib/locale.ts).
+      await applyLocale(locale, async (l) => {
+        await updateMe({ locale: l })
+      })
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Não foi possível trocar o idioma.",
-      )
+      setError(err instanceof Error ? err.message : tAccount("locale.error"))
     } finally {
       setSaving(false)
     }
@@ -402,7 +419,7 @@ export function LocaleSection() {
     <div className="grid gap-6">
       <SectionHeader
         title={t("locale.label")}
-        description="Escolha o idioma da interface e dos e-mails."
+        description={tAccount("locale.description")}
       />
       <section className="max-w-lg rounded-xl border border-border bg-foreground/[0.02] p-5">
         <div className="flex items-center gap-2">
@@ -412,12 +429,12 @@ export function LocaleSection() {
         {loading ? (
           <div className="mt-4 flex items-center gap-2 text-sm text-foreground/40">
             <Loader2 className="h-4 w-4 animate-spin" />
-            Carregando…
+            {tAccount("locale.loading")}
           </div>
         ) : (
           <div className="mt-4 max-w-xs">
             <Select
-              value={me?.locale ?? "pt-BR"}
+              value={me?.locale ?? DEFAULT_LOCALE}
               onValueChange={handleChange}
               disabled={saving}
             >
@@ -425,7 +442,7 @@ export function LocaleSection() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {LOCALE_VALUES.map((value) => (
+                {SUPPORTED_LOCALES.map((value) => (
                   <SelectItem key={value} value={value}>
                     {t(`locale.${value}`)}
                   </SelectItem>
@@ -443,6 +460,7 @@ export function LocaleSection() {
 /* ── Zona de perigo ─────────────────────────────────────────────── */
 
 export function DangerSection() {
+  const { t } = useTranslation("account")
   const router = useRouter()
   const { user } = useAuth()
   const [open, setOpen] = useState(false)
@@ -462,11 +480,7 @@ export function DangerSection() {
       clearSession()
       await router.replace("/auth/login")
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Não foi possível excluir a conta.",
-      )
+      setError(err instanceof Error ? err.message : t("danger.deleteError"))
       setLoading(false)
     }
   }
@@ -474,23 +488,21 @@ export function DangerSection() {
   return (
     <div className="grid gap-6">
       <SectionHeader
-        title="Zona de perigo"
-        description="Ações irreversíveis na sua conta."
+        title={t("danger.title")}
+        description={t("danger.description")}
       />
       <section className="rounded-lg border border-red-500/20 p-4 sm:p-6">
         <div className="mb-4">
-          <h3 className="font-semibold text-red-400">Apagar conta</h3>
+          <h3 className="font-semibold text-red-400">{t("danger.cardTitle")}</h3>
           <p className="mt-1 text-sm text-foreground/50">
-            A exclusão permanente da conta removerá todos os seus dados
-            pessoais. Esta ação é irreversível.
+            {t("danger.cardDescription")}
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-medium">Excluir minha conta</p>
+            <p className="text-sm font-medium">{t("danger.deleteTitle")}</p>
             <p className="text-xs text-foreground/40">
-              Você precisa transferir ou excluir as lares das quais é
-              proprietário antes de excluir sua conta.
+              {t("danger.deleteHint")}
             </p>
           </div>
 
@@ -507,26 +519,33 @@ export function DangerSection() {
             <DialogTrigger asChild>
               <Button variant="destructive" size="sm" className="w-full sm:w-auto">
                 <Trash2 className="h-4 w-4" />
-                Apagar conta
+                {t("danger.deleteButton")}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Excluir minha conta</DialogTitle>
+                <DialogTitle>{t("danger.dialogTitle")}</DialogTitle>
                 <DialogDescription>
-                  Esta ação é{" "}
-                  <span className="font-semibold text-red-400">irreversível</span>.
-                  Seus dados pessoais serão permanentemente removidos. Se você
-                  ainda for proprietário de algum lar, a exclusão será
-                  bloqueada.
+                  <Trans
+                    t={t}
+                    i18nKey="danger.dialogDescription"
+                    components={{
+                      span: <span className="font-semibold text-red-400" />,
+                    }}
+                  />
                 </DialogDescription>
               </DialogHeader>
 
               <div className="grid gap-3">
                 <Label htmlFor="delete-account-confirm">
-                  Digite seu e-mail{" "}
-                  <span className="font-mono text-foreground/80">{email}</span> para
-                  confirmar:
+                  <Trans
+                    t={t}
+                    i18nKey="danger.confirmLabel"
+                    values={{ email }}
+                    components={{
+                      span: <span className="font-mono text-foreground/80" />,
+                    }}
+                  />
                 </Label>
                 <Input
                   id="delete-account-confirm"
@@ -545,7 +564,7 @@ export function DangerSection() {
                   onClick={handleDelete}
                   className="w-full sm:w-auto"
                 >
-                  {loading ? "Excluindo…" : "Excluir permanentemente"}
+                  {loading ? t("danger.deleting") : t("danger.confirmDelete")}
                 </Button>
               </DialogFooter>
             </DialogContent>

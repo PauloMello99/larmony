@@ -1,0 +1,79 @@
+{
+  "page": {
+    "title": "Transações",
+    "description": "Receitas e despesas do lar",
+    "newTransaction": "Nova transação",
+    "empty": "Nenhuma transação neste período.",
+    "emptyCta": "Lançar transação"
+  },
+  "form": {
+    "titleCreate": "Nova transação",
+    "titleEdit": "Editar transação",
+    "description": "Registre uma receita ou despesa do lar.",
+    "typeLabel": "Tipo",
+    "typeIncome": "Receita",
+    "typeExpense": "Despesa",
+    "amountLabel": "Valor",
+    "amountTotalLabel": "Valor total",
+    "descriptionLabel": "Descrição",
+    "descriptionPlaceholder": "Ex: Supermercado",
+    "dateLabel": "Data",
+    "categoryLabel": "Categoria",
+    "categoryPlaceholder": "Sem categoria",
+    "personLabel": "Pessoa",
+    "personPlaceholder": "Você",
+    "notesLabel": "Notas",
+    "notesPlaceholder": "Observações opcionais",
+    "installmentsLabel": "Parcelar",
+    "installmentsHint": "Divide o valor total em várias parcelas mensais — uma transação por parcela, todas ligadas à mesma série.",
+    "installmentsPreview": "{{count}}× de ~{{amount}}",
+    "splitLabel": "Dividir entre membros",
+    "splitHint": "Rateia o valor entre os membros do lar (igualmente ou com valor específico para cada um), alimentando os relatórios por pessoa.",
+    "submitting": "Salvando…",
+    "submitEdit": "Salvar alterações",
+    "submitInstallments": "Criar parcelas",
+    "submitCreate": "Criar transação"
+  },
+  "list": {
+    "headerDescription": "Descrição",
+    "headerCategory": "Categoria",
+    "headerPerson": "Pessoa",
+    "headerDate": "Data",
+    "headerAmount": "Valor",
+    "installmentBadge": "{{number}}/{{total}}",
+    "badgeSplit": "Rateio",
+    "badgeRecurring": "Recorrente",
+    "noCategory": "Sem categoria"
+  },
+  "filters": {
+    "byMonth": "Filtrar por mês",
+    "byYear": "Filtrar por ano",
+    "byType": "Filtrar por tipo",
+    "byCategory": "Filtrar por categoria",
+    "typeAll": "Tipo: todos",
+    "typeIncome": "Receita",
+    "typeExpense": "Despesa",
+    "categoryAll": "Categoria: todas"
+  },
+  "split": {
+    "equal": "Dividir igual",
+    "specific": "Valores específicos",
+    "sum": "Soma: {{sum}} / {{total}}",
+    "sumMismatch": " — precisa bater com o total",
+    "equalPreview": "{{count}}× de ~{{amount}}"
+  },
+  "deleteDialog": {
+    "title": "Excluir transação",
+    "installmentDescription": "<desc>{{description}}</desc> é a parcela {{number}}/{{total}}. Excluir só esta parcela ou a série inteira?",
+    "normalDescription": "Tem certeza que deseja excluir <desc>{{description}}</desc>? Esta ação é <emphasis>irreversível</emphasis>.",
+    "deleting": "Excluindo…",
+    "deleteSeries": "Excluir série inteira",
+    "deleteInstallment": "Excluir esta parcela"
+  },
+  "validation": {
+    "amountRequired": "Informe um valor",
+    "descriptionRequired": "Descrição é obrigatória",
+    "descriptionMax": "Máximo 200 caracteres",
+    "dateRequired": "Data é obrigatória"
+  }
+}

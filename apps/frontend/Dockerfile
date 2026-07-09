@@ -40,8 +40,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=pruner /app/out/json/ ./
 RUN pnpm install --prod --frozen-lockfile
-# artefato buildado + configs + public/ (locales do next-i18next são lidos do
-# filesystem em runtime; next.config.js importa next-i18next.config.js)
+# artefato buildado + configs + public/ (locale.ts é a fonte única de idiomas;
+# next-i18next.config.js segue copiado por convenção do next-i18next, mas não é
+# mais importado por next.config.js — o roteamento nativo de locale está desligado)
 COPY --from=builder /app/apps/frontend/.next ./apps/frontend/.next
 COPY --from=builder /app/apps/frontend/next.config.js ./apps/frontend/next.config.js
 COPY --from=builder /app/apps/frontend/next-i18next.config.js ./apps/frontend/next-i18next.config.js

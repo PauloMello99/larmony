@@ -1,0 +1,40 @@
+{
+  "page": {
+    "title": "Orçamentos",
+    "subtitle": "Limites mensais de gasto por categoria",
+    "newBudget": "Novo orçamento",
+    "empty": "Nenhum orçamento neste período.",
+    "createBudget": "Criar orçamento"
+  },
+  "periodNav": {
+    "monthAria": "Mês do orçamento",
+    "yearAria": "Ano do orçamento"
+  },
+  "card": {
+    "exceeded": "Excedido",
+    "of": "de {{value}}",
+    "overLimit": "{{value}} acima do limite",
+    "available": "{{value}} disponível"
+  },
+  "form": {
+    "createTitle": "Novo orçamento",
+    "editTitle": "Editar orçamento",
+    "description": "Defina um limite mensal de gasto para uma categoria.",
+    "categoryLabel": "Categoria",
+    "categoryImmutable": "(imutável)",
+    "categoryPlaceholder": "Escolha uma categoria",
+    "limitLabel": "Limite mensal",
+    "saving": "Salvando…",
+    "saveChanges": "Salvar alterações",
+    "create": "Criar orçamento"
+  },
+  "deleteDialog": {
+    "title": "Excluir orçamento",
+    "description": "Remover o orçamento de <span>{{name}}</span> deste mês? As transações não são afetadas.",
+    "deleting": "Excluindo…"
+  },
+  "validation": {
+    "categoryRequired": "Selecione uma categoria",
+    "limitRequired": "Informe um limite"
+  }
+}

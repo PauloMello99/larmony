@@ -1,5 +1,6 @@
 "use client"
 
+import { useTranslation } from "react-i18next"
 import { Check } from "lucide-react"
 import { CurrencyInput } from "@/shared/components/ui/currency-input"
 import { cn } from "@/shared/lib/utils"
@@ -38,6 +39,7 @@ export function RateioField({
   amountCents,
   allowSpecific,
 }: RateioFieldProps) {
+  const { t } = useTranslation("transactions")
   const effectiveMode: RateioMode = allowSpecific ? mode : "equal"
   const specificSum = selected.reduce((s, uid) => s + (shares[uid] ?? 0), 0)
   const sumMatches = specificSum === amountCents
@@ -58,7 +60,7 @@ export function RateioField({
                   : "text-foreground/50 hover:text-foreground",
               )}
             >
-              {m === "equal" ? "Dividir igual" : "Valores específicos"}
+              {m === "equal" ? t("split.equal") : t("split.specific")}
             </button>
           ))}
         </div>
@@ -101,13 +103,19 @@ export function RateioField({
 
       {effectiveMode === "specific" && selected.length > 0 && (
         <p className={cn("text-xs", sumMatches ? "text-foreground/40" : "text-destructive")}>
-          Soma: {formatCentsToBRL(specificSum)} / {formatCentsToBRL(amountCents)}
-          {!sumMatches && " — precisa bater com o total"}
+          {t("split.sum", {
+            sum: formatCentsToBRL(specificSum),
+            total: formatCentsToBRL(amountCents),
+          })}
+          {!sumMatches && t("split.sumMismatch")}
         </p>
       )}
       {effectiveMode === "equal" && selected.length > 0 && (
         <p className="text-xs text-foreground/40">
-          {selected.length}× de ~{formatCentsToBRL(Math.floor(amountCents / selected.length))}
+          {t("split.equalPreview", {
+            count: selected.length,
+            amount: formatCentsToBRL(Math.floor(amountCents / selected.length)),
+          })}
         </p>
       )}
     </div>

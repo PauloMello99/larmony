@@ -28,7 +28,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (!loading && me && !isSuperAdmin) {
-      void router.replace("/dashboard/households")
+      void router.replace("/households")
     }
   }, [loading, me, isSuperAdmin, router])
 
@@ -65,7 +65,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         </div>
         <div className="flex items-center gap-1">
           <Link
-            href="/dashboard/households"
+            href="/households"
             className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm text-foreground/50 transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />

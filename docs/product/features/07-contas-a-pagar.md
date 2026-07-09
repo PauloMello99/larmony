@@ -1,4 +1,14 @@
-# 07 — Contas a pagar (M7)
+# 07 — Contas a pagar (bills) — Superseded
+
+> **Superseded pelo ADR-0020 (2026-07-09)**: unificado com a Recorrência
+> (`09-recorrencia.md`) na feature "Lançamentos programados" — ver
+> [`10-lancamentos-programados.md`](10-lancamentos-programados.md). O módulo
+> `bills` e a rota `/bills` não existem mais; bills antigas foram migradas
+> para `scheduled_transaction_entries` com `posting_mode='manual'`.
+>
+> Conteúdo original preservado abaixo por histórico.
+
+---
 
 > **Entregue (2026-07-06)**: CRUD completo via `households/:householdId/bills`
 > (RLS via `DRIZZLE`) somado à fatia cron já validada (job

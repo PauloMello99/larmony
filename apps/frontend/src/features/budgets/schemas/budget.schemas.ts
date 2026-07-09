@@ -1,8 +1,11 @@
 import { z } from "zod"
+import type { TFunction } from "i18next"
 
-export const createBudgetSchema = z.object({
-  categoryId: z.string().uuid("Selecione uma categoria"),
-  amountCents: z.number().int().min(1, "Informe um limite"),
-})
+export function makeCreateBudgetSchema(t: TFunction) {
+  return z.object({
+    categoryId: z.string().uuid(t("validation.categoryRequired")),
+    amountCents: z.number().int().min(1, t("validation.limitRequired")),
+  })
+}
 
-export type CreateBudgetFormValues = z.infer<typeof createBudgetSchema>
+export type CreateBudgetFormValues = z.infer<ReturnType<typeof makeCreateBudgetSchema>>

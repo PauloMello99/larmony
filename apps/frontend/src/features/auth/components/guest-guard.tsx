@@ -60,7 +60,7 @@ export function GuestGuard({ children, allowRecoveryToken = false }: GuestGuardP
     // o Sheet de criar o primeiro lar já aberto na lista.
     const isFreshSignup = router.pathname === "/auth/signup"
     void router.replace(
-      isFreshSignup ? "/dashboard/households?welcome=1" : "/dashboard/households",
+      isFreshSignup ? "/households?welcome=1" : "/households",
     )
   }, [router, router.isReady, user, loading, allowedByToken])
 

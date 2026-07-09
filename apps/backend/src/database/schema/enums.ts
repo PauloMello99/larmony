@@ -45,12 +45,20 @@ export const categoryTypeEnum = pgEnum("category_type", [
   "both",
 ]);
 
-// Periodicidade de uma regra de recorrência (M9). "a cada N períodos" via
+// Periodicidade de um lançamento programado. "a cada N períodos" via
 // coluna `interval`; cobre quinzenal (weekly×2), trimestral/semestral (monthly×N).
 export const recurrenceFrequencyEnum = pgEnum("recurrence_frequency", [
   "weekly",
   "monthly",
   "yearly",
+]);
+
+// Modo de postagem de um lançamento programado (ADR-0020, unifica bills+recurrences):
+// `auto` = o engine do cron gera a transação automaticamente na ocorrência;
+// `manual` = lembrete por e-mail + lançamento manual (valor confirmado pelo usuário).
+export const scheduledPostingModeEnum = pgEnum("scheduled_posting_mode", [
+  "auto",
+  "manual",
 ]);
 
 export const genderEnum = pgEnum("gender", ["male", "female", "other"]);
