@@ -6,7 +6,7 @@ export default function NotFound() {
   const router = useRouter()
 
   useEffect(() => {
-    void router.replace("/dashboard/households")
+    void router.replace("/households")
   }, [router])
 
   return null

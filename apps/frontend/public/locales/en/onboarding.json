@@ -31,14 +31,6 @@
       "title": "Goals",
       "body": "Create savings goals with a target amount and log contributions until you reach it."
     },
-    "bills": {
-      "title": "Bills",
-      "body": "Register recurring bills with a due day and get email reminders."
-    },
-    "recurrences": {
-      "title": "Recurrences",
-      "body": "Set up automatic entries that repeat, like a salary or a subscription."
-    },
     "reports": {
       "title": "Reports",
       "body": "Monthly and yearly charts showing how your household's finances evolve."
@@ -102,18 +94,6 @@
     "intro": {
       "title": "Goals",
       "body": "Create savings goals with a target amount and, optionally, a date. Log contributions over time until you reach the goal."
-    }
-  },
-  "bills": {
-    "intro": {
-      "title": "Bills",
-      "body": "Register fixed bills (rent, internet, subscriptions) with a due day and get email reminders. Logging a bill as a transaction is always manual."
-    }
-  },
-  "recurrences": {
-    "intro": {
-      "title": "Recurrences",
-      "body": "Set up automatic entries that repeat, like a monthly salary. Larmony generates the transactions on the right date, so you don't have to log them by hand."
     }
   },
   "reports": {

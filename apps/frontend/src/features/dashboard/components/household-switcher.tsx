@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter } from "next/router"
+import { useTranslation } from "react-i18next"
 import { Check, ChevronsUpDown, Building2 } from "lucide-react"
 import { useHouseholds } from "@/features/dashboard/hooks/use-households"
 import type { HouseholdSummary } from "@/features/dashboard/hooks/use-households"
@@ -19,6 +20,7 @@ interface HouseholdSwitcherProps {
 }
 
 export function HouseholdSwitcher({ household }: HouseholdSwitcherProps) {
+  const { t } = useTranslation("dashboard")
   const { households } = useHouseholds()
   const router = useRouter()
 
@@ -26,7 +28,7 @@ export function HouseholdSwitcher({ household }: HouseholdSwitcherProps) {
   const handleSelect = (slug: string) => {
     if (slug === household.slug) return
     void router.push({
-      pathname: router.pathname, // e.g. /dashboard/household/[householdSlug]/members
+      pathname: router.pathname, // e.g. /households/[householdSlug]/members
       query: { ...router.query, householdSlug: slug },
     })
   }
@@ -45,7 +47,7 @@ export function HouseholdSwitcher({ household }: HouseholdSwitcherProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="min-w-[200px]">
         <DropdownMenuLabel className="text-[10px] uppercase tracking-widest">
-          Lares
+          {t("switcher.label")}
         </DropdownMenuLabel>
         {households.map((o) => (
           <DropdownMenuItem key={o.id} onClick={() => handleSelect(o.slug)}>
@@ -55,7 +57,7 @@ export function HouseholdSwitcher({ household }: HouseholdSwitcherProps) {
             <span className="flex min-w-0 flex-1 flex-col gap-0.5 overflow-hidden">
               <span className="truncate">{o.name}</span>
               <span className="text-[10px] text-foreground/30">
-                {o.role === "owner" ? "Proprietário" : "Funcionário"}
+                {o.role === "owner" ? t("roles.owner") : t("roles.member")}
               </span>
             </span>
             {o.id === household.id && (
@@ -65,10 +67,10 @@ export function HouseholdSwitcher({ household }: HouseholdSwitcherProps) {
         ))}
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => void router.push("/dashboard/households")}
+          onClick={() => void router.push("/households")}
         >
           <Building2 className="h-3.5 w-3.5 shrink-0 text-foreground/40" />
-          <span className="flex-1">Ver todas as lares</span>
+          <span className="flex-1">{t("switcher.viewAll")}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

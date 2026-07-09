@@ -1,3 +1,4 @@
+import { makeI18nProps } from "@/shared/lib/i18n"
 import type { ReactElement } from "react"
 import { useRouter } from "next/router"
 import type { NextPageWithLayout } from "@/pages/_app"
@@ -17,3 +18,5 @@ AdminUserDetailPage.getLayout = (page: ReactElement) => (
 )
 
 export default AdminUserDetailPage
+
+export const getServerSideProps = makeI18nProps(["common", "dashboard"])

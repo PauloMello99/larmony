@@ -1,0 +1,77 @@
+{
+  "page": {
+    "title": "Transactions",
+    "description": "Household income and expenses",
+    "newTransaction": "New transaction",
+    "empty": "No transactions in this period.",
+    "emptyCta": "Add transaction"
+  },
+  "form": {
+    "titleCreate": "New transaction",
+    "titleEdit": "Edit transaction",
+    "description": "Record household income or expense.",
+    "typeLabel": "Type",
+    "typeIncome": "Income",
+    "typeExpense": "Expense",
+    "amountLabel": "Amount",
+    "amountTotalLabel": "Total amount",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "e.g., Supermarket",
+    "dateLabel": "Date",
+    "categoryLabel": "Category",
+    "categoryPlaceholder": "Uncategorized",
+    "personLabel": "Person",
+    "personPlaceholder": "You",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Optional remarks",
+    "installmentsLabel": "Pay in installments",
+    "installmentsPreview": "{{count}}× of ~{{amount}}",
+    "splitLabel": "Split among members",
+    "submitting": "Saving…",
+    "submitEdit": "Save changes",
+    "submitInstallments": "Create installments",
+    "submitCreate": "Create transaction"
+  },
+  "list": {
+    "headerDescription": "Description",
+    "headerCategory": "Category",
+    "headerPerson": "Person",
+    "headerDate": "Date",
+    "headerAmount": "Amount",
+    "installmentBadge": "{{number}}/{{total}}",
+    "badgeSplit": "Split",
+    "badgeRecurring": "Recurring",
+    "noCategory": "Uncategorized"
+  },
+  "filters": {
+    "byMonth": "Filter by month",
+    "byYear": "Filter by year",
+    "byType": "Filter by type",
+    "byCategory": "Filter by category",
+    "typeAll": "Type: all",
+    "typeIncome": "Income",
+    "typeExpense": "Expense",
+    "categoryAll": "Category: all"
+  },
+  "split": {
+    "equal": "Split equally",
+    "specific": "Specific amounts",
+    "sum": "Sum: {{sum}} / {{total}}",
+    "sumMismatch": " — must match the total",
+    "equalPreview": "{{count}}× of ~{{amount}}"
+  },
+  "deleteDialog": {
+    "title": "Delete transaction",
+    "installmentDescription": "<desc>{{description}}</desc> is installment {{number}}/{{total}}. Delete only this installment or the entire series?",
+    "normalDescription": "Are you sure you want to delete <desc>{{description}}</desc>? This action is <emphasis>irreversible</emphasis>.",
+    "deleting": "Deleting…",
+    "deleteSeries": "Delete entire series",
+    "deleteInstallment": "Delete this installment"
+  },
+  "validation": {
+    "amountRequired": "Enter an amount",
+    "descriptionRequired": "Description is required",
+    "descriptionMax": "Maximum 200 characters",
+    "dateRequired": "Date is required"
+  }
+}

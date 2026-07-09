@@ -58,16 +58,10 @@ export const queryKeys = {
       ["budgets", householdId, "list", filters ?? {}] as const,
   },
 
-  // ─── Bills ──────────────────────────────────────────────────────────────
-  bills: {
-    all: (householdId: string) => ["bills", householdId] as const,
-    list: (householdId: string) => ["bills", householdId, "list"] as const,
-  },
-
-  // ─── Recurrences ──────────────────────────────────────────────────────────
-  recurrences: {
-    all: (householdId: string) => ["recurrences", householdId] as const,
-    list: (householdId: string) => ["recurrences", householdId, "list"] as const,
+  // ─── Lançamentos programados (ADR-0020 — unifica bills + recurrences) ───────
+  scheduledTransactions: {
+    all: (householdId: string) => ["scheduled-transactions", householdId] as const,
+    list: (householdId: string) => ["scheduled-transactions", householdId, "list"] as const,
   },
 
   // ─── Goals ──────────────────────────────────────────────────────────────

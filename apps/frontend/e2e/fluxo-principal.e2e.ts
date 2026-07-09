@@ -17,7 +17,7 @@ test("signup cria a conta e leva à lista de lares", async ({ page }) => {
   await page.fill("#password", password)
   await page.fill("#confirmPassword", password)
   await page.click('button[type="submit"]')
-  await page.waitForURL(/\/dashboard/, { timeout: 20_000 })
+  await page.waitForURL(/\/households/, { timeout: 20_000 })
 })
 
 test("cria um lar e entra direto no overview (bugfix do link sem /overview)", async ({ page }) => {
@@ -25,19 +25,19 @@ test("cria um lar e entra direto no overview (bugfix do link sem /overview)", as
   await page.fill('input[type="email"]', email)
   await page.fill('input[type="password"]', password)
   await page.click('button[type="submit"]')
-  await page.waitForURL(/\/dashboard\/households/)
+  await page.waitForURL(/\/households/)
 
   await page.getByRole("button", { name: /novo lar|criar lar/i }).first().click()
   await page.locator('input:visible[type="text"], input:visible:not([type])').first().fill(`E2E Lar ${runId}`)
   await page.getByRole("button", { name: /^criar/i }).last().click()
 
   // Link da lista vai direto ao lar (sem /overview) e o overview renderiza.
-  const link = page.locator('a[href*="/dashboard/household/"]').first()
+  const link = page.locator('a[href*="/households/"]').first()
   await expect(link).toBeVisible()
   const href = await link.getAttribute("href")
   expect(href).not.toContain("/overview")
   await link.click()
-  await page.waitForURL(/\/dashboard\/household\/[^/]+$/)
+  await page.waitForURL(/\/households\/[^/]+$/)
   await expect(page.locator("h1")).toContainText(/bom dia|boa tarde|boa noite/i)
 })
 
@@ -46,9 +46,9 @@ test("sidebar tem a IA completa e os placeholders renderizam", async ({ page }) 
   await page.fill('input[type="email"]', email)
   await page.fill('input[type="password"]', password)
   await page.click('button[type="submit"]')
-  await page.waitForURL(/\/dashboard\/households/)
-  await page.locator('a[href*="/dashboard/household/"]').first().click()
-  await page.waitForURL(/\/dashboard\/household\/[^/]+$/)
+  await page.waitForURL(/\/households/)
+  await page.locator('a[href*="/households/"]').first().click()
+  await page.waitForURL(/\/households\/[^/]+$/)
 
   const sidebar = page.getByRole("navigation").last()
   for (const item of ["Transações", "Categorias", "Orçamentos", "Metas", "Contas", "Relatórios"]) {
@@ -71,8 +71,8 @@ test("GuestGuard: logado, /auth/login redireciona ao dashboard", async ({ page }
   await page.fill('input[type="email"]', email)
   await page.fill('input[type="password"]', password)
   await page.click('button[type="submit"]')
-  await page.waitForURL(/\/dashboard/)
+  await page.waitForURL(/\/households/)
 
   await page.goto("/auth/login")
-  await page.waitForURL(/\/dashboard\/households/, { timeout: 15_000 })
+  await page.waitForURL(/\/households/, { timeout: 15_000 })
 })

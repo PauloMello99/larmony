@@ -17,7 +17,7 @@ test("signup cria a conta", async ({ page }) => {
   await page.fill("#password", password)
   await page.fill("#confirmPassword", password)
   await page.click('button[type="submit"]')
-  await page.waitForURL(/\/dashboard/, { timeout: 20_000 })
+  await page.waitForURL(/\/households/, { timeout: 20_000 })
 })
 
 test("troca o idioma para inglês e persiste após reload", async ({ page }) => {
@@ -25,9 +25,9 @@ test("troca o idioma para inglês e persiste após reload", async ({ page }) => 
   await page.fill('input[type="email"]', email)
   await page.fill('input[type="password"]', password)
   await page.click('button[type="submit"]')
-  await page.waitForURL(/\/dashboard\/households/)
+  await page.waitForURL(/\/households/)
 
-  await page.goto("/dashboard/account")
+  await page.goto("/account")
   await page.locator("#locale").scrollIntoViewIfNeeded()
   await page.locator("#locale").getByRole("combobox").click()
   await page.getByRole("option", { name: "English" }).click()

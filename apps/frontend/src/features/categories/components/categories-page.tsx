@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { PlusCircle, Tags } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Skeleton } from "@/shared/components/ui/skeleton"
@@ -14,6 +15,7 @@ import type { Category } from "../types"
 import type { CategoryFormValues } from "../schemas/category.schemas"
 
 export function CategoriesPage() {
+  const { t } = useTranslation("categories")
   const { householdId } = useCurrentHousehold()
   const { categories, loading } = useCategories(householdId)
   const { createCategory, updateCategory, deleteCategory } = useCategoryMutations(householdId)
@@ -44,10 +46,8 @@ export function CategoriesPage() {
     <div className="mx-auto max-w-3xl">
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold text-foreground sm:text-2xl">Categorias</h1>
-          <p className="mt-1 text-sm text-foreground/40">
-            Organize suas transações, orçamentos e contas por categoria
-          </p>
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
+          <p className="mt-1 text-sm text-foreground/40">{t("page.subtitle")}</p>
         </div>
         <Button
           className="w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
@@ -55,7 +55,7 @@ export function CategoriesPage() {
           onClick={openCreate}
         >
           <PlusCircle className="mr-2 h-4 w-4" />
-          Nova categoria
+          {t("page.newCategory")}
         </Button>
       </div>
 
@@ -68,14 +68,14 @@ export function CategoriesPage() {
       ) : categories.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-foreground/10 py-16 text-center sm:py-20">
           <Tags className="mb-4 h-10 w-10 text-foreground/20" />
-          <p className="text-sm text-foreground/40">Nenhuma categoria ainda.</p>
+          <p className="text-sm text-foreground/40">{t("page.empty")}</p>
           <Button
             className="mt-4 w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
             size="sm"
             onClick={openCreate}
           >
             <PlusCircle className="mr-2 h-4 w-4" />
-            Criar categoria
+            {t("page.createCategory")}
           </Button>
         </div>
       ) : (

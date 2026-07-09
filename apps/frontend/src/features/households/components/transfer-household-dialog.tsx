@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { useTranslation, Trans } from "react-i18next"
 import { ArrowLeftRight } from "lucide-react"
 import {
   Dialog,
@@ -33,6 +34,7 @@ export function TransferHouseholdDialog({
   currentUserEmail,
   onConfirm,
 }: TransferHouseholdDialogProps) {
+  const { t } = useTranslation("households")
   const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<string>("")
   const [loading, setLoading] = useState(false)
@@ -55,9 +57,7 @@ export function TransferHouseholdDialog({
       setSelected("")
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Não foi possível transferir a lar.",
+        err instanceof Error ? err.message : t("transferDialog.error"),
       )
     } finally {
       setLoading(false)
@@ -83,29 +83,31 @@ export function TransferHouseholdDialog({
           disabled={eligible.length === 0}
         >
           <ArrowLeftRight className="h-4 w-4" />
-          Transferir
+          {t("transferDialog.trigger")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Transferir lar</DialogTitle>
+          <DialogTitle>{t("transferDialog.title")}</DialogTitle>
           <DialogDescription>
-            Escolha o membro que se tornará o novo proprietário. Você passará a
-            ter função de <span className="font-medium">funcionário</span> com
-            acesso total aos módulos.
+            <Trans
+              t={t}
+              i18nKey="transferDialog.description"
+              components={{ span: <span className="font-medium" /> }}
+            />
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-3">
-          <Label htmlFor="transfer-target">Novo proprietário</Label>
+          <Label htmlFor="transfer-target">{t("transferDialog.newOwnerLabel")}</Label>
           <Select value={selected} onValueChange={setSelected}>
             <SelectTrigger id="transfer-target">
-              <SelectValue placeholder="Selecione um membro" />
+              <SelectValue placeholder={t("transferDialog.selectPlaceholder")} />
             </SelectTrigger>
             <SelectContent>
               {eligible.map((m) => (
                 <SelectItem key={m.memberId} value={m.memberId}>
-                  {m.userName} ({m.userEmail})
+                  {t("transferDialog.memberOption", { name: m.userName, email: m.userEmail })}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -119,7 +121,7 @@ export function TransferHouseholdDialog({
             onClick={handleConfirm}
             className="w-full sm:w-auto"
           >
-            {loading ? "Transferindo…" : "Transferir titularidade"}
+            {loading ? t("transferDialog.submitting") : t("transferDialog.submit")}
           </Button>
         </DialogFooter>
       </DialogContent>

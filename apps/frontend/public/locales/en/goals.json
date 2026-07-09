@@ -1,0 +1,59 @@
+{
+  "page": {
+    "title": "Goals",
+    "subtitle": "Household savings goals, with contributions from everyone",
+    "newGoal": "New goal",
+    "empty": "No goals yet.",
+    "createGoal": "Create goal"
+  },
+  "form": {
+    "editTitle": "Edit goal",
+    "createTitle": "New goal",
+    "description": "Household savings goals — progress comes from contributions.",
+    "nameLabel": "Name",
+    "namePlaceholder": "e.g., Trip",
+    "targetAmountLabel": "Target amount",
+    "colorLabel": "Color",
+    "targetDateLabel": "Target date",
+    "noTargetDate": "No target date",
+    "clearTargetDate": "Clear target date",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Optional",
+    "saving": "Saving…",
+    "saveChanges": "Save changes",
+    "create": "Create goal"
+  },
+  "card": {
+    "done": "Completed",
+    "contributions": "Contributions",
+    "contribute": "Contribute",
+    "ofTarget": "of {{value}}",
+    "progress": "{{pct}}%",
+    "progressWithDate": "{{pct}}% · by {{date}}"
+  },
+  "contributionDialog": {
+    "title": "Contributions — {{name}}",
+    "summary": "{{saved}} of {{target}} saved.",
+    "amountLabel": "Amount",
+    "dateLabel": "Date",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Optional",
+    "submitting": "Contributing…",
+    "submit": "Contribute",
+    "history": "History",
+    "empty": "No contributions yet.",
+    "deleteContribution": "Delete contribution"
+  },
+  "deleteDialog": {
+    "title": "Delete goal",
+    "description": "Delete <span>{{name}}</span>? The contribution history will also be erased — this action cannot be undone.",
+    "deleting": "Deleting…"
+  },
+  "validation": {
+    "nameRequired": "Name is required",
+    "nameMax": "Maximum 80 characters",
+    "amountRequired": "Enter an amount",
+    "dateRequired": "Enter the date",
+    "colorInvalid": "Invalid color"
+  }
+}

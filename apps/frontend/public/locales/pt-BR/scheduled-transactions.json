@@ -1,0 +1,88 @@
+{
+  "page": {
+    "title": "Lançamentos",
+    "subtitle": "Contas e lançamentos que se repetem — lance manualmente ou deixe o Larmony gerar automaticamente",
+    "newEntry": "Novo lançamento",
+    "empty": "Nenhum lançamento cadastrado.",
+    "createEntry": "Criar lançamento"
+  },
+  "form": {
+    "createTitle": "Novo lançamento",
+    "editTitle": "Editar lançamento",
+    "description": "Defina a cadência e escolha se o Larmony lança automaticamente ou se você prefere confirmar manualmente.",
+    "postingModeLabel": "Lançar automaticamente",
+    "postingModeAutoHint": "O Larmony gera a transação sozinho, na data de cada ocorrência.",
+    "postingModeManualHint": "Você recebe um lembrete e lança manualmente quando quiser.",
+    "typeLabel": "Tipo",
+    "typeExpense": "Despesa",
+    "typeIncome": "Receita",
+    "amountLabel": "Valor",
+    "descriptionLabel": "Descrição",
+    "descriptionPlaceholder": "Ex: Aluguel, Salário, Internet",
+    "frequencyLabel": "Frequência",
+    "intervalLabel": "A cada",
+    "startLabel": "Início",
+    "startImmutable": "{{date}} (imutável)",
+    "startPlaceholder": "Data da 1ª ocorrência",
+    "endLabel": "Término (opcional)",
+    "endPlaceholder": "Sem término",
+    "clear": "Limpar",
+    "categoryLabel": "Categoria",
+    "categoryPlaceholder": "Sem categoria",
+    "reminderLabel": "Lembrete",
+    "reminderNone": "Sem lembrete",
+    "reminderDaysBefore_one": "{{count}} dia antes",
+    "reminderDaysBefore_other": "{{count}} dias antes",
+    "activeLabel": "Lançamento ativo",
+    "notesLabel": "Notas",
+    "notesPlaceholder": "Observações opcionais",
+    "saving": "Salvando…",
+    "saveChanges": "Salvar alterações",
+    "create": "Criar lançamento"
+  },
+  "list": {
+    "activeHeading": "Ativos ({{count}})",
+    "inactiveHeading": "Inativos ({{count}})",
+    "activeEmpty": "Nenhum lançamento ativo."
+  },
+  "row": {
+    "dueToday": "Vence hoje",
+    "dueTomorrow": "Vence amanhã",
+    "dueInDays_one": "Vence em {{count}} dia",
+    "dueInDays_other": "Vence em {{count}} dias",
+    "next": "próxima {{date}}",
+    "inactive": "Inativo",
+    "activateAria": "Ativar lançamento",
+    "deactivateAria": "Desativar lançamento",
+    "launchAsTransaction": "Lançar como transação"
+  },
+  "deleteDialog": {
+    "title": "Excluir lançamento",
+    "descriptionManual": "Tem certeza que deseja excluir <span>{{description}}</span>? Transações já lançadas não são afetadas.",
+    "descriptionAuto": "Tem certeza que deseja excluir <span>{{description}}</span>? As transações já geradas continuam no histórico (deixam de ser marcadas como automáticas).",
+    "deleting": "Excluindo…"
+  },
+  "frequency": {
+    "weekly": "Semanal",
+    "biweekly": "Quinzenal",
+    "monthly": "Mensal",
+    "bimonthly": "Bimestral",
+    "quarterly": "Trimestral",
+    "semiannual": "Semestral",
+    "yearly": "Anual",
+    "everyWeeks_one": "A cada {{count}} semana",
+    "everyWeeks_other": "A cada {{count}} semanas",
+    "everyMonths_one": "A cada {{count}} mês",
+    "everyMonths_other": "A cada {{count}} meses",
+    "everyYears_one": "A cada {{count}} ano",
+    "everyYears_other": "A cada {{count}} anos"
+  },
+  "validation": {
+    "amountRequired": "Informe um valor",
+    "descriptionRequired": "Descrição é obrigatória",
+    "descriptionMax": "Máximo 200 caracteres",
+    "intervalMin": "Mínimo 1",
+    "intervalMax": "Máximo 365",
+    "startDateRequired": "Informe a data de início"
+  }
+}

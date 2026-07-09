@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { Construction } from "lucide-react"
 
 interface HouseholdPagePlaceholderProps {
@@ -7,6 +8,7 @@ interface HouseholdPagePlaceholderProps {
 }
 
 export function HouseholdPagePlaceholder({ title, description }: HouseholdPagePlaceholderProps) {
+  const { t } = useTranslation("dashboard")
   return (
     <div className="flex flex-col">
       {/* Page title */}
@@ -21,9 +23,11 @@ export function HouseholdPagePlaceholder({ title, description }: HouseholdPagePl
       <div className="flex min-h-[40vh] items-center justify-center rounded-xl border border-dashed border-foreground/[0.08]">
         <div className="text-center">
           <Construction className="mx-auto mb-3 h-8 w-8 text-foreground/20" />
-          <p className="text-sm font-medium text-foreground/30">Em construção</p>
+          <p className="text-sm font-medium text-foreground/30">
+            {t("placeholders.underConstruction")}
+          </p>
           <p className="mt-1 text-xs text-foreground/20">
-            Esta seção estará disponível em breve
+            {t("placeholders.comingSoon")}
           </p>
         </div>
       </div>

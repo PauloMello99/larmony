@@ -1,0 +1,77 @@
+{
+  "page": {
+    "title": "Transacciones",
+    "description": "Ingresos y gastos del hogar",
+    "newTransaction": "Nueva transacción",
+    "empty": "No hay transacciones en este período.",
+    "emptyCta": "Registrar transacción"
+  },
+  "form": {
+    "titleCreate": "Nueva transacción",
+    "titleEdit": "Editar transacción",
+    "description": "Registra un ingreso o gasto del hogar.",
+    "typeLabel": "Tipo",
+    "typeIncome": "Ingreso",
+    "typeExpense": "Gasto",
+    "amountLabel": "Importe",
+    "amountTotalLabel": "Importe total",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Ej.: Supermercado",
+    "dateLabel": "Fecha",
+    "categoryLabel": "Categoría",
+    "categoryPlaceholder": "Sin categorizar",
+    "personLabel": "Persona",
+    "personPlaceholder": "Tú",
+    "notesLabel": "Notas",
+    "notesPlaceholder": "Notas opcionales",
+    "installmentsLabel": "Cuota",
+    "installmentsPreview": "{{count}}× de ~{{amount}}",
+    "splitLabel": "Dividir entre miembros",
+    "submitting": "Guardando…",
+    "submitEdit": "Guardar cambios",
+    "submitInstallments": "Crear cuotas",
+    "submitCreate": "Crear transacción"
+  },
+  "list": {
+    "headerDescription": "Descripción",
+    "headerCategory": "Categoría",
+    "headerPerson": "Persona",
+    "headerDate": "Fecha",
+    "headerAmount": "Importe",
+    "installmentBadge": "{{number}}/{{total}}",
+    "badgeSplit": "Dividir",
+    "badgeRecurring": "Recurrente",
+    "noCategory": "Sin categoría"
+  },
+  "filters": {
+    "byMonth": "Filtrar por mes",
+    "byYear": "Filtrar por año",
+    "byType": "Filtrar por tipo",
+    "byCategory": "Filtrar por categoría",
+    "typeAll": "Tipo: todos",
+    "typeIncome": "Ingresos",
+    "typeExpense": "Gastos",
+    "categoryAll": "Categoría: todos"
+  },
+  "split": {
+    "equal": "Dividir a partes iguales",
+    "specific": "Valores específicos",
+    "sum": "Suma: {{sum}} / {{total}}",
+    "sumMismatch": "—debe coincidir con el total",
+    "equalPreview": "{{count}}× de ~{{amount}}"
+  },
+  "deleteDialog": {
+    "title": "Eliminar transacción",
+    "installmentDescription": "<desc>{{description}}</desc> es la cuota {{number}}/{{total}}. ¿Eliminar solo esta cuota o toda la serie?",
+    "normalDescription": "¿Está seguro de que desea eliminar <desc>{{description}}</desc>? Esta acción es <emphasis>irreversible</emphasis>.",
+    "deleting": "Eliminando…",
+    "deleteSeries": "Eliminar toda la serie",
+    "deleteInstallment": "Eliminar esta cuota"
+  },
+  "validation": {
+    "amountRequired": "Ingrese un valor",
+    "descriptionRequired": "Se requiere una descripción",
+    "descriptionMax": "Máximo 200 caracteres",
+    "dateRequired": "Se requiere la fecha"
+  }
+}

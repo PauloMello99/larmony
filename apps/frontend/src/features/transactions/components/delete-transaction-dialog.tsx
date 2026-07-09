@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Trans, useTranslation } from "react-i18next"
 import {
   Dialog,
   DialogContent,
@@ -26,6 +27,8 @@ export function DeleteTransactionDialog({
   onConfirm,
   onConfirmSeries,
 }: DeleteTransactionDialogProps) {
+  const { t } = useTranslation("transactions")
+  const { t: tCommon } = useTranslation("common")
   const [loading, setLoading] = useState<"one" | "series" | null>(null)
   const isInstallment = !!transaction?.installmentGroupId
 
@@ -43,20 +46,29 @@ export function DeleteTransactionDialog({
     <Dialog open={!!transaction} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Excluir transação</DialogTitle>
+          <DialogTitle>{t("deleteDialog.title")}</DialogTitle>
           <DialogDescription>
             {isInstallment ? (
-              <>
-                <span className="font-medium text-foreground">{transaction?.description}</span> é
-                a parcela {transaction?.installmentNumber}/{transaction?.installmentCount}. Excluir
-                só esta parcela ou a série inteira?
-              </>
+              <Trans
+                t={t}
+                i18nKey="deleteDialog.installmentDescription"
+                values={{
+                  description: transaction?.description,
+                  number: transaction?.installmentNumber,
+                  total: transaction?.installmentCount,
+                }}
+                components={{ desc: <span className="font-medium text-foreground" /> }}
+              />
             ) : (
-              <>
-                Tem certeza que deseja excluir{" "}
-                <span className="font-medium text-foreground">{transaction?.description}</span>?
-                Esta ação é <span className="font-semibold text-red-400">irreversível</span>.
-              </>
+              <Trans
+                t={t}
+                i18nKey="deleteDialog.normalDescription"
+                values={{ description: transaction?.description }}
+                components={{
+                  desc: <span className="font-medium text-foreground" />,
+                  emphasis: <span className="font-semibold text-red-400" />,
+                }}
+              />
             )}
           </DialogDescription>
         </DialogHeader>
@@ -68,7 +80,7 @@ export function DeleteTransactionDialog({
               onClick={() => run("series", onConfirmSeries)}
               className="w-full sm:w-auto"
             >
-              {loading === "series" ? "Excluindo…" : "Excluir série inteira"}
+              {loading === "series" ? t("deleteDialog.deleting") : t("deleteDialog.deleteSeries")}
             </Button>
           )}
           <Button
@@ -77,7 +89,11 @@ export function DeleteTransactionDialog({
             onClick={() => run("one", onConfirm)}
             className="w-full sm:w-auto"
           >
-            {loading === "one" ? "Excluindo…" : isInstallment ? "Excluir esta parcela" : "Excluir"}
+            {loading === "one"
+              ? t("deleteDialog.deleting")
+              : isInstallment
+                ? t("deleteDialog.deleteInstallment")
+                : tCommon("actions.delete")}
           </Button>
         </DialogFooter>
       </DialogContent>

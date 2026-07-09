@@ -30,8 +30,8 @@ export interface TransactionListItem {
   installmentGroupId: string | null;
   installmentNumber: number | null;
   installmentCount: number | null;
-  /** Regra de recorrência que gerou a tx (M9). NULL = criada pelo usuário. */
-  recurrenceId: string | null;
+  /** Lançamento programado que gerou a tx (ADR-0020). NULL = criada pelo usuário. */
+  scheduledTransactionEntryId: string | null;
   /** Nº de participantes no rateio (0 = sem rateio). */
   memberCount: number;
   createdAt: Date;
@@ -81,12 +81,13 @@ export interface CreateInstallmentData {
 }
 
 /**
- * Dados para uma transação gerada por regra de recorrência (M9). Escrita fora de
- * request context (cron) → o repositório usa DRIZZLE_ADMIN. Sempre single (sem
- * parcelamento/rateio no v1); `recurrenceId` liga a tx à regra.
+ * Dados para uma transação gerada por um lançamento programado auto (ADR-0020).
+ * Escrita fora de request context (cron) → o repositório usa DRIZZLE_ADMIN.
+ * Sempre single (sem parcelamento/rateio no v1); `scheduledTransactionEntryId`
+ * liga a tx ao lançamento que a gerou.
  */
 export interface CreateGeneratedData {
-  recurrenceId: string;
+  scheduledTransactionEntryId: string;
   createdBy: string;
   personId: string | null;
   categoryId: string | null;

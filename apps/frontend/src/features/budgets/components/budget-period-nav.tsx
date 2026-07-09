@@ -1,5 +1,6 @@
 "use client"
 
+import { useTranslation } from "react-i18next"
 import {
   Select,
   SelectContent,
@@ -7,12 +8,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select"
+import { monthName, useActiveLocale } from "@/shared/lib/format"
 import type { BudgetFilters } from "../types"
 
-const MONTH_LABEL = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
-]
+const MONTH_INDEXES = Array.from({ length: 12 }, (_, i) => i)
+
+/** Intl devolve nomes de mês em minúsculas em pt-BR/es — capitaliza para exibição. */
+function capitalizeFirst(label: string): string {
+  return label.charAt(0).toUpperCase() + label.slice(1)
+}
 
 interface BudgetPeriodNavProps {
   period: BudgetFilters
@@ -20,6 +24,8 @@ interface BudgetPeriodNavProps {
 }
 
 export function BudgetPeriodNav({ period, onChange }: BudgetPeriodNavProps) {
+  const { t } = useTranslation("budgets")
+  const locale = useActiveLocale()
   const now = new Date()
   const years = Array.from({ length: 5 }, (_, i) => now.getFullYear() - i)
 
@@ -29,13 +35,13 @@ export function BudgetPeriodNav({ period, onChange }: BudgetPeriodNavProps) {
         value={String(period.month)}
         onValueChange={(v) => onChange({ ...period, month: Number(v) })}
       >
-        <SelectTrigger className="w-36" aria-label="Mês do orçamento">
+        <SelectTrigger className="w-36" aria-label={t("periodNav.monthAria")}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          {MONTH_LABEL.map((label, i) => (
-            <SelectItem key={label} value={String(i + 1)}>
-              {label}
+          {MONTH_INDEXES.map((i) => (
+            <SelectItem key={i} value={String(i + 1)}>
+              {capitalizeFirst(monthName(i, locale))}
             </SelectItem>
           ))}
         </SelectContent>
@@ -45,7 +51,7 @@ export function BudgetPeriodNav({ period, onChange }: BudgetPeriodNavProps) {
         value={String(period.year)}
         onValueChange={(v) => onChange({ ...period, year: Number(v) })}
       >
-        <SelectTrigger className="w-24" aria-label="Ano do orçamento">
+        <SelectTrigger className="w-24" aria-label={t("periodNav.yearAria")}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

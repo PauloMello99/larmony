@@ -4,8 +4,7 @@ import {
   Tags,
   PiggyBank,
   Target,
-  ReceiptText,
-  Repeat,
+  CalendarClock,
   ChartPie,
   Settings,
   CreditCard,
@@ -34,7 +33,7 @@ export function canAccessModule(
 export interface NavItem {
   /** Chave i18n (namespace `dashboard`), ex.: "nav.transactions" */
   labelKey: string
-  /** Path relativo a /dashboard/household/[householdSlug]/ — "" = o próprio índice */
+  /** Path relativo a /households/[householdSlug]/ — "" = o próprio índice */
   href: string
   icon: LucideIcon
   /** When set, only users with one of these roles see this item. Omit = visible to all. */
@@ -63,8 +62,7 @@ export const HOUSEHOLD_NAV_SECTIONS: NavSection[] = [
       { labelKey: "nav.categories", href: "categories", icon: Tags, dataTour: "nav-categories" },
       { labelKey: "nav.budgets", href: "budgets", icon: PiggyBank, dataTour: "nav-budgets" },
       { labelKey: "nav.goals", href: "goals", icon: Target, dataTour: "nav-goals" },
-      { labelKey: "nav.bills", href: "bills", icon: ReceiptText, dataTour: "nav-bills" },
-      { labelKey: "nav.recurrences", href: "recurrences", icon: Repeat, dataTour: "nav-recurrences" },
+      { labelKey: "nav.scheduledTransactions", href: "scheduled-transactions", icon: CalendarClock, dataTour: "nav-scheduled" },
       { labelKey: "nav.reports", href: "reports", icon: ChartPie, dataTour: "nav-reports" },
     ],
   },
@@ -100,7 +98,6 @@ export const FEATURE_PAGES: FeaturePageMeta[] = [
   { href: "categories", icon: Tags, key: "categories", milestone: "M2" },
   { href: "budgets", icon: PiggyBank, key: "budgets", milestone: "M5" },
   { href: "goals", icon: Target, key: "goals", milestone: "M6" },
-  { href: "bills", icon: ReceiptText, key: "bills", milestone: "M7" },
   { href: "reports", icon: ChartPie, key: "reports", milestone: "M8" },
 ]
 
@@ -127,8 +124,7 @@ export const PAGE_LABEL_KEYS: Record<string, string> = {
   categories: "nav.categories",
   budgets: "nav.budgets",
   goals: "nav.goals",
-  bills: "nav.bills",
-  recurrences: "nav.recurrences",
+  "scheduled-transactions": "nav.scheduledTransactions",
   reports: "nav.reports",
   members: "nav.members",
   settings: "nav.settings",

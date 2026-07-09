@@ -20,8 +20,7 @@ export const TOURS = {
       { kind: "spotlight", target: "nav-categories", placement: "right", titleKey: "sidebar.categories.title", bodyKey: "sidebar.categories.body" },
       { kind: "spotlight", target: "nav-budgets", placement: "right", titleKey: "sidebar.budgets.title", bodyKey: "sidebar.budgets.body" },
       { kind: "spotlight", target: "nav-goals", placement: "right", titleKey: "sidebar.goals.title", bodyKey: "sidebar.goals.body" },
-      { kind: "spotlight", target: "nav-bills", placement: "right", titleKey: "sidebar.bills.title", bodyKey: "sidebar.bills.body" },
-      { kind: "spotlight", target: "nav-recurrences", placement: "right", titleKey: "sidebar.recurrences.title", bodyKey: "sidebar.recurrences.body" },
+      { kind: "spotlight", target: "nav-scheduled", placement: "right", titleKey: "sidebar.scheduledTransactions.title", bodyKey: "sidebar.scheduledTransactions.body" },
       { kind: "spotlight", target: "nav-reports", placement: "right", titleKey: "sidebar.reports.title", bodyKey: "sidebar.reports.body" },
       { kind: "spotlight", target: "nav-settings", placement: "right", titleKey: "sidebar.settings.title", bodyKey: "sidebar.settings.body" },
     ],
@@ -81,19 +80,11 @@ export const TOURS = {
     ],
   },
 
-  bills: {
-    key: "bills",
+  "scheduled-transactions": {
+    key: "scheduled-transactions",
     version: 1,
     steps: [
-      { kind: "modal", titleKey: "bills.intro.title", bodyKey: "bills.intro.body" },
-    ],
-  },
-
-  recurrences: {
-    key: "recurrences",
-    version: 1,
-    steps: [
-      { kind: "modal", titleKey: "recurrences.intro.title", bodyKey: "recurrences.intro.body" },
+      { kind: "modal", titleKey: "scheduledTransactions.intro.title", bodyKey: "scheduledTransactions.intro.body" },
     ],
   },
 

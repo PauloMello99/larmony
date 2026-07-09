@@ -1,17 +1,23 @@
 /**
- * i18n do Larmony (ADR-0018): pt-BR (default) + en.
+ * i18n do Larmony (ADR-0018): pt-BR (default) + en + es.
  * Locale do usuário persiste em users.locale (PATCH /auth/me) + cookie NEXT_LOCALE.
  * Namespaces por feature; "common" é o compartilhado.
  *
+ * O locale NÃO influencia a rota (sem prefixo `/en/`, `/es/`) — o roteamento
+ * nativo de i18n do Next.js está desligado (`next.config.js` não tem `i18n`).
+ * Este arquivo só documenta a config para o `next-i18next` (namespaces,
+ * localePath); `shared/lib/i18n.ts` monta sua própria config inline para
+ * `serverSideTranslations` (ESM não serializa o import direto deste .js).
+ *
  * ⚠️ Fonte única da lista de locales: src/shared/lib/locale.ts
- * (SUPPORTED_LOCALES / DEFAULT_LOCALE). Este .js é lido pelo next.config.js em
- * build e não importa TS, então precisa espelhar aqueles valores manualmente.
+ * (SUPPORTED_LOCALES / DEFAULT_LOCALE). Este .js não importa TS, então precisa
+ * espelhar aqueles valores manualmente.
  */
 /** @type {import('next-i18next').UserConfig} */
 const config = {
   i18n: {
     defaultLocale: "pt-BR",
-    locales: ["pt-BR", "en"],
+    locales: ["pt-BR", "en", "es"],
   },
   defaultNS: "common",
   localePath: "./public/locales",

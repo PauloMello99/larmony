@@ -1,10 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format, parse } from "date-fns"
-import { ptBR } from "date-fns/locale"
 import { Trash2 } from "lucide-react"
 import {
   Dialog,
@@ -27,8 +27,9 @@ import { CurrencyInput } from "@/shared/components/ui/currency-input"
 import { DatePicker } from "@/shared/components/ui/date-picker"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { formatCentsToBRL } from "@/shared/lib/currency"
+import { getDateFnsLocale, useActiveLocale } from "@/shared/lib/format"
 import { useGoalContributions } from "../hooks/use-goal-contributions"
-import { contributionSchema, type ContributionFormValues } from "../schemas/goal.schemas"
+import { makeContributionSchema, type ContributionFormValues } from "../schemas/goal.schemas"
 import type { Goal, GoalContribution } from "../types"
 
 function todayISO(): string {
@@ -50,8 +51,12 @@ export function ContributionDialog({
   onSubmit,
   onDeleteContribution,
 }: ContributionDialogProps) {
+  const { t } = useTranslation("goals")
+  const locale = useActiveLocale()
   const { contributions, loading } = useGoalContributions(householdId, goal?.id ?? null)
   const [removingId, setRemovingId] = useState<string | null>(null)
+
+  const contributionSchema = useMemo(() => makeContributionSchema(t), [t])
 
   const form = useForm<ContributionFormValues>({
     resolver: zodResolver(contributionSchema),
@@ -82,10 +87,13 @@ export function ContributionDialog({
     <Dialog open={!!goal} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Aportes — {goal?.name}</DialogTitle>
+          <DialogTitle>{t("contributionDialog.title", { name: goal?.name ?? "" })}</DialogTitle>
           <DialogDescription>
             {goal
-              ? `${formatCentsToBRL(goal.savedCents)} de ${formatCentsToBRL(goal.targetAmountCents)} guardados.`
+              ? t("contributionDialog.summary", {
+                  saved: formatCentsToBRL(goal.savedCents),
+                  target: formatCentsToBRL(goal.targetAmountCents),
+                })
               : null}
           </DialogDescription>
         </DialogHeader>
@@ -99,7 +107,7 @@ export function ContributionDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Valor <span className="text-red-400">*</span>
+                      {t("contributionDialog.amountLabel")} <span className="text-red-400">*</span>
                     </FormLabel>
                     <FormControl>
                       <CurrencyInput value={field.value} onChange={field.onChange} />
@@ -113,7 +121,7 @@ export function ContributionDialog({
                 name="date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Data</FormLabel>
+                    <FormLabel>{t("contributionDialog.dateLabel")}</FormLabel>
                     <FormControl>
                       <DatePicker value={field.value} onChange={field.onChange} align="end" />
                     </FormControl>
@@ -127,29 +135,36 @@ export function ContributionDialog({
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Notas</FormLabel>
+                  <FormLabel>{t("contributionDialog.notesLabel")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Opcional" autoComplete="off" {...field} value={field.value ?? ""} />
+                    <Input
+                      placeholder={t("contributionDialog.notesPlaceholder")}
+                      autoComplete="off"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
-              {form.formState.isSubmitting ? "Aportando…" : "Aportar"}
+              {form.formState.isSubmitting
+                ? t("contributionDialog.submitting")
+                : t("contributionDialog.submit")}
             </Button>
           </form>
         </Form>
 
         <div className="mt-2">
           <p className="mb-2 text-xs font-medium uppercase tracking-wide text-foreground/50">
-            Histórico
+            {t("contributionDialog.history")}
           </p>
           {loading ? (
             <Skeleton className="h-16 w-full rounded-lg" />
           ) : contributions.length === 0 ? (
             <p className="rounded-lg border border-dashed border-foreground/10 py-4 text-center text-sm text-foreground/30">
-              Nenhum aporte ainda.
+              {t("contributionDialog.empty")}
             </p>
           ) : (
             <ul className="max-h-48 divide-y divide-foreground/[0.06] overflow-y-auto">
@@ -161,7 +176,7 @@ export function ContributionDialog({
                     </p>
                     <p className="truncate text-xs text-foreground/40">
                       {format(parse(c.date, "yyyy-MM-dd", new Date()), "dd/MM/yyyy", {
-                        locale: ptBR,
+                        locale: getDateFnsLocale(locale),
                       })}
                       {c.authorName ? ` · ${c.authorName}` : ""}
                       {c.notes ? ` · ${c.notes}` : ""}
@@ -171,7 +186,7 @@ export function ContributionDialog({
                     variant="ghost"
                     size="icon"
                     className="h-7 w-7 shrink-0 text-foreground/40 hover:text-red-400"
-                    aria-label="Excluir aporte"
+                    aria-label={t("contributionDialog.deleteContribution")}
                     disabled={removingId === c.id}
                     onClick={() => handleRemove(c)}
                   >

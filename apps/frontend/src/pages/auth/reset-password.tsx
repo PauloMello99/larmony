@@ -1,6 +1,7 @@
 import type { ReactElement } from "react"
 import type { NextPageWithLayout } from "@/pages/_app"
 import { GuestGuard, ResetPasswordForm } from "@/features/auth"
+import { makeI18nProps } from "@/shared/lib/i18n"
 
 const ResetPasswordPage: NextPageWithLayout = () => <ResetPasswordForm />
 
@@ -11,3 +12,5 @@ ResetPasswordPage.getLayout = (page: ReactElement) => (
 )
 
 export default ResetPasswordPage
+
+export const getServerSideProps = makeI18nProps(["common", "auth"])

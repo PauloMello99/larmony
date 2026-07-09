@@ -1,0 +1,58 @@
+{
+  "page": {
+    "title": "Categorias",
+    "subtitle": "Organize suas transações, orçamentos e contas por categoria",
+    "newCategory": "Nova categoria",
+    "empty": "Nenhuma categoria ainda.",
+    "createCategory": "Criar categoria"
+  },
+  "types": {
+    "income": "Receita",
+    "expense": "Despesa",
+    "both": "Ambos"
+  },
+  "form": {
+    "editTitle": "Editar categoria",
+    "createTitle": "Nova categoria",
+    "description": "Categorias organizam suas transações, orçamentos e contas.",
+    "nameLabel": "Nome",
+    "namePlaceholder": "Ex: Pets",
+    "typeLabel": "Tipo",
+    "colorLabel": "Cor",
+    "iconLabel": "Ícone",
+    "iconPlaceholder": "Escolher",
+    "saving": "Salvando…",
+    "saveChanges": "Salvar alterações",
+    "create": "Criar categoria"
+  },
+  "list": {
+    "headerName": "Nome",
+    "headerType": "Tipo",
+    "defaultSuffix": "(padrão)"
+  },
+  "deleteDialog": {
+    "title": "Excluir categoria",
+    "description": "Tem certeza que deseja excluir <span>{{name}}</span>? Transações já lançadas nela ficam sem categoria — nenhuma é apagada.",
+    "deleting": "Excluindo…"
+  },
+  "icons": {
+    "banknote": "Dinheiro",
+    "briefcase": "Trabalho",
+    "trendingUp": "Investimentos",
+    "utensilsCrossed": "Alimentação",
+    "home": "Moradia",
+    "car": "Transporte",
+    "heart": "Saúde",
+    "bookOpen": "Educação",
+    "gamepad2": "Lazer",
+    "shirt": "Vestuário",
+    "refreshCw": "Assinaturas",
+    "circlePlus": "Outros (entrada)",
+    "circleMinus": "Outros (saída)"
+  },
+  "validation": {
+    "nameRequired": "Nome é obrigatório",
+    "nameMax": "Máximo 60 caracteres",
+    "colorInvalid": "Cor inválida"
+  }
+}

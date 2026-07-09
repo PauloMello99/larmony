@@ -1,0 +1,28 @@
+{
+  "roles": {
+    "owner": "Proprietário",
+    "member": "Membro"
+  },
+  "invalid": {
+    "title": "Convite inválido",
+    "description": "Este link de convite não é válido."
+  },
+  "unavailable": {
+    "title": "Convite indisponível",
+    "accepted": "Este convite já foi aceito.",
+    "cancelled": "Este convite foi cancelado.",
+    "expired": "Este convite expirou.",
+    "goToDashboard": "Ir para o painel"
+  },
+  "accept": {
+    "title": "Convite para {{householdName}}",
+    "invitedAs": "Você foi convidado como <span>{{role}}</span>.",
+    "emailMismatch": "Este convite é para <strong>{{inviteEmail}}</strong>, mas você está logado como <strong>{{userEmail}}</strong>. Entre com a conta correta para aceitar.",
+    "acceptingAs": "Aceitando como <span>{{email}}</span>.",
+    "switchAccount": "Trocar de conta",
+    "submit": "Aceitar convite",
+    "decline": "Recusar",
+    "acceptError": "Não foi possível aceitar o convite.",
+    "declineError": "Não foi possível recusar o convite."
+  }
+}

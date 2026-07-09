@@ -1,37 +1,48 @@
 import { z } from "zod"
+import type { TFunction } from "i18next"
 
-export const loginSchema = z.object({
-  email: z.string().email("E-mail inválido"),
-  password: z.string().min(1, "Senha obrigatória"),
-})
+// Factories: mensagens de validação traduzidas via i18next (namespace "auth",
+// chaves em `validation.*`). Instanciar nos componentes com
+// `React.useMemo(() => makeXSchema(t), [t])`.
 
-export const signupSchema = z
-  .object({
-    name: z.string().min(2, "Nome deve ter ao menos 2 caracteres"),
-    email: z.string().email("E-mail inválido"),
-    password: z.string().min(8, "Senha deve ter ao menos 8 caracteres"),
-    confirmPassword: z.string().min(1, "Confirme a senha"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Senhas não coincidem",
-    path: ["confirmPassword"],
+export const makeLoginSchema = (t: TFunction) =>
+  z.object({
+    email: z.string().email(t("validation.invalidEmail")),
+    password: z.string().min(1, t("validation.passwordRequired")),
   })
 
-export const recoverSchema = z.object({
-  email: z.string().email("E-mail inválido"),
-})
+export const makeSignupSchema = (t: TFunction) =>
+  z
+    .object({
+      name: z.string().min(2, t("validation.nameMin")),
+      email: z.string().email(t("validation.invalidEmail")),
+      password: z.string().min(8, t("validation.passwordMin")),
+      confirmPassword: z.string().min(1, t("validation.confirmPasswordRequired")),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("validation.passwordsMismatch"),
+      path: ["confirmPassword"],
+    })
 
-export const resetPasswordSchema = z
-  .object({
-    password: z.string().min(8, "Senha deve ter ao menos 8 caracteres"),
-    confirmPassword: z.string().min(1, "Confirme a senha"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Senhas não coincidem",
-    path: ["confirmPassword"],
+export const makeRecoverSchema = (t: TFunction) =>
+  z.object({
+    email: z.string().email(t("validation.invalidEmail")),
   })
 
-export type LoginFormValues = z.infer<typeof loginSchema>
-export type SignupFormValues = z.infer<typeof signupSchema>
-export type RecoverFormValues = z.infer<typeof recoverSchema>
-export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>
+export const makeResetPasswordSchema = (t: TFunction) =>
+  z
+    .object({
+      password: z.string().min(8, t("validation.passwordMin")),
+      confirmPassword: z.string().min(1, t("validation.confirmPasswordRequired")),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("validation.passwordsMismatch"),
+      path: ["confirmPassword"],
+    })
+
+export type LoginFormValues = z.infer<ReturnType<typeof makeLoginSchema>>
+export type SignupFormValues = z.infer<ReturnType<typeof makeSignupSchema>>
+export type RecoverFormValues = z.infer<ReturnType<typeof makeRecoverSchema>>
+export type ResetPasswordFormValues = z.infer<
+  ReturnType<typeof makeResetPasswordSchema>
+>

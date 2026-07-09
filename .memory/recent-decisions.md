@@ -22,7 +22,8 @@
 | ADR-0016 | Evolução do RAG: bge-m3 + hybrid search + parent-document | 2026-07-04 | Aceito |
 | ADR-0017 | Dinheiro em centavos inteiros em todo o stack | 2026-07-04 | Aceito |
 | ADR-0018 | i18n pt-BR/en com locale no perfil do usuário | 2026-07-04 | Aceito |
-| ADR-0019 | Recorrência: modelo simples + engine no cron gravando via DRIZZLE_ADMIN | 2026-07-08 | Aceito |
+| ADR-0019 | Recorrência: modelo simples + engine no cron gravando via DRIZZLE_ADMIN | 2026-07-08 | **Superseded** — unificado com bills no ADR-0020 |
+| ADR-0020 | Unificar bills + recurrences em "lançamentos programados" (scheduled_transaction_entries) | 2026-07-09 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
 
@@ -54,3 +55,19 @@
   parcelamento no v1. Migration `0002_recurrences` (hand-written + RLS). Detalhes
   e gotchas em `roadmap.md`/`architecture.md`/`domain-rules.md`. Migration + specs
   validados no Supabase local (9 e2e + 11 unit + regressão cron/transactions verde).
+- **2026-07-09 — Unificação bills+recurrences → "Lançamentos" (ADR-0020)**:
+  módulo `scheduled-transactions` substitui `bills`+`recurrences` por completo
+  (deletados, sem período de coexistência). Eixo que separa os dois modos é
+  `posting_mode` (`auto`|`manual`), não o tipo — por isso o lançamento programado
+  é type-neutral (receita ou despesa). Dois helpers de "próxima data": cursor-based
+  (`nextRunOnOrAfter`, só engine `auto`) vs stateless (`nextManualOccurrence`, só
+  lembrete/card `manual` — evita drift de clamp de dia-de-mês). Dedup do lembrete
+  mudou de mês para dia (bug latente em bills para cadências não-mensais, nunca
+  ocorria porque bills só tinha `monthly`). Migration `0005` preserva `id` de
+  recurrences (valida backfill de `transactions.recurrence_id`) e sintetiza
+  `start_date` de bills a partir de `due_day`. Rotas `/bills` e `/recurrences`
+  removidas sem redirect (app interno). Migration + 34 unit + 67 e2e verificados
+  no Supabase local; browser: nav única "Lançamentos", toggle auto↔manual
+  re-ancorando cursor, launch manual criando transação real, dashboard "Próximos
+  lançamentos". Detalhes em `domain-rules.md` §Lançamentos programados e
+  `docs/product/features/10-lancamentos-programados.md`.

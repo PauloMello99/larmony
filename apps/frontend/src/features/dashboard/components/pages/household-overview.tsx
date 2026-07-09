@@ -5,8 +5,8 @@ import {
   ArrowLeftRight,
   ArrowDownRight,
   ArrowUpRight,
+  CalendarClock,
   PiggyBank,
-  ReceiptText,
   Scale,
   Target,
   TrendingDown,
@@ -234,7 +234,7 @@ export function HouseholdOverview() {
   const now = new Date()
   const firstName = (me?.name ?? "").split(" ")[0]
   const dateLabel = formatDate(now, locale, { dateStyle: "full" })
-  const base = `/dashboard/household/${household.slug}`
+  const base = `/households/${household.slug}`
 
   const income = overview?.currentMonth.incomeCents ?? 0
   const expense = overview?.currentMonth.expenseCents ?? 0
@@ -330,7 +330,7 @@ export function HouseholdOverview() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <SectionCard title={t("overview.upcomingBills")}>
+          <SectionCard title={t("overview.upcomingEntries")}>
             {loading ? (
               <div className="space-y-2 p-4">
                 <Skeleton className="h-8 w-full" />
@@ -344,10 +344,10 @@ export function HouseholdOverview() {
               </ul>
             ) : (
               <EmptyState
-                icon={ReceiptText}
-                title={t("overview.emptyBills")}
-                description={t("overview.emptyBillsHint")}
-                action={{ href: `${base}/bills`, label: t("nav.bills") }}
+                icon={CalendarClock}
+                title={t("overview.emptyEntries")}
+                description={t("overview.emptyEntriesHint")}
+                action={{ href: `${base}/scheduled-transactions`, label: t("nav.scheduledTransactions") }}
               />
             )}
           </SectionCard>

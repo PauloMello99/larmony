@@ -19,8 +19,9 @@ import {
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { useAuth } from "@/features/auth/hooks/use-auth"
+import { AuthLayout } from "@/features/auth/components/auth-layout"
 import {
-  loginSchema,
+  makeLoginSchema,
   type LoginFormValues,
 } from "@/features/auth/schemas/auth.schemas"
 
@@ -34,6 +35,7 @@ export function LoginForm() {
   const router = useRouter()
   const inviteToken = queryParam(router.query.invite)
   const invitedEmail = queryParam(router.query.email)
+  const loginSchema = React.useMemo(() => makeLoginSchema(t), [t])
 
   const {
     register,
@@ -57,7 +59,7 @@ export function LoginForm() {
       await router.push(
         inviteToken
           ? `/invite/accept?token=${encodeURIComponent(inviteToken)}`
-          : "/dashboard/households",
+          : "/households",
       )
     } catch {
       setError("root", { message: t("login.invalidCredentials") })
@@ -69,7 +71,7 @@ export function LoginForm() {
     : "/auth/signup"
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <AuthLayout>
       <Card className="w-full max-w-sm border-foreground/5 bg-foreground/[0.03]">
         <CardHeader className="text-center">
           <div className="mb-2 text-xl font-bold">
@@ -149,6 +151,6 @@ export function LoginForm() {
           </CardFooter>
         </form>
       </Card>
-    </div>
+    </AuthLayout>
   )
 }

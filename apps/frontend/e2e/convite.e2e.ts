@@ -57,8 +57,8 @@ test("convidado aceita convite pelo link e vê o lar como member", async ({ brow
   await page.getByRole("button", { name: /aceitar/i }).click()
 
   // Assert: o lar aparece para o convidado.
-  await page.waitForURL(/\/dashboard/, { timeout: 20_000 })
-  await page.goto("/dashboard/households")
+  await page.waitForURL(/\/households/, { timeout: 20_000 })
+  await page.goto("/households")
   await expect(page.getByText(`E2E Lar Convite ${runId}`)).toBeVisible()
 
   await context.close()

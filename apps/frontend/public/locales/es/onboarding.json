@@ -1,0 +1,115 @@
+{
+  "nav": {
+    "back": "Atrás",
+    "skip": "Omitir",
+    "next": "Siguiente",
+    "done": "Entendido",
+    "step": "Paso {{current}} de {{total}}"
+  },
+  "sidebar": {
+    "welcome": {
+      "title": "¡Bienvenido a Larmony!",
+      "body": "Hagamos un recorrido rápido por el menú lateral para que sepas dónde está todo en tu hogar."
+    },
+    "overview": {
+      "title": "Resumen",
+      "body": "El resumen de tu hogar: el saldo del mes, presupuestos, metas y cuentas próximas, todo en un solo lugar."
+    },
+    "transactions": {
+      "title": "Transacciones",
+      "body": "Todos los ingresos y gastos registrados del hogar, con filtros por mes, categoría y tipo."
+    },
+    "categories": {
+      "title": "Categorías",
+      "body": "Las categorías organizan tus transacciones, presupuestos y recurrencias. Tu hogar empieza con 13 categorías predeterminadas."
+    },
+    "budgets": {
+      "title": "Presupuestos",
+      "body": "Define un límite de gasto mensual por categoría y controla cuánto se ha gastado."
+    },
+    "goals": {
+      "title": "Metas",
+      "body": "Crea metas de ahorro con un monto objetivo y registra aportes hasta alcanzarla."
+    },
+    "reports": {
+      "title": "Informes",
+      "body": "Gráficos mensuales y anuales que muestran cómo evolucionan las finanzas de tu hogar."
+    },
+    "settings": {
+      "title": "Ajustes",
+      "body": "Administra la información de tu hogar e invita a otros miembros."
+    }
+  },
+  "overview": {
+    "intro": {
+      "title": "El resumen de tu hogar",
+      "body": "Este panel te da un resumen rápido: el saldo del mes, presupuestos, metas y cuentas próximas. Se completa a medida que usas Larmony."
+    }
+  },
+  "transactions": {
+    "intro": {
+      "title": "Transacciones",
+      "body": "Aquí vive cada ingreso y gasto del hogar. Usa los filtros para encontrar movimientos por mes, categoría o tipo."
+    },
+    "new": {
+      "title": "Nueva transacción",
+      "body": "Haz clic aquí para registrar un ingreso o gasto en cualquier momento."
+    }
+  },
+  "transactionForm": {
+    "intro": {
+      "title": "Cómo registrar una transacción",
+      "body": "Completa lo básico y luego usa los campos de abajo para categorizar, dividir en cuotas o repartir el gasto con otros miembros del hogar."
+    },
+    "category": {
+      "title": "Categoría",
+      "body": "Clasifica la transacción (p. ej., Mercado, Transporte) para que aparezca correctamente en informes y presupuestos. Es opcional."
+    },
+    "person": {
+      "title": "Persona",
+      "body": "Quién hizo realmente el gasto — distinto de quién lo registra. Los informes por persona usan este campo. Si se deja vacío, eres tú por defecto."
+    },
+    "installments": {
+      "title": "Cuotas",
+      "body": "Activa esto para dividir el monto total en varias cuotas mensuales. Larmony crea una transacción por cuota, vinculada a la misma serie."
+    },
+    "split": {
+      "title": "Dividir entre miembros",
+      "body": "Activa esto para repartir el monto entre los miembros del hogar, ya sea en partes iguales o con un valor específico para cada uno."
+    }
+  },
+  "categories": {
+    "intro": {
+      "title": "Categorías",
+      "body": "Las categorías clasifican tus transacciones, presupuestos y recurrencias. Tu hogar empieza con 13 categorías predeterminadas y puedes crear las tuyas."
+    }
+  },
+  "budgets": {
+    "intro": {
+      "title": "Presupuestos",
+      "body": "Define un límite de gasto mensual por categoría. Larmony calcula automáticamente cuánto se ha gastado y te avisa cuando lo superas."
+    }
+  },
+  "goals": {
+    "intro": {
+      "title": "Metas",
+      "body": "Crea metas de ahorro con un monto objetivo y, opcionalmente, una fecha. Registra aportes con el tiempo hasta alcanzar la meta."
+    }
+  },
+  "reports": {
+    "intro": {
+      "title": "Informes",
+      "body": "Sigue cómo evolucionan las finanzas de tu hogar con gráficos mensuales y anuales, gasto por categoría y gasto por persona."
+    }
+  },
+  "settings": {
+    "intro": {
+      "title": "Ajustes",
+      "body": "Aquí administras la información de tu hogar."
+    },
+    "members": {
+      "title": "Miembros",
+      "body": "Invita a otras personas a administrar las finanzas del hogar contigo. Cada miembro puede registrar y ver transacciones, presupuestos y metas."
+    }
+  }
+}

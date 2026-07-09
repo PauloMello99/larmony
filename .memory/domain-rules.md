@@ -1,6 +1,6 @@
 ---
 name: domain-rules
-description: Regras de domínio do Larmony (households, transações, metas, orçamentos, bills) + convenções obrigatórias de backend/frontend/monorepo herdadas da carcaça
+description: Regras de domínio do Larmony (households, transações, metas, orçamentos, lançamentos programados) + convenções obrigatórias de backend/frontend/monorepo herdadas da carcaça
 metadata:
   type: project
 ---
@@ -169,28 +169,55 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
   dividida igualmente entre os membros). Rateio específico + parcelamento → 422
   (evita split 2D parcela×membro; fora do v1).
 
-#### Recorrência (M9 ✅ 2026-07-08)
+#### Lançamentos programados (ADR-0020 ✅ 2026-07-09 — unifica bills M7 + recorrência M9)
 
-- Regra na tabela `recurrences` (schema novo — o old-larmony só tinha campos
-  natimortos): `frequency ∈ {weekly,monthly,yearly}` + `interval` ("a cada N";
-  **sem RRULE**), `startDate`, `endDate?` (fim opcional), `nextRunDate` (cursor),
-  `isActive`, `type`/`amountCents`/`description`/`categoryId?`/`personId?`.
-- **Gera transações automaticamente** (≠ bills, que é definição estática +
-  lembrete manual — coexistem, não se sobrepõem). O job `recurrence-engine`
-  (tick do cron) materializa **cada ocorrência na sua data** (`next_run_date <=
-  hoje`), não pré-materializa futuro. A transação gerada tem `recurrence_id`
-  (FK SET NULL — histórico sobrevive à exclusão da regra) e badge "Recorrente".
-- **Sem rateio e sem parcelamento no v1** (precedente do M4 sobre explosão 2D).
-- `startDate` deve ser **hoje ou futuro** (sem backfill histórico surpresa; 422
-  `RECURRENCE_START_DATE_IN_PAST`) e `endDate` (se houver) não pode ser anterior
-  a `startDate` (422 `RECURRENCE_INVALID_DATE_RANGE`). `startDate` é imutável no
-  update (troca = deletar+criar); `nextRunDate` é gerido só pelo engine/reativação.
-- **Editar a regra afeta só ocorrências futuras**; transações já geradas são
-  transações comuns (editáveis/deletáveis à parte). Pausar = `isActive=false`;
-  **reativar re-ancora `nextRunDate`** para a próxima ocorrência >= hoje (não
-  gera de uma vez o período pausado).
-- **Idempotência**: o engine **avança o cursor ANTES de inserir** (gaps-over-dups,
-  espelha o mark-before-send de bills). Ver detalhes/gotchas em `roadmap.md`.
+- Tabela única `scheduled_transaction_entries` (não é extensão de nenhuma das
+  duas antigas): `posting_mode ∈ {auto,manual}` é o eixo que separa os modos —
+  **não** o `type` (`income`|`expense`, sempre presente; o lançamento
+  programado é type-neutral: salário mensal é uma recorrência de receita, não
+  uma "conta a pagar"). Cadência `frequency ∈ {weekly,monthly,yearly}` +
+  `interval` ("a cada N"; **sem RRULE**, mesmo modelo do ADR-0019).
+  `due_day` de bills não existe mais como campo — é subsumido por `startDate`
+  (dia-do-mês carregado pela data de origem).
+- **CHECK físico no schema**: `(posting_mode = 'auto') = (next_run_date IS NOT
+  NULL)`. `next_run_date` (cursor) só existe no modo `auto`; um filtro
+  esquecido no engine não consegue gerar de uma linha `manual` porque
+  `next_run_date IS NULL` já a exclui de `next_run_date <= hoje`.
+- **Modo `auto`** (ex-recurrences): gera transações automaticamente. O job
+  `scheduled-transactions-engine` (tick do cron) materializa **cada ocorrência
+  na sua data**, não pré-materializa futuro. Idempotência: **avança o cursor
+  ANTES de inserir** (gaps-over-dups). Transação gerada tem
+  `scheduled_transaction_entry_id` (FK SET NULL) e badge "Recorrente".
+  `startDate` deve ser hoje ou futuro no create (422
+  `SCHEDULED_ENTRY_START_DATE_IN_PAST`; sem backfill surpresa).
+- **Modo `manual`** (ex-bills): definição estática + lembrete + lançamento
+  manual — **nunca** gera transaction automaticamente. `reminder_days_before ∈
+  {1,3,7,15}` (NULL = sem lembrete); job `scheduled-transactions-reminders`
+  dispara e-mail quando `dias_até_próxima_ocorrência == reminder_days_before` e
+  ainda não enviou **no dia** (dedup por dia-calendário, não por mês — dedup
+  por mês era um bug latente de bills para cadências não-mensais, nunca
+  observado porque bills só tinha `monthly`). "Lançar como transação"
+  (`LaunchScheduledEntryUseCase`, reusa `CreateTransactionUseCase`) usa o
+  `type` da própria entrada (não hardcoded `expense`); **a entrada nunca é
+  consumida** — lançar é sempre manual e relançável. Bloqueado para entradas
+  `auto` (409 `SCHEDULED_ENTRY_NOT_MANUAL` — o engine já posta essa sozinha).
+- **Dois helpers de "próxima data" — não confundir**: `nextRunOnOrAfter`
+  (cursor-based, `scheduled-entry-schedule.ts`) é **só para o engine `auto`**,
+  que sempre parte de um cursor já clampado. `nextManualOccurrence`
+  (stateless, `common/finance/due-date.ts`) é **só para o modo `manual`**
+  (lembrete + card "Próximos lançamentos"), que não tem cursor — reusar o
+  helper cursor-based aqui causaria drift permanente (dia-de-origem 31
+  clamparia para 28/fev e ficaria colado em 28 para sempre); o stateless
+  re-deriva o dia-de-origem do zero em cada mês-alvo.
+- **Toggle de modo**: `manual→auto` re-ancora `next_run_date` via
+  `nextRunOnOrAfter` (pula para a próxima ocorrência futura, não gera de uma
+  vez o histórico parado — mesmo princípio da reativação do ADR-0019);
+  `auto→manual` zera `next_run_date` para satisfazer o CHECK. `startDate` é
+  imutável no update em ambos os modos (troca = deletar+criar).
+- **Sem rateio e sem parcelamento no v1** (precedente do M4/M9). Dashboard
+  destaca entradas `manual` com vencimento em ≤7 dias (alerta amber).
+- Migrados no ADR-0020: `bills`/`recurrences` (módulos, features, rotas,
+  specs) deletados por completo, sem período de coexistência.
 
 ### Metas (goals)
 
@@ -207,19 +234,6 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
 - **Spending é calculado em tempo real** via query de transactions do mesmo
   mês/ano/categoria — nunca persistido.
 - Ao editar orçamento, a categoria é imutável (troca = deletar + criar).
-
-### Contas a pagar (bills)
-
-- Definições **estáticas** de despesas recorrentes: `due_day` (1–31), `amount_cents`,
-  categoria opcional, `is_active` (pausar sem excluir).
-- **Bills ≠ transactions**: bill não gera transaction automaticamente — o lançamento
-  é sempre manual pelo usuário.
-- Lembrete por e-mail configurável por conta: `reminder_days_before` ∈ {1, 3, 7, 15},
-  NULL = sem lembrete. `reminder_last_sent_at` evita duplicata no mesmo mês.
-- O job `send-bill-reminders` roda no tick do `internal-cron` (M7): busca bills
-  ativas com lembrete, calcula dias até o vencimento e dispara e-mail aos membros
-  quando `dias_até_vencimento == reminder_days_before` e ainda não enviou no mês.
-- Dashboard destaca contas com vencimento em ≤7 dias (alerta visual amber).
 
 ### Relatórios (reports) — M8 ✅
 

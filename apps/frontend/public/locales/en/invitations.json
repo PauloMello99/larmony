@@ -1,0 +1,28 @@
+{
+  "roles": {
+    "owner": "Owner",
+    "member": "Member"
+  },
+  "invalid": {
+    "title": "Invalid invitation",
+    "description": "This invitation link is not valid."
+  },
+  "unavailable": {
+    "title": "Invitation unavailable",
+    "accepted": "This invitation has already been accepted.",
+    "cancelled": "This invitation has been cancelled.",
+    "expired": "This invitation has expired.",
+    "goToDashboard": "Go to dashboard"
+  },
+  "accept": {
+    "title": "Invitation to {{householdName}}",
+    "invitedAs": "You have been invited as <span>{{role}}</span>.",
+    "emailMismatch": "This invitation is for <strong>{{inviteEmail}}</strong>, but you are logged in as <strong>{{userEmail}}</strong>. Log in with the correct account to accept.",
+    "acceptingAs": "Accepting as <span>{{email}}</span>.",
+    "switchAccount": "Switch account",
+    "submit": "Accept invitation",
+    "decline": "Decline",
+    "acceptError": "Unable to accept the invitation.",
+    "declineError": "Unable to decline the invitation."
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "title": "My Account",
+    "profile": "Profile",
+    "access": "Access",
+    "appearance": "Theme",
+    "locale": "Language",
+    "danger": "Delete Account"
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "Manage your name, email, and profile picture.",
+    "loading": "Loading…",
+    "avatarAlt": "Profile picture",
+    "avatarUpload": "Upload photo",
+    "avatarUploading": "Uploading…",
+    "avatarHint": "PNG, JPG, WEBP, or GIF · up to 5 MB.",
+    "avatarInvalidType": "Please select an image file.",
+    "avatarTooLarge": "The image must be 5 MB or smaller.",
+    "avatarUploadError": "Failed to upload the photo.",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "emailHint": "Changing your email also changes your login.",
+    "saveError": "Could not save the profile.",
+    "saved": "Profile updated.",
+    "submit": "Save changes",
+    "submitting": "Saving…"
+  },
+  "access": {
+    "title": "Access",
+    "description": "Manage your password and access security.",
+    "changePassword": "Change password",
+    "sentMessage": "We've sent a link to <strong>{{email}}</strong>. Open it to set a new password—your session is securely restored via the email link itself.",
+    "explanation": "For security reasons, password changes are handled via a link sent to your email. Clicking the link opens the new password screen with your session automatically restored.",
+    "error": "Unable to send the email. Please try again.",
+    "submit": "Send change link"
+  },
+  "appearance": {
+    "title": "Theme",
+    "description": "Customize the dashboard's appearance.",
+    "cardTitle": "Theme",
+    "cardDescription": "Choose between light, dark, or automatic (follows system settings).",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "locale": {
+    "description": "Choose the language for the interface and emails.",
+    "loading": "Loading…",
+    "error": "Could not change the language."
+  },
+  "danger": {
+    "title": "Danger zone",
+    "description": "Irreversible actions for your account.",
+    "cardTitle": "Delete account",
+    "cardDescription": "Permanently deleting the account will remove all your personal data. This action is irreversible.",
+    "deleteTitle": "Delete my account",
+    "deleteHint": "You must transfer or delete the homes you own before deleting your account.",
+    "deleteButton": "Delete account",
+    "dialogTitle": "Delete my account",
+    "dialogDescription": "This action is <span>irreversible</span>. Your personal data will be permanently removed. If you still own any homes, deletion will be blocked.",
+    "confirmLabel": "Enter your email <span>{{email}}</span> to confirm:",
+    "deleteError": "Could not delete the account.",
+    "confirmDelete": "Permanently delete",
+    "deleting": "Deleting…"
+  },
+  "validation": {
+    "nameRequired": "Name is required",
+    "invalidEmail": "Invalid email"
+  }
+}

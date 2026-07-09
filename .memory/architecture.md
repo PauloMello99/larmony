@@ -111,11 +111,11 @@ domínio se registram por **decorator + DiscoveryService** (padrão do
 `@nestjs/schedule`) — o módulo `internal-cron` não muda por feature:
 
 ```ts
-// no módulo da feature (ex.: bills), como provider normal:
-@CronJobName("send-bill-reminders")
+// no módulo da feature (ex.: scheduled-transactions), como provider normal:
+@CronJobName("scheduled-transactions-reminders")
 @Injectable()
-export class SendBillRemindersJob implements CronJob {
-  constructor(private readonly useCase: SendBillRemindersUseCase) {}
+export class ScheduledEntriesRemindersJob implements CronJob {
+  constructor(private readonly useCase: SendScheduledEntryRemindersUseCase) {}
   run() { return this.useCase.execute(); }
 }
 ```
@@ -126,8 +126,8 @@ providers decorados no boot; o tick roda todos com isolamento de erro e retorna
 
 | Job | Status |
 |---|---|
-| `send-bill-reminders` (lembretes de contas) | ✅ entregue (fatia cron do M7, 2026-07-06) — `modules/bills/application/jobs/send-bill-reminders.job.ts`; dedup por contexto **bill×mês** via `reminder_last_sent_at` gravado ANTES do envio (e-mail best-effort nunca duplica); janela = próximo vencimento (dueDay clampado ao fim do mês) − hoje == reminderDaysBefore |
-| `recurrence-engine` (transações recorrentes) | ✅ entregue (M9, 2026-07-08) — `modules/recurrences/application/jobs/recurrence-engine.job.ts`; gera as ocorrências vencidas (`next_run_date <= hoje`) das regras ativas, catch-up bounded, **avança o cursor ANTES de inserir** (gaps-over-dups); grava via `CreateGeneratedTransactionUseCase` (DRIZZLE_ADMIN, sem auditoria) |
+| `scheduled-transactions-engine` (gera ocorrências `auto`) | ✅ entregue (ADR-0020, 2026-07-09 — ex-`recurrence-engine` do M9) — `modules/scheduled-transactions/application/jobs/scheduled-entries-engine.job.ts`; gera as ocorrências vencidas (`next_run_date <= hoje`) das entradas `posting_mode='auto'` ativas, catch-up bounded, **avança o cursor ANTES de inserir** (gaps-over-dups); grava via `CreateGeneratedTransactionUseCase` (DRIZZLE_ADMIN, sem auditoria) |
+| `scheduled-transactions-reminders` (lembrete de entradas `manual`) | ✅ entregue (ADR-0020, 2026-07-09 — ex-`send-bill-reminders` do M7) — `modules/scheduled-transactions/application/jobs/scheduled-entries-reminders.job.ts`; dedup **por dia-calendário** (não por mês — corrige bug latente do M7 para cadências não-mensais) via `reminder_last_sent_at` gravado ANTES do envio; janela = próxima ocorrência (calculada estatelessmente por `nextManualOccurrence`) − hoje == reminderDaysBefore |
 
 ### Migrations (ver ADR-0003)
 

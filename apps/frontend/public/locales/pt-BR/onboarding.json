@@ -31,13 +31,9 @@
       "title": "Metas",
       "body": "Crie metas de poupança com valor alvo e registre aportes até alcançar o objetivo."
     },
-    "bills": {
-      "title": "Contas a pagar",
-      "body": "Cadastre contas fixas com dia de vencimento e receba lembretes por e-mail."
-    },
-    "recurrences": {
-      "title": "Recorrências",
-      "body": "Configure lançamentos automáticos que se repetem, como salário ou assinaturas."
+    "scheduledTransactions": {
+      "title": "Lançamentos",
+      "body": "Cadastre contas fixas ou lançamentos automáticos — com lembrete por e-mail ou gerados sozinhos pelo Larmony."
     },
     "reports": {
       "title": "Relatórios",
@@ -104,16 +100,10 @@
       "body": "Crie metas de poupança com um valor alvo e, opcionalmente, uma data. Registre aportes ao longo do tempo até alcançar o objetivo."
     }
   },
-  "bills": {
+  "scheduledTransactions": {
     "intro": {
-      "title": "Contas a pagar",
-      "body": "Cadastre contas fixas (aluguel, internet, assinaturas) com dia de vencimento e receba lembretes por e-mail. Lançar uma conta como transação é sempre manual."
-    }
-  },
-  "recurrences": {
-    "intro": {
-      "title": "Recorrências",
-      "body": "Configure lançamentos automáticos que se repetem, como um salário mensal. O Larmony gera as transações na data certa, sem você precisar lançar manualmente."
+      "title": "Lançamentos",
+      "body": "Cadastre contas e lançamentos que se repetem — escolha entre lançar manualmente (com lembrete por e-mail) ou deixar o Larmony gerar a transação automaticamente na data certa."
     }
   },
   "reports": {

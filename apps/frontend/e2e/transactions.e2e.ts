@@ -19,13 +19,13 @@ test("signup e cria um lar", async ({ page }) => {
   await page.fill("#confirmPassword", password)
   await page.click('button[type="submit"]')
 
-  await page.waitForURL(/\/dashboard\/households\?welcome=1/, { timeout: 20_000 })
+  await page.waitForURL(/\/households\?welcome=1/, { timeout: 20_000 })
   await page
     .locator('input:visible[type="text"], input:visible:not([type])')
     .first()
     .fill(`E2E Lar Transacoes ${runId}`)
   await page.getByRole("button", { name: /^criar/i }).last().click()
-  await page.waitForURL(/\/dashboard\/households$/)
+  await page.waitForURL(/\/households$/)
 })
 
 async function goToTransactions(page: import("@playwright/test").Page) {
@@ -33,9 +33,9 @@ async function goToTransactions(page: import("@playwright/test").Page) {
   await page.fill('input[type="email"]', email)
   await page.fill('input[type="password"]', password)
   await page.click('button[type="submit"]')
-  await page.waitForURL(/\/dashboard\/households/)
-  await page.locator('a[href*="/dashboard/household/"]').first().click()
-  await page.waitForURL(/\/dashboard\/household\/[^/]+$/)
+  await page.waitForURL(/\/households/)
+  await page.locator('a[href*="/households/"]').first().click()
+  await page.waitForURL(/\/households\/[^/]+$/)
   await page.getByRole("navigation").last().getByRole("link", { name: "Transações", exact: true }).click()
   await page.waitForURL(/\/transactions$/)
 }
@@ -94,9 +94,9 @@ test("o overview do dashboard para de mostrar zero após criar transações", as
   await page.fill('input[type="email"]', email)
   await page.fill('input[type="password"]', password)
   await page.click('button[type="submit"]')
-  await page.waitForURL(/\/dashboard\/households/)
-  await page.locator('a[href*="/dashboard/household/"]').first().click()
-  await page.waitForURL(/\/dashboard\/household\/[^/]+$/)
+  await page.waitForURL(/\/households/)
+  await page.locator('a[href*="/households/"]').first().click()
+  await page.waitForURL(/\/households\/[^/]+$/)
 
   await expect(page.getByText("Salário mensal").first()).toBeVisible()
   // Receita lançada (R$ 2.000,00) aparece no card "Receitas do mês" — não mais zerado.

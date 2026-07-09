@@ -14,7 +14,7 @@ export class UpdateMeDto {
   @IsOptional()
   avatarUrl?: string | null;
 
-  @IsIn(["pt-BR", "en"])
+  @IsIn(["pt-BR", "en", "es"])
   @IsOptional()
   locale?: string;
 }

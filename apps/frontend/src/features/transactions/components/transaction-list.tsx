@@ -1,5 +1,6 @@
 "use client"
 
+import { useTranslation } from "react-i18next"
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import {
   DropdownMenu,
@@ -18,30 +19,41 @@ import {
 import { Button } from "@/shared/components/ui/button"
 import { cn } from "@/shared/lib/utils"
 import { formatCentsToBRL } from "@/shared/lib/currency"
+import { formatDate, useActiveLocale } from "@/shared/lib/format"
+import type { AppLocale } from "@/shared/lib/locale"
 import type { Transaction } from "../types"
 
-function formatDate(iso: string): string {
-  const [y, m, d] = iso.split("-")
-  return `${d}/${m}/${y}`
+/** `tx.date` é date-only (yyyy-mm-dd); o sufixo T00:00:00 força parse em hora
+ * local (sem ele, `new Date` parseia como UTC e a data recua 1 dia no Brasil). */
+function formatTxDate(iso: string, locale: AppLocale): string {
+  return formatDate(`${iso}T00:00:00`, locale, {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  })
 }
 
 function TxBadges({ tx }: { tx: Transaction }) {
-  if (!tx.installmentCount && tx.memberCount === 0 && !tx.recurrenceId) return null
+  const { t } = useTranslation("transactions")
+  if (!tx.installmentCount && tx.memberCount === 0 && !tx.scheduledTransactionEntryId) return null
   return (
     <span className="ml-2 inline-flex gap-1 align-middle">
       {tx.installmentCount && (
         <span className="rounded-full bg-foreground/[0.06] px-1.5 py-0.5 text-[10px] font-medium text-foreground/60">
-          {tx.installmentNumber}/{tx.installmentCount}
+          {t("list.installmentBadge", {
+            number: tx.installmentNumber,
+            total: tx.installmentCount,
+          })}
         </span>
       )}
       {tx.memberCount > 0 && (
         <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-          Rateio
+          {t("list.badgeSplit")}
         </span>
       )}
-      {tx.recurrenceId && (
+      {tx.scheduledTransactionEntryId && (
         <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-          Recorrente
+          {t("list.badgeRecurring")}
         </span>
       )}
     </span>
@@ -57,6 +69,7 @@ function TransactionActions({
   onEdit: (t: Transaction) => void
   onDelete: (t: Transaction) => void
 }) {
+  const { t: tCommon } = useTranslation("common")
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -67,14 +80,14 @@ function TransactionActions({
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => onEdit(transaction)}>
           <Pencil className="mr-2 h-4 w-4" />
-          Editar
+          {tCommon("actions.edit")}
         </DropdownMenuItem>
         <DropdownMenuItem
           className="text-red-400 focus:text-red-400"
           onClick={() => onDelete(transaction)}
         >
           <Trash2 className="mr-2 h-4 w-4" />
-          Excluir
+          {tCommon("actions.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -88,6 +101,8 @@ interface TransactionListProps {
 }
 
 export function TransactionList({ transactions, onEdit, onDelete }: TransactionListProps) {
+  const { t } = useTranslation("transactions")
+  const locale = useActiveLocale()
   return (
     <>
       {/* Desktop table */}
@@ -96,19 +111,19 @@ export function TransactionList({ transactions, onEdit, onDelete }: TransactionL
           <TableHeader>
             <TableRow className="bg-foreground/[0.02] hover:bg-transparent">
               <TableHead className="px-4 text-foreground/50 normal-case tracking-normal">
-                Descrição
+                {t("list.headerDescription")}
               </TableHead>
               <TableHead className="px-4 text-foreground/50 normal-case tracking-normal">
-                Categoria
+                {t("list.headerCategory")}
               </TableHead>
               <TableHead className="px-4 text-foreground/50 normal-case tracking-normal">
-                Pessoa
+                {t("list.headerPerson")}
               </TableHead>
               <TableHead className="px-4 text-foreground/50 normal-case tracking-normal">
-                Data
+                {t("list.headerDate")}
               </TableHead>
               <TableHead className="px-4 text-right text-foreground/50 normal-case tracking-normal">
-                Valor
+                {t("list.headerAmount")}
               </TableHead>
               <TableHead className="w-12 px-4" />
             </TableRow>
@@ -130,11 +145,13 @@ export function TransactionList({ transactions, onEdit, onDelete }: TransactionL
                       {tx.categoryName}
                     </span>
                   ) : (
-                    <span className="text-sm text-foreground/30">Sem categoria</span>
+                    <span className="text-sm text-foreground/30">{t("list.noCategory")}</span>
                   )}
                 </TableCell>
                 <TableCell className="px-4 text-foreground/60">{tx.personName}</TableCell>
-                <TableCell className="px-4 text-foreground/60">{formatDate(tx.date)}</TableCell>
+                <TableCell className="px-4 text-foreground/60">
+                  {formatTxDate(tx.date, locale)}
+                </TableCell>
                 <TableCell
                   className={cn(
                     "px-4 text-right font-medium",
@@ -166,7 +183,7 @@ export function TransactionList({ transactions, onEdit, onDelete }: TransactionL
                 <TxBadges tx={tx} />
               </p>
               <p className="truncate text-xs text-foreground/40">
-                {tx.categoryName ?? "Sem categoria"} · {formatDate(tx.date)}
+                {tx.categoryName ?? t("list.noCategory")} · {formatTxDate(tx.date, locale)}
               </p>
             </div>
             <span

@@ -1,20 +1,26 @@
 "use client"
 
 import * as React from "react"
-import { useRouter } from "next/router"
+import { useTranslation } from "react-i18next"
 import { useMe } from "@/features/auth/hooks/use-me"
 import { normalizeLocale, setLocaleCookie } from "@/shared/lib/locale"
 
 /**
- * Reconcilia o locale do perfil (`users.locale`) com o locale ativo do Next.js
+ * Reconcilia o locale do perfil (`users.locale`) com o locale ativo da página
  * após o login. Sem isto, um usuário que escolheu `en` volta a ver pt-BR ao
- * recarregar, porque o Next.js só detecta o idioma pelo cookie `NEXT_LOCALE` /
- * defaultLocale — não pelo perfil (ADR-0018).
+ * recarregar, porque a detecção usa o cookie `NEXT_LOCALE` / defaultLocale —
+ * não o perfil (ADR-0018).
+ *
+ * O locale NÃO influencia a rota (sem prefixo `/en/`, `/es/`): "trocar" aqui é
+ * cookie + `window.location.reload()` no MESMO caminho (garante que o SSR relê
+ * o cookie via `makeI18nProps`, mesmo em páginas sem data-fetching próprio —
+ * ver shared/components/locale-switcher.tsx). Autoterminante: após o reload, o
+ * cookie já bate com o perfil, então a condição não dispara de novo.
  *
  * Deve ser montado em área autenticada (AuthGuard), onde `GET /auth/me` é válido.
  */
 export function useLocaleSync(): void {
-  const router = useRouter()
+  const { i18n } = useTranslation()
   const { me } = useMe()
 
   React.useEffect(() => {
@@ -24,9 +30,9 @@ export function useLocaleSync(): void {
     // Mantém o cookie de detecção alinhado ao perfil (sobrevive a reloads).
     setLocaleCookie(profileLocale)
 
-    // Se a rota atual está num locale diferente do perfil, troca uma única vez.
-    if (router.locale && router.locale !== profileLocale) {
-      void router.replace(router.asPath, router.asPath, { locale: profileLocale })
+    // Se a página está renderizada num locale diferente do perfil, corrige uma única vez.
+    if (normalizeLocale(i18n.language) !== profileLocale) {
+      window.location.reload()
     }
-  }, [me, router])
+  }, [me, i18n])
 }

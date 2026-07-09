@@ -10,8 +10,7 @@ const SEGMENT_TO_TOUR: Record<string, TourKey> = {
   categories: "categories",
   budgets: "budgets",
   goals: "goals",
-  bills: "bills",
-  recurrences: "recurrences",
+  "scheduled-transactions": "scheduled-transactions",
   reports: "reports",
   settings: "settings",
 }

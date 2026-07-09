@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Sheet,
@@ -39,12 +40,16 @@ import { formatCentsToBRL } from "@/shared/lib/currency"
 import { useCategories } from "@/features/categories/hooks/use-categories"
 import { useMembers } from "@/features/households/hooks/use-members"
 import { useOnboarding } from "@/features/onboarding/providers/onboarding-provider"
-import { transactionSchema, type TransactionFormValues } from "../schemas/transaction.schemas"
+import { makeTransactionSchema, type TransactionFormValues } from "../schemas/transaction.schemas"
 import { useTransactionMembers } from "../hooks/use-transaction-members"
 import { RateioField, type RateioMode } from "./rateio-field"
 import type { Transaction, TransactionType } from "../types"
 
-const TYPE_LABEL: Record<TransactionType, string> = { income: "Receita", expense: "Despesa" }
+/** Chaves i18n (namespace `transactions`) por tipo — mesmo padrão de features/dashboard/lib/nav.ts. */
+const TYPE_LABEL_KEY: Record<TransactionType, string> = {
+  income: "form.typeIncome",
+  expense: "form.typeExpense",
+}
 
 const DEFAULT_VALUES: TransactionFormValues = {
   type: "expense",
@@ -71,6 +76,8 @@ export function TransactionForm({
   transaction,
   onSubmit,
 }: TransactionFormProps) {
+  const { t } = useTranslation("transactions")
+  const { t: tCommon } = useTranslation("common")
   const isEditing = !!transaction
   const { categories } = useCategories(householdId)
   const { members } = useMembers(householdId)
@@ -92,8 +99,9 @@ export function TransactionForm({
   const [shares, setShares] = useState<Record<string, number>>({})
   const [rateioInit, setRateioInit] = useState(false)
 
+  const schema = useMemo(() => makeTransactionSchema(t), [t])
   const form = useForm<TransactionFormValues>({
-    resolver: zodResolver(transactionSchema),
+    resolver: zodResolver(schema),
     defaultValues: DEFAULT_VALUES,
   })
 
@@ -189,10 +197,8 @@ export function TransactionForm({
         <Form {...form}>
           <form onSubmit={handleSubmit} className="flex h-full flex-col">
             <SheetHeader>
-              <SheetTitle>{isEditing ? "Editar transação" : "Nova transação"}</SheetTitle>
-              <SheetDescription>
-                Registre uma receita ou despesa do lar.
-              </SheetDescription>
+              <SheetTitle>{isEditing ? t("form.titleEdit") : t("form.titleCreate")}</SheetTitle>
+              <SheetDescription>{t("form.description")}</SheetDescription>
             </SheetHeader>
 
             <SheetBody className="flex flex-col gap-4 py-6">
@@ -202,7 +208,7 @@ export function TransactionForm({
                   name="type"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tipo</FormLabel>
+                      <FormLabel>{t("form.typeLabel")}</FormLabel>
                       <Select
                         value={field.value}
                         onValueChange={(v) => {
@@ -216,9 +222,9 @@ export function TransactionForm({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {(Object.keys(TYPE_LABEL) as TransactionType[]).map((v) => (
+                          {(Object.keys(TYPE_LABEL_KEY) as TransactionType[]).map((v) => (
                             <SelectItem key={v} value={v}>
-                              {TYPE_LABEL[v]}
+                              {t(TYPE_LABEL_KEY[v])}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -234,7 +240,8 @@ export function TransactionForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {parcelarOn ? "Valor total" : "Valor"} <span className="text-red-400">*</span>
+                        {parcelarOn ? t("form.amountTotalLabel") : t("form.amountLabel")}{" "}
+                        <span className="text-red-400">*</span>
                       </FormLabel>
                       <FormControl>
                         <CurrencyInput value={field.value} onChange={field.onChange} />
@@ -251,10 +258,15 @@ export function TransactionForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Descrição <span className="text-red-400">*</span>
+                      {t("form.descriptionLabel")} <span className="text-red-400">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: Supermercado" autoComplete="off" autoFocus {...field} />
+                      <Input
+                        placeholder={t("form.descriptionPlaceholder")}
+                        autoComplete="off"
+                        autoFocus
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -266,7 +278,7 @@ export function TransactionForm({
                 name="date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Data</FormLabel>
+                    <FormLabel>{t("form.dateLabel")}</FormLabel>
                     <FormControl>
                       <DatePicker value={field.value} onChange={field.onChange} />
                     </FormControl>
@@ -281,11 +293,11 @@ export function TransactionForm({
                   name="categoryId"
                   render={({ field }) => (
                     <FormItem data-tour="tx-field-category">
-                      <FormLabel>Categoria</FormLabel>
+                      <FormLabel>{t("form.categoryLabel")}</FormLabel>
                       <Select value={field.value} onValueChange={field.onChange}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Sem categoria" />
+                            <SelectValue placeholder={t("form.categoryPlaceholder")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -306,11 +318,11 @@ export function TransactionForm({
                   name="personId"
                   render={({ field }) => (
                     <FormItem data-tour="tx-field-person">
-                      <FormLabel>Pessoa</FormLabel>
+                      <FormLabel>{t("form.personLabel")}</FormLabel>
                       <Select value={field.value} onValueChange={field.onChange}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Você" />
+                            <SelectValue placeholder={t("form.personPlaceholder")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -332,10 +344,10 @@ export function TransactionForm({
                 name="notes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Notas</FormLabel>
+                    <FormLabel>{t("form.notesLabel")}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Observações opcionais"
+                        placeholder={t("form.notesPlaceholder")}
                         rows={3}
                         {...field}
                       />
@@ -353,7 +365,7 @@ export function TransactionForm({
                 >
                   <div className="flex items-center justify-between">
                     <Label htmlFor="tx-parcelar" className="text-sm font-normal">
-                      Parcelar
+                      {t("form.installmentsLabel")}
                     </Label>
                     <Switch id="tx-parcelar" checked={parcelarOn} onCheckedChange={setParcelarOn} />
                   </div>
@@ -370,8 +382,10 @@ export function TransactionForm({
                         className="w-20"
                       />
                       <span className="text-xs text-foreground/50">
-                        {installmentCount}× de ~
-                        {formatCentsToBRL(Math.floor(amountCents / installmentCount))}
+                        {t("form.installmentsPreview", {
+                          count: installmentCount,
+                          amount: formatCentsToBRL(Math.floor(amountCents / installmentCount)),
+                        })}
                       </span>
                     </div>
                   )}
@@ -382,7 +396,7 @@ export function TransactionForm({
               <div data-tour="tx-field-split" className="flex flex-col gap-3">
                 <div className="flex items-center justify-between rounded-lg border border-foreground/[0.08] p-3">
                   <Label htmlFor="tx-rateio" className="text-sm font-normal">
-                    Dividir entre membros
+                    {t("form.splitLabel")}
                   </Label>
                   <Switch id="tx-rateio" checked={rateioOn} onCheckedChange={setRateioOn} />
                 </div>
@@ -407,7 +421,7 @@ export function TransactionForm({
             <SheetFooter>
               <SheetClose asChild>
                 <Button type="button" variant="outline" className="w-full sm:w-auto">
-                  Cancelar
+                  {tCommon("actions.cancel")}
                 </Button>
               </SheetClose>
               <Button
@@ -416,12 +430,12 @@ export function TransactionForm({
                 className="w-full sm:w-auto"
               >
                 {form.formState.isSubmitting
-                  ? "Salvando…"
+                  ? t("form.submitting")
                   : isEditing
-                    ? "Salvar alterações"
+                    ? t("form.submitEdit")
                     : parcelarOn
-                      ? "Criar parcelas"
-                      : "Criar transação"}
+                      ? t("form.submitInstallments")
+                      : t("form.submitCreate")}
               </Button>
             </SheetFooter>
           </form>

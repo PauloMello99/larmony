@@ -3,13 +3,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { apiRequest } from "@/infrastructure/api/client"
 import { queryKeys } from "@/infrastructure/query/query-keys"
+import type { AppLocale } from "@/shared/lib/locale"
 import type { Me } from "../types"
 
 export interface UpdateMeBody {
   name?: string
   email?: string
   avatarUrl?: string | null
-  locale?: "pt-BR" | "en"
+  locale?: AppLocale
 }
 
 export function useMe() {

@@ -91,7 +91,7 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <Button asChild variant="default">
-            <Link href={`/dashboard/household/${household.slug}`}>
+            <Link href={`/households/${household.slug}`}>
               <ExternalLink className="h-4 w-4" /> Gerenciar
             </Link>
           </Button>

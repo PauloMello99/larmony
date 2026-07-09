@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { SlidersHorizontal } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import {
@@ -30,6 +31,7 @@ export function FilterPopover({
   children,
   className,
 }: FilterPopoverProps) {
+  const { t } = useTranslation("common")
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -38,7 +40,7 @@ export function FilterPopover({
           className={cn("shrink-0 gap-2", className)}
         >
           <SlidersHorizontal className="h-4 w-4" />
-          <span className="hidden sm:inline">Filtros</span>
+          <span className="hidden sm:inline">{t("filters.label")}</span>
           {activeCount > 0 && (
             <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-background/20 px-1.5 text-xs font-semibold tabular-nums">
               {activeCount}
@@ -49,7 +51,7 @@ export function FilterPopover({
       <PopoverContent align="end" className="w-80 p-4">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-foreground">
-            Filtros avançados
+            {t("filters.advanced")}
           </span>
           <Button
             variant="ghost"
@@ -58,7 +60,7 @@ export function FilterPopover({
             disabled={activeCount === 0}
             className="h-7 px-2 text-xs text-foreground/60"
           >
-            Limpar
+            {t("actions.clear")}
           </Button>
         </div>
         <div className="mt-3 space-y-3">{children}</div>
@@ -89,7 +91,7 @@ export function RangeInputs({
   maxValue,
   onMinChange,
   onMaxChange,
-  placeholder = ["Mín", "Máx"],
+  placeholder,
   inputMode = "decimal",
 }: {
   minValue: string
@@ -99,12 +101,14 @@ export function RangeInputs({
   placeholder?: [string, string]
   inputMode?: "decimal" | "numeric"
 }) {
+  const { t } = useTranslation("common")
+  const [minPlaceholder, maxPlaceholder] = placeholder ?? [t("filters.min"), t("filters.max")]
   return (
     <div className="flex items-center gap-2">
       <input
         value={minValue}
         onChange={(e) => onMinChange(e.target.value)}
-        placeholder={placeholder[0]}
+        placeholder={minPlaceholder}
         inputMode={inputMode}
         className="h-9 w-full rounded-md border border-foreground/10 bg-transparent px-3 text-sm text-foreground outline-none placeholder:text-foreground/30 focus:border-foreground/30"
       />
@@ -112,7 +116,7 @@ export function RangeInputs({
       <input
         value={maxValue}
         onChange={(e) => onMaxChange(e.target.value)}
-        placeholder={placeholder[1]}
+        placeholder={maxPlaceholder}
         inputMode={inputMode}
         className="h-9 w-full rounded-md border border-foreground/10 bg-transparent px-3 text-sm text-foreground outline-none placeholder:text-foreground/30 focus:border-foreground/30"
       />
