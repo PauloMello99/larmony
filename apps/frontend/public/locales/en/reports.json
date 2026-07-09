@@ -3,9 +3,7 @@
     "title": "Reports",
     "description": "Monthly and annual view of your finances",
     "monthly": "Monthly",
-    "annual": "Annual",
-    "empty": "No transactions yet. Add income and expenses to view reports.",
-    "goToTransactions": "Go to transactions"
+    "annual": "Annual"
   },
   "chart": {
     "income": "Income",

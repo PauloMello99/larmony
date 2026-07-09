@@ -3,9 +3,7 @@
     "title": "Informes",
     "description": "Vista mensual y anual de sus finanzas",
     "monthly": "Mensual",
-    "annual": "Anual",
-    "empty": "Aún no hay transacciones. Ingrese sus ingresos y gastos para ver los informes.",
-    "goToTransactions": "Ir a transacciones"
+    "annual": "Anual"
   },
   "chart": {
     "income": "Ingresos",

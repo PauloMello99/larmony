@@ -3,9 +3,7 @@
     "title": "Relatórios",
     "description": "Visão mensal e anual das suas finanças",
     "monthly": "Mensal",
-    "annual": "Anual",
-    "empty": "Nenhuma transação ainda. Lance receitas e despesas para ver os relatórios.",
-    "goToTransactions": "Ir para transações"
+    "annual": "Anual"
   },
   "chart": {
     "income": "Receita",
