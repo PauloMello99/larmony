@@ -24,7 +24,7 @@ import {
 } from "recharts"
 import { useAdminStats, useAdminGrowth } from "../hooks/use-admin"
 import { fmtMonth } from "../lib/format"
-import { usePrefersReducedMotion } from "../lib/use-prefers-reduced-motion"
+import { usePrefersReducedMotion } from "@/shared/lib/use-prefers-reduced-motion"
 
 const COLORS = {
   households: "var(--chart-1)",

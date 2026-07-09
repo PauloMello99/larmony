@@ -12,7 +12,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { usePrefersReducedMotion } from "@/features/admin/lib/use-prefers-reduced-motion"
+import { usePrefersReducedMotion } from "@/shared/lib/use-prefers-reduced-motion"
 import { Button } from "@/shared/components/ui/button"
 import { formatCentsToBRL } from "@/shared/lib/currency"
 import { useActiveLocale } from "@/shared/lib/format"
