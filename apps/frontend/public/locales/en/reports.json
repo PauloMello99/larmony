@@ -12,6 +12,8 @@
     "expense": "Expense"
   },
   "monthly": {
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
     "seriesTitle": "Income vs. Expense · last 6 months",
     "seriesEmpty": "No activity in the last 6 months.",
     "byCategory": "Expenses by category · {{ref}}",

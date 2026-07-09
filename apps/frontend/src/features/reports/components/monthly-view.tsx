@@ -1,6 +1,12 @@
 "use client"
 
-import { BarChart3, PieChart as PieChartIcon, Users } from "lucide-react"
+import {
+  BarChart3,
+  ChevronLeft,
+  ChevronRight,
+  PieChart as PieChartIcon,
+  Users,
+} from "lucide-react"
 import { useTranslation } from "react-i18next"
 import {
   Bar,
@@ -16,11 +22,18 @@ import {
   YAxis,
 } from "recharts"
 import { usePrefersReducedMotion } from "@/features/admin/lib/use-prefers-reduced-motion"
+import { Button } from "@/shared/components/ui/button"
 import { formatCentsToBRL } from "@/shared/lib/currency"
 import { useActiveLocale } from "@/shared/lib/format"
 import { fmtMonthLabel, fmtMonthLong } from "../lib/format"
-import type { MonthlyReport } from "../types"
+import type { MonthRef, MonthlyReport } from "../types"
 import { ReportTooltip } from "./report-tooltip"
+
+/** Desloca um mês de referência em `delta` meses, com virada de ano. */
+function shiftMonth(ref: MonthRef, delta: number): MonthRef {
+  const d = new Date(ref.year, ref.month - 1 + delta, 1)
+  return { year: d.getFullYear(), month: d.getMonth() + 1 }
+}
 
 const COLORS = {
   income: "var(--success)",
@@ -45,12 +58,23 @@ function formatAxisCents(value: number): string {
 
 interface MonthlyViewProps {
   report: MonthlyReport
+  monthRef: MonthRef
+  onMonthChange: (ref: MonthRef) => void
 }
 
-export function MonthlyView({ report }: MonthlyViewProps) {
+export function MonthlyView({ report, monthRef, onMonthChange }: MonthlyViewProps) {
   const { t } = useTranslation("reports")
   const locale = useActiveLocale()
   const reducedMotion = usePrefersReducedMotion()
+
+  const now = new Date()
+  // Não deixa navegar para o futuro (não há dados adiante do mês corrente).
+  const isCurrentOrFuture =
+    monthRef.year > now.getFullYear() ||
+    (monthRef.year === now.getFullYear() && monthRef.month >= now.getMonth() + 1)
+  // Rótulo do seletor derivado do estado (atualiza no clique, sem esperar o
+  // fetch); os títulos dos gráficos usam report.refMonth (o dado exibido).
+  const navLabel = `${fmtMonthLong(monthRef.month, locale)} ${monthRef.year}`
 
   const barData = report.months.map((m) => ({
     label: fmtMonthLabel(m.year, m.month, locale),
@@ -70,6 +94,32 @@ export function MonthlyView({ report }: MonthlyViewProps) {
 
   return (
     <div className="space-y-4">
+      {/* Seletor de mês de referência */}
+      <div className="flex items-center justify-center gap-3">
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-8 w-8"
+          onClick={() => onMonthChange(shiftMonth(monthRef, -1))}
+          aria-label={t("monthly.prevMonth")}
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <span className="min-w-[9rem] text-center text-sm font-semibold capitalize tabular-nums text-foreground">
+          {navLabel}
+        </span>
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-8 w-8"
+          onClick={() => onMonthChange(shiftMonth(monthRef, 1))}
+          aria-label={t("monthly.nextMonth")}
+          disabled={isCurrentOrFuture}
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+
       {/* Série 6 meses */}
       <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
         <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">

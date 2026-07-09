@@ -2,9 +2,6 @@
 
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import Link from "next/link"
-import { BarChart3, PlusCircle } from "lucide-react"
-import { Button } from "@/shared/components/ui/button"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { cn } from "@/shared/lib/utils"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
@@ -12,31 +9,28 @@ import { useMonthlyReport } from "../hooks/use-monthly-report"
 import { useAnnualReport } from "../hooks/use-annual-report"
 import { MonthlyView } from "./monthly-view"
 import { AnnualView } from "./annual-view"
-import type { ReportView } from "../types"
+import type { MonthRef, ReportView } from "../types"
 
 export function ReportsPage() {
   const { t } = useTranslation("reports")
-  const { household, householdId } = useCurrentHousehold()
+  const { householdId } = useCurrentHousehold()
   const [view, setView] = useState<ReportView>("monthly")
-  const [year, setYear] = useState(() => new Date().getFullYear())
+  const now = new Date()
+  const [year, setYear] = useState(() => now.getFullYear())
+  const [monthRef, setMonthRef] = useState<MonthRef>(() => ({
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+  }))
 
-  const monthly = useMonthlyReport(householdId)
+  const monthly = useMonthlyReport(householdId, monthRef.year, monthRef.month)
   const annual = useAnnualReport(householdId, year)
 
   const loading = view === "monthly" ? monthly.loading : annual.loading
   const error = view === "monthly" ? monthly.error : annual.error
 
-  // Só a vista mensal usa o empty-state global (não há navegação — a janela é
-  // sempre "últimos 6 meses"). A anual é navegável por ano: um ano vazio não
-  // pode esconder os botões de navegação, senão o usuário fica preso sem
-  // conseguir voltar a um ano com dados. A AnnualView já trata "sem
-  // movimentação neste ano" internamente, mantendo a navegação visível.
-  const hasNoData =
-    view === "monthly" &&
-    monthly.report !== null &&
-    monthly.report.months.every((m) => m.incomeCents === 0 && m.expenseCents === 0)
-
-  const transactionsHref = `/households/${household.slug}/transactions`
+  // Ambas as vistas são navegáveis (mês / ano), então tratam "sem movimentação"
+  // internamente — nenhuma usa empty-state global, senão a navegação some e o
+  // usuário fica preso num período vazio sem conseguir voltar.
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -79,23 +73,8 @@ export function ReportsPage() {
             <Skeleton className="h-64 w-full rounded-xl" />
           </div>
         </div>
-      ) : hasNoData ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-foreground/10 py-16 text-center sm:py-20">
-          <BarChart3 className="mb-4 h-10 w-10 text-foreground/20" />
-          <p className="text-sm text-foreground/40">{t("page.empty")}</p>
-          <Button
-            asChild
-            className="mt-4 w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
-            size="sm"
-          >
-            <Link href={transactionsHref}>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              {t("page.goToTransactions")}
-            </Link>
-          </Button>
-        </div>
       ) : view === "monthly" && monthly.report ? (
-        <MonthlyView report={monthly.report} />
+        <MonthlyView report={monthly.report} monthRef={monthRef} onMonthChange={setMonthRef} />
       ) : annual.report ? (
         <AnnualView report={annual.report} year={year} onYearChange={setYear} />
       ) : null}

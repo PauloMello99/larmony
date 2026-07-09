@@ -12,6 +12,8 @@
     "expense": "Gastos"
   },
   "monthly": {
+    "prevMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
     "seriesTitle": "Ingresos × Gastos · últimos 6 meses",
     "seriesEmpty": "Sin actividad en los últimos 6 meses.",
     "byCategory": "Gastos por categoría · {{ref}}",

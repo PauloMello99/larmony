@@ -76,7 +76,8 @@ export const queryKeys = {
   // ─── Reports ────────────────────────────────────────────────────────────
   reports: {
     all: (householdId: string) => ["reports", householdId] as const,
-    monthly: (householdId: string) => ["reports", householdId, "monthly"] as const,
+    monthly: (householdId: string, year: number, month: number) =>
+      ["reports", householdId, "monthly", year, month] as const,
     annual: (householdId: string, year: number) =>
       ["reports", householdId, "annual", year] as const,
   },

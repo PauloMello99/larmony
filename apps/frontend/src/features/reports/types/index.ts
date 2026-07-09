@@ -38,3 +38,9 @@ export interface AnnualReport {
 }
 
 export type ReportView = "monthly" | "annual"
+
+/** Mês de referência selecionado na vista mensal (month 1-12). */
+export interface MonthRef {
+  year: number
+  month: number
+}
