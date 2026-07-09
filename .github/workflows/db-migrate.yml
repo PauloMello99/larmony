@@ -100,9 +100,13 @@ jobs:
               sleep "$INTERVAL"; continue
             fi
 
+            # Enum DeploymentStatus (docs Railway): BUILDING, DEPLOYING, SUCCESS,
+            # FAILED, CRASHED, REMOVED, SLEEPING, SKIPPED, WAITING, QUEUED (+
+            # THROTTLED/INITIALIZING). SLEEPING = subiu com sucesso e hibernou por
+            # inatividade → o código está no ar, trata como sucesso.
             case "$status" in
-              SUCCESS)
-                echo "Deploy SUCCESS — seguindo para as migrations."
+              SUCCESS|SLEEPING)
+                echo "Deploy $status — seguindo para as migrations."
                 break ;;
               FAILED|CRASHED|REMOVED|SKIPPED)
                 echo "::error::Deploy terminou em $status — migrations NÃO serão aplicadas."
