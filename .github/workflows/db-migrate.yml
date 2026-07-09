@@ -1,0 +1,73 @@
+name: DB Migrate
+
+# Aplica migrations pendentes no Supabase automaticamente quando `staging` ou
+# `main` são atualizadas — remove o passo manual (`pnpm db:migrate`) e o risco
+# de esquecê-lo após um deploy.
+#
+# Gatilho: roda DEPOIS que o workflow "CI" conclui com sucesso no branch
+# (build + type-check + lint verdes = o artefato que o Railway está subindo é
+# válido). Usamos o sucesso do CI como sinal de "deploy bom" porque o deploy do
+# Railway é acionado pela integração GitHub do próprio Railway, fora do Actions;
+# esta é a checagem nativa mais próxima de "após o deploy bem-sucedido" sem
+# acoplar a API do Railway. O migrator (ADR-0003) é idempotente: só aplica o que
+# está pendente, então rodar sem migrations novas é um no-op seguro.
+#
+# Pré-requisitos (configurar uma única vez em Settings → Environments):
+#   - Environment `staging`  → secret DATABASE_URL apontando para o Postgres do
+#     projeto Supabase de staging.
+#   - Environment `production` → secret DATABASE_URL do Supabase de produção
+#     (opcionalmente com "Required reviewers" para exigir aprovação manual).
+#   A connection string deve ser a conexão de sessão/direta (porta 5432) com
+#   `?sslmode=require` — o pooler transacional (6543) não suporta DDL de forma
+#   confiável.
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [staging, main]
+
+# Serializa migrations do mesmo branch — nunca duas execuções concorrentes
+# mexendo no schema ao mesmo tempo.
+concurrency:
+  group: db-migrate-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    # Só migra se o CI passou (build/lint/types verdes).
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    # main → produção; staging → staging. Cada environment traz seu próprio
+    # secret DATABASE_URL (e regras de proteção, se configuradas).
+    environment:
+      name: ${{ github.event.workflow_run.head_branch == 'main' && 'production' || 'staging' }}
+    steps:
+      # Faz checkout do commit EXATO que passou no CI (workflow_run faz checkout
+      # do default branch por padrão — precisamos do sha que disparou o CI).
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # Log do estado antes de aplicar (aparece nos logs do Actions p/ auditoria).
+      - name: Migration status (before)
+        run: pnpm --filter backend db:status
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Apply pending migrations
+        run: pnpm --filter backend db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
