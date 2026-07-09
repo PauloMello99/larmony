@@ -39,8 +39,10 @@ test("troca o idioma para inglês e persiste após reload", async ({ page }) => 
   await expect(page.locator("#locale").getByText("Language").first()).toBeVisible()
   await expect(page.locator("#locale").getByText("English")).toBeVisible()
 
-  // Volta para pt-BR para não vazar estado para outros specs.
+  // Volta para pt-BR para não vazar estado para outros specs. A UI está em
+  // inglês aqui, então o rótulo da opção é localizado ("Portuguese (Brazil)",
+  // de common.json en) — não o endônimo pt-BR.
   await page.locator("#locale").getByRole("combobox").click()
-  await page.getByRole("option", { name: "Português (Brasil)" }).click()
+  await page.getByRole("option", { name: "Portuguese (Brazil)" }).click()
   await expect(page.locator("#locale").getByText("Idioma").first()).toBeVisible()
 })

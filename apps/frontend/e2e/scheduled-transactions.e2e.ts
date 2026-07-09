@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test"
+import { suppressOnboardingTours } from "./helpers"
 
 /**
  * ADR-0020 — Lançamentos programados: unifica os antigos e2e de bills (M7) e
@@ -11,6 +12,10 @@ const email = `e2e.scheduled.${runId}@e2e.larmony.local`
 const password = "SenhaForteE2e123!"
 
 test.describe.configure({ mode: "serial" })
+
+test.beforeEach(async ({ page }) => {
+  await suppressOnboardingTours(page)
+})
 
 test("signup e cria um lar", async ({ page }) => {
   await page.goto("/auth/signup")
@@ -29,24 +34,6 @@ test("signup e cria um lar", async ({ page }) => {
   await page.waitForURL(/\/households$/)
 })
 
-/**
- * 1ª visita a uma aba dispara o tour guiado daquela aba (sidebar na entrada
- * do lar, depois um tour por aba conforme `route-tour.ts`) — modal bloqueia
- * cliques até fechado. Tours de 1 passo só mostram "Entendi" (sem "Pular" —
- * ver tour-modal-step.tsx `!isLast`). Fecha em loop até não sobrar nenhum
- * (bounded); chamar após TODA navegação para uma aba nova (1ª vez).
- */
-async function dismissTours(page: import("@playwright/test").Page) {
-  for (let i = 0; i < 5; i++) {
-    const closeBtn = page.getByRole("button", { name: /^(Pular|Entendi)$/ })
-    try {
-      await closeBtn.first().click({ timeout: 3_000 })
-    } catch {
-      break // nenhum tour pendente — segue normalmente.
-    }
-  }
-}
-
 async function login(page: import("@playwright/test").Page) {
   await page.goto("/auth/login")
   await page.fill('input[type="email"]', email)
@@ -55,7 +42,6 @@ async function login(page: import("@playwright/test").Page) {
   await page.waitForURL(/\/households/)
   await page.locator('a[href*="/households/"]').first().click()
   await page.waitForURL(/\/households\/[^/]+$/)
-  await dismissTours(page)
 }
 
 async function goToScheduledTransactions(page: import("@playwright/test").Page) {
@@ -65,7 +51,6 @@ async function goToScheduledTransactions(page: import("@playwright/test").Page) 
     .getByRole("link", { name: "Lançamentos", exact: true })
     .click()
   await page.waitForURL(/\/scheduled-transactions$/)
-  await dismissTours(page)
 }
 
 test("cria um lançamento manual e lança como transação — a entrada continua ativa", async ({
@@ -93,7 +78,6 @@ test("cria um lançamento manual e lança como transação — a entrada continu
   // A transação aparece na tela de Transações.
   await page.getByRole("navigation").last().getByRole("link", { name: "Transações", exact: true }).click()
   await page.waitForURL(/\/transactions$/)
-  await dismissTours(page)
   await expect(page.getByText("Aluguel").first()).toBeVisible()
 })
 

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test"
+import { suppressOnboardingTours } from "./helpers"
 
 /**
  * Fluxo principal de uso: signup → lista de lares → criar lar → overview →
@@ -9,6 +10,10 @@ const email = `e2e.fluxo.${runId}@e2e.larmony.local`
 const password = "SenhaForteE2e123!"
 
 test.describe.configure({ mode: "serial" })
+
+test.beforeEach(async ({ page }) => {
+  await suppressOnboardingTours(page)
+})
 
 test("signup cria a conta e leva à lista de lares", async ({ page }) => {
   await page.goto("/auth/signup")
@@ -51,7 +56,7 @@ test("sidebar tem a IA completa e os placeholders renderizam", async ({ page }) 
   await page.waitForURL(/\/households\/[^/]+$/)
 
   const sidebar = page.getByRole("navigation").last()
-  for (const item of ["Transações", "Categorias", "Orçamentos", "Metas", "Contas", "Relatórios"]) {
+  for (const item of ["Transações", "Categorias", "Orçamentos", "Metas", "Lançamentos", "Relatórios"]) {
     await expect(sidebar.getByRole("link", { name: item, exact: true })).toBeVisible()
   }
 

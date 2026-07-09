@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test"
+import { suppressOnboardingTours } from "./helpers"
 
 /**
  * M8 — Relatórios: vista mensal com totais renderizados, alternância para anual
@@ -9,6 +10,10 @@ const email = `e2e.reports.${runId}@e2e.larmony.local`
 const password = "SenhaForteE2e123!"
 
 test.describe.configure({ mode: "serial" })
+
+test.beforeEach(async ({ page }) => {
+  await suppressOnboardingTours(page)
+})
 
 test("signup e cria um lar", async ({ page }) => {
   await page.goto("/auth/signup")

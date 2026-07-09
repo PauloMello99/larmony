@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test"
+import { suppressOnboardingTours } from "./helpers"
 
 /**
  * M4 — parcelamento + rateio no frontend: criar 3x (badges 1/3..3/3),
@@ -9,6 +10,10 @@ const email = `e2e.m4.${runId}@e2e.larmony.local`
 const password = "SenhaForteE2e123!"
 
 test.describe.configure({ mode: "serial" })
+
+test.beforeEach(async ({ page }) => {
+  await suppressOnboardingTours(page)
+})
 
 test("signup e cria um lar", async ({ page }) => {
   await page.goto("/auth/signup")
