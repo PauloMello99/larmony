@@ -38,6 +38,7 @@ import { Label } from "@/shared/components/ui/label"
 import { CurrencyInput } from "@/shared/components/ui/currency-input"
 import { DatePicker } from "@/shared/components/ui/date-picker"
 import { useCategories } from "@/features/categories/hooks/use-categories"
+import { useOnboarding } from "@/features/onboarding/providers/onboarding-provider"
 import { formatDate, useActiveLocale } from "@/shared/lib/format"
 import {
   makeScheduledEntrySchema,
@@ -101,6 +102,7 @@ export function ScheduledEntryForm({
   const locale = useActiveLocale()
   const isEditing = !!entry
   const { categories } = useCategories(householdId)
+  const { startTour, isTourSeen, activeTour } = useOnboarding()
 
   const today = new Date()
   const todayISO = format(today, "yyyy-MM-dd")
@@ -149,6 +151,14 @@ export function ScheduledEntryForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, entry])
 
+  // Tour do formulário — só na criação (modo manual é o default, então o campo
+  // de lembrete está visível), e só quando nenhum outro tour está ativo.
+  useEffect(() => {
+    if (!open || isEditing || activeTour || isTourSeen("scheduled-transaction-form")) return
+    const id = requestAnimationFrame(() => startTour("scheduled-transaction-form"))
+    return () => cancelAnimationFrame(id)
+  }, [open, isEditing, activeTour, isTourSeen, startTour])
+
   const handleSubmit = form.handleSubmit(async (values) => {
     await onSubmit(values)
     onOpenChange(false)
@@ -169,7 +179,7 @@ export function ScheduledEntryForm({
                 control={form.control}
                 name="postingMode"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem data-tour="sched-field-auto">
                     <div className="flex items-center justify-between rounded-lg border border-foreground/[0.08] px-3 py-2.5">
                       <div>
                         <Label htmlFor="entry-auto" className="text-sm font-normal">
@@ -266,7 +276,7 @@ export function ScheduledEntryForm({
                   control={form.control}
                   name="frequency"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem data-tour="sched-field-frequency">
                       <FormLabel>{t("form.frequencyLabel")}</FormLabel>
                       <Select value={field.value} onValueChange={field.onChange}>
                         <FormControl>
@@ -402,7 +412,7 @@ export function ScheduledEntryForm({
                   control={form.control}
                   name="reminderDaysBefore"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem data-tour="sched-field-reminder">
                       <FormLabel>{t("form.reminderLabel")}</FormLabel>
                       <Select
                         value={field.value === null ? "none" : String(field.value)}

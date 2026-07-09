@@ -106,6 +106,20 @@
       "body": "Cadastre contas e lançamentos que se repetem — escolha entre lançar manualmente (com lembrete por e-mail) ou deixar o Larmony gerar a transação automaticamente na data certa."
     }
   },
+  "scheduledTransactionForm": {
+    "postingMode": {
+      "title": "Lançar automaticamente",
+      "body": "Ative para o Larmony gerar a transação sozinho na data de cada ocorrência. Deixe desativado para receber um lembrete e lançar você mesmo, confirmando o valor na hora."
+    },
+    "frequency": {
+      "title": "Frequência",
+      "body": "Define a cadência do lançamento (semanal, mensal ou anual) e, no campo \"A cada\", de quantos em quantos períodos ele se repete — ex.: mensal a cada 1, ou semanal a cada 2 para quinzenal."
+    },
+    "reminder": {
+      "title": "Lembrete",
+      "body": "Só no modo manual: quantos dias antes do vencimento o Larmony envia um e-mail para você não esquecer de lançar."
+    }
+  },
   "reports": {
     "intro": {
       "title": "Relatórios",

@@ -31,6 +31,10 @@
       "title": "Goals",
       "body": "Create savings goals with a target amount and log contributions until you reach it."
     },
+    "scheduledTransactions": {
+      "title": "Scheduled entries",
+      "body": "Register recurring bills and entries — post them manually with an email reminder, or let Larmony generate them automatically on the due date."
+    },
     "reports": {
       "title": "Reports",
       "body": "Monthly and yearly charts showing how your household's finances evolve."
@@ -94,6 +98,26 @@
     "intro": {
       "title": "Goals",
       "body": "Create savings goals with a target amount and, optionally, a date. Log contributions over time until you reach the goal."
+    }
+  },
+  "scheduledTransactions": {
+    "intro": {
+      "title": "Scheduled entries",
+      "body": "Register recurring bills and entries — choose between posting them manually (with an email reminder) or letting Larmony generate the transaction automatically on the right date."
+    }
+  },
+  "scheduledTransactionForm": {
+    "postingMode": {
+      "title": "Post automatically",
+      "body": "Turn this on for Larmony to create the transaction on its own, on each occurrence date. Leave it off to get a reminder and post it yourself, confirming the amount at that moment."
+    },
+    "frequency": {
+      "title": "Frequency",
+      "body": "Sets the entry's cadence (weekly, monthly, or yearly) and, in the \"Every\" field, how many periods apart it repeats — e.g. monthly every 1, or weekly every 2 for biweekly."
+    },
+    "reminder": {
+      "title": "Reminder",
+      "body": "Manual mode only: how many days before the due date Larmony emails you so you don't forget to post it."
     }
   },
   "reports": {

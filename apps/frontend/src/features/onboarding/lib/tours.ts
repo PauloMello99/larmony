@@ -88,6 +88,19 @@ export const TOURS = {
     ],
   },
 
+  // Tour do formulário de lançamento — disparado ao abrir o Sheet "Novo
+  // lançamento" (não por rota). Explica os 3 campos que definem o
+  // comportamento do lançamento: modo de postagem, cadência e lembrete.
+  "scheduled-transaction-form": {
+    key: "scheduled-transaction-form",
+    version: 1,
+    steps: [
+      { kind: "spotlight", target: "sched-field-auto", placement: "left", titleKey: "scheduledTransactionForm.postingMode.title", bodyKey: "scheduledTransactionForm.postingMode.body" },
+      { kind: "spotlight", target: "sched-field-frequency", placement: "left", titleKey: "scheduledTransactionForm.frequency.title", bodyKey: "scheduledTransactionForm.frequency.body" },
+      { kind: "spotlight", target: "sched-field-reminder", placement: "left", titleKey: "scheduledTransactionForm.reminder.title", bodyKey: "scheduledTransactionForm.reminder.body" },
+    ],
+  },
+
   reports: {
     key: "reports",
     version: 1,

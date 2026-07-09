@@ -31,6 +31,10 @@
       "title": "Metas",
       "body": "Crea metas de ahorro con un monto objetivo y registra aportes hasta alcanzarla."
     },
+    "scheduledTransactions": {
+      "title": "Movimientos programados",
+      "body": "Registra cuentas y movimientos que se repiten — regístralos manualmente con un recordatorio por correo, o deja que Larmony los genere automáticamente en la fecha de vencimiento."
+    },
     "reports": {
       "title": "Informes",
       "body": "Gráficos mensuales y anuales que muestran cómo evolucionan las finanzas de tu hogar."
@@ -94,6 +98,26 @@
     "intro": {
       "title": "Metas",
       "body": "Crea metas de ahorro con un monto objetivo y, opcionalmente, una fecha. Registra aportes con el tiempo hasta alcanzar la meta."
+    }
+  },
+  "scheduledTransactions": {
+    "intro": {
+      "title": "Movimientos programados",
+      "body": "Registra cuentas y movimientos que se repiten — elige entre registrarlos manualmente (con un recordatorio por correo) o dejar que Larmony genere la transacción automáticamente en la fecha correcta."
+    }
+  },
+  "scheduledTransactionForm": {
+    "postingMode": {
+      "title": "Registrar automáticamente",
+      "body": "Actívalo para que Larmony cree la transacción por sí solo, en la fecha de cada ocurrencia. Déjalo desactivado para recibir un recordatorio y registrarlo tú mismo, confirmando el valor en ese momento."
+    },
+    "frequency": {
+      "title": "Frecuencia",
+      "body": "Define la cadencia del movimiento (semanal, mensual o anual) y, en el campo \"Cada\", cada cuántos períodos se repite — p. ej. mensual cada 1, o semanal cada 2 para quincenal."
+    },
+    "reminder": {
+      "title": "Recordatorio",
+      "body": "Solo en modo manual: cuántos días antes del vencimiento Larmony te envía un correo para que no olvides registrarlo."
     }
   },
   "reports": {
