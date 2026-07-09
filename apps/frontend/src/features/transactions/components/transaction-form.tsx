@@ -363,10 +363,13 @@ export function TransactionForm({
                   data-tour="tx-field-installments"
                   className="flex flex-col gap-3 rounded-lg border border-foreground/[0.08] p-3"
                 >
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="tx-parcelar" className="text-sm font-normal">
-                      {t("form.installmentsLabel")}
-                    </Label>
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <Label htmlFor="tx-parcelar" className="text-sm font-normal">
+                        {t("form.installmentsLabel")}
+                      </Label>
+                      <p className="text-xs text-foreground/40">{t("form.installmentsHint")}</p>
+                    </div>
                     <Switch id="tx-parcelar" checked={parcelarOn} onCheckedChange={setParcelarOn} />
                   </div>
                   {parcelarOn && (
@@ -394,10 +397,13 @@ export function TransactionForm({
 
               {/* Rateio */}
               <div data-tour="tx-field-split" className="flex flex-col gap-3">
-                <div className="flex items-center justify-between rounded-lg border border-foreground/[0.08] p-3">
-                  <Label htmlFor="tx-rateio" className="text-sm font-normal">
-                    {t("form.splitLabel")}
-                  </Label>
+                <div className="flex items-center justify-between gap-3 rounded-lg border border-foreground/[0.08] p-3">
+                  <div>
+                    <Label htmlFor="tx-rateio" className="text-sm font-normal">
+                      {t("form.splitLabel")}
+                    </Label>
+                    <p className="text-xs text-foreground/40">{t("form.splitHint")}</p>
+                  </div>
                   <Switch id="tx-rateio" checked={rateioOn} onCheckedChange={setRateioOn} />
                 </div>
                 {rateioOn && (
