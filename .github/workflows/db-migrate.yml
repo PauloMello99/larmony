@@ -1,53 +1,119 @@
 name: DB Migrate
 
-# Aplica migrations pendentes no Supabase automaticamente quando `staging` ou
-# `main` são atualizadas — remove o passo manual (`pnpm db:migrate`) e o risco
-# de esquecê-lo após um deploy.
+# Aplica migrations pendentes no Supabase automaticamente APÓS o deploy do
+# Railway concluir com sucesso — remove o passo manual (`pnpm db:migrate`) e o
+# risco de esquecê-lo. Esperar o deploy ficar SUCCESS antes de migrar é
+# essencial para migrations destrutivas (ex.: a 0005 dropa bills/recurrences):
+# o código novo já precisa estar no ar quando o schema antigo some.
 #
-# Gatilho: roda DEPOIS que o workflow "CI" conclui com sucesso no branch
-# (build + type-check + lint verdes = o artefato que o Railway está subindo é
-# válido). Usamos o sucesso do CI como sinal de "deploy bom" porque o deploy do
-# Railway é acionado pela integração GitHub do próprio Railway, fora do Actions;
-# esta é a checagem nativa mais próxima de "após o deploy bem-sucedido" sem
-# acoplar a API do Railway. O migrator (ADR-0003) é idempotente: só aplica o que
-# está pendente, então rodar sem migrations novas é um no-op seguro.
+# Como funciona: no push para staging/main, o Railway (integração GitHub dele,
+# fora do Actions) sobe o deploy. Este workflow faz polling na API GraphQL do
+# Railway até o deployment mais recente do serviço naquele environment virar
+# SUCCESS e, só então, roda o migrator (ADR-0003, idempotente — no-op se não há
+# migration nova).
 #
-# Pré-requisitos (configurar uma única vez em Settings → Environments):
-#   - Environment `staging`  → secret DATABASE_URL apontando para o Postgres do
-#     projeto Supabase de staging.
-#   - Environment `production` → secret DATABASE_URL do Supabase de produção
-#     (opcionalmente com "Required reviewers" para exigir aprovação manual).
-#   A connection string deve ser a conexão de sessão/direta (porta 5432) com
-#   `?sslmode=require` — o pooler transacional (6543) não suporta DDL de forma
-#   confiável.
+# Pré-requisitos (Settings → Environments, um por ambiente):
+#   Environment `staging`  e `production`, cada um com:
+#     - secret DATABASE_URL      → Postgres do Supabase (conexão direta/sessão,
+#       porta 5432, com `?sslmode=require`; o pooler 6543 não roda DDL bem).
+#     - secret RAILWAY_API_TOKEN → token de conta/time do Railway (Account
+#       Settings → Tokens). Se usar Project Token, troque o header abaixo para
+#       `Project-Access-Token`.
+#     - var RAILWAY_PROJECT_ID / RAILWAY_SERVICE_ID / RAILWAY_ENVIRONMENT_ID →
+#       IDs do projeto, do serviço backend e do environment correspondente
+#       (copiáveis da URL/painel do Railway; não são segredos).
+#   Em `production` vale ativar "Required reviewers" para aprovar antes de migrar.
+#
+# Só entra em vigor quando presente no default branch (workflow lê do default).
 
 on:
-  workflow_run:
-    workflows: ["CI"]
-    types: [completed]
+  push:
     branches: [staging, main]
 
 # Serializa migrations do mesmo branch — nunca duas execuções concorrentes
-# mexendo no schema ao mesmo tempo.
+# mexendo no schema.
 concurrency:
-  group: db-migrate-${{ github.event.workflow_run.head_branch }}
+  group: db-migrate-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   migrate:
-    # Só migra se o CI passou (build/lint/types verdes).
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    # main → produção; staging → staging. Cada environment traz seu próprio
-    # secret DATABASE_URL (e regras de proteção, se configuradas).
+    # main → produção; staging → staging. Cada environment traz seus próprios
+    # secrets/vars (e regras de proteção, se configuradas).
     environment:
-      name: ${{ github.event.workflow_run.head_branch == 'main' && 'production' || 'staging' }}
+      name: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
     steps:
-      # Faz checkout do commit EXATO que passou no CI (workflow_run faz checkout
-      # do default branch por padrão — precisamos do sha que disparou o CI).
+      - name: Wait for Railway deployment to succeed
+        env:
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+          PROJECT_ID: ${{ vars.RAILWAY_PROJECT_ID }}
+          SERVICE_ID: ${{ vars.RAILWAY_SERVICE_ID }}
+          ENVIRONMENT_ID: ${{ vars.RAILWAY_ENVIRONMENT_ID }}
+        run: |
+          set -euo pipefail
+
+          MAX_WAIT=900   # 15 min de teto
+          INTERVAL=15
+          START=$(date +%s)
+
+          query='query($input: DeploymentListInput!) { deployments(first: 1, input: $input) { edges { node { id status createdAt } } } }'
+
+          echo "Aguardando o deploy do serviço $SERVICE_ID (env $ENVIRONMENT_ID) ficar SUCCESS…"
+
+          while true; do
+            now=$(date +%s)
+            if [ $((now - START)) -ge "$MAX_WAIT" ]; then
+              echo "::error::Timeout de ${MAX_WAIT}s esperando o deploy do Railway."
+              exit 1
+            fi
+
+            payload=$(jq -n --arg q "$query" \
+              --arg p "$PROJECT_ID" --arg e "$ENVIRONMENT_ID" --arg s "$SERVICE_ID" \
+              '{query: $q, variables: {input: {projectId: $p, environmentId: $e, serviceId: $s}}}')
+
+            resp=$(curl -sS -X POST https://backboard.railway.com/graphql/v2 \
+              -H "Authorization: Bearer $RAILWAY_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "$payload")
+
+            if echo "$resp" | jq -e '.errors' >/dev/null 2>&1; then
+              echo "::error::Erro da API do Railway: $(echo "$resp" | jq -c '.errors')"
+              exit 1
+            fi
+
+            node=$(echo "$resp" | jq -c '.data.deployments.edges[0].node // empty')
+            if [ -z "$node" ]; then
+              echo "Nenhum deployment ainda; aguardando…"
+              sleep "$INTERVAL"; continue
+            fi
+
+            status=$(echo "$node" | jq -r '.status')
+            created=$(echo "$node" | jq -r '.createdAt')
+            created_epoch=$(date -d "$created" +%s)
+
+            # Ignora um deploy ANTERIOR ao início deste run (o do Railway p/ este
+            # push pode ainda não ter sido registrado) — evita casar com o deploy
+            # anterior já SUCCESS. Folga de 120s para clock skew.
+            if [ "$created_epoch" -lt $((START - 120)) ]; then
+              echo "Último deploy ($status) é anterior a este push; aguardando o novo…"
+              sleep "$INTERVAL"; continue
+            fi
+
+            case "$status" in
+              SUCCESS)
+                echo "Deploy SUCCESS — seguindo para as migrations."
+                break ;;
+              FAILED|CRASHED|REMOVED|SKIPPED)
+                echo "::error::Deploy terminou em $status — migrations NÃO serão aplicadas."
+                exit 1 ;;
+              *)
+                echo "Deploy em $status; aguardando ${INTERVAL}s…"
+                sleep "$INTERVAL" ;;
+            esac
+          done
+
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -61,7 +127,7 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      # Log do estado antes de aplicar (aparece nos logs do Actions p/ auditoria).
+      # Log do estado antes de aplicar (auditoria nos logs do Actions).
       - name: Migration status (before)
         run: pnpm --filter backend db:status
         env:
