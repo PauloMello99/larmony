@@ -48,8 +48,7 @@ function readLocaleCookie(): string | undefined {
  * componente aparece em páginas que ainda não chamam `makeI18nProps` (sem
  * `I18nextProvider` — o `useTranslation()` quebraria ali). A leitura roda em
  * `useEffect` (não no render) para casar com o HTML enviado pelo servidor e
- * evitar mismatch de hidratação — mesmo padrão do `next-themes` já usado em
- * `AppearanceSection`.
+ * evitar mismatch de hidratação (mesmo padrão `mounted` do `next-themes`).
  *
  * O locale NÃO influencia a rota (sem prefixo `/en/`, `/es/`): a troca é
  * cookie + `window.location.reload()` no MESMO caminho. Um `router.replace`

@@ -74,7 +74,7 @@ function SheetContent({
           onInteractOutside?.(event)
         }}
         className={cn(
-          "fixed z-50 flex flex-col gap-4 bg-popover shadow-2xl transition ease-in-out outline-none",
+          "fixed z-50 flex flex-col gap-4 bg-popover/90 backdrop-blur-xl shadow-2xl transition ease-in-out outline-none",
           "border-foreground/[0.08] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-300",
           side === "right" &&
             "inset-y-0 right-0 h-full w-full border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-md",

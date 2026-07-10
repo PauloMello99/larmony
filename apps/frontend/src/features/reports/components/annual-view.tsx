@@ -46,7 +46,7 @@ function StatCard({
   tone?: "success" | "destructive" | "default"
 }) {
   return (
-    <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
+    <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4">
       <div className="flex items-center gap-1.5 text-xs text-foreground/50">
         <Icon
           className={cn(
@@ -141,7 +141,7 @@ export function AnnualView({ report, year, onYearChange }: AnnualViewProps) {
         />
       </div>
 
-      <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
+      <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4">
         <div className="mb-3 text-sm font-medium text-foreground">
           {t("annual.seriesTitle", { year })}
         </div>

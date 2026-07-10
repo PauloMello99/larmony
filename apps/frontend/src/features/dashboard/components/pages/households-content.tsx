@@ -93,7 +93,7 @@ export function HouseholdsContent() {
             <li key={household.id}>
               <Link
                 href={`/households/${household.slug}`}
-                className="group flex items-center justify-between rounded-xl border border-foreground/5 bg-foreground/[0.02] px-4 py-3.5 transition-all hover:border-foreground/10 hover:bg-foreground/[0.05] sm:px-5 sm:py-4"
+                className="group flex items-center justify-between rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] px-4 py-3.5 transition-all hover:border-foreground/10 hover:bg-foreground/[0.05] sm:px-5 sm:py-4"
               >
                 <div className="flex items-center gap-3 sm:gap-4">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary sm:h-10 sm:w-10 sm:text-base">

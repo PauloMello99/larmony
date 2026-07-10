@@ -106,7 +106,7 @@ export function TransactionList({ transactions, onEdit, onDelete }: TransactionL
   return (
     <>
       {/* Desktop table */}
-      <div className="hidden overflow-hidden rounded-lg border border-foreground/10 sm:block">
+      <div className="hidden overflow-hidden rounded-lg border border-foreground/[0.07] sm:block">
         <Table>
           <TableHeader>
             <TableRow className="bg-foreground/[0.02] hover:bg-transparent">
@@ -175,7 +175,7 @@ export function TransactionList({ transactions, onEdit, onDelete }: TransactionL
         {transactions.map((tx) => (
           <div
             key={tx.id}
-            className="flex items-center gap-3 rounded-lg border border-foreground/10 bg-foreground/[0.02] p-3"
+            className="flex items-center gap-3 rounded-lg border border-foreground/[0.07] bg-foreground/[0.03] p-3"
           >
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">

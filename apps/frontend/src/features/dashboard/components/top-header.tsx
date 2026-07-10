@@ -26,7 +26,7 @@ export function TopHeader({ breadcrumbs, onMobileMenuToggle }: TopHeaderProps) {
     // the HouseholdSwitcher dropdown (absolute, z-50 within this context) paints on top.
     // backdrop-filter (backdrop-blur-sm) creates a stacking context but without a
     // z-index it loses to siblings that come later in the DOM.
-    <header className="relative z-10 flex h-14 shrink-0 items-center border-b border-foreground/[0.06] bg-background/95 backdrop-blur-sm">
+    <header className="relative z-10 flex h-14 shrink-0 items-center border-b border-foreground/[0.06] bg-background/70 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-7xl items-center gap-3 px-4 sm:px-6">
         {/* Hamburger — mobile only, shown when a sidebar exists */}
         {onMobileMenuToggle && (

@@ -5,40 +5,56 @@ import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { LocaleSwitcher } from "@/shared/components/locale-switcher"
+import { LogoMark } from "@/shared/components/brand/logo-mark"
 import { cn } from "@/shared/lib/utils"
 
 const NAV_LINKS = [
   { label: "Recursos", href: "#recursos" },
+  { label: "Produto", href: "#tour" },
   { label: "Preços", href: "#precos" },
-  { label: "Sobre", href: "#sobre" },
+  { label: "FAQ", href: "#faq" },
 ]
 
 export function Nav() {
   const [mobileOpen, setMobileOpen] = React.useState(false)
+  const [scrolled, setScrolled] = React.useState(false)
+
+  React.useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
 
   const closeMenu = () => setMobileOpen(false)
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 border-b border-white/5 bg-[#0d0d0f]/90 backdrop-blur-md",
-        "transition-all",
-      )}
-    >
-      {/* Main nav bar */}
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-        {/* Logo */}
-        <Link href="/" className="text-xl font-bold tracking-tight text-white">
-          <span className="text-primary">lar</span>mony
+    <header className="fixed left-1/2 top-4 z-50 w-[min(1080px,calc(100%-2rem))] -translate-x-1/2">
+      {/* Pílula flutuante */}
+      <div
+        className={cn(
+          "flex items-center justify-between gap-3 rounded-full border border-white/[0.07] bg-[rgba(20,20,24,0.72)] py-2.5 pl-5 pr-2.5 backdrop-blur-xl transition-shadow",
+          scrolled && "shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6)]",
+        )}
+      >
+        {/* Logo lockup */}
+        <Link
+          href="/"
+          className="flex items-center gap-2.5 text-lg font-bold tracking-tight text-white"
+        >
+          <LogoMark size={26} />
+          <span>
+            <span className="text-primary">lar</span>mony
+          </span>
         </Link>
 
         {/* Center links — desktop only */}
-        <ul className="hidden items-center gap-6 md:flex">
+        <ul className="hidden items-center gap-1 md:flex">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-sm text-white/60 transition-colors hover:text-white"
+                className="rounded-full px-3.5 py-2 text-sm text-white/60 transition-colors hover:bg-white/[0.06] hover:text-white"
               >
                 {link.label}
               </Link>
@@ -46,21 +62,13 @@ export function Nav() {
           ))}
         </ul>
 
-        {/* Right: CTAs + hamburger */}
+        {/* Right: locale + CTA + hamburger */}
         <div className="flex items-center gap-2">
           <LocaleSwitcher className="text-white/70 hover:text-white" />
           <Button
-            variant="outline"
             size="sm"
             asChild
-            className="hidden bg-transparent text-white/70 sm:flex"
-          >
-            <Link href="/auth/login">Entrar</Link>
-          </Button>
-          <Button
-            size="sm"
-            asChild
-            className="hidden bg-primary text-primary-foreground hover:bg-primary/90 sm:flex"
+            className="hidden rounded-full bg-primary px-5 text-primary-foreground hover:bg-primary/90 sm:flex"
           >
             <Link href="/auth/signup">Começar grátis</Link>
           </Button>
@@ -68,7 +76,7 @@ export function Nav() {
           {/* Hamburger — mobile only */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
-            className="flex h-9 w-9 items-center justify-center rounded-md text-white/60 transition-colors hover:bg-white/[0.06] hover:text-white md:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/[0.06] hover:text-white md:hidden"
             aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={mobileOpen}
           >
@@ -77,33 +85,33 @@ export function Nav() {
         </div>
       </div>
 
-      {/* Mobile drawer — slides open below nav bar */}
+      {/* Mobile drawer — cai abaixo da pílula */}
       {mobileOpen && (
-        <div className="border-t border-white/5 md:hidden">
-          <nav className="flex flex-col gap-1 px-4 py-4">
+        <div className="mt-2 rounded-2xl border border-white/[0.07] bg-[rgba(20,20,24,0.92)] p-2 backdrop-blur-xl md:hidden">
+          <nav className="flex flex-col gap-1">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={closeMenu}
-                className="rounded-md px-3 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/[0.05] hover:text-white"
+                className="rounded-xl px-4 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/[0.06] hover:text-white"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
-          <div className="flex flex-col gap-2 border-t border-white/5 px-4 pb-4 pt-3">
+          <div className="mt-2 flex flex-col gap-2 border-t border-white/5 p-2 pt-3">
             <Button
               variant="outline"
               asChild
-              className="w-full bg-transparent text-white/70"
+              className="w-full rounded-full bg-transparent text-white/70"
               onClick={closeMenu}
             >
               <Link href="/auth/login">Entrar</Link>
             </Button>
             <Button
               asChild
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+              className="w-full rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={closeMenu}
             >
               <Link href="/auth/signup">Começar grátis</Link>

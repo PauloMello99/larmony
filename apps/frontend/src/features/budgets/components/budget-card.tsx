@@ -28,7 +28,7 @@ export function BudgetCard({ budget, onEdit, onDelete }: BudgetCardProps) {
   const remaining = budget.limitCents - budget.spentCents
 
   return (
-    <div className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-4">
+    <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4">
       <div className="mb-3 flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <span

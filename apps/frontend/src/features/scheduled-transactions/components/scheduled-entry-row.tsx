@@ -69,7 +69,7 @@ export function ScheduledEntryRow({
   })()
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-foreground/10 bg-foreground/[0.02] p-3">
+    <div className="flex items-center gap-3 rounded-lg border border-foreground/[0.07] bg-foreground/[0.03] p-3">
       {entry.categoryColor && (
         <span
           className="h-2.5 w-2.5 shrink-0 rounded-full"

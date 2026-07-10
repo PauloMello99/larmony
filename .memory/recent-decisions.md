@@ -24,6 +24,7 @@
 | ADR-0018 | i18n pt-BR/en com locale no perfil do usuário | 2026-07-04 | Aceito |
 | ADR-0019 | Recorrência: modelo simples + engine no cron gravando via DRIZZLE_ADMIN | 2026-07-08 | **Superseded** — unificado com bills no ADR-0020 |
 | ADR-0020 | Unificar bills + recurrences em "lançamentos programados" (scheduled_transaction_entries) | 2026-07-09 | Aceito |
+| ADR-0021 | Adoção do Design System gerado no Claude Design (logo, landing, glass app-wide) | 2026-07-10 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
 

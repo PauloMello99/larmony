@@ -7,6 +7,7 @@ import { LayoutDashboard, Building2, Users, CreditCard, Shield, ArrowLeft, Loade
 import { cn } from "@/shared/lib/utils"
 import { useMe } from "@/features/auth/hooks/use-me"
 import { UserMenu } from "@/features/dashboard/components/user-menu"
+import { AppBackground } from "@/shared/components/app-background"
 
 const NAV = [
   { href: "/admin", label: "Visão geral", icon: LayoutDashboard },
@@ -54,9 +55,10 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       : router.pathname.startsWith(href)
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background">
+      <AppBackground />
       {/* Top bar */}
-      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-foreground/[0.06] bg-background/80 px-4 py-2.5 backdrop-blur sm:px-6">
+      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-foreground/[0.06] bg-background/70 px-4 py-2.5 backdrop-blur-xl sm:px-6">
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-5 w-5 text-primary" />
           <span className="text-sm font-semibold text-foreground">

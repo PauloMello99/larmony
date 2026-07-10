@@ -4,20 +4,19 @@ import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useTranslation } from "react-i18next"
-import { ArrowLeft, User, KeyRound, Languages, Palette, Trash2 } from "lucide-react"
+import { ArrowLeft, User, KeyRound, Languages, Trash2 } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import {
   AccessSection,
-  AppearanceSection,
   DangerSection,
   LocaleSection,
   ProfileSection,
 } from "./account-sections"
 
+// Sem seção Aparência: o app é dark-only (Design System 2026-07-10).
 const SECTIONS = [
   { id: "profile", labelKey: "nav.profile", icon: User, Section: ProfileSection },
   { id: "access", labelKey: "nav.access", icon: KeyRound, Section: AccessSection },
-  { id: "appearance", labelKey: "nav.appearance", icon: Palette, Section: AppearanceSection },
   { id: "locale", labelKey: "nav.locale", icon: Languages, Section: LocaleSection },
   { id: "danger", labelKey: "nav.danger", icon: Trash2, Section: DangerSection },
 ] as const

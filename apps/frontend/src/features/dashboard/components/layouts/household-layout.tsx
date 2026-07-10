@@ -6,6 +6,7 @@ import { useRouter } from "next/router"
 import { ShieldAlert } from "lucide-react"
 import { TopHeader } from "@/features/dashboard/components/top-header"
 import { HouseholdSidebar } from "@/features/dashboard/components/household-sidebar"
+import { AppBackground } from "@/shared/components/app-background"
 import { HouseholdSwitcher } from "@/features/dashboard/components/household-switcher"
 import { HouseholdProvider } from "@/features/dashboard/components/household-context"
 import { useHouseholds, useResolveHouseholdBySlug } from "@/features/dashboard/hooks/use-households"
@@ -130,7 +131,8 @@ export function HouseholdLayout({ children }: HouseholdLayoutProps) {
   return (
     <HouseholdProvider household={household} actingAsAdmin={actingAsAdmin}>
       <OnboardingProvider onRequestMobileNav={setMobileOpen}>
-      <div className="flex h-screen flex-col overflow-hidden bg-background">
+      <div className="relative flex h-screen flex-col overflow-hidden bg-background">
+        <AppBackground />
         {actingAsAdmin ? (
           // Funcionário ou não-membro agindo com poderes de plataforma → aviso forte.
           <div className="flex shrink-0 items-center justify-center gap-2 bg-warning/15 px-4 py-1.5 text-center text-xs text-warning sm:text-sm">

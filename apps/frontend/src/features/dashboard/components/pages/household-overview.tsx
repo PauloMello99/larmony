@@ -57,7 +57,7 @@ function SummaryCard({ label, valueCents, icon: Icon, tone = "neutral", trend, l
   const trendIsGood = tone === "destructive" ? (trend ?? 0) <= 0 : (trend ?? 0) >= 0
 
   return (
-    <div className="rounded-xl border border-foreground/[0.06] bg-card p-4">
+    <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4 transition-colors hover:border-foreground/[0.12]">
       <div className="flex items-center justify-between gap-2">
         <p className="truncate text-xs font-medium text-muted-foreground">{label}</p>
         <Icon
@@ -112,7 +112,7 @@ function SectionCard({
   bodyClassName?: string
 }) {
   return (
-    <section className={cn("flex flex-col rounded-xl border border-foreground/[0.06] bg-card", className)}>
+    <section className={cn("flex flex-col rounded-xl border border-foreground/[0.07] bg-foreground/[0.03]", className)}>
       <header className="flex items-center justify-between border-b border-foreground/[0.06] px-4 py-3">
         <h2 className="text-sm font-semibold text-foreground">{title}</h2>
         {action}
