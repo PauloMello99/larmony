@@ -1,4 +1,4 @@
-# Features do Larmony — catálogo (v1)
+# Features do Larmony — catálogo
 
 Uma spec-esqueleto por milestone do roadmap (`.memory/roadmap.md`). Cada spec define
 **escopo e regras** — o *plano de implementação* é feito por milestone, quando ele começa.
@@ -15,5 +15,8 @@ Uma spec-esqueleto por milestone do roadmap (`.memory/roadmap.md`). Cada spec de
 | [08](08-relatorios.md) | Relatórios | M8 | ✅ entregue (mensal 6m + pizza/pessoa, anual 12m + totais) |
 | [09](09-recorrencia.md) | Recorrência | M9 | ⛔ superseded pelo ADR-0020 → [10](10-lancamentos-programados.md) |
 | [10](10-lancamentos-programados.md) | Lançamentos programados (unifica 07+09) | ADR-0020 | ✅ entregue (CRUD unificado, toggle auto/manual, launch, engine + lembrete) |
+| [11](11-orcamentos-recorrentes.md) | Orçamentos recorrentes/versionados (refatora 05) | M10 | 🔲 não iniciado (spec 2026-07-10) |
+| [12](12-notificacoes-multicanal.md) | Notificações multicanal + preferências | M11 | 🔲 não iniciado (spec 2026-07-10) |
+| [13](13-cron-horario-timezone.md) | Disparos com horário + timezone | M12 | 🔲 não iniciado (spec 2026-07-10) |
 
 Legenda: 🔲 não iniciado · 🚧 em desenvolvimento · ✅ entregue · ⛔ superseded

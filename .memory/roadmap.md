@@ -1,6 +1,6 @@
 ---
 name: roadmap
-description: Roadmap do Larmony — M1–M9 entregues, v1 COMPLETO (snapshot 2026-07-08)
+description: Roadmap do Larmony — v1 completo (M1–M9 + ADR-0020); v1.1 planejado (M10 budgets versionados, M11 notificações multicanal, M12 timezone)
 metadata:
   type: project
 ---
@@ -151,6 +151,20 @@ relatórios + recorrência entregues. Não há milestone pendente no roadmap do 
 | Onboarding (tour guiado) | **✅ entregue (2026-07-08)** | Backend: `users.onboarding` (jsonb `{ [tourKey]: maiorVersãoVista }`), `POST /auth/me/onboarding` (merge atômico via `||`). Frontend: `features/onboarding/` — registro central `lib/tours.ts` (steps `modal` \| `spotlight`, versionados), `OnboardingProvider` (auto-start: tour `sidebar` primeiro, depois o da aba via `route-tour.ts`; tour do formulário de transação dispara manualmente ao abrir o Sheet), `TourRenderer` + componentes custom (sem lib externa — Dialog para modal, overlay+card fixo para spotlight, alvo localizado por `data-tour`, pulado se ausente no DOM). Monta em `HouseholdLayout`. i18n em `public/locales/{pt-BR,en}/onboarding.json`, precisa constar em **todo** `makeI18nProps([...])` das páginas do household (o tour do menu pode disparar em qualquer uma). Bump de `version` em `tours.ts` = re-exibe para quem já viu. |
 
 **Gotcha — migration criada não é migration aplicada**: gerar o arquivo SQL (`drizzle-kit generate` ou manual) e registrar no `_journal.json` não roda a migration no Postgres local — é preciso `pnpm --filter backend db:migrate` explicitamente. Sintoma: `GET /auth/me` (ou qualquer query que toque a coluna nova) quebra com 500 "Failed query" mesmo com o código do backend correto, porque a coluna não existe de fato na tabela. Sempre confirmar com `\d <tabela>` no psql (ou rodar a migration) antes de testar uma feature que depende de uma migration nova.
+
+## v1.1 — Próximos milestones (planejados 2026-07-10, specs prontas)
+
+Specs-esqueleto em `docs/product/features/` (mesmo contrato do v1: escopo +
+regras; plano de implementação + ADR no kickoff de cada um). Ordem recomendada
+M10 → M11 → M12 (M11 depende do limite vigente do M10 para "orçamento
+estourado"; M12 define o *quando* dos jobs que o M11 cria).
+
+| M | Feature | Spec | Resumo | ADR reservado |
+|---|---|---|---|---|
+| M10 | Orçamentos recorrentes/versionados | [11-orcamentos-recorrentes.md](../docs/product/features/11-orcamentos-recorrentes.md) | Limite mensal vira série + versões (`effective_from`), resolução on-read (sem cron de clonagem); meses passados imutáveis; remover = encerrar série (`ended_from`), não apagar histórico; migração colapsa linhas-por-mês em versões | ADR-0021 |
+| M11 | Notificações multicanal + preferências | [12-notificacoes-multicanal.md](../docs/product/features/12-notificacoes-multicanal.md) | Dispatcher no módulo `notifications` (in-app sempre + e-mail/SMS/WhatsApp por preferência de usuário, ports `ISmsSender`/`IWhatsAppSender`); eventos: lançamento auto, meta atingida, orçamento estourado, relatório mensal; telefone verificado p/ SMS/WhatsApp; flags de custo | ADR-0022 |
+| M12 | Disparos com horário + timezone | [13-cron-horario-timezone.md](../docs/product/features/13-cron-horario-timezone.md) | Tick continua burro; jobs comparam relógio local: `households.timezone` (dados/vencimentos) + `users.timezone`+`notification_hour` (entrega); IANA sempre; dedup em data local; auditoria dos jobs afetados (engine, reminders, monthly-report) | ADR-0023 |
+| M13 | Open Finance (conexão bancária) | [14-open-finance.md](../docs/product/features/14-open-finance.md) | Importação/conciliação automática via agregador licenciado (Pluggy/Belvo/Klavi — escolher na Fase 0 com PoC + ADR); port `IBankAggregator`, dedup idempotente, consentimento LGPD; destrava plano "Conectado" da assinatura B2C (decisão comercial 2026-07-10: freemium + Premium R$ 14,90/mês por lar). Pré-requisito: entitlements/billing (Stripe) | ADR no kickoff |
 
 ## Fora de escopo do v1
 

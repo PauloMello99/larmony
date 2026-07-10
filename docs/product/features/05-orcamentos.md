@@ -1,5 +1,10 @@
 # 05 — Orçamentos (M5)
 
+> **Refatoração planejada (M10)**: o modelo linha-por-mês abaixo será
+> substituído por séries versionadas com herança automática entre meses — ver
+> [`11-orcamentos-recorrentes.md`](11-orcamentos-recorrentes.md). Este doc
+> segue descrevendo o comportamento **vigente** até o M10 ser entregue.
+
 > **Entregue (2026-07-06)**: CRUD via `households/:householdId/budgets?month=&year=`
 > (RLS via `DRIZZLE`, guard `HouseholdMembershipGuard`). **Spending derivado em
 > runtime** no `list`: join correlacionado budgets→transactions por
