@@ -328,6 +328,28 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
 - Test-first por módulo: unitário (use-cases, domain) + integração (controller +
   repositório com banco local). Regra herdada da carcaça; manter no Larmony.
 
+### Seed de dados para dev local (2026-07-10)
+
+- `pnpm --filter backend seed:local` (`apps/backend/scripts/seed-local-user.ts`)
+  recria do zero o usuário `local@user.com` / `we3fladmin*` (login fixo,
+  idempotente — deleta `auth.users`+`public.users`+household anterior antes
+  de semear) com 2 anos de dados ricos em todos os módulos: ~250 transações
+  (recorrentes + discricionárias + parcelamentos), 5 categorias orçadas com
+  histórico versionado (M10 — inclui um caso de série encerrada+reaberta com
+  gap, para testar visualização somente-leitura de meses passados/futuros),
+  4 metas (uma concluída), 4 lançamentos programados (auto+manual).
+- **Gotcha**: o script fala HTTP com o dev server real (`pnpm --filter
+  backend dev` precisa estar rodando) em vez de bootar o Nest em-processo —
+  `tsx`/esbuild não emite os metadados de decorator (`design:paramtypes`) que
+  o DI do Nest usa para injeção implícita por tipo (`ConfigService` etc.),
+  então um bootstrap in-process via `tsx` falha silenciosamente com
+  providers `undefined`. `ts-jest`/o compilador do Nest CLI não têm esse
+  problema — só scripts `tsx` que instanciam o `AppModule` diretamente.
+- Histórico de orçamento (`budget_versions` retroativos) é sempre inserido
+  via SQL direto (pool admin) — a API nunca cria versão passada por design
+  (M10); é assim mesmo que qualquer seed de histórico de orçamento precisa
+  ser feito.
+
 ### Pendências não bloqueantes para V1
 
 - Landing page com copy do Larmony (hoje já tem copy de finanças domésticas).
