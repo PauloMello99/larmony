@@ -199,18 +199,24 @@ function DropdownMenuSubContent({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>) {
   return (
-    <DropdownMenuPrimitive.SubContent
-      data-slot="dropdown-menu-sub-content"
-      className={cn(
-        "bg-popover text-foreground z-50 min-w-[8rem] overflow-hidden rounded-lg border border-foreground/10 p-1 shadow-lg",
-        "data-[state=open]:animate-in data-[state=closed]:animate-out",
-        "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-        "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-        "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
-        className,
-      )}
-      {...props}
-    />
+    // Portal é obrigatório: sem ele o SubContent renderiza sob o Content pai
+    // (que tem `overflow-hidden`), que recorta a pintura do submenu — o
+    // conteúdo existe no DOM mas não aparece (bug do submenu de idioma).
+    <DropdownMenuPrimitive.Portal>
+      <DropdownMenuPrimitive.SubContent
+        data-slot="dropdown-menu-sub-content"
+        className={cn(
+          "bg-popover/85 backdrop-blur-xl text-foreground z-50 min-w-[8rem] overflow-hidden rounded-lg border border-foreground/10 p-1 shadow-lg",
+          "data-[state=open]:animate-in data-[state=closed]:animate-out",
+          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+          "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+          "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
+          "data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          className,
+        )}
+        {...props}
+      />
+    </DropdownMenuPrimitive.Portal>
   )
 }
 
