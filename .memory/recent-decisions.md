@@ -25,6 +25,7 @@
 | ADR-0019 | Recorrência: modelo simples + engine no cron gravando via DRIZZLE_ADMIN | 2026-07-08 | **Superseded** — unificado com bills no ADR-0020 |
 | ADR-0020 | Unificar bills + recurrences em "lançamentos programados" (scheduled_transaction_entries) | 2026-07-09 | Aceito |
 | ADR-0021 | Adoção do Design System gerado no Claude Design (logo, landing, glass app-wide) | 2026-07-10 | Aceito |
+| ADR-0022 | Orçamentos como série + versões, resolução on-read (M10) | 2026-07-10 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
 
@@ -72,3 +73,22 @@
   re-ancorando cursor, launch manual criando transação real, dashboard "Próximos
   lançamentos". Detalhes em `domain-rules.md` §Lançamentos programados e
   `docs/product/features/10-lancamentos-programados.md`.
+- **2026-07-10 — M10 Orçamentos recorrentes entregue (ADR-0022)**: `budgets`
+  vira série por categoria + `budget_versions` (histórico de limites),
+  resolução do limite on-read (`DISTINCT ON`, nunca materializada). Editar
+  sempre faz upsert da versão do mês corrente (nunca toca o passado); série
+  com `ended_from` preenchido (não é mais a aberta) → 422 ao editar. Remover
+  sempre encerra a série (nunca hard delete). `currentPeriodStart()`/
+  `currentMonthYear()` centralizam "mês corrente" em `common/finance/
+  due-date.ts` (prepara M12). Overview (`budgetsProgress`) replica a mesma
+  resolução. Migration `0006` sem backfill de valores (staging é dado de
+  teste descartável — decisão do kickoff). Gotcha de ambiente resolvido no
+  caminho: `drizzle.__drizzle_migrations` local estava com hashes de
+  0000-0002 divergentes do conteúdo atual dos arquivos e 0004/0005 nunca
+  registradas (embora já aplicadas) — corrigido recalculando os hashes reais
+  e reinserindo as linhas faltantes antes de rodar a 0006 (bookkeeping puro,
+  sem tocar dado/schema). 11 e2e novos (herança, projeção, imutabilidade,
+  reabertura de série) + 72 e2e/34 unit da suíte completa seguem verdes;
+  Playwright cobre CRUD no mês corrente + navegação para mês passado/futuro
+  somente-leitura. Detalhes em `domain-rules.md` §Orçamentos e
+  `docs/product/features/11-orcamentos-recorrentes.md`.

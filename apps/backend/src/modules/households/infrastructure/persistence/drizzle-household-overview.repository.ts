@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, desc, eq, gte, lt, sql } from "drizzle-orm";
+import { and, desc, eq, gt, gte, isNull, lt, lte, or, sql } from "drizzle-orm";
 import { DRIZZLE, type DrizzleDB } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
 import {
@@ -40,7 +40,7 @@ export class DrizzleHouseholdOverviewRepository implements IHouseholdOverviewRep
         this.goalsSummary(householdId),
         this.upcomingBills(householdId, now),
         this.recentTransactions(householdId),
-        this.budgetsProgress(householdId, now, curStart, curEnd),
+        this.budgetsProgress(householdId, curStart, curEnd),
       ]);
 
     return { currentMonth, previousMonth, goals, upcomingBills, recentTransactions, budgets };
@@ -157,19 +157,34 @@ export class DrizzleHouseholdOverviewRepository implements IHouseholdOverviewRep
 
   private async budgetsProgress(
     householdId: string,
-    now: Date,
     curStart: Date,
     curEnd: Date,
   ): Promise<BudgetProgress[]> {
+    const periodStartISO = toISODate(curStart);
+
+    // Mesma resolução on-read do módulo budgets (M10) — replicada aqui, não
+    // acoplada (ver domain-rules): limite vigente = maior effective_from <=
+    // início do mês corrente, série ainda não encerrada antes dele.
+    const resolvedVersions = this.db
+      .selectDistinctOn([schema.budgetVersions.budgetId], {
+        budgetId: schema.budgetVersions.budgetId,
+        amountCents: schema.budgetVersions.amountCents,
+      })
+      .from(schema.budgetVersions)
+      .where(lte(schema.budgetVersions.effectiveFrom, periodStartISO))
+      .orderBy(schema.budgetVersions.budgetId, desc(schema.budgetVersions.effectiveFrom))
+      .as("resolved_versions");
+
     const rows = await this.db
       .select({
         id: schema.budgets.id,
         categoryName: schema.categories.name,
         categoryColor: schema.categories.color,
-        limitCents: schema.budgets.amountCents,
+        limitCents: resolvedVersions.amountCents,
         spentCents: sql<number>`coalesce(sum(case when ${schema.transactions.type} = 'expense' then ${schema.transactions.amountCents} else 0 end), 0)::int`,
       })
       .from(schema.budgets)
+      .innerJoin(resolvedVersions, eq(resolvedVersions.budgetId, schema.budgets.id))
       .innerJoin(schema.categories, eq(schema.categories.id, schema.budgets.categoryId))
       .leftJoin(
         schema.transactions,
@@ -183,15 +198,14 @@ export class DrizzleHouseholdOverviewRepository implements IHouseholdOverviewRep
       .where(
         and(
           eq(schema.budgets.householdId, householdId),
-          eq(schema.budgets.month, now.getMonth() + 1),
-          eq(schema.budgets.year, now.getFullYear()),
+          or(isNull(schema.budgets.endedFrom), gt(schema.budgets.endedFrom, periodStartISO)),
         ),
       )
       .groupBy(
         schema.budgets.id,
         schema.categories.name,
         schema.categories.color,
-        schema.budgets.amountCents,
+        resolvedVersions.amountCents,
       );
 
     return rows

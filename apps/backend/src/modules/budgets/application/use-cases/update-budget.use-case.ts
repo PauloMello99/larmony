@@ -19,7 +19,7 @@ export class UpdateBudgetUseCase {
     authId: string,
     amountCents: number,
   ): Promise<BudgetEntity> {
-    const budget = await this.budgetRepo.updateAmount(budgetId, householdId, amountCents);
+    const budget = await this.budgetRepo.upsertCurrentVersion(budgetId, householdId, amountCents);
 
     await this.auditService.logByAuthId(authId, {
       householdId,

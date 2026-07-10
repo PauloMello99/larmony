@@ -5,7 +5,7 @@
 > janela do dia em UTC** — ou seja, um lembrete pode chegar ~00h–02h no Brasil.
 > Este milestone adiciona **timezone + horário preferido** a todos os disparos
 > agendados por data. Decisão de modelo temporal a formalizar em ADR no
-> kickoff (reservar ADR-0023).
+> kickoff (reservar ADR-0024).
 
 ## Princípios
 

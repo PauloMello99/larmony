@@ -43,6 +43,13 @@
       "when": 1783241797155,
       "tag": "0005_scheduled_transaction_entries",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1783241797156,
+      "tag": "0006_budget_versioning",
+      "breakpoints": true
     }
   ]
 }

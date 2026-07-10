@@ -3,7 +3,7 @@
 > **Proposta (2026-07-10)**: evolui o módulo `notifications` (hoje in-app +
 > e-mail acoplado caso a caso) para um **dispatcher multicanal** com
 > preferências por usuário. Decisão de provedor SMS/WhatsApp e da arquitetura
-> de fan-out a formalizar em ADR no kickoff (reservar ADR-0022).
+> de fan-out a formalizar em ADR no kickoff (reservar ADR-0023).
 
 ## Canais
 

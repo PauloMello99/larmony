@@ -24,6 +24,28 @@ export function toISODate(d: Date): string {
   return dateOnly(d).toISOString().slice(0, 10);
 }
 
+/** ISO (yyyy-MM-dd) do 1º dia do período `month`(1-12)/`year`. */
+export function periodStart(month: number, year: number): string {
+  return toISODate(new Date(year, month - 1, 1));
+}
+
+/**
+ * ISO (yyyy-MM-dd) do 1º dia do mês corrente — âncora ÚNICA de toda a
+ * imutabilidade de orçamentos versionados (M10, ver
+ * `docs/product/features/11-orcamentos-recorrentes.md`): tanto a checagem de
+ * "período editável" quanto o anchor de create/edit usam esta função, para
+ * nunca divergir. Hoje deriva do relógio do processo (UTC em produção); o
+ * M12 substitui por timezone do household sem tocar os chamadores.
+ */
+export function currentPeriodStart(now: Date = new Date()): string {
+  return toISODate(monthBounds(now).start);
+}
+
+/** Mês/ano (1-12/YYYY) do período corrente — mesma âncora de `currentPeriodStart`. */
+export function currentMonthYear(now: Date = new Date()): { month: number; year: number } {
+  return { month: now.getMonth() + 1, year: now.getFullYear() };
+}
+
 /**
  * Avança `iso` (yyyy-MM-dd) em `months` meses, clampando o dia ao fim do mês
  * destino (ex.: 31/01 + 1 mês → 28/02). Usado nas datas das parcelas.

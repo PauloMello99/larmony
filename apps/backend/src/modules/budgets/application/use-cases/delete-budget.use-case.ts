@@ -13,7 +13,7 @@ export class DeleteBudgetUseCase {
   ) {}
 
   async execute(budgetId: string, householdId: string, authId: string): Promise<void> {
-    await this.budgetRepo.delete(budgetId, householdId);
+    await this.budgetRepo.endSeries(budgetId, householdId);
 
     await this.auditService.logByAuthId(authId, {
       householdId,

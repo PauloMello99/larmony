@@ -26,7 +26,7 @@ export class CreateBudgetUseCase {
       action: "create",
       entityType: "budget",
       entityId: budget.id,
-      metadata: { categoryId: budget.categoryId, month: budget.month, year: budget.year },
+      metadata: { categoryId: budget.categoryId, amountCents: data.amountCents },
     });
 
     return budget;

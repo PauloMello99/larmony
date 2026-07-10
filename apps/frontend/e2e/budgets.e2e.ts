@@ -74,6 +74,56 @@ test("cria orçamento e o spending reflete uma despesa (excedido)", async ({ pag
   await expect(card.getByText("R$ 900,00")).toBeVisible()
 })
 
+function capitalizeFirst(label: string): string {
+  return label.charAt(0).toUpperCase() + label.slice(1)
+}
+
+function shiftMonth(base: Date, delta: number): { month: number; year: number } {
+  const total = base.getFullYear() * 12 + base.getMonth() + delta
+  return { year: Math.floor(total / 12), month: (total % 12) + 1 }
+}
+
+async function navigateToPeriod(
+  page: import("@playwright/test").Page,
+  month: number,
+  year: number,
+) {
+  const monthName = capitalizeFirst(
+    new Date(year, month - 1, 1).toLocaleDateString("pt-BR", { month: "long" }),
+  )
+  await page.getByRole("combobox", { name: "Mês do orçamento" }).click()
+  await page.getByRole("option", { name: monthName }).click()
+  await page.getByRole("combobox", { name: "Ano do orçamento" }).click()
+  await page.getByRole("option", { name: String(year) }).click()
+}
+
+test("mês futuro é projeção somente-leitura; mês passado é somente-leitura", async ({ page }) => {
+  await login(page)
+  await page.getByRole("navigation").last().getByRole("link", { name: "Orçamentos", exact: true }).click()
+  await page.waitForURL(/\/budgets$/)
+
+  const now = new Date()
+
+  // Navega para o mês seguinte — herda o limite como projeção, sem controles.
+  const nextPeriod = shiftMonth(now, 1)
+  await navigateToPeriod(page, nextPeriod.month, nextPeriod.year)
+
+  await expect(page.getByText("Alimentação")).toBeVisible()
+  await expect(page.getByText("de R$ 800,00")).toBeVisible()
+  await expect(page.getByRole("button", { name: "Novo orçamento" })).toHaveCount(0)
+  await expect(page.locator("main [aria-haspopup='menu']")).toHaveCount(0)
+  await expect(
+    page.getByText("Mês futuro — o limite exibido é uma projeção do valor vigente hoje."),
+  ).toBeVisible()
+
+  // Navega para o mês anterior — nada aparece ainda (série só existe a partir do mês corrente).
+  const prevPeriod = shiftMonth(now, -1)
+  await navigateToPeriod(page, prevPeriod.month, prevPeriod.year)
+
+  await expect(page.getByRole("button", { name: "Novo orçamento" })).toHaveCount(0)
+  await expect(page.getByText("Nenhum orçamento neste período.")).toBeVisible()
+})
+
 test("edita o limite (sai de excedido) e exclui", async ({ page }) => {
   await login(page)
   await page.getByRole("navigation").last().getByRole("link", { name: "Orçamentos", exact: true }).click()

@@ -4,7 +4,9 @@
     "subtitle": "Límites de gasto mensuales por categoría",
     "newBudget": "Nuevo presupuesto",
     "empty": "Sin presupuesto en este periodo.",
-    "createBudget": "Crear presupuesto"
+    "createBudget": "Crear presupuesto",
+    "readOnlyNotice": "Mes cerrado — el límite mostrado es el que aplicaba en ese periodo y no se puede cambiar.",
+    "projectedNotice": "Mes futuro — el límite mostrado es una proyección del valor vigente hoy."
   },
   "periodNav": {
     "monthAria": "Presupuesto del mes",

@@ -238,12 +238,56 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
   Materializar só se a performance exigir.
 - Meta concluída quando `current >= target` (badge "Concluída" na UI).
 
-### Orçamentos (budgets)
+### Orçamentos (budgets) — M10 ✅ (série + versões, ADR-0021)
 
-- Limite de gasto mensal por categoria: unique `(household_id, category_id, month, year)`.
-- **Spending é calculado em tempo real** via query de transactions do mesmo
-  mês/ano/categoria — nunca persistido.
-- Ao editar orçamento, a categoria é imutável (troca = deletar + criar).
+- Modelo **série + versões**: `budgets` é a série por `(household_id,
+  category_id)` — só identidade + `ended_from` opcional; `budget_versions`
+  guarda o histórico de limites (`amount_cents`, `effective_from`, dia 1 do
+  mês). Unique parcial `(household_id, category_id) WHERE ended_from IS NULL`
+  — só uma série **aberta** por categoria (séries encerradas não conflitam,
+  permitindo recriar).
+- **Resolução do limite é on-read, nunca materializada**: para um período, a
+  versão aplicável é a de **maior `effective_from` ≤ início do período**
+  (`DISTINCT ON (budget_id) ORDER BY budget_id, effective_from DESC`, ver
+  `drizzle-budget.repository.ts`), e a série só entra na listagem se ainda
+  cobria o período (`ended_from IS NULL OR período < ended_from`). Nenhum cron
+  clona/materializa orçamento por mês — a herança automática entre meses é
+  100% derivada.
+- **Invariante central: editar = upsert da versão do mês corrente, nunca
+  altera uma versão passada.** `PATCH` faz
+  `INSERT ... ON CONFLICT (budget_id, effective_from) DO UPDATE` com
+  `effective_from = currentPeriodStart()` — reeditar no mesmo mês sobrescreve
+  a mesma versão (não duplica); meses anteriores nunca são tocados. Essa
+  regra entrega a imutabilidade do passado e a reedição no mesmo caminho.
+- **Imutabilidade enforçada no servidor, não é só flag de UI**: editar uma
+  série com `ended_from` preenchido (não é mais a série aberta) → 422
+  `BUDGET_PERIOD_NOT_EDITABLE`. Não há parâmetro de período no `PATCH`/`POST`
+  — create/edit sempre ancoram no mês corrente; não é possível pedir para
+  editar um mês passado/futuro via API (elimina a necessidade de validar
+  "qual mês o cliente está vendo").
+- **"Mês corrente" é UMA função só**: `currentPeriodStart()`/`currentMonthYear()`
+  em `common/finance/due-date.ts` — usada pelo anchor de create/edit E pelo
+  cálculo de `isEditable`/`isProjected` no `list-budgets.use-case`. Nunca
+  duplicar `new Date()` para essa decisão (prepara M12 — troca de UTC para
+  timezone do household numa função só, sem tocar chamadores).
+- **`isEditable`/`isProjected` são propriedades do PERÍODO consultado**, não
+  da linha — atribuídas uniformemente pelo use-case (`período === corrente` /
+  `período > corrente`), nunca calculadas por linha no repositório. Sem
+  scheduling futuro no v1: qualquer período à frente do corrente é sempre
+  projeção do limite vigente (nunca há versão com `effective_from` futuro).
+- **Remoção = encerrar a série sempre** (`ended_from = mês corrente`), nunca
+  hard delete — um único caminho de código, mesmo se a série foi criada e
+  removida no mesmo mês (tombstone invisível, não bloqueia recriar via a
+  unique parcial). Remover uma série já encerrada → 404 (idempotente).
+- Categoria continua imutável (trocar = encerrar série + criar outra).
+- **Spending continua calculado em tempo real** via query de transactions do
+  mesmo mês/ano/categoria — nunca persistido (inalterado desde M5).
+- Overview (`budgetsProgress`, M3) replica a mesma resolução on-read para o
+  mês corrente — não acoplado ao módulo `budgets` (mesmo padrão do M5).
+- **Migração 0006 sem backfill de valores** (decisão deliberada do kickoff):
+  produção intocada, staging é dado de teste descartável — a migration só
+  remodela as tabelas, sem `INSERT ... SELECT` de histórico. Usuários
+  reconfiguram os orçamentos após o deploy.
 
 ### Relatórios (reports) — M8 ✅
 

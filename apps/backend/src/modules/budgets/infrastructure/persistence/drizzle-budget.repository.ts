@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gt, gte, isNull, lt, lte, or, sql } from "drizzle-orm";
 import { DRIZZLE, type DrizzleDB } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
-import { monthBounds, toISODate } from "../../../../common/finance/due-date";
+import { currentPeriodStart, monthBounds, periodStart, toISODate } from "../../../../common/finance/due-date";
 import type {
   BudgetListItem,
   CreateBudgetData,
@@ -11,6 +11,7 @@ import type {
 import type { BudgetEntity } from "../../domain/budget.entity";
 import { BudgetNotFoundException } from "../../domain/exceptions/budget-not-found.exception";
 import { BudgetAlreadyExistsException } from "../../domain/exceptions/budget-already-exists.exception";
+import { BudgetPeriodNotEditableException } from "../../domain/exceptions/budget-period-not-editable.exception";
 import { BudgetMapper } from "./budget.mapper";
 
 /** Código Postgres de violação de unique constraint. */
@@ -24,12 +25,27 @@ export class DrizzleBudgetRepository implements IBudgetRepository {
     householdId: string,
     month: number,
     year: number,
-  ): Promise<BudgetListItem[]> {
+  ): Promise<Omit<BudgetListItem, "isEditable" | "isProjected">[]> {
+    const periodStartISO = periodStart(month, year);
     const { start, end } = monthBounds(new Date(year, month - 1, 1));
+
+    // Resolução on-read (M10): a versão vigente de cada série é a de maior
+    // effective_from <= início do período — nunca materializada. Séries sem
+    // nenhuma versão até o período (ainda não existiam) somem naturalmente
+    // do inner join abaixo.
+    const resolvedVersions = this.db
+      .selectDistinctOn([schema.budgetVersions.budgetId], {
+        budgetId: schema.budgetVersions.budgetId,
+        amountCents: schema.budgetVersions.amountCents,
+      })
+      .from(schema.budgetVersions)
+      .where(lte(schema.budgetVersions.effectiveFrom, periodStartISO))
+      .orderBy(schema.budgetVersions.budgetId, desc(schema.budgetVersions.effectiveFrom))
+      .as("resolved_versions");
 
     // Spending derivado em runtime: join correlacionado budgets→transactions por
     // categoria+household dentro do range do mês, somando apenas despesas.
-    return this.db
+    const rows = await this.db
       .select({
         id: schema.budgets.id,
         householdId: schema.budgets.householdId,
@@ -37,14 +53,13 @@ export class DrizzleBudgetRepository implements IBudgetRepository {
         categoryName: schema.categories.name,
         categoryColor: schema.categories.color,
         categoryIcon: schema.categories.icon,
-        month: schema.budgets.month,
-        year: schema.budgets.year,
-        limitCents: schema.budgets.amountCents,
+        limitCents: resolvedVersions.amountCents,
         spentCents: sql<number>`coalesce(sum(case when ${schema.transactions.type} = 'expense' then ${schema.transactions.amountCents} else 0 end), 0)::int`,
         createdAt: schema.budgets.createdAt,
         updatedAt: schema.budgets.updatedAt,
       })
       .from(schema.budgets)
+      .innerJoin(resolvedVersions, eq(resolvedVersions.budgetId, schema.budgets.id))
       .innerJoin(schema.categories, eq(schema.categories.id, schema.budgets.categoryId))
       .leftJoin(
         schema.transactions,
@@ -58,8 +73,8 @@ export class DrizzleBudgetRepository implements IBudgetRepository {
       .where(
         and(
           eq(schema.budgets.householdId, householdId),
-          eq(schema.budgets.month, month),
-          eq(schema.budgets.year, year),
+          // Série ainda cobre o período: aberta, ou encerrada só a partir de um mês posterior.
+          or(isNull(schema.budgets.endedFrom), gt(schema.budgets.endedFrom, periodStartISO)),
         ),
       )
       .groupBy(
@@ -67,50 +82,80 @@ export class DrizzleBudgetRepository implements IBudgetRepository {
         schema.categories.name,
         schema.categories.color,
         schema.categories.icon,
+        resolvedVersions.amountCents,
       )
       .orderBy(asc(schema.categories.name));
+
+    return rows.map((row) => ({ ...row, month, year }));
   }
 
   async create(householdId: string, data: CreateBudgetData): Promise<BudgetEntity> {
-    try {
-      const [row] = await this.db
-        .insert(schema.budgets)
-        .values({
-          householdId,
-          categoryId: data.categoryId,
-          month: data.month,
-          year: data.year,
-          amountCents: data.amountCents,
-        })
-        .returning();
+    const effectiveFrom = currentPeriodStart();
 
-      if (!row) throw new Error("Failed to create budget");
-      return BudgetMapper.toDomain(row);
+    try {
+      return await this.db.transaction(async (tx) => {
+        const [budgetRow] = await tx
+          .insert(schema.budgets)
+          .values({ householdId, categoryId: data.categoryId })
+          .returning();
+
+        if (!budgetRow) throw new Error("Failed to create budget");
+
+        await tx.insert(schema.budgetVersions).values({
+          budgetId: budgetRow.id,
+          amountCents: data.amountCents,
+          effectiveFrom,
+        });
+
+        return BudgetMapper.toDomain(budgetRow);
+      });
     } catch (err) {
       if (isUniqueViolation(err)) throw new BudgetAlreadyExistsException();
       throw err;
     }
   }
 
-  async updateAmount(
+  async upsertCurrentVersion(
     id: string,
     householdId: string,
     amountCents: number,
   ): Promise<BudgetEntity> {
-    const [row] = await this.db
-      .update(schema.budgets)
-      .set({ amountCents, updatedAt: new Date() })
-      .where(and(eq(schema.budgets.id, id), eq(schema.budgets.householdId, householdId)))
-      .returning();
+    const [budgetRow] = await this.db
+      .select()
+      .from(schema.budgets)
+      .where(and(eq(schema.budgets.id, id), eq(schema.budgets.householdId, householdId)));
 
-    if (!row) throw new BudgetNotFoundException(id);
-    return BudgetMapper.toDomain(row);
+    if (!budgetRow) throw new BudgetNotFoundException(id);
+    if (budgetRow.endedFrom !== null) throw new BudgetPeriodNotEditableException(id);
+
+    const effectiveFrom = currentPeriodStart();
+
+    // Upsert = nunca altera uma versão passada; reeditar no mesmo mês
+    // sobrescreve a mesma versão em vez de criar outra.
+    await this.db
+      .insert(schema.budgetVersions)
+      .values({ budgetId: id, amountCents, effectiveFrom })
+      .onConflictDoUpdate({
+        target: [schema.budgetVersions.budgetId, schema.budgetVersions.effectiveFrom],
+        set: { amountCents, updatedAt: new Date() },
+      });
+
+    return BudgetMapper.toDomain(budgetRow);
   }
 
-  async delete(id: string, householdId: string): Promise<void> {
+  async endSeries(id: string, householdId: string): Promise<void> {
+    const endedFrom = currentPeriodStart();
+
     const rows = await this.db
-      .delete(schema.budgets)
-      .where(and(eq(schema.budgets.id, id), eq(schema.budgets.householdId, householdId)))
+      .update(schema.budgets)
+      .set({ endedFrom, updatedAt: new Date() })
+      .where(
+        and(
+          eq(schema.budgets.id, id),
+          eq(schema.budgets.householdId, householdId),
+          isNull(schema.budgets.endedFrom),
+        ),
+      )
       .returning({ id: schema.budgets.id });
 
     if (rows.length === 0) throw new BudgetNotFoundException(id);
