@@ -23,7 +23,6 @@ import { DeleteBudgetUseCase } from "../application/use-cases/delete-budget.use-
 import { CreateBudgetDto } from "./dto/create-budget.dto";
 import { UpdateBudgetDto } from "./dto/update-budget.dto";
 import { ListBudgetsQueryDto } from "./dto/list-budgets-query.dto";
-import { currentMonthYear } from "../../../common/finance/due-date";
 
 @Controller("households/:householdId/budgets")
 @UseGuards(AuthGuard, HouseholdMembershipGuard)
@@ -40,10 +39,8 @@ export class BudgetsController {
     @Param("householdId", ParseUUIDPipe) householdId: string,
     @Query() query: ListBudgetsQueryDto,
   ) {
-    const current = currentMonthYear();
-    const month = query.month ?? current.month;
-    const year = query.year ?? current.year;
-    return this.listBudgets.execute(householdId, month, year);
+    // Default de mês/ano (fuso do lar) resolvido no use-case — ver M12/ADR-0024.
+    return this.listBudgets.execute(householdId, query.month, query.year);
   }
 
   @Post()

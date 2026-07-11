@@ -104,4 +104,7 @@ export interface IBudgetRepository {
 
   /** IDs dos membros habilitados do lar — fan-out da notificação de estouro. */
   findHouseholdMemberUserIds(householdId: string): Promise<string[]>;
+
+  /** Fuso IANA do lar (M12) — âncora do "mês corrente" dos orçamentos. */
+  findTimezone(householdId: string): Promise<string>;
 }

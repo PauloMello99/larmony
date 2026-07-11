@@ -9,6 +9,10 @@ function entry(partial: Partial<ScheduledEntryEntityProps>): ScheduledEntryEntit
     id: "entry-1",
     householdId: "hh-1",
     householdSlug: "casa-teste",
+    // Fuso UTC + hora 0 nos testes de janela/dedup: isola a lógica de DIA do
+    // gate de hora (coberto por testes dedicados no e2e de cron). Ver M12.
+    householdTimezone: "UTC",
+    householdNotificationHour: 0,
     description: "Aluguel",
     amountCents: 150_000,
     frequency: "monthly",
@@ -46,19 +50,19 @@ function makeUseCase(entries: ScheduledEntryEntity[]) {
   return { useCase, repo, dispatch };
 }
 
-describe("alreadySentToday (dedup por dia-calendário)", () => {
+describe("alreadySentToday (dedup por dia-calendário local do lar)", () => {
   it("false sem envio anterior", () => {
-    expect(alreadySentToday(entry({}), new Date(2026, 6, 7))).toBe(false);
+    expect(alreadySentToday(entry({}), new Date(2026, 6, 7), "UTC")).toBe(false);
   });
 
-  it("true quando o último envio é do mesmo dia", () => {
-    const e = entry({ reminderLastSentAt: new Date(2026, 6, 7, 9, 0) });
-    expect(alreadySentToday(e, new Date(2026, 6, 7, 18, 0))).toBe(true);
+  it("true quando o último envio é do mesmo dia local", () => {
+    const e = entry({ reminderLastSentAt: new Date(Date.UTC(2026, 6, 7, 9, 0)) });
+    expect(alreadySentToday(e, new Date(Date.UTC(2026, 6, 7, 18, 0)), "UTC")).toBe(true);
   });
 
-  it("false quando o último envio foi em outro dia do mesmo mês", () => {
-    const e = entry({ reminderLastSentAt: new Date(2026, 6, 5) });
-    expect(alreadySentToday(e, new Date(2026, 6, 7))).toBe(false);
+  it("false quando o último envio foi em outro dia local", () => {
+    const e = entry({ reminderLastSentAt: new Date(Date.UTC(2026, 6, 5)) });
+    expect(alreadySentToday(e, new Date(Date.UTC(2026, 6, 7)), "UTC")).toBe(false);
   });
 });
 
@@ -126,6 +130,33 @@ describe("SendScheduledEntryRemindersUseCase", () => {
     const result = await useCase.execute(new Date(2026, 6, 18));
 
     expect(result.sent).toBe(1);
+  });
+
+  describe("gate de hora no fuso do lar (M12)", () => {
+    // 2026-07-07 05:00 UTC → com startDate dia 10 + reminder 3, vence hoje.
+    const at5hUtc = new Date(Date.UTC(2026, 6, 7, 5, 0));
+
+    it("NÃO dispara antes da hora preferida local (05h < 09h)", async () => {
+      const { useCase, repo } = makeUseCase([
+        entry({ householdTimezone: "UTC", householdNotificationHour: 9 }),
+      ]);
+
+      const result = await useCase.execute(at5hUtc);
+
+      expect(result.sent).toBe(0);
+      expect(repo.markReminderSent).not.toHaveBeenCalled();
+    });
+
+    it("dispara a partir da hora preferida local (05h >= 05h)", async () => {
+      const { useCase, repo } = makeUseCase([
+        entry({ householdTimezone: "UTC", householdNotificationHour: 5 }),
+      ]);
+
+      const result = await useCase.execute(at5hUtc);
+
+      expect(result.sent).toBe(1);
+      expect(repo.markReminderSent).toHaveBeenCalledWith("entry-1", at5hUtc);
+    });
   });
 
   it("dedup por dia (não por mês): 2ª ocorrência semanal do mesmo mês dispara de novo", async () => {

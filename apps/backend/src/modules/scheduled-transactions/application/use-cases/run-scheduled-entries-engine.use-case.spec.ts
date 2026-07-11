@@ -6,10 +6,16 @@ import type {
   IScheduledEntryRepository,
 } from "../../domain/scheduled-entry.repository.interface";
 
+const KIRITIMATI = "Pacific/Kiritimati"; // UTC+14
+const MIDWAY = "Pacific/Midway"; // UTC-11
+
 function dueEntry(partial: Partial<DueScheduledEntry>): DueScheduledEntry {
   return {
     id: "e1",
     householdId: "hh1",
+    // Fuso UTC nos testes de catch-up/cursor: isola a lógica de calendário do
+    // efeito de fuso (coberto no bloco M12 abaixo).
+    householdTimezone: "UTC",
     createdBy: "u1",
     personId: "u1",
     categoryId: null,
@@ -111,5 +117,47 @@ describe("RunScheduledEntriesEngineUseCase", () => {
     const result = await useCase.execute(now);
     expect(result).toEqual({ scanned: 0, generated: 0, deactivated: 0 });
     expect(createGenerated.execute).not.toHaveBeenCalled();
+  });
+
+  describe("fuso do lar (M12)", () => {
+    // 31/jan 00:00 UTC: já é 31/jan em Kiritimati (+14), ainda 30/jan em Midway (−11).
+    const utcMidnight = new Date("2026-01-31T00:00:00Z");
+
+    it("gera quando a data da ocorrência chega no fuso do lar (UTC+14 já venceu)", async () => {
+      const { useCase, createGenerated } = makeUseCase([
+        dueEntry({ householdId: "kiri", householdTimezone: KIRITIMATI, nextRunDate: "2026-01-31" }),
+      ]);
+
+      const result = await useCase.execute(utcMidnight);
+
+      expect(result.generated).toBe(1);
+      expect(createGenerated.execute).toHaveBeenCalledWith(
+        "kiri",
+        expect.objectContaining({ date: "2026-01-31" }),
+      );
+    });
+
+    it("NÃO gera quando ainda não é a data local do lar (UTC−11 ainda em 30/jan)", async () => {
+      const { useCase, createGenerated } = makeUseCase([
+        dueEntry({ householdId: "mid", householdTimezone: MIDWAY, nextRunDate: "2026-01-31" }),
+      ]);
+
+      const result = await useCase.execute(utcMidnight);
+
+      expect(result.generated).toBe(0);
+      expect(createGenerated.execute).not.toHaveBeenCalled();
+    });
+
+    it("busca com teto UTC+14 e filtra fino por fuso do lar em código", async () => {
+      const { useCase, repo } = makeUseCase([
+        dueEntry({ householdId: "kiri", householdTimezone: KIRITIMATI, nextRunDate: "2026-01-31" }),
+        dueEntry({ householdId: "mid", householdTimezone: MIDWAY, nextRunDate: "2026-01-31" }),
+      ]);
+
+      const result = await useCase.execute(utcMidnight);
+
+      expect(repo.findDue).toHaveBeenCalledWith("2026-01-31");
+      expect(result.generated).toBe(1); // só o UTC+14
+    });
   });
 });

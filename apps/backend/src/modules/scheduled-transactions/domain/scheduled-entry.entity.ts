@@ -10,6 +10,10 @@ export interface ScheduledEntryEntityProps {
   id: string;
   householdId: string;
   householdSlug: string;
+  /** Fuso IANA do lar (M12) — o lembrete avalia dia/hora no relógio do lar. */
+  householdTimezone: string;
+  /** Hora local (0–23) a partir da qual o lembrete pode sair (M12). */
+  householdNotificationHour: number;
   description: string;
   amountCents: number;
   frequency: ScheduledEntryFrequency;
@@ -27,6 +31,8 @@ export class ScheduledEntryEntity {
   readonly id: string;
   readonly householdId: string;
   readonly householdSlug: string;
+  readonly householdTimezone: string;
+  readonly householdNotificationHour: number;
   readonly description: string;
   readonly amountCents: number;
   readonly frequency: ScheduledEntryFrequency;
@@ -40,6 +46,8 @@ export class ScheduledEntryEntity {
     this.id = props.id;
     this.householdId = props.householdId;
     this.householdSlug = props.householdSlug;
+    this.householdTimezone = props.householdTimezone;
+    this.householdNotificationHour = props.householdNotificationHour;
     this.description = props.description;
     this.amountCents = props.amountCents;
     this.frequency = props.frequency;

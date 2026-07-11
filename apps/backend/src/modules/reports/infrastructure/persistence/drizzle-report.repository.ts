@@ -5,6 +5,7 @@ import { findHouseholdMemberUserIds } from "../../../../common/household/househo
 import { DRIZZLE, DRIZZLE_ADMIN, type DrizzleDB } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
 import type {
+  ActiveHousehold,
   AnnualReport,
   CategorySlice,
   IReportRepository,
@@ -70,12 +71,15 @@ export class DrizzleReportRepository implements IReportRepository {
     return this.buildMonthlyReport(this.admin, householdId, now);
   }
 
-  async findAllActiveHouseholdIds(): Promise<string[]> {
-    const rows = await this.admin
-      .select({ id: schema.households.id })
+  async findAllActiveHouseholds(): Promise<ActiveHousehold[]> {
+    return this.admin
+      .select({
+        id: schema.households.id,
+        timezone: schema.households.timezone,
+        notificationHour: schema.households.notificationHour,
+      })
       .from(schema.households)
       .where(isNull(schema.households.suspendedAt));
-    return rows.map((r) => r.id);
   }
 
   findHouseholdMemberUserIds(householdId: string): Promise<string[]> {

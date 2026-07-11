@@ -296,11 +296,13 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
   — create/edit sempre ancoram no mês corrente; não é possível pedir para
   editar um mês passado/futuro via API (elimina a necessidade de validar
   "qual mês o cliente está vendo").
-- **"Mês corrente" é UMA função só**: `currentPeriodStart()`/`currentMonthYear()`
-  em `common/finance/due-date.ts` — usada pelo anchor de create/edit E pelo
-  cálculo de `isEditable`/`isProjected` no `list-budgets.use-case`. Nunca
-  duplicar `new Date()` para essa decisão (prepara M12 — troca de UTC para
-  timezone do household numa função só, sem tocar chamadores).
+- **"Mês corrente" é UMA função só**: `currentPeriodStart(timezone)`/
+  `currentMonthYear(timezone)` em `common/finance/due-date.ts` — usada pelo
+  anchor de create/edit E pelo cálculo de `isEditable`/`isProjected` no
+  `list-budgets.use-case`. Desde o M12 (ADR-0024) **exige o fuso do lar**
+  (resolve via `localISODate`); os chamadores household-scoped resolvem
+  `households.timezone` (o repo de budgets via `findTimezone`, o overview via
+  a entidade já carregada). Nunca duplicar `new Date()` para essa decisão.
 - **`isEditable`/`isProjected` são propriedades do PERÍODO consultado**, não
   da linha — atribuídas uniformemente pelo use-case (`período === corrente` /
   `período > corrente`), nunca calculadas por linha no repositório. Sem
@@ -394,6 +396,36 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
   quando foi gerada (aceito). Único mecanismo de i18n do backend hoje —
   **e-mails seguem hardcoded pt-BR** (track separado; só o *corpo* do e-mail de
   notificação sai localizado, por reusar o title/body renderizado).
+
+### Timezone dos disparos (cron) — M12 ✅ (ADR-0024)
+
+- **Fuso é por LAR** (`households.timezone` IANA + `households.notification_hour`
+  0–23, migration 0008). Não há fuso/hora por usuário nem dedup por-usuário
+  (adiados p/ pós-v1.1). Sempre IANA, nunca offset fixo.
+- **Ponto único de "agora" no fuso**: `common/time/tz-clock.ts` —
+  `zonedNow(tz, now)` (Date com getters locais no fuso), `localISODate(tz, now)`
+  (yyyy-MM-dd local via `formatInTimeZone`), `localHour(tz, now)`. **Onde um job
+  fazia `new Date()` cru, agora usa estes helpers com o fuso do lar.** O tick e
+  o `InternalCronController` não mudam (burros; cada job resolve).
+- **Regras por job**: engine gera quando a data local do lar chega (`findDue`
+  busca até teto UTC+14 com JOIN do fuso; corte fino `nextRunDate <=
+  localISODate(tz)` em código; catch-up idem). Lembrete e relatório mensal
+  disparam a partir de `localHour(tz) >= notification_hour` (>= tolera atraso de
+  tick; dedup diária impede reenvio), com dedup na **data local do lar**
+  (`reminderLastSentAt`/`notification_dedup` comparados no fuso, nunca com
+  `getDate()`/`toISOString().slice()` crus). Auto-launch e eventos event-driven
+  (meta/orçamento) disparam na hora — hora preferida não se aplica.
+- **Validação estrita**: `households.timezone` validado contra
+  `Intl.supportedValuesOf("timeZone")` (`common/time/timezones.ts`) nos DTOs —
+  fuso inválido faria date-fns-tz lançar no tick. `Intl.supportedValuesOf` não
+  está na lib de tipos do TS (cast pontual back+front).
+- **Gotcha**: os helpers legados `toISODate`/`monthBounds` misturam
+  `new Date(y,m,d)` local + `toISOString()` (só corretos em processo UTC, como
+  prod). Os helpers novos usam `formatInTimeZone` (robustos a qualquer TZ) —
+  preferir sempre eles para lógica de fuso.
+- Front: criação de lar auto-detecta `Intl.DateTimeFormat().resolvedOptions()
+  .timeZone` e envia; Configurações do lar têm seletor de fuso + hora
+  (`shared/lib/timezones.ts`).
 
 ### i18n
 

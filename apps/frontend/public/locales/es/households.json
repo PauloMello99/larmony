@@ -97,6 +97,10 @@
     "namePlaceholder": "Ej.: Casa familiar",
     "slugLabel": "Identificador (slug)",
     "slugHint": "Generado automáticamente; no se puede modificar.",
+    "timezoneLabel": "Zona horaria",
+    "timezoneHint": "Define cuándo vencen los lanzamientos y cuándo se envían los avisos.",
+    "notificationHourLabel": "Hora de los avisos",
+    "notificationHourHint": "Los recordatorios y el informe mensual salen a partir de esta hora, en la zona del hogar.",
     "saving": "Guardando…",
     "submit": "Guardar cambios"
   },

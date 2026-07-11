@@ -100,6 +100,10 @@
     "namePlaceholder": "e.g., Family Home",
     "slugLabel": "Identifier (slug)",
     "slugHint": "Automatically generated — cannot be changed.",
+    "timezoneLabel": "Time zone",
+    "timezoneHint": "Sets when scheduled entries are due and when alerts go out.",
+    "notificationHourLabel": "Alert hour",
+    "notificationHourHint": "Reminders and the monthly report go out from this hour, in the home's time zone.",
     "saving": "Saving…",
     "submit": "Save changes"
   },

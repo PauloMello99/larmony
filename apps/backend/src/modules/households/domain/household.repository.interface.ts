@@ -16,7 +16,15 @@ export interface IHouseholdRepository {
   isOwner(householdId: string, authId: string): Promise<boolean>;
 
   // Mutations
-  create(name: string, slug: string, creatorAuthId: string): Promise<HouseholdEntity>;
-  update(householdId: string, data: { name?: string }): Promise<HouseholdEntity>;
+  create(
+    name: string,
+    slug: string,
+    creatorAuthId: string,
+    timezone?: string,
+  ): Promise<HouseholdEntity>;
+  update(
+    householdId: string,
+    data: { name?: string; timezone?: string; notificationHour?: number },
+  ): Promise<HouseholdEntity>;
   delete(householdId: string): Promise<void>;
 }

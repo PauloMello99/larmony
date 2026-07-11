@@ -88,6 +88,8 @@ export interface EntryForLaunch {
 export interface DueScheduledEntry {
   id: string;
   householdId: string;
+  /** Fuso IANA do lar (M12) — o engine avalia "vencido" no dia local do lar. */
+  householdTimezone: string;
   createdBy: string;
   personId: string | null;
   categoryId: string | null;
@@ -114,8 +116,13 @@ export interface IScheduledEntryRepository {
   delete(id: string, householdId: string): Promise<void>;
 
   // ─── Engine (cron, modo auto, sem request context → conexão admin) ───
-  /** Regras `auto` ativas com `next_run_date <= today` (ISO). */
-  findDue(today: string): Promise<DueScheduledEntry[]>;
+  /**
+   * Regras `auto` ativas com `next_run_date <= upperBound` (ISO). `upperBound`
+   * é um teto seguro (data local do fuso mais adiantado do mundo, UTC+14) — o
+   * filtro fino "venceu no dia local DESTE lar" é aplicado em código pelo
+   * engine, já que o corte difere por fuso do lar (M12). Traz `householdTimezone`.
+   */
+  findDue(upperBound: string): Promise<DueScheduledEntry[]>;
   /** Avança o cursor da regra (persistido ANTES de gerar a transação). */
   advanceNextRun(id: string, nextRunDate: string): Promise<void>;
   /** Encerra a série (isActive=false) — usada ao ultrapassar `endDate`. */
