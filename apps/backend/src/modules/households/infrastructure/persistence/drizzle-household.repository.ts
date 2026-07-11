@@ -127,7 +127,12 @@ export class DrizzleHouseholdRepository implements IHouseholdRepository {
     return isSuperAdmin(this.admin, authId);
   }
 
-  async create(name: string, slug: string, creatorAuthId: string): Promise<HouseholdEntity> {
+  async create(
+    name: string,
+    slug: string,
+    creatorAuthId: string,
+    timezone?: string,
+  ): Promise<HouseholdEntity> {
     return this.admin.transaction(async (tx) => {
       // Find the creator's user record
       const [user] = await tx
@@ -138,10 +143,10 @@ export class DrizzleHouseholdRepository implements IHouseholdRepository {
 
       if (!user) throw new Error("User not found");
 
-      // Create the household
+      // Create the household (timezone opcional — omitido cai no default do schema).
       const insertedHouseholds = await tx
         .insert(schema.households)
-        .values({ name, slug })
+        .values({ name, slug, ...(timezone ? { timezone } : {}) })
         .returning();
       const household = insertedHouseholds[0];
       if (!household) throw new Error("Failed to create household");
@@ -190,7 +195,10 @@ export class DrizzleHouseholdRepository implements IHouseholdRepository {
     });
   }
 
-  async update(householdId: string, data: { name?: string }): Promise<HouseholdEntity> {
+  async update(
+    householdId: string,
+    data: { name?: string; timezone?: string; notificationHour?: number },
+  ): Promise<HouseholdEntity> {
     await this.db
       .update(schema.households)
       .set({ ...data, updatedAt: new Date() })

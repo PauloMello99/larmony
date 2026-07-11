@@ -100,6 +100,10 @@
     "namePlaceholder": "Ex: Casa da Família",
     "slugLabel": "Identificador (slug)",
     "slugHint": "Gerado automaticamente — não pode ser alterado.",
+    "timezoneLabel": "Fuso horário",
+    "timezoneHint": "Define quando lançamentos vencem e quando os avisos são enviados.",
+    "notificationHourLabel": "Hora dos avisos",
+    "notificationHourHint": "Lembretes e relatório mensal saem a partir desta hora, no fuso do lar.",
     "saving": "Salvando…",
     "submit": "Salvar alterações"
   },

@@ -11,13 +11,19 @@ export function makeCreateHouseholdSchema(t: TFunction) {
       .string()
       .min(2, t("validation.nameMin"))
       .max(80, t("validation.nameMax")),
+    // Fuso IANA auto-detectado do navegador (M12) — sem campo visível na criação.
+    timezone: z.string().optional(),
   })
 }
 
 export type CreateHouseholdFormValues = z.infer<ReturnType<typeof makeCreateHouseholdSchema>>
 
 export function makeUpdateHouseholdSchema(t: TFunction) {
-  return makeCreateHouseholdSchema(t).partial()
+  return z.object({
+    name: z.string().min(2, t("validation.nameMin")).max(80, t("validation.nameMax")).optional(),
+    timezone: z.string().optional(),
+    notificationHour: z.number().int().min(0).max(23).optional(),
+  })
 }
 
 export type UpdateHouseholdFormValues = z.infer<ReturnType<typeof makeUpdateHouseholdSchema>>

@@ -28,9 +28,9 @@ export class CreateHouseholdUseCase {
     private readonly auditService: AuditService,
   ) {}
 
-  async execute(name: string, creatorAuthId: string): Promise<HouseholdEntity> {
+  async execute(name: string, creatorAuthId: string, timezone?: string): Promise<HouseholdEntity> {
     const slug = generateSlug();
-    const household = await this.householdRepo.create(name, slug, creatorAuthId);
+    const household = await this.householdRepo.create(name, slug, creatorAuthId, timezone);
 
     await this.auditService.logByAuthId(creatorAuthId, {
       householdId: household.id,

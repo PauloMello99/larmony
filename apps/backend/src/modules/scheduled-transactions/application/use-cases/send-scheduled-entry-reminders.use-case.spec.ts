@@ -132,6 +132,33 @@ describe("SendScheduledEntryRemindersUseCase", () => {
     expect(result.sent).toBe(1);
   });
 
+  describe("gate de hora no fuso do lar (M12)", () => {
+    // 2026-07-07 05:00 UTC → com startDate dia 10 + reminder 3, vence hoje.
+    const at5hUtc = new Date(Date.UTC(2026, 6, 7, 5, 0));
+
+    it("NÃO dispara antes da hora preferida local (05h < 09h)", async () => {
+      const { useCase, repo } = makeUseCase([
+        entry({ householdTimezone: "UTC", householdNotificationHour: 9 }),
+      ]);
+
+      const result = await useCase.execute(at5hUtc);
+
+      expect(result.sent).toBe(0);
+      expect(repo.markReminderSent).not.toHaveBeenCalled();
+    });
+
+    it("dispara a partir da hora preferida local (05h >= 05h)", async () => {
+      const { useCase, repo } = makeUseCase([
+        entry({ householdTimezone: "UTC", householdNotificationHour: 5 }),
+      ]);
+
+      const result = await useCase.execute(at5hUtc);
+
+      expect(result.sent).toBe(1);
+      expect(repo.markReminderSent).toHaveBeenCalledWith("entry-1", at5hUtc);
+    });
+  });
+
   it("dedup por dia (não por mês): 2ª ocorrência semanal do mesmo mês dispara de novo", async () => {
     // Bug corrigido pelo ADR-0020: dedup por MÊS (herdado de bills) bloquearia
     // esta 2ª ocorrência por já ter enviado um lembrete em julho. Dedup por DIA

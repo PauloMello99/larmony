@@ -24,6 +24,7 @@ import {
 } from "@/shared/components/ui/form";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
+import { browserTimeZone } from "@/shared/lib/timezones";
 import {
   makeCreateHouseholdSchema,
   type CreateHouseholdFormValues,
@@ -45,11 +46,13 @@ export function CreateHouseholdForm({
   const schema = useMemo(() => makeCreateHouseholdSchema(t), [t]);
   const form = useForm<CreateHouseholdFormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { name: "" },
+    // Fuso do lar (M12) capturado do navegador do criador — editável depois em
+    // Configurações do lar. Sem campo visível na criação.
+    defaultValues: { name: "", timezone: browserTimeZone() },
   });
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit(values);
+    await onSubmit({ ...values, timezone: values.timezone ?? browserTimeZone() });
     form.reset();
     onOpenChange(false);
   });
