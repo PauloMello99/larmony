@@ -51,13 +51,12 @@ export class SendMonthlyReportUseCase {
   ) {}
 
   async execute(now: Date = new Date()): Promise<SendMonthlyReportResult> {
-    const householdIds = await this.reports.findAllActiveHouseholdIds();
-    const result: SendMonthlyReportResult = { scanned: householdIds.length, sent: 0 };
-
     if (now.getDate() !== lastDayOfMonth(now.getFullYear(), now.getMonth())) {
-      return result;
+      return { scanned: 0, sent: 0 };
     }
 
+    const householdIds = await this.reports.findAllActiveHouseholdIds();
+    const result: SendMonthlyReportResult = { scanned: householdIds.length, sent: 0 };
     const key = periodKey(now);
     for (const householdId of householdIds) {
       const claimed = await this.dedup.claim(householdId, "monthly_report", householdId, key);

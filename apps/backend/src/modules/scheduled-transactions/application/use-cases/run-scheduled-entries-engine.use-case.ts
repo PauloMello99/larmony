@@ -80,6 +80,13 @@ export class RunScheduledEntriesEngineUseCase {
     let generated = 0;
     let steps = 0;
 
+    // Constantes por regra — resolvidas 1x, não a cada ocorrência do catch-up.
+    const memberIds = await this.entryRepo.findHouseholdMemberUserIds(rule.householdId);
+    const amount = (rule.amountCents / 100).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+
     while (cursor <= today) {
       // Passou do fim da série → encerra sem gerar.
       if (rule.endDate && cursor > rule.endDate) {
@@ -115,11 +122,6 @@ export class RunScheduledEntriesEngineUseCase {
 
       // Sem marcador de dedup — idempotência é estrutural (cursor avança antes
       // do insert; 1 ocorrência = 1 insert = 1 notificação).
-      const memberIds = await this.entryRepo.findHouseholdMemberUserIds(rule.householdId);
-      const amount = (rule.amountCents / 100).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      });
       await this.dispatch.execute({
         recipientUserIds: memberIds,
         householdId: rule.householdId,
