@@ -42,4 +42,12 @@ export interface AnnualReport {
 export interface IReportRepository {
   getMonthlyReport(householdId: string, now: Date): Promise<MonthlyReport>;
   getAnnualReport(householdId: string, year: number): Promise<AnnualReport>;
+
+  // ─── Cron (relatório mensal, sem request context → conexão admin) ───
+  /** IDs de households não suspensos — universo do job `monthly-report`. */
+  findAllActiveHouseholdIds(): Promise<string[]>;
+  /** Mesma agregação de `getMonthlyReport`, via DRIZZLE_ADMIN. */
+  getMonthlyReportAdmin(householdId: string, now: Date): Promise<MonthlyReport>;
+  /** User ids (public.users.id) dos membros ativos do household. */
+  findHouseholdMemberUserIds(householdId: string): Promise<string[]>;
 }

@@ -1,7 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq, gte, lt, sql } from "drizzle-orm";
+import { and, eq, gte, isNull, lt, sql } from "drizzle-orm";
 import { monthBounds, toISODate } from "../../../../common/finance/due-date";
-import { DRIZZLE, type DrizzleDB } from "../../../../database/database.module";
+import { findHouseholdMemberUserIds } from "../../../../common/household/household-members";
+import { DRIZZLE, DRIZZLE_ADMIN, type DrizzleDB } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
 import type {
   AnnualReport,
@@ -55,18 +56,46 @@ function sumTotals(months: MonthPoint[]): MonthTotals {
 
 @Injectable()
 export class DrizzleReportRepository implements IReportRepository {
-  constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
+  constructor(
+    @Inject(DRIZZLE) private readonly db: DrizzleDB,
+    @Inject(DRIZZLE_ADMIN) private readonly admin: DrizzleDB,
+  ) {}
 
-  async getMonthlyReport(householdId: string, now: Date): Promise<MonthlyReport> {
+  getMonthlyReport(householdId: string, now: Date): Promise<MonthlyReport> {
+    return this.buildMonthlyReport(this.db, householdId, now);
+  }
+
+  /** Mesma agregação de `getMonthlyReport`, via DRIZZLE_ADMIN (job `monthly-report`, sem request context). */
+  getMonthlyReportAdmin(householdId: string, now: Date): Promise<MonthlyReport> {
+    return this.buildMonthlyReport(this.admin, householdId, now);
+  }
+
+  async findAllActiveHouseholdIds(): Promise<string[]> {
+    const rows = await this.admin
+      .select({ id: schema.households.id })
+      .from(schema.households)
+      .where(isNull(schema.households.suspendedAt));
+    return rows.map((r) => r.id);
+  }
+
+  findHouseholdMemberUserIds(householdId: string): Promise<string[]> {
+    return findHouseholdMemberUserIds(this.admin, householdId);
+  }
+
+  private async buildMonthlyReport(
+    db: DrizzleDB,
+    householdId: string,
+    now: Date,
+  ): Promise<MonthlyReport> {
     const buckets = buildMonthRange(SERIES_MONTHS, now);
     const windowStart = new Date(now.getFullYear(), now.getMonth() - (SERIES_MONTHS - 1), 1);
     const windowEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
     const { start: curStart, end: curEnd } = monthBounds(now);
 
     const [seriesRows, byCategory, byPerson] = await Promise.all([
-      this.seriesQuery(householdId, windowStart, windowEnd),
-      this.categoryBreakdown(householdId, curStart, curEnd),
-      this.personBreakdown(householdId, curStart, curEnd),
+      this.seriesQuery(db, householdId, windowStart, windowEnd),
+      this.categoryBreakdown(db, householdId, curStart, curEnd),
+      this.personBreakdown(db, householdId, curStart, curEnd),
     ]);
 
     return {
@@ -82,18 +111,19 @@ export class DrizzleReportRepository implements IReportRepository {
     const windowStart = new Date(year, 0, 1);
     const windowEnd = new Date(year + 1, 0, 1);
 
-    const seriesRows = await this.seriesQuery(householdId, windowStart, windowEnd);
+    const seriesRows = await this.seriesQuery(this.db, householdId, windowStart, windowEnd);
     const months = mapSeriesRows(buckets, seriesRows);
 
     return { year, months, totals: sumTotals(months) };
   }
 
   private async seriesQuery(
+    db: DrizzleDB,
     householdId: string,
     start: Date,
     end: Date,
   ): Promise<{ period: string; type: string; total: number }[]> {
-    return this.db
+    return db
       .select({
         period: sql<string>`to_char(${schema.transactions.date}, 'YYYY-MM')`,
         type: schema.transactions.type,
@@ -114,11 +144,12 @@ export class DrizzleReportRepository implements IReportRepository {
   }
 
   private async categoryBreakdown(
+    db: DrizzleDB,
     householdId: string,
     start: Date,
     end: Date,
   ): Promise<CategorySlice[]> {
-    const rows = await this.db
+    const rows = await db
       .select({
         categoryId: schema.transactions.categoryId,
         name: schema.categories.name,
@@ -151,11 +182,12 @@ export class DrizzleReportRepository implements IReportRepository {
   }
 
   private async personBreakdown(
+    db: DrizzleDB,
     householdId: string,
     start: Date,
     end: Date,
   ): Promise<PersonSlice[]> {
-    const rows = await this.db
+    const rows = await db
       .select({
         userId: schema.transactions.personId,
         name: schema.users.name,
