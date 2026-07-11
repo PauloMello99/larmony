@@ -103,6 +103,60 @@ describe("Goals (e2e)", () => {
     expect(goal.savedCents).toBe(100000);
   });
 
+  it("aporte que atinge a meta dispara goal_reached 1x (dispatcher + dedup)", async () => {
+    const created = await authed(app, "post", `/households/${householdId}/goals`, owner.accessToken)
+      .send({
+        name: "Reserva",
+        targetAmountCents: 100000,
+        color: "#22c55e",
+      })
+      .expect(201);
+    const reachedGoalId = created.body.id;
+
+    // Cruza o alvo — deve disparar goal_reached e gravar a notificação in-app.
+    await authed(
+      app,
+      "post",
+      `/households/${householdId}/goals/${reachedGoalId}/contributions`,
+      owner.accessToken,
+    )
+      .send({ amountCents: 100000, date: "2026-07-01" })
+      .expect(201);
+
+    const rows = await pool.query(
+      `SELECT id FROM public.notifications WHERE type = 'goal_reached' AND (data->>'goalId') = $1`,
+      [reachedGoalId],
+    );
+    expect(rows.rows).toHaveLength(1);
+
+    const dedupRows = await pool.query(
+      `SELECT id FROM public.notification_dedup WHERE event_type = 'goal_reached' AND context_id = $1`,
+      [reachedGoalId],
+    );
+    expect(dedupRows.rows).toHaveLength(1);
+
+    // Um 2º aporte não re-dispara (dedup "once" já reivindicado).
+    await authed(
+      app,
+      "post",
+      `/households/${householdId}/goals/${reachedGoalId}/contributions`,
+      owner.accessToken,
+    )
+      .send({ amountCents: 1000, date: "2026-07-02" })
+      .expect(201);
+
+    const rowsAfter = await pool.query(
+      `SELECT id FROM public.notifications WHERE type = 'goal_reached' AND (data->>'goalId') = $1`,
+      [reachedGoalId],
+    );
+    expect(rowsAfter.rows).toHaveLength(1);
+
+    // Limpa — os testes seguintes assumem só a meta "Viagem" ativa no lar.
+    await authed(app, "delete", `/households/${householdId}/goals/${reachedGoalId}`, owner.accessToken).expect(
+      204,
+    );
+  });
+
   it("edita a meta, inclusive limpando a targetDate", async () => {
     const updated = await authed(
       app,

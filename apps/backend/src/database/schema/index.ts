@@ -3,6 +3,8 @@ export * from "./users";
 export * from "./households";
 export * from "./subscriptions";
 export * from "./notifications";
+export * from "./notification-preferences";
+export * from "./notification-dedup";
 export * from "./audit";
 export * from "./finance/categories";
 export * from "./finance/scheduled-transaction-entries";

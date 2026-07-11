@@ -1,5 +1,5 @@
 import { ConfigService } from "@nestjs/config";
-import { NotificationService } from "../../../notifications/application/notification.service";
+import type { DispatchNotificationUseCase } from "../../../notifications/application/use-cases/dispatch-notification.use-case";
 import { ScheduledEntryEntity, ScheduledEntryEntityProps } from "../../domain/scheduled-entry.entity";
 import type { IScheduledEntryRepository } from "../../domain/scheduled-entry.repository.interface";
 import { alreadySentToday, SendScheduledEntryRemindersUseCase } from "./send-scheduled-entry-reminders.use-case";
@@ -36,14 +36,14 @@ function makeUseCase(entries: ScheduledEntryEntity[]) {
     markReminderSent: jest.fn().mockResolvedValue(undefined),
     findHouseholdMemberUserIds: jest.fn().mockResolvedValue(["user-a", "user-b"]),
   };
-  const notifications = { notify: jest.fn().mockResolvedValue({}) };
+  const dispatch = { execute: jest.fn().mockResolvedValue(undefined) };
   const config = { get: jest.fn().mockReturnValue("http://localhost:3000") };
   const useCase = new SendScheduledEntryRemindersUseCase(
     repo,
-    notifications as unknown as NotificationService,
+    dispatch as unknown as DispatchNotificationUseCase,
     config as unknown as ConfigService,
   );
-  return { useCase, repo, notifications };
+  return { useCase, repo, dispatch };
 }
 
 describe("alreadySentToday (dedup por dia-calendário)", () => {
@@ -66,35 +66,41 @@ describe("SendScheduledEntryRemindersUseCase", () => {
   // now = 2026-07-07; startDate dia 10 + reminder 3 → dispara exatamente hoje.
   const now = new Date(2026, 6, 7);
 
-  it("dispara na janela exata e notifica todos os membros", async () => {
-    const { useCase, repo, notifications } = makeUseCase([entry({})]);
+  it("dispara na janela exata e notifica todos os membros num único dispatch", async () => {
+    const { useCase, repo, dispatch } = makeUseCase([entry({})]);
 
     const result = await useCase.execute(now);
 
     expect(result).toEqual({ scanned: 1, sent: 1, skippedDedup: 0 });
     expect(repo.markReminderSent).toHaveBeenCalledWith("entry-1", now);
-    expect(notifications.notify).toHaveBeenCalledTimes(2); // user-a + user-b
-    expect(notifications.notify).toHaveBeenCalledWith(
-      expect.objectContaining({ type: "bill_reminder", householdId: "hh-1" }),
+    // Fan-out por destinatário é do dispatcher: 1 chamada com os 2 membros.
+    expect(dispatch.execute).toHaveBeenCalledTimes(1);
+    expect(dispatch.execute).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: "bill_reminder",
+        householdId: "hh-1",
+        recipientUserIds: ["user-a", "user-b"],
+        description: "Aluguel",
+      }),
     );
     // Guarda gravada ANTES do envio — e-mail best-effort nunca duplica.
     const markOrder = repo.markReminderSent.mock.invocationCallOrder[0]!;
-    const notifyOrder = notifications.notify.mock.invocationCallOrder[0]!;
-    expect(markOrder).toBeLessThan(notifyOrder);
+    const dispatchOrder = dispatch.execute.mock.invocationCallOrder[0]!;
+    expect(markOrder).toBeLessThan(dispatchOrder);
   });
 
   it("não dispara fora da janela", async () => {
-    const { useCase, repo, notifications } = makeUseCase([entry({ startDate: "2025-01-15" })]);
+    const { useCase, repo, dispatch } = makeUseCase([entry({ startDate: "2025-01-15" })]);
 
     const result = await useCase.execute(now); // faltam 8 dias ≠ 3
 
     expect(result).toEqual({ scanned: 1, sent: 0, skippedDedup: 0 });
     expect(repo.markReminderSent).not.toHaveBeenCalled();
-    expect(notifications.notify).not.toHaveBeenCalled();
+    expect(dispatch.execute).not.toHaveBeenCalled();
   });
 
   it("dedup: pula entrada já lembrada hoje (tick repetido não re-envia)", async () => {
-    const { useCase, repo, notifications } = makeUseCase([
+    const { useCase, repo, dispatch } = makeUseCase([
       entry({ reminderLastSentAt: new Date(2026, 6, 7, 9, 0) }),
     ]);
 
@@ -102,7 +108,7 @@ describe("SendScheduledEntryRemindersUseCase", () => {
 
     expect(result).toEqual({ scanned: 1, sent: 0, skippedDedup: 1 });
     expect(repo.markReminderSent).not.toHaveBeenCalled();
-    expect(notifications.notify).not.toHaveBeenCalled();
+    expect(dispatch.execute).not.toHaveBeenCalled();
   });
 
   it("clamp de mês curto: dia-de-origem 31 em abril dispara no dia 27 com reminder 3", async () => {

@@ -63,10 +63,23 @@ export const scheduledPostingModeEnum = pgEnum("scheduled_posting_mode", [
 
 export const genderEnum = pgEnum("gender", ["male", "female", "other"]);
 
+// "Event key" único, reusado por inbox in-app + preferências + dispatcher
+// (M11) — evita um 2º enum para o mesmo conceito.
 export const notificationTypeEnum = pgEnum("notification_type", [
   "bill_reminder",
   "invite_accepted",
   "goal_reached",
+  "auto_launch",
+  "budget_exceeded",
+  "monthly_report",
+]);
+
+// Canais configuráveis pelo usuário (M11). In-app NÃO entra aqui — é sempre
+// gravado, nunca opcional (ver notification_preferences).
+export const notificationChannelEnum = pgEnum("notification_channel", [
+  "email",
+  "sms",
+  "whatsapp",
 ]);
 
 export const auditActionEnum = pgEnum("audit_action", [

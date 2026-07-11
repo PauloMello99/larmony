@@ -61,7 +61,9 @@ Sem Redis. Sem Vercel/Render.
 
 `NODE_ENV=production`, `RUN_MIGRATIONS=true`, `DATABASE_URL`, `DATABASE_APP_URL`, `SUPABASE_URL`,
 `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `FRONTEND_URL`, `CRON_SECRET`. E-mail (opcional):
-`NOTIFICATIONS_EMAIL_ENABLED`, `RESEND_API_KEY`, `NOTIFICATIONS_FROM_EMAIL`.
+`NOTIFICATIONS_EMAIL_ENABLED`, `RESEND_API_KEY`, `NOTIFICATIONS_FROM_EMAIL`. SMS/WhatsApp (M11,
+ports stub — sem provedor integrado, manter `false`): `NOTIFICATIONS_SMS_ENABLED`,
+`NOTIFICATIONS_WHATSAPP_ENABLED`.
 
 > `DATABASE_URL` = role `postgres` (migrações/admin, BYPASSRLS) — use a **Session pooler** do
 > Supabase (IPv4, porta 5432) para o container alcançar o banco.

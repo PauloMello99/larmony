@@ -1,6 +1,6 @@
 ---
 name: roadmap
-description: Roadmap do Larmony — v1 completo (M1–M9 + ADR-0020); v1.1 planejado (M10 budgets versionados, M11 notificações multicanal, M12 timezone)
+description: Roadmap do Larmony — v1 completo (M1–M9 + ADR-0020); v1.1 em andamento (M10 budgets versionados ✅, M11 notificações multicanal ✅, M12 timezone planejado)
 metadata:
   type: project
 ---
@@ -162,7 +162,7 @@ define o *quando* dos jobs que o M11 cria).
 | M | Feature | Spec | Resumo | ADR |
 |---|---|---|---|---|
 | M10 | Orçamentos recorrentes/versionados | [11-orcamentos-recorrentes.md](../docs/product/features/11-orcamentos-recorrentes.md) | **✅ entregue (2026-07-10)** — `budgets` vira série por categoria + `budget_versions` (histórico), limite resolvido on-read (`DISTINCT ON`, nunca materializado); editar = upsert da versão do mês corrente (nunca toca o passado); série encerrada (`ended_from`) → 422 ao editar; remover sempre encerra (nunca hard delete); migration `0006` sem backfill de valores | [ADR-0022](adr/0022-budget-series-versions.md) |
-| M11 | Notificações multicanal + preferências | [12-notificacoes-multicanal.md](../docs/product/features/12-notificacoes-multicanal.md) | 🔲 não iniciado — dispatcher no módulo `notifications` (in-app sempre + e-mail/SMS/WhatsApp por preferência de usuário, ports `ISmsSender`/`IWhatsAppSender`); eventos: lançamento auto, meta atingida, orçamento estourado, relatório mensal; telefone verificado p/ SMS/WhatsApp; flags de custo | ADR-0023 (reservado) |
+| M11 | Notificações multicanal + preferências | [12-notificacoes-multicanal.md](../docs/product/features/12-notificacoes-multicanal.md) | **✅ entregue (2026-07-11)** — `DispatchNotificationUseCase` único ponto de entrada (in-app sempre + e-mail real + SMS/WhatsApp ports stub atrás de flag); `notification_preferences` (matriz por usuário) + `notification_dedup` (tabela dedicada, household-scoped); 5 eventos: lembrete migrado + meta atingida + orçamento estourado (M10) + lançamento automático + relatório mensal (cron `monthly-report`); `NotificationsSection` no Account | [ADR-0023](adr/0023-notification-dispatcher-multicanal.md) |
 | M12 | Disparos com horário + timezone | [13-cron-horario-timezone.md](../docs/product/features/13-cron-horario-timezone.md) | 🔲 não iniciado — tick continua burro; jobs comparam relógio local: `households.timezone` (dados/vencimentos) + `users.timezone`+`notification_hour` (entrega); IANA sempre; dedup em data local; auditoria dos jobs afetados (engine, reminders, monthly-report) | ADR-0024 (reservado) |
 | M13 | Open Finance (conexão bancária) | [14-open-finance.md](../docs/product/features/14-open-finance.md) | Importação/conciliação automática via agregador licenciado (Pluggy/Belvo/Klavi — escolher na Fase 0 com PoC + ADR); port `IBankAggregator`, dedup idempotente, consentimento LGPD; destrava plano "Conectado" da assinatura B2C (decisão comercial 2026-07-10: freemium + Premium R$ 14,90/mês por lar). Pré-requisito: entitlements/billing (Stripe) | ADR no kickoff |
 

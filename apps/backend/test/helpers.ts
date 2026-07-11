@@ -62,7 +62,7 @@ export async function signUpUser(
 
 export function authed(
   app: INestApplication,
-  method: "get" | "post" | "patch" | "delete",
+  method: "get" | "post" | "patch" | "put" | "delete",
   url: string,
   token: string,
 ) {

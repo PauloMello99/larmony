@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { toISODate } from "../../../../common/finance/due-date";
 import { CreateGeneratedTransactionUseCase } from "../../../transactions/application/use-cases/create-generated-transaction.use-case";
+import { DispatchNotificationUseCase } from "../../../notifications/application/use-cases/dispatch-notification.use-case";
 import {
   advanceScheduledEntryDate,
   MAX_SCHEDULE_STEPS,
@@ -43,6 +44,7 @@ export class RunScheduledEntriesEngineUseCase {
     @Inject(SCHEDULED_ENTRY_REPOSITORY)
     private readonly entryRepo: IScheduledEntryRepository,
     private readonly createGenerated: CreateGeneratedTransactionUseCase,
+    private readonly dispatch: DispatchNotificationUseCase,
   ) {}
 
   async execute(now: Date = new Date()): Promise<RunScheduledEntriesEngineResult> {
@@ -78,6 +80,9 @@ export class RunScheduledEntriesEngineUseCase {
     let generated = 0;
     let steps = 0;
 
+    // Membros do lar resolvidos 1x, não a cada ocorrência do catch-up.
+    const memberIds = await this.entryRepo.findHouseholdMemberUserIds(rule.householdId);
+
     while (cursor <= today) {
       // Passou do fim da série → encerra sem gerar.
       if (rule.endDate && cursor > rule.endDate) {
@@ -109,6 +114,18 @@ export class RunScheduledEntriesEngineUseCase {
         description: rule.description,
         date: occurrenceDate,
         notes: null,
+      });
+
+      // Sem marcador de dedup — idempotência é estrutural (cursor avança antes
+      // do insert; 1 ocorrência = 1 insert = 1 notificação).
+      await this.dispatch.execute({
+        recipientUserIds: memberIds,
+        householdId: rule.householdId,
+        type: "auto_launch",
+        description: rule.description,
+        amountCents: rule.amountCents,
+        date: occurrenceDate,
+        data: { scheduledTransactionEntryId: rule.id },
       });
 
       cursor = next;

@@ -333,9 +333,71 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
 - **Frontend**: `features/reports/` — `ReportsPage`, `MonthlyView`, `AnnualView`,
   hooks `useMonthlyReport`/`useAnnualReport`, `queryKeys.reports`.
 
+### Notificações (notifications) — M11 ✅ (dispatcher multicanal, ADR-0023)
+
+- **Único ponto de entrada**: `DispatchNotificationUseCase` — grava a linha
+  in-app (sempre, `DRIZZLE_ADMIN`), resolve preferências por destinatário e
+  faz fan-out via ports (`Promise.allSettled`, falha num canal não bloqueia
+  os outros). Nunca invocar `IEmailSender`/`ISmsSender`/`IWhatsAppSender`
+  direto de um use-case de domínio — sempre pelo dispatcher.
+- **Canais**: in-app (sempre, não configurável) + e-mail (real, Resend) +
+  SMS/WhatsApp (**ports stub no M11** — no-op se a flag
+  `NOTIFICATIONS_{SMS,WHATSAPP}_ENABLED` estiver off; **lança** se on sem
+  provedor integrado — nunca finge enviar). Sem `users.phone`/verificação
+  ainda — colunas SMS/WhatsApp na UI (Account) sempre desabilitadas.
+- **`notification_preferences`**: matriz `(user_id, event_type, channel,
+  enabled)` por usuário (não por household). Ausência de linha = default do
+  evento (`DEFAULT_CHANNEL_ENABLED`/`PREFERENCE_EVENT_TYPES` em
+  `notification-events.ts`: e-mail on, sms/whatsapp off) — nunca backfillado.
+  In-app não entra na matriz (sempre gravado).
+- **`notification_dedup` é tabela dedicada** (não coluna em goals/budgets):
+  `(household_id, event_type, context_id, period_key)`, reivindicado via
+  `INSERT ... ON CONFLICT DO NOTHING RETURNING id` **antes** do dispatch —
+  mesmo princípio do `reminder_last_sent_at`. Sempre household-scoped, nunca
+  por usuário (fan-out é ortogonal ao dedup). Sem RLS — sempre
+  `DRIZZLE_ADMIN`.
+- **Eventos event-driven** (avaliados no seam de escrita, não por varredura):
+  `goal_reached` (dedup `"once"`/meta), `budget_exceeded` (dedup
+  `"YYYY-MM"`/budget×mês, resolve o limite vigente via `budget_versions`/M10),
+  `auto_launch` (sem dedup — idempotência estrutural: cursor avança antes do
+  insert). `monthly_report` é o único por cron (`monthly-report`, último dia
+  do mês, baseline UTC — M12 troca por timezone do household).
+- **Gotcha crítico (achado em e2e, corrigido antes do merge): a leitura de um
+  check "acabei de escrever isso, e agora?" precisa usar a MESMA conexão da
+  escrita que a originou.** Toda escrita de transação roda dentro de uma
+  transação Postgres aberta em `DRIZZLE` (a `RlsInterceptor` só dá `COMMIT`
+  ao fim do request) — ler o mesmo dado por `DRIZZLE_ADMIN` (conexão
+  diferente) não vê a escrita ainda não commitada. Por isso
+  `findBudgetForCategoryPeriod` tem duas variantes: via `DRIZZLE` (chamada
+  pelos use-cases request-scoped `CreateTransactionUseCase`/
+  `CreateInstallmentTransactionUseCase`) e `findBudgetForCategoryPeriodAdmin`
+  via `DRIZZLE_ADMIN` (só para `CreateGeneratedTransactionUseCase`/engine,
+  que roda fora de request context). Regra geral: só uma leitura
+  verdadeiramente cross-context (cron lendo dados antigos, não a escrita
+  corrente do próprio use-case) usa `DRIZZLE_ADMIN`.
+- Helper `findHouseholdMemberUserIds(db, householdId)` em `common/household/`
+  — cada módulo (`goals`, `budgets`, `reports`, `scheduled-transactions`)
+  expõe seu próprio método de repositório delegando pra ele (use-cases nunca
+  importam `DRIZZLE` direto).
+- Frontend: `NotificationsSection` no Account (`Table`+`Switch`, hook
+  `use-notification-preferences`, `GET`/`PUT /me/notification-preferences`).
+- **i18n das notificações (render-at-send)**: os use-cases **não** montam
+  string — passam `type` + params estruturados (união discriminada
+  `NotificationParams`); o dispatcher renderiza por destinatário no idioma do
+  perfil (`users.locale`, buscado junto com o contato em `findUserContact`) e
+  grava o title/body já traduzidos na linha in-app. Catálogo
+  função-por-mensagem em `notifications/application/i18n/`
+  (`notification-messages.ts` + `notification-locale.ts`), 3 locales
+  (pt-BR/en/es, fallback pt-BR). **Moeda fica fixa em pt-BR/BRL** (mesma
+  decisão do frontend `formatCentsToBRL` — "R$ 1.234,56" sempre); só datas e
+  nomes de mês seguem o locale. Notificação antiga fica congelada no idioma de
+  quando foi gerada (aceito). Único mecanismo de i18n do backend hoje —
+  **e-mails seguem hardcoded pt-BR** (track separado; só o *corpo* do e-mail de
+  notificação sai localizado, por reusar o title/body renderizado).
+
 ### i18n
 
-- Idiomas: `pt-BR` (padrão) e `en`. Locale persistido em `users.locale` **e** no
+- Idiomas: `pt-BR` (padrão), `en` e `es`. Locale persistido em `users.locale` **e** no
   cookie `NEXT_LOCALE` (o que o Next.js honra na detecção). Fonte única da lista de
   locales: `apps/frontend/src/shared/lib/locale.ts` (`SUPPORTED_LOCALES`/`DEFAULT_LOCALE`);
   `next-i18next.config.js` espelha manualmente (é `.js`, não importa TS).
@@ -352,7 +414,10 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
 - **Estado do rollout:** scaffold `next-i18next` pronto; features `dashboard`+`auth(login)`
   usam `t()`. Demais telas ainda são pt-BR hardcoded — rollout tela-a-tela pendente
   (plano em fases; e-mails e strings de backend são tracks separados).
-- E-mails transacionais respeitam o locale do destinatário.
+- **Backend i18n**: só as **notificações** têm i18n (render-at-send no locale do
+  destinatário — ver §Notificações). **E-mails transacionais seguem hardcoded
+  pt-BR** (subjects, chrome do `base-layout`, welcome/invite/reset) — a intenção
+  do ADR-0018 de e-mails localizados **nunca foi implementada**; é track separado.
 
 ### Qualidade — Testes (TDD obrigatório)
 

@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import type { TFunction } from "i18next"
 import {
+  Check,
   KeyRound,
   Languages,
   Loader2,
@@ -45,6 +46,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shared/components/ui/dialog"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/shared/components/ui/table"
+import { Switch } from "@/shared/components/ui/switch"
+import { Tooltip } from "@/shared/components/ui/tooltip"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
@@ -54,6 +65,11 @@ import {
   applyLocale,
   type AppLocale,
 } from "@/shared/lib/locale"
+import {
+  useNotificationPreferences,
+  type NotificationChannel,
+  type NotificationEventType,
+} from "../hooks/use-notification-preferences"
 
 function SectionHeader({
   title,
@@ -152,7 +168,7 @@ export function ProfileSection() {
           {t("profile.loading")}
         </div>
       ) : (
-        <div className="grid max-w-lg gap-6">
+        <div className="grid gap-6">
           <div className="flex items-center gap-4">
             {me?.avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -286,7 +302,7 @@ export function AccessSection() {
         title={t("access.title")}
         description={t("access.description")}
       />
-      <section className="max-w-lg rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
+      <section className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
         <div className="flex items-center gap-2">
           <KeyRound className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-medium">{t("access.changePassword")}</h3>
@@ -353,7 +369,7 @@ export function LocaleSection() {
         title={t("locale.label")}
         description={tAccount("locale.description")}
       />
-      <section className="max-w-lg rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
+      <section className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
         <div className="flex items-center gap-2">
           <Languages className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-medium">{t("locale.label")}</h3>
@@ -385,6 +401,102 @@ export function LocaleSection() {
           </div>
         )}
       </section>
+    </div>
+  )
+}
+
+/* ── Notificações ───────────────────────────────────────────────── */
+
+const CONFIGURABLE_CHANNELS: NotificationChannel[] = ["email", "sms", "whatsapp"]
+
+export function NotificationsSection() {
+  const { t } = useTranslation("account")
+  const { matrix, loading, error, updatePreference } = useNotificationPreferences()
+  const [pending, setPending] = useState<Set<string>>(new Set())
+
+  async function toggle(
+    eventType: NotificationEventType,
+    channel: NotificationChannel,
+    enabled: boolean,
+  ) {
+    const key = `${eventType}:${channel}`
+    setPending((prev) => new Set(prev).add(key))
+    try {
+      await updatePreference({ eventType, channel, enabled })
+    } finally {
+      setPending((prev) => {
+        const next = new Set(prev)
+        next.delete(key)
+        return next
+      })
+    }
+  }
+
+  return (
+    <div className="grid gap-6">
+      <SectionHeader
+        title={t("notifications.title")}
+        description={t("notifications.description")}
+      />
+      {loading ? (
+        <div className="flex items-center justify-center py-12 text-foreground/40">
+          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          {t("notifications.loading")}
+        </div>
+      ) : error ? (
+        <p className="text-sm text-red-400">{t("notifications.error")}</p>
+      ) : (
+        <section className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t("notifications.columns.event")}</TableHead>
+                <TableHead className="text-center">{t("notifications.columns.inapp")}</TableHead>
+                <TableHead className="text-center">{t("notifications.columns.email")}</TableHead>
+                <TableHead className="text-center">{t("notifications.columns.sms")}</TableHead>
+                <TableHead className="text-center">
+                  {t("notifications.columns.whatsapp")}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {matrix.map((row) => (
+                <TableRow key={row.eventType}>
+                  <TableCell className="font-medium">
+                    {t(`notifications.events.${row.eventType}`)}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Check className="mx-auto h-4 w-4 text-foreground/30" />
+                  </TableCell>
+                  {CONFIGURABLE_CHANNELS.map((channel) => {
+                    // SMS/WhatsApp são ports stub no M11 (ADR-0023) — visíveis,
+                    // sempre desabilitados, sem verificação de telefone ainda.
+                    const stubbed = channel !== "email"
+                    const switchEl = (
+                      <Switch
+                        checked={stubbed ? false : row[channel]}
+                        disabled={stubbed || pending.has(`${row.eventType}:${channel}`)}
+                        onCheckedChange={(checked) => void toggle(row.eventType, channel, checked)}
+                      />
+                    )
+                    return (
+                      <TableCell key={channel} className="text-center">
+                        {stubbed ? (
+                          <Tooltip content={t("notifications.columns.stubbedHint")}>
+                            <span className="inline-flex">{switchEl}</span>
+                          </Tooltip>
+                        ) : (
+                          switchEl
+                        )}
+                      </TableCell>
+                    )
+                  })}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </section>
+      )}
     </div>
   )
 }

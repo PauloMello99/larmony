@@ -5,6 +5,7 @@
     "access": "Access",
     "appearance": "Theme",
     "locale": "Language",
+    "notifications": "Notifications",
     "danger": "Delete Account"
   },
   "profile": {
@@ -48,6 +49,27 @@
     "description": "Choose the language for the interface and emails.",
     "loading": "Loading…",
     "error": "Could not change the language."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Choose how you want to be notified for each event.",
+    "loading": "Loading…",
+    "error": "Could not load your preferences.",
+    "columns": {
+      "event": "Event",
+      "inapp": "In-app",
+      "email": "Email",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "stubbedHint": "Not available yet in this version."
+    },
+    "events": {
+      "bill_reminder": "Bill reminder",
+      "goal_reached": "Goal reached",
+      "budget_exceeded": "Budget exceeded",
+      "auto_launch": "Automatic entry",
+      "monthly_report": "Monthly report"
+    }
   },
   "danger": {
     "title": "Danger zone",
