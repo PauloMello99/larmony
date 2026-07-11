@@ -4,12 +4,13 @@ import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useTranslation } from "react-i18next"
-import { ArrowLeft, User, KeyRound, Languages, Trash2 } from "lucide-react"
+import { ArrowLeft, Bell, User, KeyRound, Languages, Trash2 } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import {
   AccessSection,
   DangerSection,
   LocaleSection,
+  NotificationsSection,
   ProfileSection,
 } from "./account-sections"
 
@@ -18,6 +19,12 @@ const SECTIONS = [
   { id: "profile", labelKey: "nav.profile", icon: User, Section: ProfileSection },
   { id: "access", labelKey: "nav.access", icon: KeyRound, Section: AccessSection },
   { id: "locale", labelKey: "nav.locale", icon: Languages, Section: LocaleSection },
+  {
+    id: "notifications",
+    labelKey: "nav.notifications",
+    icon: Bell,
+    Section: NotificationsSection,
+  },
   { id: "danger", labelKey: "nav.danger", icon: Trash2, Section: DangerSection },
 ] as const
 

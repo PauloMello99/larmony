@@ -11,6 +11,11 @@ export const queryKeys = {
   // ─── Current user ─────────────────────────────────────────────────────────
   me: ["me"] as const,
 
+  // ─── Preferências de notificação (M11) ─────────────────────────────────
+  notificationPreferences: {
+    all: ["notification-preferences"] as const,
+  },
+
   // ─── Households ────────────────────────────────────────────────────────
   households: {
     /** Matches every households key (list + all detail entries) */
