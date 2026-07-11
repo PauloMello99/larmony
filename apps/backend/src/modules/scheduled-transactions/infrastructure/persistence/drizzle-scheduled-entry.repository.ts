@@ -3,6 +3,7 @@ import { and, eq, isNotNull, lte } from "drizzle-orm";
 import { DRIZZLE, DRIZZLE_ADMIN, type DrizzleDB } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
 import { daysBetween, nextManualOccurrence, toISODate } from "../../../../common/finance/due-date";
+import { findHouseholdMemberUserIds } from "../../../../common/household/household-members";
 import {
   ScheduledEntryEntity,
   type ScheduledEntryFrequency,
@@ -302,16 +303,7 @@ export class DrizzleScheduledEntryRepository implements IScheduledEntryRepositor
   }
 
   async findHouseholdMemberUserIds(householdId: string): Promise<string[]> {
-    const rows = await this.admin
-      .select({ userId: schema.householdMemberships.userId })
-      .from(schema.householdMemberships)
-      .where(
-        and(
-          eq(schema.householdMemberships.householdId, householdId),
-          eq(schema.householdMemberships.enabled, true),
-        ),
-      );
-    return rows.map((r) => r.userId);
+    return findHouseholdMemberUserIds(this.admin, householdId);
   }
 
   private async getOne(id: string, householdId: string): Promise<ScheduledEntryListItem> {
