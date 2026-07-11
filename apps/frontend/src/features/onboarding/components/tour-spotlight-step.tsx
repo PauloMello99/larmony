@@ -15,10 +15,23 @@ interface TourSpotlightStepProps {
 const TARGET_PADDING = 8
 const CARD_GAP = 14
 const VIEWPORT_MARGIN = 12
+/** Máx. de frames aguardando o alvo entrar na tela (cobre a transição do
+ * drawer/sheet no mobile, ~200–300ms; RAF ~60fps). */
+const MAX_LOCATE_ATTEMPTS = 40
 
 interface Position {
   top: number
   left: number
+}
+
+function isMobileViewport(): boolean {
+  return typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
+}
+
+/** O alvo está visível na viewport (não off-canvas dentro de um drawer/sheet
+ * fechado ou em transição)? Um item de nav no drawer fechado tem `right <= 0`. */
+function isOnScreen(rect: DOMRect): boolean {
+  return rect.width > 0 && rect.right > 0 && rect.left < window.innerWidth
 }
 
 function computeCardPosition(
@@ -88,12 +101,19 @@ export function TourSpotlightStep({ step, stepIndex, totalSteps }: TourSpotlight
         ? document.querySelector<HTMLElement>(`[data-tour="${step.target}"]`)
         : null
       if (el) {
-        el.scrollIntoView({ block: "center", behavior: "auto" })
-        setTargetRect(el.getBoundingClientRect())
-        return
+        const rect = el.getBoundingClientRect()
+        // Só aceita quando o alvo está de fato na tela. No mobile, itens da
+        // sidebar vivem num drawer `-translate-x-full` (off-canvas): aceitar o
+        // rect off-canvas colocaria o spotlight fora da tela. Aguarda o drawer
+        // abrir/transicionar antes de medir.
+        if (isOnScreen(rect)) {
+          el.scrollIntoView({ block: "center", behavior: "auto" })
+          setTargetRect(el.getBoundingClientRect())
+          return
+        }
       }
       attempts += 1
-      if (attempts > 5) {
+      if (attempts > MAX_LOCATE_ATTEMPTS) {
         setTargetMissing(true)
         return
       }
@@ -130,7 +150,12 @@ export function TourSpotlightStep({ step, stepIndex, totalSteps }: TourSpotlight
   React.useLayoutEffect(() => {
     if (!targetRect || !cardRef.current) return
     const cardBox = cardRef.current.getBoundingClientRect()
-    setCardPos(computeCardPosition(targetRect, cardBox.width, cardBox.height, step.placement ?? "bottom"))
+    // No mobile, os placements laterais ("right" da sidebar, "left" dos forms)
+    // não cabem na largura estreita e o clamp acabaria sobrepondo o alvo —
+    // força "bottom" (card abaixo do alvo; a lógica de flip trata alvos no
+    // rodapé, virando para "top").
+    const placement = isMobileViewport() ? "bottom" : (step.placement ?? "bottom")
+    setCardPos(computeCardPosition(targetRect, cardBox.width, cardBox.height, placement))
   }, [targetRect, step.placement])
 
   if (!targetRect) return null
