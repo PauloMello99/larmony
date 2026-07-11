@@ -57,6 +57,13 @@
       "when": 1783241797157,
       "tag": "0007_notification_dispatcher",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1783241797158,
+      "tag": "0008_household_timezone",
+      "breakpoints": true
     }
   ]
 }

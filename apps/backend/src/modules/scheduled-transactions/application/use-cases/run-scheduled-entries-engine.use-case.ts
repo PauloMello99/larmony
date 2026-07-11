@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
-import { toISODate } from "../../../../common/finance/due-date";
+import { localISODate } from "../../../../common/time/tz-clock";
 import { CreateGeneratedTransactionUseCase } from "../../../transactions/application/use-cases/create-generated-transaction.use-case";
 import { DispatchNotificationUseCase } from "../../../notifications/application/use-cases/dispatch-notification.use-case";
 import {
@@ -23,10 +23,12 @@ export interface RunScheduledEntriesEngineResult {
 
 /**
  * Engine de geração automática (ADR-0020, ex-M9 recurrence-engine): a cada
- * tick do cron gera as transações das entradas `auto` vencidas
- * (`next_run_date <= hoje`). Roda fora de request context, então grava via
- * caminho admin (CreateGeneratedTransactionUseCase → DRIZZLE_ADMIN) e o
- * repositório usa a conexão admin.
+ * tick do cron gera as transações das entradas `auto` vencidas. "Vencido" é
+ * avaliado no **dia local do lar** (M12, ADR-0024): busca-se até um teto seguro
+ * (UTC+14) e o corte fino `cursor <= hoje_local(lar)` é feito em código, pois
+ * difere por fuso. Roda fora de request context, então grava via caminho admin
+ * (CreateGeneratedTransactionUseCase → DRIZZLE_ADMIN) e o repositório usa a
+ * conexão admin.
  *
  * Idempotência sem transação cross-repo: **avança o cursor ANTES de inserir**
  * (mesmo princípio do markReminderSent das entradas manuais). Um crash entre
@@ -48,8 +50,10 @@ export class RunScheduledEntriesEngineUseCase {
   ) {}
 
   async execute(now: Date = new Date()): Promise<RunScheduledEntriesEngineResult> {
-    const today = toISODate(now);
-    const due = await this.entryRepo.findDue(today);
+    // Teto seguro: a maior data-calendário local possível no planeta (UTC+14).
+    // Traz um superconjunto; o corte fino por fuso do lar é feito em runRule.
+    const upperBound = localISODate("Pacific/Kiritimati", now);
+    const due = await this.entryRepo.findDue(upperBound);
 
     const result: RunScheduledEntriesEngineResult = {
       scanned: due.length,
@@ -58,6 +62,9 @@ export class RunScheduledEntriesEngineUseCase {
     };
 
     for (const rule of due) {
+      const today = localISODate(rule.householdTimezone, now);
+      // Filtro fino: só vence de fato quando a data local do lar alcança o cursor.
+      if (rule.nextRunDate > today) continue;
       result.generated += await this.runRule(rule, today, result);
     }
 

@@ -217,11 +217,12 @@ export class DrizzleScheduledEntryRepository implements IScheduledEntryRepositor
 
   // ─── Engine (admin, modo auto) ───
 
-  async findDue(today: string): Promise<DueScheduledEntry[]> {
+  async findDue(upperBound: string): Promise<DueScheduledEntry[]> {
     const rows = await this.admin
       .select({
         id: schema.scheduledTransactionEntries.id,
         householdId: schema.scheduledTransactionEntries.householdId,
+        householdTimezone: schema.households.timezone,
         createdBy: schema.scheduledTransactionEntries.createdBy,
         personId: schema.scheduledTransactionEntries.personId,
         categoryId: schema.scheduledTransactionEntries.categoryId,
@@ -234,12 +235,17 @@ export class DrizzleScheduledEntryRepository implements IScheduledEntryRepositor
         nextRunDate: schema.scheduledTransactionEntries.nextRunDate,
       })
       .from(schema.scheduledTransactionEntries)
+      .innerJoin(
+        schema.households,
+        eq(schema.households.id, schema.scheduledTransactionEntries.householdId),
+      )
       .where(
         and(
           eq(schema.scheduledTransactionEntries.postingMode, "auto"),
           eq(schema.scheduledTransactionEntries.isActive, true),
           isNotNull(schema.scheduledTransactionEntries.nextRunDate),
-          lte(schema.scheduledTransactionEntries.nextRunDate, today),
+          // Teto seguro (UTC+14) — o corte fino por fuso do lar é no engine (M12).
+          lte(schema.scheduledTransactionEntries.nextRunDate, upperBound),
         ),
       );
 
@@ -270,6 +276,8 @@ export class DrizzleScheduledEntryRepository implements IScheduledEntryRepositor
         id: schema.scheduledTransactionEntries.id,
         householdId: schema.scheduledTransactionEntries.householdId,
         householdSlug: schema.households.slug,
+        householdTimezone: schema.households.timezone,
+        householdNotificationHour: schema.households.notificationHour,
         description: schema.scheduledTransactionEntries.description,
         amountCents: schema.scheduledTransactionEntries.amountCents,
         frequency: schema.scheduledTransactionEntries.frequency,

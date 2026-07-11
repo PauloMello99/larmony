@@ -98,8 +98,19 @@ export class DrizzleBudgetRepository implements IBudgetRepository {
     return rows.map((row) => ({ ...row, month, year }));
   }
 
+  /** Fuso IANA do lar (M12) — âncora do "mês corrente" dos orçamentos. */
+  async findTimezone(householdId: string): Promise<string> {
+    const [row] = await this.db
+      .select({ timezone: schema.households.timezone })
+      .from(schema.households)
+      .where(eq(schema.households.id, householdId))
+      .limit(1);
+    // Fallback defensivo (a coluna é NOT NULL default; nunca deve faltar).
+    return row?.timezone ?? "America/Sao_Paulo";
+  }
+
   async create(householdId: string, data: CreateBudgetData): Promise<BudgetEntity> {
-    const effectiveFrom = currentPeriodStart();
+    const effectiveFrom = currentPeriodStart(await this.findTimezone(householdId));
 
     try {
       return await this.db.transaction(async (tx) => {
@@ -137,7 +148,7 @@ export class DrizzleBudgetRepository implements IBudgetRepository {
     if (!budgetRow) throw new BudgetNotFoundException(id);
     if (budgetRow.endedFrom !== null) throw new BudgetPeriodNotEditableException(id);
 
-    const effectiveFrom = currentPeriodStart();
+    const effectiveFrom = currentPeriodStart(await this.findTimezone(householdId));
 
     // Upsert = nunca altera uma versão passada; reeditar no mesmo mês
     // sobrescreve a mesma versão em vez de criar outra.
@@ -153,7 +164,7 @@ export class DrizzleBudgetRepository implements IBudgetRepository {
   }
 
   async endSeries(id: string, householdId: string): Promise<void> {
-    const endedFrom = currentPeriodStart();
+    const endedFrom = currentPeriodStart(await this.findTimezone(householdId));
 
     const rows = await this.db
       .update(schema.budgets)

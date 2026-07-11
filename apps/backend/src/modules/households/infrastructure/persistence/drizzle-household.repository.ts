@@ -18,6 +18,8 @@ const ORG_SELECT = {
   logoUrl: schema.households.logoUrl,
   role: schema.householdMemberships.role,
   permissions: schema.householdMemberships.permissions,
+  timezone: schema.households.timezone,
+  notificationHour: schema.households.notificationHour,
   createdAt: schema.households.createdAt,
   updatedAt: schema.households.updatedAt,
 } as const;
@@ -93,6 +95,8 @@ export class DrizzleHouseholdRepository implements IHouseholdRepository {
         name: schema.households.name,
         slug: schema.households.slug,
         logoUrl: schema.households.logoUrl,
+        timezone: schema.households.timezone,
+        notificationHour: schema.households.notificationHour,
         createdAt: schema.households.createdAt,
         updatedAt: schema.households.updatedAt,
       })

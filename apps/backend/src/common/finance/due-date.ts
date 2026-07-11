@@ -1,3 +1,5 @@
+import { localISODate } from "../time/tz-clock";
+
 /** Último dia do mês de `year`/`monthIndex` (monthIndex 0-based). */
 export function lastDayOfMonth(year: number, monthIndex: number): number {
   return new Date(year, monthIndex + 1, 0).getDate();
@@ -30,20 +32,31 @@ export function periodStart(month: number, year: number): string {
 }
 
 /**
- * ISO (yyyy-MM-dd) do 1º dia do mês corrente — âncora ÚNICA de toda a
- * imutabilidade de orçamentos versionados (M10, ver
+ * Mês/ano (1-12/YYYY) do período corrente **no fuso do lar** — âncora ÚNICA de
+ * toda a imutabilidade de orçamentos versionados (M10, ver
  * `docs/product/features/11-orcamentos-recorrentes.md`): tanto a checagem de
  * "período editável" quanto o anchor de create/edit usam esta função, para
- * nunca divergir. Hoje deriva do relógio do processo (UTC em produção); o
- * M12 substitui por timezone do household sem tocar os chamadores.
+ * nunca divergir. O `timezone` (IANA de `households.timezone`) é obrigatório
+ * desde o M12 (ADR-0024) — cada chamador household-scoped resolve o fuso do
+ * lar e o passa aqui. Calculado a partir de `localISODate` (string, robusto a
+ * qualquer TZ do processo — não usa `toISOString` ingênuo).
  */
-export function currentPeriodStart(now: Date = new Date()): string {
-  return toISODate(monthBounds(now).start);
+export function currentMonthYear(
+  timezone: string,
+  now: Date = new Date(),
+): { month: number; year: number } {
+  const [year, month] = localISODate(timezone, now).split("-").map(Number) as [
+    number,
+    number,
+    number,
+  ];
+  return { month, year };
 }
 
-/** Mês/ano (1-12/YYYY) do período corrente — mesma âncora de `currentPeriodStart`. */
-export function currentMonthYear(now: Date = new Date()): { month: number; year: number } {
-  return { month: now.getMonth() + 1, year: now.getFullYear() };
+/** ISO (yyyy-MM-dd) do 1º dia do mês corrente no fuso do lar — mesma âncora de `currentMonthYear`. */
+export function currentPeriodStart(timezone: string, now: Date = new Date()): string {
+  const { month, year } = currentMonthYear(timezone, now);
+  return `${year}-${String(month).padStart(2, "0")}-01`;
 }
 
 /**

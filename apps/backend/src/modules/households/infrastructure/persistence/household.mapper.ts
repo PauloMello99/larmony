@@ -7,6 +7,8 @@ interface HouseholdRow {
   logoUrl: string | null;
   role: string;
   permissions?: string[] | null;
+  timezone: string;
+  notificationHour: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,6 +22,8 @@ export class HouseholdMapper {
       logoUrl: row.logoUrl,
       role: row.role as HouseholdRole,
       permissions: row.permissions ?? [],
+      timezone: row.timezone,
+      notificationHour: row.notificationHour,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
     });

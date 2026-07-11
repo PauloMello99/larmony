@@ -9,6 +9,10 @@ function entry(partial: Partial<ScheduledEntryEntityProps>): ScheduledEntryEntit
     id: "entry-1",
     householdId: "hh-1",
     householdSlug: "casa-teste",
+    // Fuso UTC + hora 0 nos testes de janela/dedup: isola a lógica de DIA do
+    // gate de hora (coberto por testes dedicados no e2e de cron). Ver M12.
+    householdTimezone: "UTC",
+    householdNotificationHour: 0,
     description: "Aluguel",
     amountCents: 150_000,
     frequency: "monthly",
@@ -46,19 +50,19 @@ function makeUseCase(entries: ScheduledEntryEntity[]) {
   return { useCase, repo, dispatch };
 }
 
-describe("alreadySentToday (dedup por dia-calendário)", () => {
+describe("alreadySentToday (dedup por dia-calendário local do lar)", () => {
   it("false sem envio anterior", () => {
-    expect(alreadySentToday(entry({}), new Date(2026, 6, 7))).toBe(false);
+    expect(alreadySentToday(entry({}), new Date(2026, 6, 7), "UTC")).toBe(false);
   });
 
-  it("true quando o último envio é do mesmo dia", () => {
-    const e = entry({ reminderLastSentAt: new Date(2026, 6, 7, 9, 0) });
-    expect(alreadySentToday(e, new Date(2026, 6, 7, 18, 0))).toBe(true);
+  it("true quando o último envio é do mesmo dia local", () => {
+    const e = entry({ reminderLastSentAt: new Date(Date.UTC(2026, 6, 7, 9, 0)) });
+    expect(alreadySentToday(e, new Date(Date.UTC(2026, 6, 7, 18, 0)), "UTC")).toBe(true);
   });
 
-  it("false quando o último envio foi em outro dia do mesmo mês", () => {
-    const e = entry({ reminderLastSentAt: new Date(2026, 6, 5) });
-    expect(alreadySentToday(e, new Date(2026, 6, 7))).toBe(false);
+  it("false quando o último envio foi em outro dia local", () => {
+    const e = entry({ reminderLastSentAt: new Date(Date.UTC(2026, 6, 5)) });
+    expect(alreadySentToday(e, new Date(Date.UTC(2026, 6, 7)), "UTC")).toBe(false);
   });
 });
 
