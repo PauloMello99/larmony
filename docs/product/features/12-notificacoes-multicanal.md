@@ -1,9 +1,8 @@
 # 12 — Notificações multicanal + preferências (M11)
 
-> **Proposta (2026-07-10)**: evolui o módulo `notifications` (hoje in-app +
-> e-mail acoplado caso a caso) para um **dispatcher multicanal** com
-> preferências por usuário. Decisão de provedor SMS/WhatsApp e da arquitetura
-> de fan-out a formalizar em ADR no kickoff (reservar ADR-0023).
+> **Entregue (2026-07-11)**: dispatcher multicanal com preferências por
+> usuário — in-app + e-mail funcionais, SMS/WhatsApp como ports stub (sem
+> provedor integrado). Ver ADR-0023.
 
 ## Canais
 
@@ -11,16 +10,17 @@
 |---|---|---|
 | In-app (sino no header) | **Não — sempre gravado** | tabela `notifications` (existente) |
 | E-mail | Sim | Resend (módulo `mail`, ADR-0012) |
-| SMS | Sim | a decidir no ADR (candidato: Twilio) |
-| WhatsApp | Sim | a decidir no ADR (candidato: Twilio WhatsApp Business API) |
+| SMS | **Stub no M11** — port existe, sem provedor integrado | candidato futuro: Twilio |
+| WhatsApp | **Stub no M11** — port existe, sem provedor integrado | candidato futuro: Twilio WhatsApp Business API |
 
 - O in-app é o **registro canônico**: toda notificação gerada existe lá,
   independentemente das preferências. Os demais canais são réplicas de entrega.
-- SMS e WhatsApp exigem **telefone verificado** no Account (novo campo
-  `users.phone` + fluxo de verificação por código). Sem telefone verificado, a
-  preferência aparece desabilitada com CTA para verificar.
-- SMS/WhatsApp nascem **gateados por feature flag/env** (mesmo padrão do
-  e-mail, ADR-0009/0012) — custo por mensagem exige liberação controlada.
+- SMS/WhatsApp entregues no M11 apenas como **ports no-op** (ADR-0023) —
+  colunas visíveis na UI, sempre desabilitadas. Integração real e verificação
+  de telefone (`users.phone`) ficam para um milestone futuro (dependem de
+  provedor ativo).
+- Flag/env: `NOTIFICATIONS_SMS_ENABLED`/`NOTIFICATIONS_WHATSAPP_ENABLED`
+  (default `false`) — ligá-las sem provedor real lança erro explícito.
 
 ## Eventos notificáveis
 

@@ -26,6 +26,7 @@
 | ADR-0020 | Unificar bills + recurrences em "lançamentos programados" (scheduled_transaction_entries) | 2026-07-09 | Aceito |
 | ADR-0021 | Adoção do Design System gerado no Claude Design (logo, landing, glass app-wide) | 2026-07-10 | Aceito |
 | ADR-0022 | Orçamentos como série + versões, resolução on-read (M10) | 2026-07-10 | Aceito |
+| ADR-0023 | Dispatcher multicanal de notificações + dedup por evento (M11) | 2026-07-11 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
 
@@ -109,3 +110,26 @@
   backend, Playwright budgets/transactions/scheduled). Gotcha corrigido de
   passagem: flake de fuso no `isoDaysFromNow` do e2e de scheduled-transactions
   (usava UTC, app usa local). Detalhes em `domain-rules.md` regras 24/27/28/29.
+- **2026-07-11 — M11 Notificações multicanal entregue (ADR-0023)**:
+  `DispatchNotificationUseCase` (in-app sempre + e-mail real + SMS/WhatsApp
+  ports stub atrás de flag, sem provedor integrado) substitui o antigo
+  `NotificationService.notify()`. `notification_preferences` (matriz por
+  usuário, evento×canal, default e-mail on/sms-whatsapp off) +
+  `notification_dedup` (tabela dedicada household-scoped, não coluna em
+  goals/budgets). 5 eventos: lembrete de lançamento (migrado), meta atingida,
+  orçamento estourado (resolve limite via `budget_versions`/M10), lançamento
+  automático (sem dedup — idempotência estrutural do cursor), relatório
+  mensal (novo cron `monthly-report`, último dia do mês, baseline UTC).
+  **Bug real pego em e2e antes do merge**: `budget_exceeded` sempre lia via
+  `DRIZZLE_ADMIN`, mas a despesa recém-gravada por
+  `CreateTransactionUseCase` ainda estava numa transação Postgres aberta na
+  conexão `DRIZZLE` do request (`RlsInterceptor` só commita ao fim do
+  request) — invisível para uma conexão diferente. Fix: leitura via `DRIZZLE`
+  nos chamadores request-scoped, variante `...Admin` (`DRIZZLE_ADMIN`) só
+  para o chamador de cron (engine de auto-lançamento). Regra geral: um check
+  "leio o que acabei de escrever" usa a MESMA conexão da escrita. Frontend:
+  `NotificationsSection` no Account (matriz `Table`+`Switch`, SMS/WhatsApp
+  sempre desabilitados). 77 e2e + typecheck/lint verdes; verificado ao vivo
+  no browser (transação estourando orçamento → notificação aparece no sino
+  após refresh). Detalhes em `domain-rules.md` §Notificações e
+  `docs/product/features/12-notificacoes-multicanal.md`.
