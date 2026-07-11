@@ -168,7 +168,7 @@ export function ProfileSection() {
           {t("profile.loading")}
         </div>
       ) : (
-        <div className="grid max-w-lg gap-6">
+        <div className="grid gap-6">
           <div className="flex items-center gap-4">
             {me?.avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -302,7 +302,7 @@ export function AccessSection() {
         title={t("access.title")}
         description={t("access.description")}
       />
-      <section className="max-w-lg rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
+      <section className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
         <div className="flex items-center gap-2">
           <KeyRound className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-medium">{t("access.changePassword")}</h3>
@@ -369,7 +369,7 @@ export function LocaleSection() {
         title={t("locale.label")}
         description={tAccount("locale.description")}
       />
-      <section className="max-w-lg rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
+      <section className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
         <div className="flex items-center gap-2">
           <Languages className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-medium">{t("locale.label")}</h3>
@@ -446,7 +446,7 @@ export function NotificationsSection() {
       ) : error ? (
         <p className="text-sm text-red-400">{t("notifications.error")}</p>
       ) : (
-        <section className="max-w-2xl rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
+        <section className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
           <Table>
             <TableHeader>
               <TableRow>
