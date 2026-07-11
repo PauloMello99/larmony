@@ -50,6 +50,13 @@
       "when": 1783241797156,
       "tag": "0006_budget_versioning",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1783241797157,
+      "tag": "0007_notification_dispatcher",
+      "breakpoints": true
     }
   ]
 }
