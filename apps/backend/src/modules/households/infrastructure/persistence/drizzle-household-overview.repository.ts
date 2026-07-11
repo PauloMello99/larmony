@@ -152,7 +152,7 @@ export class DrizzleHouseholdOverviewRepository implements IHouseholdOverviewRep
       .leftJoin(schema.categories, eq(schema.categories.id, schema.transactions.categoryId))
       .where(eq(schema.transactions.householdId, householdId))
       .orderBy(desc(schema.transactions.date), desc(schema.transactions.createdAt))
-      .limit(5);
+      .limit(20);
   }
 
   private async budgetsProgress(

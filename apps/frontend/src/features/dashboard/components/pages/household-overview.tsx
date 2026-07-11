@@ -293,9 +293,10 @@ export function HouseholdOverview() {
 
       {/* Conteúdo: transações recentes (2/3) + coluna lateral (1/3) */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="flex lg:col-span-2">
+        <div className="flex lg:col-span-2 lg:min-h-0">
           <SectionCard
-            className="h-full w-full"
+            className="h-full w-full lg:min-h-0"
+            bodyClassName="lg:relative lg:min-h-0"
             title={t("overview.recentTransactions")}
             action={
               transactions.length > 0 ? (
@@ -312,7 +313,10 @@ export function HouseholdOverview() {
                 <Skeleton className="h-10 w-full" />
               </div>
             ) : transactions.length > 0 ? (
-              <ul className="divide-y divide-foreground/[0.06]">
+              // lg+: absolute+scroll para NÃO esticar a linha do grid — a altura
+              // vem da coluna lateral (irmã); no mobile fica em fluxo normal e a
+              // página rola. Ver plano de polimento de UI (item 5).
+              <ul className="divide-y divide-foreground/[0.06] lg:absolute lg:inset-0 lg:overflow-y-auto">
                 {transactions.map((tx) => (
                   <TransactionRow key={tx.id} tx={tx} />
                 ))}
