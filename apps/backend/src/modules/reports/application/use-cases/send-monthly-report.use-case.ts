@@ -5,7 +5,6 @@ import { NotificationDedupService } from "../../../notifications/application/not
 import {
   IReportRepository,
   REPORT_REPOSITORY,
-  type MonthlyReport,
 } from "../../domain/report.repository.interface";
 
 export interface SendMonthlyReportResult {
@@ -15,21 +14,8 @@ export interface SendMonthlyReportResult {
   sent: number;
 }
 
-function formatBRL(cents: number): string {
-  return (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
-
 function periodKey(now: Date): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-}
-
-function summarize(report: MonthlyReport): string {
-  const { incomeCents, expenseCents } = report.months[report.months.length - 1] ?? {
-    incomeCents: 0,
-    expenseCents: 0,
-  };
-  const balance = incomeCents - expenseCents;
-  return `Receitas: ${formatBRL(incomeCents)}. Despesas: ${formatBRL(expenseCents)}. Saldo: ${formatBRL(balance)}.`;
 }
 
 /**
@@ -65,12 +51,22 @@ export class SendMonthlyReportUseCase {
       const report = await this.reports.getMonthlyReportAdmin(householdId, now);
       const memberIds = await this.reports.findHouseholdMemberUserIds(householdId);
 
+      const refBucket = report.months[report.months.length - 1] ?? {
+        incomeCents: 0,
+        expenseCents: 0,
+      };
+      const incomeCents = refBucket.incomeCents;
+      const expenseCents = refBucket.expenseCents;
+
       await this.dispatch.execute({
         recipientUserIds: memberIds,
         householdId,
         type: "monthly_report",
-        title: `Relatório mensal — ${report.refMonth.month}/${report.refMonth.year}`,
-        body: summarize(report),
+        month: report.refMonth.month,
+        year: report.refMonth.year,
+        incomeCents,
+        expenseCents,
+        balanceCents: incomeCents - expenseCents,
         data: { month: report.refMonth.month, year: report.refMonth.year },
       });
 

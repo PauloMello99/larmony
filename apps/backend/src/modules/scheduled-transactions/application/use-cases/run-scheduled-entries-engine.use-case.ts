@@ -80,12 +80,8 @@ export class RunScheduledEntriesEngineUseCase {
     let generated = 0;
     let steps = 0;
 
-    // Constantes por regra — resolvidas 1x, não a cada ocorrência do catch-up.
+    // Membros do lar resolvidos 1x, não a cada ocorrência do catch-up.
     const memberIds = await this.entryRepo.findHouseholdMemberUserIds(rule.householdId);
-    const amount = (rule.amountCents / 100).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
 
     while (cursor <= today) {
       // Passou do fim da série → encerra sem gerar.
@@ -126,8 +122,9 @@ export class RunScheduledEntriesEngineUseCase {
         recipientUserIds: memberIds,
         householdId: rule.householdId,
         type: "auto_launch",
-        title: `Lançamento automático: ${rule.description}`,
-        body: `${amount} lançado automaticamente em ${occurrenceDate}.`,
+        description: rule.description,
+        amountCents: rule.amountCents,
+        date: occurrenceDate,
         data: { scheduledTransactionEntryId: rule.id },
       });
 

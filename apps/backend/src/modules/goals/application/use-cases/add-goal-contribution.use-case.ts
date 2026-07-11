@@ -66,14 +66,9 @@ export class AddGoalContributionUseCase {
       recipientUserIds: memberIds,
       householdId,
       type: "goal_reached",
-      title: `Meta "${goal.name}" atingida! 🎉`,
-      body: `Vocês guardaram ${(savedCents / 100).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      })} — a meta de ${(goal.targetAmountCents / 100).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      })} foi alcançada.`,
+      goalName: goal.name,
+      savedCents,
+      targetCents: goal.targetAmountCents,
       data: { goalId },
     });
   }

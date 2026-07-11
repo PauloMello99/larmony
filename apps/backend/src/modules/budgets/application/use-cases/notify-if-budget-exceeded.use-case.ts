@@ -22,10 +22,6 @@ export interface CheckBudgetExceededInput {
   viaAdmin?: boolean;
 }
 
-function formatBRL(cents: number): string {
-  return (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
-
 /**
  * Evento "orçamento estourado" (M11) — event-driven, chamado logo após
  * qualquer escrita de transação (`CreateTransactionUseCase`,
@@ -77,8 +73,9 @@ export class NotifyIfBudgetExceededUseCase {
       recipientUserIds: memberIds,
       householdId: input.householdId,
       type: "budget_exceeded",
-      title: `Orçamento de "${budget.categoryName}" estourado`,
-      body: `Gasto de ${formatBRL(budget.spentCents)} superou o limite de ${formatBRL(budget.limitCents)}.`,
+      categoryName: budget.categoryName,
+      spentCents: budget.spentCents,
+      limitCents: budget.limitCents,
       data: { budgetId: budget.budgetId, categoryId: input.categoryId },
     });
   }

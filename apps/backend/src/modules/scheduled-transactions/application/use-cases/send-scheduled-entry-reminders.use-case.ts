@@ -77,25 +77,21 @@ export class SendScheduledEntryRemindersUseCase {
       await this.entries.markReminderSent(entry.id, now);
 
       const memberIds = await this.entries.findHouseholdMemberUserIds(entry.householdId);
-      const amount = (entry.amountCents / 100).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      });
-      const when =
-        daysUntil === 0 ? "vence hoje" : `vence em ${daysUntil} dia${daysUntil > 1 ? "s" : ""}`;
       const frontendUrl = this.config.get<string>("FRONTEND_URL") ?? "";
 
+      // actionLabel ("Ver lançamentos") vem do catálogo i18n — aqui só o actionUrl.
       await this.dispatch.execute({
         recipientUserIds: memberIds,
         householdId: entry.householdId,
         type: "bill_reminder",
-        title: `Lançamento "${entry.description}" ${when}`,
-        body: `Valor: ${amount}. Vencimento no dia ${due.getDate()}.`,
+        description: entry.description,
+        amountCents: entry.amountCents,
+        daysUntil,
+        dueDay: due.getDate(),
         data: { scheduledTransactionEntryId: entry.id, dueDate: due.toISOString().slice(0, 10) },
         actionUrl: frontendUrl
           ? `${frontendUrl}/households/${entry.householdSlug}/scheduled-transactions`
           : undefined,
-        actionLabel: "Ver lançamentos",
       });
 
       result.sent++;

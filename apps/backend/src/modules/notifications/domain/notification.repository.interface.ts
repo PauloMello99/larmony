@@ -15,6 +15,9 @@ export interface UserContact {
    * como no-op estrutural. Presente para quando a edição/verificação existir.
    */
   phone: string | null;
+  /** Locale do perfil (`users.locale`) — o dispatcher renderiza a notificação
+   *  neste idioma (fallback pt-BR via `normalizeLocale`). */
+  locale: string;
 }
 
 export interface INotificationRepository {

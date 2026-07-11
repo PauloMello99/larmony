@@ -1,5 +1,6 @@
 import { RunScheduledEntriesEngineUseCase } from "./run-scheduled-entries-engine.use-case";
 import type { CreateGeneratedTransactionUseCase } from "../../../transactions/application/use-cases/create-generated-transaction.use-case";
+import type { DispatchNotificationUseCase } from "../../../notifications/application/use-cases/dispatch-notification.use-case";
 import type {
   DueScheduledEntry,
   IScheduledEntryRepository,
@@ -36,14 +37,16 @@ function makeUseCase(due: DueScheduledEntry[]) {
     deactivate: jest.fn().mockResolvedValue(undefined),
     findActiveWithReminder: jest.fn(),
     markReminderSent: jest.fn(),
-    findHouseholdMemberUserIds: jest.fn(),
+    findHouseholdMemberUserIds: jest.fn().mockResolvedValue([]),
   };
   const createGenerated = { execute: jest.fn().mockResolvedValue({}) };
+  const dispatch = { execute: jest.fn().mockResolvedValue(undefined) };
   const useCase = new RunScheduledEntriesEngineUseCase(
     repo,
     createGenerated as unknown as CreateGeneratedTransactionUseCase,
+    dispatch as unknown as DispatchNotificationUseCase,
   );
-  return { useCase, repo, createGenerated };
+  return { useCase, repo, createGenerated, dispatch };
 }
 
 // Datas escolhidas para serem robustas a ±1 dia de fuso na conversão de `now`.

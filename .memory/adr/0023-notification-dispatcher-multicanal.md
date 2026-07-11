@@ -118,3 +118,39 @@ relatório mensal).
   `monthly-report` roda em baseline UTC até lá.
 - Coluna de canal/status de entrega em `notifications` — entrega best-effort,
   sem tracking por linha no v1.
+
+## Adendo (2026-07-11) — i18n das notificações (render-at-send)
+
+O dispatcher do M11 gravava title/body **hardcoded em pt-BR** (os use-cases
+montavam a string e a passavam pronta), ignorando `users.locale`. Corrigido com
+i18n **render-at-send**:
+
+1. **Entrada do dispatcher passa a ser `type` + params estruturados**, não
+   strings. `DispatchNotificationInput = NotificationParams & { recipientUserIds,
+   householdId?, data?, actionUrl? }` — união discriminada, cada call site
+   type-checado. Os 5 use-cases pararam de formatar texto (removido o
+   `toLocaleString`/`formatBRL`/`summarize`/`when` inline, agora de-duplicados).
+2. **Render por destinatário no dispatcher**: `dispatchToOne` busca contato +
+   `locale` **uma vez** (`findUserContact` agora seleciona `users.locale`;
+   `UserContact.locale` novo) e chama `renderNotification(input, locale)` antes
+   de gravar o in-app e enviar os canais. Locale antigo → texto congelado
+   (aceito; mesmo modelo que e-mail exigiria).
+3. **Catálogo função-por-mensagem** em `notifications/application/i18n/`
+   (`notification-messages.ts` + `notification-locale.ts`): TS puro, sem
+   dependência de i18n; plural/condicional/formatação resolvidos no builder.
+   3 locales (pt-BR/en/es, fallback pt-BR via `normalizeLocale`).
+4. **Moeda fica fixa em pt-BR/BRL** (mesma decisão do frontend
+   `formatCentsToBRL` — o Larmony é brasileiro, moeda sempre "R$ 1.234,56"); só
+   datas e nomes de mês seguem o locale do destinatário.
+
+**Escopo**: só notificações. **E-mails seguem hardcoded pt-BR** — não havia
+infra de i18n no backend (a nota "e-mails respeitam locale" e o ADR-0018 eram
+aspiracionais, nunca implementados); esta é a primeira fundação, escopada a
+notificações. O *corpo* do e-mail de notificação sai localizado por reusar o
+title/body renderizado, mas subjects e chrome do `base-layout` seguem pt-BR.
+
+Verificação: unit de `renderNotification` (5 tipos × 3 locales, cobre plural/
+"vence hoje"/nome de mês/BRL); e2e com usuário `locale=en` recebendo título em
+inglês; suíte completa verde (78 e2e + 41 unit); browser: conta em inglês,
+despesa estourando orçamento → sino mostra "Budget for … exceeded" (com R$),
+ao lado de uma notificação antiga ainda em pt-BR (prova o render-at-send).

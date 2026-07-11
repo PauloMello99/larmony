@@ -112,6 +112,42 @@ describe("Notifications preferences + dispatch (e2e)", () => {
     );
   });
 
+  it("renderiza a notificação in-app no locale do destinatário (en)", async () => {
+    // Novo usuário + novo lar, com o perfil em inglês.
+    const enUser = await signUpUser(app, "notif.en");
+    await authed(app, "patch", "/auth/me", enUser.accessToken).send({ locale: "en" }).expect(200);
+
+    const enHousehold = await authed(app, "post", "/households", enUser.accessToken)
+      .send({ name: "E2E Home Notifications EN" })
+      .expect(201);
+    const enHouseholdId = enHousehold.body.id;
+
+    const goal = await authed(app, "post", `/households/${enHouseholdId}/goals`, enUser.accessToken)
+      .send({ name: "Trip", targetAmountCents: 50000, color: "#3b82f6" })
+      .expect(201);
+
+    await authed(
+      app,
+      "post",
+      `/households/${enHouseholdId}/goals/${goal.body.id}/contributions`,
+      enUser.accessToken,
+    )
+      .send({ amountCents: 50000, date: isoDate(current, 1) })
+      .expect(201);
+
+    const rows = await pool.query(
+      `SELECT title, body FROM public.notifications WHERE type = 'goal_reached' AND (data->>'goalId') = $1`,
+      [goal.body.id],
+    );
+    expect(rows.rows).toHaveLength(1);
+    // Texto em inglês (render-at-send no locale do perfil), não em português.
+    expect(rows.rows[0].title).toContain("reached");
+    expect(rows.rows[0].title).not.toContain("atingida");
+    expect(rows.rows[0].body).toContain("saved");
+    // Moeda permanece BRL (R$), mesmo com o perfil em inglês.
+    expect(rows.rows[0].body).toContain("R$");
+  });
+
   it("orçamento estourado dispara budget_exceeded 1x/mês (dedup por budget×mês)", async () => {
     const budget = await authed(app, "post", `/households/${householdId}/budgets`, owner.accessToken)
       .send({ categoryId, amountCents: 10000 })

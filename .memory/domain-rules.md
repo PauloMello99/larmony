@@ -381,10 +381,23 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
   importam `DRIZZLE` direto).
 - Frontend: `NotificationsSection` no Account (`Table`+`Switch`, hook
   `use-notification-preferences`, `GET`/`PUT /me/notification-preferences`).
+- **i18n das notificações (render-at-send)**: os use-cases **não** montam
+  string — passam `type` + params estruturados (união discriminada
+  `NotificationParams`); o dispatcher renderiza por destinatário no idioma do
+  perfil (`users.locale`, buscado junto com o contato em `findUserContact`) e
+  grava o title/body já traduzidos na linha in-app. Catálogo
+  função-por-mensagem em `notifications/application/i18n/`
+  (`notification-messages.ts` + `notification-locale.ts`), 3 locales
+  (pt-BR/en/es, fallback pt-BR). **Moeda fica fixa em pt-BR/BRL** (mesma
+  decisão do frontend `formatCentsToBRL` — "R$ 1.234,56" sempre); só datas e
+  nomes de mês seguem o locale. Notificação antiga fica congelada no idioma de
+  quando foi gerada (aceito). Único mecanismo de i18n do backend hoje —
+  **e-mails seguem hardcoded pt-BR** (track separado; só o *corpo* do e-mail de
+  notificação sai localizado, por reusar o title/body renderizado).
 
 ### i18n
 
-- Idiomas: `pt-BR` (padrão) e `en`. Locale persistido em `users.locale` **e** no
+- Idiomas: `pt-BR` (padrão), `en` e `es`. Locale persistido em `users.locale` **e** no
   cookie `NEXT_LOCALE` (o que o Next.js honra na detecção). Fonte única da lista de
   locales: `apps/frontend/src/shared/lib/locale.ts` (`SUPPORTED_LOCALES`/`DEFAULT_LOCALE`);
   `next-i18next.config.js` espelha manualmente (é `.js`, não importa TS).
@@ -401,7 +414,10 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
 - **Estado do rollout:** scaffold `next-i18next` pronto; features `dashboard`+`auth(login)`
   usam `t()`. Demais telas ainda são pt-BR hardcoded — rollout tela-a-tela pendente
   (plano em fases; e-mails e strings de backend são tracks separados).
-- E-mails transacionais respeitam o locale do destinatário.
+- **Backend i18n**: só as **notificações** têm i18n (render-at-send no locale do
+  destinatário — ver §Notificações). **E-mails transacionais seguem hardcoded
+  pt-BR** (subjects, chrome do `base-layout`, welcome/invite/reset) — a intenção
+  do ADR-0018 de e-mails localizados **nunca foi implementada**; é track separado.
 
 ### Qualidade — Testes (TDD obrigatório)
 

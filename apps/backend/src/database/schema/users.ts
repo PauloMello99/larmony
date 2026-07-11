@@ -13,7 +13,7 @@ export const users = pgTable("users", {
   avatarUrl: text("avatar_url"),
   birthDate: date("birth_date"),
   gender: genderEnum("gender"),
-  // Idioma da UI e dos e-mails (ADR-0018): pt-BR (default) | en.
+  // Idioma da UI, das notificações e dos e-mails (ADR-0018): pt-BR (default) | en | es.
   locale: text("locale").notNull().default("pt-BR"),
   // Tours de onboarding já concluídos: mapa { [tourKey]: maiorVersãoVista }.
   onboarding: jsonb("onboarding")

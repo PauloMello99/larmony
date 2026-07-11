@@ -1,9 +1,9 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { MailService } from "../../../mail/application/mail.service";
-import type { NotificationType } from "../../domain/notification.entity";
 import {
   INotificationRepository,
   NOTIFICATION_REPOSITORY,
+  type UserContact,
 } from "../../domain/notification.repository.interface";
 import {
   INotificationPreferenceRepository,
@@ -11,28 +11,35 @@ import {
 } from "../../domain/notification-preference.repository.interface";
 import { ISmsSender, SMS_SENDER } from "../../domain/ports/sms-sender.port";
 import { IWhatsAppSender, WHATSAPP_SENDER } from "../../domain/ports/whatsapp-sender.port";
+import {
+  renderNotification,
+  type NotificationParams,
+  type RenderedNotification,
+} from "../i18n/notification-messages";
 
-export interface DispatchNotificationInput {
+/**
+ * Entrada do dispatcher. `type` + os params ficam correlacionados pela união
+ * discriminada `NotificationParams`, então cada call site é checado pelo
+ * compilador. O texto NÃO vem pronto — é renderizado por destinatário no idioma
+ * do perfil (`users.locale`). `actionUrl` (URL, não se traduz) e `data` (jsonb
+ * p/ deep-link do frontend) seguem opcionais.
+ */
+export type DispatchNotificationInput = NotificationParams & {
   /** Destinatários (o chamador já resolveu QUEM — ex.: membros do lar). */
   recipientUserIds: string[];
   householdId?: string | null;
-  type: NotificationType;
-  title: string;
-  body?: string | null;
   data?: Record<string, unknown> | null;
   /** CTA opcional nos canais assíncronos (e-mail/SMS/WhatsApp). */
   actionUrl?: string;
-  actionLabel?: string;
-}
+};
 
 /**
- * Ponto único de entrada de notificações (M11). Por destinatário: (1) grava a
- * linha in-app (sempre — fonte da verdade, nunca gateada por preferência);
- * (2) resolve os canais habilitados via `INotificationPreferenceRepository`
- * (default: e-mail on, sms/whatsapp off); (3) fan-out via ports com
- * `allSettled` — falha de um canal (ou de um destinatário) nunca bloqueia os
- * demais. Substitui o antigo `NotificationService.notify()` (e-mail estava
- * acoplado inline, sem preferência).
+ * Ponto único de entrada de notificações (M11). Por destinatário: (1) renderiza
+ * o texto no idioma do perfil (render-at-send, ADR-0023); (2) grava a linha
+ * in-app (sempre — fonte da verdade, nunca gateada por preferência); (3) resolve
+ * os canais habilitados (default: e-mail on, sms/whatsapp off); (4) fan-out via
+ * ports com `allSettled` — falha de um canal (ou destinatário) nunca bloqueia os
+ * demais.
  */
 @Injectable()
 export class DispatchNotificationUseCase {
@@ -58,21 +65,26 @@ export class DispatchNotificationUseCase {
     userId: string,
     input: DispatchNotificationInput,
   ): Promise<void> {
+    // Contato + locale buscados UMA vez (não por canal). Sem contato, ainda
+    // gravamos o in-app no idioma default — a linha in-app é a fonte da verdade.
+    const contact = await this.notifications.findUserContact(userId);
+    const content = renderNotification(input, contact?.locale);
+
     await this.notifications.create({
       userId,
       householdId: input.householdId ?? null,
       type: input.type,
-      title: input.title,
-      body: input.body ?? null,
+      title: content.title,
+      body: content.body,
       data: input.data ?? null,
     });
 
     const channels = await this.preferences.resolveForUser(userId, input.type);
 
     const results = await Promise.allSettled([
-      this.sendEmail(userId, channels.email, input),
-      this.sendSms(userId, channels.sms, input),
-      this.sendWhatsApp(userId, channels.whatsapp, input),
+      this.sendEmail(channels.email, contact, content, input.actionUrl),
+      this.sendSms(channels.sms, contact, content),
+      this.sendWhatsApp(channels.whatsapp, contact, content),
     ]);
 
     for (const result of results) {
@@ -87,43 +99,38 @@ export class DispatchNotificationUseCase {
   }
 
   private async sendEmail(
-    userId: string,
     enabled: boolean,
-    input: DispatchNotificationInput,
+    contact: UserContact | null,
+    content: RenderedNotification,
+    actionUrl: string | undefined,
   ): Promise<void> {
-    if (!enabled) return;
-    const contact = await this.notifications.findUserContact(userId);
-    if (!contact?.email) return;
+    if (!enabled || !contact?.email) return;
     await this.mail.sendNotification({
       to: contact.email,
-      title: input.title,
-      body: input.body,
-      actionUrl: input.actionUrl,
-      actionLabel: input.actionLabel,
+      title: content.title,
+      body: content.body,
+      actionUrl,
+      actionLabel: content.actionLabel,
     });
   }
 
   private async sendSms(
-    userId: string,
     enabled: boolean,
-    input: DispatchNotificationInput,
+    contact: UserContact | null,
+    content: RenderedNotification,
   ): Promise<void> {
-    if (!enabled) return;
     // Sem telefone (edição/verificação fora do M11 — ver UserContact.phone) →
     // no-op estrutural; nunca chega a chamar o port sem destino.
-    const contact = await this.notifications.findUserContact(userId);
-    if (!contact?.phone) return;
-    await this.sms.send({ to: contact.phone, body: input.title });
+    if (!enabled || !contact?.phone) return;
+    await this.sms.send({ to: contact.phone, body: content.title });
   }
 
   private async sendWhatsApp(
-    userId: string,
     enabled: boolean,
-    input: DispatchNotificationInput,
+    contact: UserContact | null,
+    content: RenderedNotification,
   ): Promise<void> {
-    if (!enabled) return;
-    const contact = await this.notifications.findUserContact(userId);
-    if (!contact?.phone) return;
-    await this.whatsapp.send({ to: contact.phone, body: input.title });
+    if (!enabled || !contact?.phone) return;
+    await this.whatsapp.send({ to: contact.phone, body: content.title });
   }
 }

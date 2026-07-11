@@ -133,3 +133,20 @@
   no browser (transação estourando orçamento → notificação aparece no sino
   após refresh). Detalhes em `domain-rules.md` §Notificações e
   `docs/product/features/12-notificacoes-multicanal.md`.
+- **2026-07-11 — i18n das notificações (render-at-send, adendo ADR-0023)**: as
+  notificações eram hardcoded pt-BR nos 5 use-cases. Agora os use-cases passam
+  `type` + params estruturados (união discriminada) e o dispatcher renderiza
+  por destinatário no idioma do perfil (`users.locale`), gravando o texto já
+  traduzido na linha in-app (render-at-send — zero mudança no frontend, o sino
+  lê title/body como antes). Catálogo função-por-mensagem (TS puro, sem dep) em
+  `notifications/application/i18n/`, 3 locales (pt-BR/en/es, fallback pt-BR).
+  **Moeda fixa em pt-BR/BRL** (igual ao frontend `formatCentsToBRL`); só datas/
+  nomes de mês seguem o locale. Descoberta: **não havia infra de i18n no
+  backend** — e-mails também são hardcoded pt-BR (a nota antiga em domain-rules
+  e o ADR-0018 eram aspiracionais); esta é a fundação, escopada a notificações
+  (e-mails = track separado). Verificado ao vivo: conta em inglês, despesa
+  estourando orçamento → sino mostra "Budget for … exceeded" (com R$) ao lado
+  de uma notificação antiga ainda em pt-BR. 78 e2e + 41 unit verdes (corrigi de
+  passagem 2 unit specs de scheduled-transactions que estavam quebrados desde o
+  M11 — nunca tinham sido rodados via `pnpm test`). Detalhes em
+  `domain-rules.md` §Notificações/§i18n.

@@ -103,6 +103,7 @@ export class DrizzleNotificationRepository implements INotificationRepository {
         name: schema.users.name,
         email: schema.users.email,
         phone: schema.users.phone,
+        locale: schema.users.locale,
       })
       .from(schema.users)
       .where(eq(schema.users.id, userId))
