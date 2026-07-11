@@ -89,6 +89,14 @@ describe("ScheduledTransactions (e2e)", () => {
       .expect(201);
     householdId = created.body.id;
 
+    // M12: o job de lembrete só dispara a partir de households.notification_hour
+    // no fuso do lar. Fixamos UTC + hora 0 para o gate ficar sempre aberto e o
+    // "hoje" ser determinístico (senão o tick real dependeria da hora do CI).
+    await pool.query(
+      `UPDATE public.households SET timezone = 'UTC', notification_hour = 0 WHERE id = $1`,
+      [householdId],
+    );
+
     const categories = await authed(
       app,
       "get",
