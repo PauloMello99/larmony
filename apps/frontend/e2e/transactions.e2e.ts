@@ -94,6 +94,20 @@ test("edita e exclui uma transação", async ({ page }) => {
   await expect(page.getByText("Supermercado")).toHaveCount(0)
 })
 
+test("a lista mostra o paginador com seletor de tamanho", async ({ page }) => {
+  await goToTransactions(page)
+
+  // O paginador monta abaixo da lista: range "N–M de T" + seletor "Por página".
+  await expect(page.getByText(/\d+–\d+ de \d+/)).toBeVisible()
+  const perPage = page.getByLabel("Por página")
+  await expect(perPage).toBeVisible()
+
+  // Trocar o tamanho para 25 mantém tudo numa página (poucos itens no lar de teste).
+  await perPage.click()
+  await page.getByRole("option", { name: "25", exact: true }).click()
+  await expect(page.getByText(/^1 de 1$/)).toBeVisible()
+})
+
 test("o overview do dashboard para de mostrar zero após criar transações", async ({ page }) => {
   await page.goto("/auth/login")
   await page.fill('input[type="email"]', email)
