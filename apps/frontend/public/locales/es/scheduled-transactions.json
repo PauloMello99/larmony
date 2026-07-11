@@ -41,9 +41,10 @@
     "create": "Crear movimiento"
   },
   "list": {
-    "activeHeading": "Activos ({{count}})",
-    "inactiveHeading": "Inactivos ({{count}})",
-    "activeEmpty": "No hay movimientos activos."
+    "headerDescription": "Descripción",
+    "headerCadence": "Cadencia",
+    "headerAmount": "Importe",
+    "headerActive": "Activo"
   },
   "row": {
     "dueToday": "Vence hoy",

@@ -41,9 +41,10 @@
     "create": "Create entry"
   },
   "list": {
-    "activeHeading": "Active ({{count}})",
-    "inactiveHeading": "Inactive ({{count}})",
-    "activeEmpty": "No active entries."
+    "headerDescription": "Description",
+    "headerCadence": "Cadence",
+    "headerAmount": "Amount",
+    "headerActive": "Active"
   },
   "row": {
     "dueToday": "Due today",

@@ -41,9 +41,10 @@
     "create": "Criar lançamento"
   },
   "list": {
-    "activeHeading": "Ativos ({{count}})",
-    "inactiveHeading": "Inativos ({{count}})",
-    "activeEmpty": "Nenhum lançamento ativo."
+    "headerDescription": "Descrição",
+    "headerCadence": "Cadência",
+    "headerAmount": "Valor",
+    "headerActive": "Ativo"
   },
   "row": {
     "dueToday": "Vence hoje",
