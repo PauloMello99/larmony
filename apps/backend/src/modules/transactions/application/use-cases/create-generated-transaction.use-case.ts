@@ -5,6 +5,7 @@ import {
   TRANSACTION_REPOSITORY,
   type CreateGeneratedData,
 } from "../../domain/transaction.repository.interface";
+import { NotifyIfBudgetExceededUseCase } from "../../../budgets/application/use-cases/notify-if-budget-exceeded.use-case";
 
 /**
  * Cria uma transação gerada por um lançamento programado no modo `auto`
@@ -19,12 +20,25 @@ export class CreateGeneratedTransactionUseCase {
   constructor(
     @Inject(TRANSACTION_REPOSITORY)
     private readonly transactionRepo: ITransactionRepository,
+    private readonly notifyIfBudgetExceeded: NotifyIfBudgetExceededUseCase,
   ) {}
 
-  execute(
+  async execute(
     householdId: string,
     data: CreateGeneratedData,
   ): Promise<TransactionEntity> {
-    return this.transactionRepo.createGenerated(householdId, data);
+    const transaction = await this.transactionRepo.createGenerated(householdId, data);
+
+    // Uma despesa auto também pode estourar o orçamento (M11) — o repositório
+    // de budgets usa DRIZZLE_ADMIN para esta checagem especificamente, pois
+    // este caminho roda fora de request context (engine no tick do cron).
+    await this.notifyIfBudgetExceeded.execute({
+      householdId,
+      categoryId: transaction.categoryId,
+      type: transaction.type,
+      date: transaction.date,
+    });
+
+    return transaction;
   }
 }

@@ -1,8 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { and, asc, desc, eq, gt, gte, isNull, lt, lte, or, sql } from "drizzle-orm";
-import { DRIZZLE, type DrizzleDB } from "../../../../database/database.module";
+import { DRIZZLE, DRIZZLE_ADMIN, type DrizzleDB } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
 import { currentPeriodStart, monthBounds, periodStart, toISODate } from "../../../../common/finance/due-date";
+import { findHouseholdMemberUserIds } from "../../../../common/household/household-members";
 import type {
   BudgetListItem,
   CreateBudgetData,
@@ -19,7 +20,15 @@ const PG_UNIQUE_VIOLATION = "23505";
 
 @Injectable()
 export class DrizzleBudgetRepository implements IBudgetRepository {
-  constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
+  constructor(
+    @Inject(DRIZZLE) private readonly db: DrizzleDB,
+    // Só para findBudgetForCategoryPeriod/findHouseholdMemberUserIds — o
+    // evento "orçamento estourado" (M11) dispara tanto de request context
+    // (CreateTransactionUseCase) quanto de cron (CreateGeneratedTransactionUseCase,
+    // engine auto), e RLS-scoped DRIZZLE sem claims (cron) bloquearia a leitura
+    // silenciosamente. Todo o resto do repositório segue em `db` (RLS).
+    @Inject(DRIZZLE_ADMIN) private readonly admin: DrizzleDB,
+  ) {}
 
   async findAllByPeriod(
     householdId: string,
@@ -159,6 +168,68 @@ export class DrizzleBudgetRepository implements IBudgetRepository {
       .returning({ id: schema.budgets.id });
 
     if (rows.length === 0) throw new BudgetNotFoundException(id);
+  }
+
+  async findBudgetForCategoryPeriod(
+    householdId: string,
+    categoryId: string,
+    month: number,
+    year: number,
+  ): Promise<{
+    budgetId: string;
+    categoryName: string;
+    limitCents: number;
+    spentCents: number;
+  } | null> {
+    const periodStartISO = periodStart(month, year);
+    const { start, end } = monthBounds(new Date(year, month - 1, 1));
+
+    // Mesma resolução on-read do M10 (findAllByPeriod), escopada a UMA
+    // categoria — usada pelo evento "orçamento estourado" (M11) logo após
+    // uma despesa ser gravada.
+    const resolvedVersions = this.admin
+      .selectDistinctOn([schema.budgetVersions.budgetId], {
+        budgetId: schema.budgetVersions.budgetId,
+        amountCents: schema.budgetVersions.amountCents,
+      })
+      .from(schema.budgetVersions)
+      .where(lte(schema.budgetVersions.effectiveFrom, periodStartISO))
+      .orderBy(schema.budgetVersions.budgetId, desc(schema.budgetVersions.effectiveFrom))
+      .as("resolved_versions");
+
+    const [row] = await this.admin
+      .select({
+        budgetId: schema.budgets.id,
+        categoryName: schema.categories.name,
+        limitCents: resolvedVersions.amountCents,
+        spentCents: sql<number>`coalesce(sum(case when ${schema.transactions.type} = 'expense' then ${schema.transactions.amountCents} else 0 end), 0)::int`,
+      })
+      .from(schema.budgets)
+      .innerJoin(resolvedVersions, eq(resolvedVersions.budgetId, schema.budgets.id))
+      .innerJoin(schema.categories, eq(schema.categories.id, schema.budgets.categoryId))
+      .leftJoin(
+        schema.transactions,
+        and(
+          eq(schema.transactions.categoryId, schema.budgets.categoryId),
+          eq(schema.transactions.householdId, schema.budgets.householdId),
+          gte(schema.transactions.date, toISODate(start)),
+          lt(schema.transactions.date, toISODate(end)),
+        ),
+      )
+      .where(
+        and(
+          eq(schema.budgets.householdId, householdId),
+          eq(schema.budgets.categoryId, categoryId),
+          or(isNull(schema.budgets.endedFrom), gt(schema.budgets.endedFrom, periodStartISO)),
+        ),
+      )
+      .groupBy(schema.budgets.id, schema.categories.name, resolvedVersions.amountCents);
+
+    return row ?? null;
+  }
+
+  async findHouseholdMemberUserIds(householdId: string): Promise<string[]> {
+    return findHouseholdMemberUserIds(this.admin, householdId);
   }
 }
 
