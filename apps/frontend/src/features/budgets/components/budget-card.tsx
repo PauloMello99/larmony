@@ -15,11 +15,12 @@ import type { Budget } from "../types"
 
 interface BudgetCardProps {
   budget: Budget
+  readOnly?: boolean
   onEdit: (b: Budget) => void
   onDelete: (b: Budget) => void
 }
 
-export function BudgetCard({ budget, onEdit, onDelete }: BudgetCardProps) {
+export function BudgetCard({ budget, readOnly, onEdit, onDelete }: BudgetCardProps) {
   const { t } = useTranslation("budgets")
   const { t: tCommon } = useTranslation("common")
   const pct =
@@ -28,7 +29,7 @@ export function BudgetCard({ budget, onEdit, onDelete }: BudgetCardProps) {
   const remaining = budget.limitCents - budget.spentCents
 
   return (
-    <div className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-4">
+    <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4">
       <div className="mb-3 flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <span
@@ -42,26 +43,28 @@ export function BudgetCard({ budget, onEdit, onDelete }: BudgetCardProps) {
             </span>
           )}
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="-mr-2 -mt-1 h-8 w-8 shrink-0">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onEdit(budget)}>
-              <Pencil className="mr-2 h-4 w-4" />
-              {tCommon("actions.edit")}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-red-400 focus:text-red-400"
-              onClick={() => onDelete(budget)}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              {tCommon("actions.delete")}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {!readOnly && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="-mr-2 -mt-1 h-8 w-8 shrink-0">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onEdit(budget)}>
+                <Pencil className="mr-2 h-4 w-4" />
+                {tCommon("actions.edit")}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-red-400 focus:text-red-400"
+                onClick={() => onDelete(budget)}
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                {tCommon("actions.delete")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
 
       <div className="mb-1.5 flex items-baseline justify-between gap-2">

@@ -1,6 +1,6 @@
 ---
 name: roadmap
-description: Roadmap do Larmony — M1–M9 entregues, v1 COMPLETO (snapshot 2026-07-08)
+description: Roadmap do Larmony — v1 completo (M1–M9 + ADR-0020); v1.1 planejado (M10 budgets versionados, M11 notificações multicanal, M12 timezone)
 metadata:
   type: project
 ---
@@ -151,6 +151,20 @@ relatórios + recorrência entregues. Não há milestone pendente no roadmap do 
 | Onboarding (tour guiado) | **✅ entregue (2026-07-08)** | Backend: `users.onboarding` (jsonb `{ [tourKey]: maiorVersãoVista }`), `POST /auth/me/onboarding` (merge atômico via `||`). Frontend: `features/onboarding/` — registro central `lib/tours.ts` (steps `modal` \| `spotlight`, versionados), `OnboardingProvider` (auto-start: tour `sidebar` primeiro, depois o da aba via `route-tour.ts`; tour do formulário de transação dispara manualmente ao abrir o Sheet), `TourRenderer` + componentes custom (sem lib externa — Dialog para modal, overlay+card fixo para spotlight, alvo localizado por `data-tour`, pulado se ausente no DOM). Monta em `HouseholdLayout`. i18n em `public/locales/{pt-BR,en}/onboarding.json`, precisa constar em **todo** `makeI18nProps([...])` das páginas do household (o tour do menu pode disparar em qualquer uma). Bump de `version` em `tours.ts` = re-exibe para quem já viu. |
 
 **Gotcha — migration criada não é migration aplicada**: gerar o arquivo SQL (`drizzle-kit generate` ou manual) e registrar no `_journal.json` não roda a migration no Postgres local — é preciso `pnpm --filter backend db:migrate` explicitamente. Sintoma: `GET /auth/me` (ou qualquer query que toque a coluna nova) quebra com 500 "Failed query" mesmo com o código do backend correto, porque a coluna não existe de fato na tabela. Sempre confirmar com `\d <tabela>` no psql (ou rodar a migration) antes de testar uma feature que depende de uma migration nova.
+
+## v1.1 — Próximos milestones
+
+Specs-esqueleto em `docs/product/features/` (mesmo contrato do v1: escopo +
+regras; plano de implementação + ADR no kickoff de cada um). Ordem M10 → M11 →
+M12 (M11 depende do limite vigente do M10 para "orçamento estourado"; M12
+define o *quando* dos jobs que o M11 cria).
+
+| M | Feature | Spec | Resumo | ADR |
+|---|---|---|---|---|
+| M10 | Orçamentos recorrentes/versionados | [11-orcamentos-recorrentes.md](../docs/product/features/11-orcamentos-recorrentes.md) | **✅ entregue (2026-07-10)** — `budgets` vira série por categoria + `budget_versions` (histórico), limite resolvido on-read (`DISTINCT ON`, nunca materializado); editar = upsert da versão do mês corrente (nunca toca o passado); série encerrada (`ended_from`) → 422 ao editar; remover sempre encerra (nunca hard delete); migration `0006` sem backfill de valores | [ADR-0022](adr/0022-budget-series-versions.md) |
+| M11 | Notificações multicanal + preferências | [12-notificacoes-multicanal.md](../docs/product/features/12-notificacoes-multicanal.md) | 🔲 não iniciado — dispatcher no módulo `notifications` (in-app sempre + e-mail/SMS/WhatsApp por preferência de usuário, ports `ISmsSender`/`IWhatsAppSender`); eventos: lançamento auto, meta atingida, orçamento estourado, relatório mensal; telefone verificado p/ SMS/WhatsApp; flags de custo | ADR-0023 (reservado) |
+| M12 | Disparos com horário + timezone | [13-cron-horario-timezone.md](../docs/product/features/13-cron-horario-timezone.md) | 🔲 não iniciado — tick continua burro; jobs comparam relógio local: `households.timezone` (dados/vencimentos) + `users.timezone`+`notification_hour` (entrega); IANA sempre; dedup em data local; auditoria dos jobs afetados (engine, reminders, monthly-report) | ADR-0024 (reservado) |
+| M13 | Open Finance (conexão bancária) | [14-open-finance.md](../docs/product/features/14-open-finance.md) | Importação/conciliação automática via agregador licenciado (Pluggy/Belvo/Klavi — escolher na Fase 0 com PoC + ADR); port `IBankAggregator`, dedup idempotente, consentimento LGPD; destrava plano "Conectado" da assinatura B2C (decisão comercial 2026-07-10: freemium + Premium R$ 14,90/mês por lar). Pré-requisito: entitlements/billing (Stripe) | ADR no kickoff |
 
 ## Fora de escopo do v1
 

@@ -4,7 +4,9 @@
     "subtitle": "Monthly spending limits by category",
     "newBudget": "New budget",
     "empty": "No budgets for this period.",
-    "createBudget": "Create budget"
+    "createBudget": "Create budget",
+    "readOnlyNotice": "Past month — the limit shown is what applied then and can't be changed.",
+    "projectedNotice": "Future month — the limit shown is a projection of today's value."
   },
   "periodNav": {
     "monthAria": "Budget month",

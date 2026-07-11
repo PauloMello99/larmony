@@ -24,6 +24,8 @@
 | ADR-0018 | i18n pt-BR/en com locale no perfil do usuário | 2026-07-04 | Aceito |
 | ADR-0019 | Recorrência: modelo simples + engine no cron gravando via DRIZZLE_ADMIN | 2026-07-08 | **Superseded** — unificado com bills no ADR-0020 |
 | ADR-0020 | Unificar bills + recurrences em "lançamentos programados" (scheduled_transaction_entries) | 2026-07-09 | Aceito |
+| ADR-0021 | Adoção do Design System gerado no Claude Design (logo, landing, glass app-wide) | 2026-07-10 | Aceito |
+| ADR-0022 | Orçamentos como série + versões, resolução on-read (M10) | 2026-07-10 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
 
@@ -71,3 +73,39 @@
   re-ancorando cursor, launch manual criando transação real, dashboard "Próximos
   lançamentos". Detalhes em `domain-rules.md` §Lançamentos programados e
   `docs/product/features/10-lancamentos-programados.md`.
+- **2026-07-10 — M10 Orçamentos recorrentes entregue (ADR-0022)**: `budgets`
+  vira série por categoria + `budget_versions` (histórico de limites),
+  resolução do limite on-read (`DISTINCT ON`, nunca materializada). Editar
+  sempre faz upsert da versão do mês corrente (nunca toca o passado); série
+  com `ended_from` preenchido (não é mais a aberta) → 422 ao editar. Remover
+  sempre encerra a série (nunca hard delete). `currentPeriodStart()`/
+  `currentMonthYear()` centralizam "mês corrente" em `common/finance/
+  due-date.ts` (prepara M12). Overview (`budgetsProgress`) replica a mesma
+  resolução. Migration `0006` sem backfill de valores (staging é dado de
+  teste descartável — decisão do kickoff). Gotcha de ambiente resolvido no
+  caminho: `drizzle.__drizzle_migrations` local estava com hashes de
+  0000-0002 divergentes do conteúdo atual dos arquivos e 0004/0005 nunca
+  registradas (embora já aplicadas) — corrigido recalculando os hashes reais
+  e reinserindo as linhas faltantes antes de rodar a 0006 (bookkeeping puro,
+  sem tocar dado/schema). 11 e2e novos (herança, projeção, imutabilidade,
+  reabertura de série) + 72 e2e/34 unit da suíte completa seguem verdes;
+  Playwright cobre CRUD no mês corrente + navegação para mês passado/futuro
+  somente-leitura. Detalhes em `domain-rules.md` §Orçamentos e
+  `docs/product/features/11-orcamentos-recorrentes.md`.
+- **2026-07-10 — Batch de polimento de UI (pós-M10)**: 5 melhorias de frontend
+  (+1 linha no backend do overview). (1) Lançamentos deixou de ser lista de
+  linhas custom e virou Table+cards (lista única ativos-primeiro, inativos
+  esmaecidos). (2) Paginação **client-side** uniforme (`usePagination` +
+  `Pagination`, 10/25/50/100) em transações/categorias/lançamentos — decisão
+  de não fazer server-side porque as listas são naturalmente limitadas (regra
+  27 de UI). (3) Fix do submenu "Idioma" que não pintava — `DropdownMenuSubContent`
+  precisava de `Portal` (regra 28). (4) Onboarding utilizável no mobile — o
+  spotlight só mede alvo on-screen (drawer off-canvas) e usa placement "bottom"
+  no mobile; **decisão explícita de NÃO migrar para biblioteca** (driver.js/
+  NextStepjs) porque a causa-raiz era coordenação do drawer, não o motor de
+  render, e NextStepjs traria framer-motion que o projeto evita. (5) Dashboard
+  mostra 20 recentes (era 5) com scroll interno casando a altura da coluna
+  lateral (regra 29). Verificado ao vivo com o seed + suíte e2e verde (72
+  backend, Playwright budgets/transactions/scheduled). Gotcha corrigido de
+  passagem: flake de fuso no `isoDaysFromNow` do e2e de scheduled-transactions
+  (usava UTC, app usa local). Detalhes em `domain-rules.md` regras 24/27/28/29.

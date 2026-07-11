@@ -64,16 +64,17 @@ test("cria um lançamento manual e lança como transação — a entrada continu
   await dialog.getByLabel(/Descrição/).fill("Aluguel")
   await dialog.getByLabel(/Valor/).fill("250000")
   await dialog.getByRole("button", { name: "Criar lançamento" }).click()
+  await expect(page.getByRole("dialog")).toBeHidden()
 
-  await expect(page.getByRole("heading", { name: "Ativos (1)", exact: true })).toBeVisible()
-  await expect(page.getByText("Aluguel").first()).toBeVisible()
+  const aluguelRow = page.getByRole("row").filter({ hasText: "Aluguel" })
+  await expect(aluguelRow).toBeVisible()
 
   // Lança como transação (só disponível no modo manual).
-  await page.locator("main [aria-haspopup='menu']").first().click()
+  await aluguelRow.locator("[aria-haspopup='menu']").click()
   await page.getByRole("menuitem", { name: "Lançar como transação" }).click()
 
-  // A entrada continua em Ativos (nunca é consumida).
-  await expect(page.getByRole("heading", { name: "Ativos (1)", exact: true })).toBeVisible()
+  // A entrada continua na lista (nunca é consumida).
+  await expect(page.getByRole("row").filter({ hasText: "Aluguel" })).toBeVisible()
 
   // A transação aparece na tela de Transações.
   await page.getByRole("navigation").last().getByRole("link", { name: "Transações", exact: true }).click()
@@ -95,12 +96,12 @@ test("cria um lançamento automático — sem lembrete e sem ação de lançar",
   // No modo auto o campo de lembrete não é exibido.
   await expect(dialog.getByLabel(/Lembrete/)).toHaveCount(0)
   await dialog.getByRole("button", { name: "Criar lançamento" }).click()
+  await expect(page.getByRole("dialog")).toBeHidden()
 
-  await expect(page.getByRole("heading", { name: "Ativos (2)", exact: true })).toBeVisible()
-  await expect(page.getByText("Salário").first()).toBeVisible()
+  const salarioRow = page.getByRole("row").filter({ hasText: "Salário" })
+  await expect(salarioRow).toBeVisible()
 
   // Sem lançamento manual disponível para uma entrada auto.
-  const salarioRow = page.locator("main").getByText("Salário").locator("..").locator("..")
   await salarioRow.locator("[aria-haspopup='menu']").click()
   await expect(page.getByRole("menuitem", { name: "Lançar como transação" })).toHaveCount(0)
   await page.keyboard.press("Escape")
@@ -110,16 +111,17 @@ test("alterna ativa/inativa e exclui", async ({ page }) => {
   await login(page)
   await goToScheduledTransactions(page)
 
-  await expect(page.getByRole("heading", { name: "Ativos (2)", exact: true })).toBeVisible()
+  const aluguelRow = page.getByRole("row").filter({ hasText: "Aluguel" })
+  await expect(aluguelRow).toBeVisible()
 
-  const aluguelRow = page.locator("main").getByText("Aluguel").locator("..").locator("..")
+  // Desativa via o Switch da linha; o toggle passa a "não marcado".
   await aluguelRow.locator("[role='switch']").click()
-  await expect(page.getByRole("heading", { name: "Inativos (1)", exact: true })).toBeVisible()
-  await expect(page.getByRole("heading", { name: "Ativos (1)", exact: true })).toBeVisible()
+  await expect(aluguelRow.locator("[role='switch']")).toHaveAttribute("aria-checked", "false")
 
+  // Exclui; a linha some e o outro lançamento (Salário) permanece.
   await aluguelRow.locator("[aria-haspopup='menu']").click()
   await page.getByRole("menuitem", { name: "Excluir" }).click()
   await page.getByRole("button", { name: "Excluir" }).last().click()
-  await expect(page.getByRole("heading", { name: "Inativos (1)", exact: true })).toHaveCount(0)
-  await expect(page.getByRole("heading", { name: "Ativos (1)", exact: true })).toBeVisible()
+  await expect(page.getByRole("row").filter({ hasText: "Aluguel" })).toHaveCount(0)
+  await expect(page.getByRole("row").filter({ hasText: "Salário" })).toBeVisible()
 })

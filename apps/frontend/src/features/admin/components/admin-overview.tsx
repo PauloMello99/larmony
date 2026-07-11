@@ -47,7 +47,7 @@ function StatCard({
   loading: boolean
 }) {
   return (
-    <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
+    <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4">
       <div className="flex items-center gap-1.5 text-xs text-foreground/50">
         <Icon className="h-3.5 w-3.5 text-primary" />
         {label}
@@ -136,7 +136,7 @@ export function AdminOverview() {
 
       <div className="grid gap-4 lg:grid-cols-3">
         {/* Crescimento (últimos 12 meses) */}
-        <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4 lg:col-span-2">
+        <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4 lg:col-span-2">
           <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
             <TrendingUp className="h-4 w-4 text-primary" />
             Crescimento · novos por mês (12 meses)
@@ -175,7 +175,7 @@ export function AdminOverview() {
         </div>
 
         {/* Lares por status */}
-        <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
+        <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4">
           <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
             <Building2 className="h-4 w-4 text-primary" />
             Lares por status

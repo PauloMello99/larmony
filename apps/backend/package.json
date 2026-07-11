@@ -17,6 +17,7 @@
     "db:status": "tsx src/database/migrator.ts status",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
+    "seed:local": "tsx scripts/seed-local-user.ts",
     "clean": "pnpm -r exec rm -rf dist .turbo",
     "clean:reset": "pnpm clean && pnpm -r exec rm -rf node_modules"
   },

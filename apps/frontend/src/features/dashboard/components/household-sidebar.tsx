@@ -56,7 +56,7 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
 
       <aside
         className={cn(
-          "flex shrink-0 flex-col border-r border-foreground/[0.06] bg-background",
+          "flex shrink-0 flex-col border-r border-foreground/[0.06] bg-background/70 backdrop-blur-xl",
           // Mobile: fixed drawer — slides in/out
           "fixed bottom-0 top-0 z-50 w-64",
           mobileOpen ? "translate-x-0" : "-translate-x-full",

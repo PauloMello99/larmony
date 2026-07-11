@@ -11,8 +11,11 @@ function buildQuery(filters: TransactionFilters): string {
   if (filters.year) params.set("year", String(filters.year))
   if (filters.type) params.set("type", filters.type)
   if (filters.categoryId) params.set("categoryId", filters.categoryId)
-  const qs = params.toString()
-  return qs ? `?${qs}` : ""
+  // Busca o mês inteiro (a paginação é client-side, ver usePagination). Sem
+  // isto o backend aplicaria o default de 50 e cortaria meses cheios; 200 é o
+  // teto do endpoint e cobre com folga um mês de um lar.
+  params.set("limit", "200")
+  return `?${params.toString()}`
 }
 
 export function useTransactions(householdId: string, filters: TransactionFilters) {

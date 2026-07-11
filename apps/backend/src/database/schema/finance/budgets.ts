@@ -2,16 +2,20 @@ import {
   pgTable,
   uuid,
   timestamp,
-  integer,
-  unique,
+  date,
+  uniqueIndex,
   index,
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { households } from "../households";
 import { categories } from "./categories";
+import { budgetVersions } from "./budget-versions";
 
-// Limite de gasto mensal por categoria. Spending é calculado em tempo real via
-// query de transactions — nunca persistido (ver domain-rules).
+// Série de orçamento por categoria (M10). O limite em si vive em
+// `budget_versions` — esta tabela só identifica a série e, opcionalmente, o
+// mês em que ela deixou de valer (`ended_from`, exclusivo). Resolução do
+// limite por período e spending são sempre derivados em runtime — nunca
+// persistidos (ver domain-rules).
 export const budgets = pgTable(
   "budgets",
   {
@@ -22,9 +26,7 @@ export const budgets = pgTable(
     categoryId: uuid("category_id")
       .notNull()
       .references(() => categories.id, { onDelete: "cascade" }),
-    month: integer("month").notNull(), // 1–12
-    year: integer("year").notNull(),
-    amountCents: integer("amount_cents").notNull(),
+    endedFrom: date("ended_from"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -33,12 +35,17 @@ export const budgets = pgTable(
       .defaultNow(),
   },
   (t) => [
-    unique().on(t.householdId, t.categoryId, t.month, t.year),
-    index("budgets_household_period_idx").on(t.householdId, t.year, t.month),
+    // Só uma série ABERTA por categoria — séries encerradas (ended_from
+    // preenchido) não conflitam, permitindo recriar após remover. Constraint
+    // UNIQUE não suporta condição parcial no Postgres — precisa ser um índice.
+    uniqueIndex("budgets_open_series_unique")
+      .on(t.householdId, t.categoryId)
+      .where(sql`${t.endedFrom} is null`),
+    index("budgets_household_category_idx").on(t.householdId, t.categoryId),
   ],
 );
 
-export const budgetsRelations = relations(budgets, ({ one }) => ({
+export const budgetsRelations = relations(budgets, ({ one, many }) => ({
   household: one(households, {
     fields: [budgets.householdId],
     references: [households.id],
@@ -47,6 +54,7 @@ export const budgetsRelations = relations(budgets, ({ one }) => ({
     fields: [budgets.categoryId],
     references: [categories.id],
   }),
+  versions: many(budgetVersions),
 }));
 
 export type Budget = typeof budgets.$inferSelect;

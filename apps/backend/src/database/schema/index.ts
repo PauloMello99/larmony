@@ -9,3 +9,4 @@ export * from "./finance/scheduled-transaction-entries";
 export * from "./finance/transactions";
 export * from "./finance/goals";
 export * from "./finance/budgets";
+export * from "./finance/budget-versions";

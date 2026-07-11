@@ -6,6 +6,8 @@ import { appWithTranslation } from "next-i18next/pages"
 import { AppProviders } from "@/providers"
 import { ErrorBoundary } from "@/shared/components/error-boundary"
 import { installGlobalErrorHandlers } from "@/infrastructure/telemetry/telemetry"
+import { sora } from "@/shared/lib/fonts"
+import { cn } from "@/shared/lib/utils"
 import "@/styles/globals.css"
 
 // Allow pages to declare a custom layout via getLayout
@@ -27,7 +29,19 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <ErrorBoundary>
-      <AppProviders>{getLayout(<Component {...pageProps} />)}</AppProviders>
+      {/* Sora global (Design System): font-family no `html` com o NOME literal
+          da fonte — conteúdo portalado (Radix dropdown/dialog/sheet vão direto
+          no body) não herdaria de um wrapper dentro do React tree. O wrapper
+          `contents` com sora.variable continua para o next/font injetar o
+          @font-face/preload e manter --font-sora disponível. */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `html{font-family:${sora.style.fontFamily},ui-sans-serif,system-ui,sans-serif;}`,
+        }}
+      />
+      <div className={cn(sora.variable, "contents")}>
+        <AppProviders>{getLayout(<Component {...pageProps} />)}</AppProviders>
+      </div>
     </ErrorBoundary>
   )
 }

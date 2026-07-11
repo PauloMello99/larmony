@@ -7,7 +7,8 @@ import {
   Bell,
   Users,
 } from "lucide-react"
-import { Badge } from "@/shared/components/ui/badge"
+import { SectionHeading } from "./section-heading"
+import { Reveal } from "./reveal"
 
 const FEATURES = [
   {
@@ -48,48 +49,37 @@ const FEATURES = [
   },
 ]
 
+const DELAYS = ["", "lp-d1", "lp-d2"]
+
 export function FeaturesSection() {
   return (
-    <section id="recursos" className="py-16 md:py-24">
+    <section id="recursos" className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        {/* Header */}
-        <div className="mb-16 text-center">
-          <div className="mb-4 flex justify-center">
-            <Badge
-              variant="outline"
-              className="border-white/10 text-white/60"
-            >
-              Recursos
-            </Badge>
-          </div>
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
-            Tudo que você precisa
-          </h2>
-          <p className="mx-auto mt-4 max-w-lg text-white/50">
-            Projetado para o dia a dia de quem organiza as finanças de casa,
-            sozinho ou com a família.
-          </p>
-        </div>
+        <SectionHeading
+          kicker="Recursos"
+          title="Tudo que o seu lar precisa"
+          subtitle="Projetado para o dia a dia de quem organiza as finanças de casa — sozinho ou com a família."
+        />
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((feature) => {
+        <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map((feature, i) => {
             const Icon = feature.icon
             return (
-              <div
+              <Reveal
                 key={feature.title}
-                className="group rounded-xl border border-white/5 bg-white/[0.03] p-6 transition-all hover:border-white/10 hover:bg-white/[0.05]"
+                delay={DELAYS[i % 3]}
+                className="group rounded-[20px] border border-white/[0.07] bg-white/[0.03] p-7 transition-[transform,border-color,background-color] duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:bg-white/[0.05]"
               >
-                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                <div className="mb-[18px] inline-flex h-11 w-11 items-center justify-center rounded-[13px] bg-primary/10">
                   <Icon className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="mb-2 text-base font-semibold text-white">
+                <h3 className="mb-2 text-[16.5px] font-semibold text-white">
                   {feature.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-white/50">
+                <p className="text-sm leading-relaxed text-white/55">
                   {feature.description}
                 </p>
-              </div>
+              </Reveal>
             )
           })}
         </div>

@@ -40,5 +40,12 @@
     "pt-BR": "Português (Brasil)",
     "en": "English",
     "es": "Español"
+  },
+  "pagination": {
+    "range": "{{from}}–{{to}} de {{total}}",
+    "perPage": "Por página",
+    "pageOf": "{{page}} de {{totalPages}}",
+    "previous": "Página anterior",
+    "next": "Próxima página"
   }
 }

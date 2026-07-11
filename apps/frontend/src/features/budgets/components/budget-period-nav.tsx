@@ -27,7 +27,9 @@ export function BudgetPeriodNav({ period, onChange }: BudgetPeriodNavProps) {
   const { t } = useTranslation("budgets")
   const locale = useActiveLocale()
   const now = new Date()
-  const years = Array.from({ length: 5 }, (_, i) => now.getFullYear() - i)
+  // Inclui 1 ano à frente — necessário para navegar a projeções de dezembro→
+  // janeiro (M10: mês futuro é uma projeção válida do limite vigente).
+  const years = Array.from({ length: 6 }, (_, i) => now.getFullYear() + 1 - i)
 
   return (
     <div className="mb-4 flex flex-wrap gap-2">

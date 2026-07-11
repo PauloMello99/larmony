@@ -123,7 +123,7 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
           Lares ({user.memberships.length})
         </h2>
         {user.memberships.length === 0 ? (
-          <p className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] px-4 py-8 text-center text-sm text-foreground/40">
+          <p className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] px-4 py-8 text-center text-sm text-foreground/40">
             Este usuário não pertence a nenhum lar.
           </p>
         ) : (

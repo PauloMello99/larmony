@@ -11,15 +11,10 @@ import {
   Languages,
   Loader2,
   MailCheck,
-  Monitor,
-  Moon,
-  Palette,
   ShieldCheck,
-  Sun,
   Trash2,
   Upload,
 } from "lucide-react"
-import { useTheme } from "next-themes"
 import { Trans, useTranslation } from "react-i18next"
 import { useMe } from "@/features/auth"
 import { useAuth } from "@/features/auth"
@@ -53,7 +48,6 @@ import {
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
-import { cn } from "@/shared/lib/utils"
 import {
   DEFAULT_LOCALE,
   SUPPORTED_LOCALES,
@@ -292,7 +286,7 @@ export function AccessSection() {
         title={t("access.title")}
         description={t("access.description")}
       />
-      <section className="max-w-lg rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-5">
+      <section className="max-w-lg rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
         <div className="flex items-center gap-2">
           <KeyRound className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-medium">{t("access.changePassword")}</h3>
@@ -323,68 +317,6 @@ export function AccessSection() {
             </div>
           </>
         )}
-      </section>
-    </div>
-  )
-}
-
-/* ── Tema / Aparência ───────────────────────────────────────────── */
-
-const THEME_OPTIONS = [
-  { value: "light", labelKey: "appearance.light", icon: Sun },
-  { value: "dark", labelKey: "appearance.dark", icon: Moon },
-  { value: "system", labelKey: "appearance.system", icon: Monitor },
-] as const
-
-export function AppearanceSection() {
-  const { t } = useTranslation("account")
-  const { theme, setTheme } = useTheme()
-  // next-themes só resolve no cliente; evita mismatch de hidratação.
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
-  const current = mounted ? (theme ?? "system") : undefined
-
-  return (
-    <div className="grid gap-6">
-      <SectionHeader
-        title={t("appearance.title")}
-        description={t("appearance.description")}
-      />
-      <section className="max-w-lg rounded-xl border border-border bg-foreground/[0.02] p-5">
-        <div className="flex items-center gap-2">
-          <Palette className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-medium">{t("appearance.cardTitle")}</h3>
-        </div>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {t("appearance.cardDescription")}
-        </p>
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          {THEME_OPTIONS.map(({ value, labelKey, icon: Icon }) => {
-            const active = current === value
-            return (
-              <button
-                key={value}
-                type="button"
-                onClick={() => setTheme(value)}
-                aria-pressed={active}
-                className={cn(
-                  "flex flex-col items-center gap-1.5 rounded-lg border p-3 text-xs transition-colors",
-                  active
-                    ? "border-primary/60 bg-primary/10 text-foreground"
-                    : "border-border text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground",
-                )}
-              >
-                <Icon
-                  className={cn(
-                    "h-5 w-5",
-                    active ? "text-primary" : "text-muted-foreground",
-                  )}
-                />
-                {t(labelKey)}
-              </button>
-            )
-          })}
-        </div>
       </section>
     </div>
   )
@@ -421,7 +353,7 @@ export function LocaleSection() {
         title={t("locale.label")}
         description={tAccount("locale.description")}
       />
-      <section className="max-w-lg rounded-xl border border-border bg-foreground/[0.02] p-5">
+      <section className="max-w-lg rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
         <div className="flex items-center gap-2">
           <Languages className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-medium">{t("locale.label")}</h3>

@@ -40,7 +40,7 @@ export function AdminBilling() {
         ))}
       </div>
 
-      <div className="flex flex-col items-center gap-3 rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] px-6 py-12 text-center">
+      <div className="flex flex-col items-center gap-3 rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] px-6 py-12 text-center">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
           <Lock className="h-5 w-5 text-primary" />
         </div>

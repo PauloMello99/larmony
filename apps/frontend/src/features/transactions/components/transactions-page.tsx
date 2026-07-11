@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next"
 import { ArrowLeftRight, PlusCircle } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Skeleton } from "@/shared/components/ui/skeleton"
+import { Pagination } from "@/shared/components/ui/pagination"
+import { usePagination } from "@/shared/hooks/use-pagination"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
 import { useCategories } from "@/features/categories/hooks/use-categories"
 import { useTransactions } from "../hooks/use-transactions"
@@ -27,6 +29,7 @@ export function TransactionsPage() {
   const [filters, setFilters] = useState<TransactionFilters>(currentFilters)
   const { categories } = useCategories(householdId)
   const { transactions, loading } = useTransactions(householdId, filters)
+  const pagination = usePagination(transactions)
   const { createTransaction, updateTransaction, deleteTransaction, deleteSeries } =
     useTransactionMutations(householdId)
 
@@ -92,7 +95,23 @@ export function TransactionsPage() {
           </Button>
         </div>
       ) : (
-        <TransactionList transactions={transactions} onEdit={openEdit} onDelete={setDeleting} />
+        <>
+          <TransactionList
+            transactions={pagination.pageItems}
+            onEdit={openEdit}
+            onDelete={setDeleting}
+          />
+          <Pagination
+            page={pagination.page}
+            pageSize={pagination.pageSize}
+            totalPages={pagination.totalPages}
+            total={pagination.total}
+            from={pagination.from}
+            to={pagination.to}
+            onPageChange={pagination.setPage}
+            onPageSizeChange={pagination.setPageSize}
+          />
+        </>
       )}
 
       <TransactionForm
