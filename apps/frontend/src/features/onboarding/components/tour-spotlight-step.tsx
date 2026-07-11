@@ -183,7 +183,7 @@ export function TourSpotlightStep({ step, stepIndex, totalSteps }: TourSpotlight
       />
       <div
         ref={cardRef}
-        className="fixed w-72 rounded-lg border border-foreground/10 bg-popover p-4 text-foreground shadow-2xl sm:w-80"
+        className="fixed rounded-lg border border-foreground/10 bg-popover p-4 text-foreground shadow-2xl w-[calc(100vw_-_28px)] sm:w-80"
         style={cardPos ? { top: cardPos.top, left: cardPos.left } : { top: -9999, left: -9999 }}
       >
         <h3 className="text-sm font-semibold">{t(step.titleKey)}</h3>

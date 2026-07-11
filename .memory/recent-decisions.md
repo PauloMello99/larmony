@@ -92,3 +92,20 @@
   Playwright cobre CRUD no mês corrente + navegação para mês passado/futuro
   somente-leitura. Detalhes em `domain-rules.md` §Orçamentos e
   `docs/product/features/11-orcamentos-recorrentes.md`.
+- **2026-07-10 — Batch de polimento de UI (pós-M10)**: 5 melhorias de frontend
+  (+1 linha no backend do overview). (1) Lançamentos deixou de ser lista de
+  linhas custom e virou Table+cards (lista única ativos-primeiro, inativos
+  esmaecidos). (2) Paginação **client-side** uniforme (`usePagination` +
+  `Pagination`, 10/25/50/100) em transações/categorias/lançamentos — decisão
+  de não fazer server-side porque as listas são naturalmente limitadas (regra
+  27 de UI). (3) Fix do submenu "Idioma" que não pintava — `DropdownMenuSubContent`
+  precisava de `Portal` (regra 28). (4) Onboarding utilizável no mobile — o
+  spotlight só mede alvo on-screen (drawer off-canvas) e usa placement "bottom"
+  no mobile; **decisão explícita de NÃO migrar para biblioteca** (driver.js/
+  NextStepjs) porque a causa-raiz era coordenação do drawer, não o motor de
+  render, e NextStepjs traria framer-motion que o projeto evita. (5) Dashboard
+  mostra 20 recentes (era 5) com scroll interno casando a altura da coluna
+  lateral (regra 29). Verificado ao vivo com o seed + suíte e2e verde (72
+  backend, Playwright budgets/transactions/scheduled). Gotcha corrigido de
+  passagem: flake de fuso no `isoDaysFromNow` do e2e de scheduled-transactions
+  (usava UTC, app usa local). Detalhes em `domain-rules.md` regras 24/27/28/29.
