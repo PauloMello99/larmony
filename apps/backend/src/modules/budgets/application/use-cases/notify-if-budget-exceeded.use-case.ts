@@ -12,6 +12,14 @@ export interface CheckBudgetExceededInput {
   type: "income" | "expense";
   /** Data da transação (ISO yyyy-MM-dd) — define QUAL mês/orçamento checar. */
   date: string;
+  /**
+   * `true` quando chamado fora de request context (engine de geração
+   * automática, cron) — lê via DRIZZLE_ADMIN em vez da conexão RLS-scoped
+   * (que não existe/não tem claims fora de um request). Default `false`
+   * (chamadores request-scoped: CreateTransactionUseCase,
+   * CreateInstallmentTransactionUseCase).
+   */
+  viaAdmin?: boolean;
 }
 
 function formatBRL(cents: number): string {
@@ -40,12 +48,19 @@ export class NotifyIfBudgetExceededUseCase {
     if (input.type !== "expense" || !input.categoryId) return;
 
     const [year, month] = input.date.split("-").map(Number) as [number, number];
-    const budget = await this.budgetRepo.findBudgetForCategoryPeriod(
-      input.householdId,
-      input.categoryId,
-      month,
-      year,
-    );
+    const budget = input.viaAdmin
+      ? await this.budgetRepo.findBudgetForCategoryPeriodAdmin(
+          input.householdId,
+          input.categoryId,
+          month,
+          year,
+        )
+      : await this.budgetRepo.findBudgetForCategoryPeriod(
+          input.householdId,
+          input.categoryId,
+          month,
+          year,
+        );
     if (!budget || budget.spentCents <= budget.limitCents) return;
 
     const periodKey = `${year}-${String(month).padStart(2, "0")}`;

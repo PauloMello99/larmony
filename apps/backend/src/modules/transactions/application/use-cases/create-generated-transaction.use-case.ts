@@ -37,6 +37,7 @@ export class CreateGeneratedTransactionUseCase {
       categoryId: transaction.categoryId,
       type: transaction.type,
       date: transaction.date,
+      viaAdmin: true,
     });
 
     return transaction;

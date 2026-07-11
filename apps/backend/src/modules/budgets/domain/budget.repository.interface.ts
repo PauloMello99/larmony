@@ -67,8 +67,30 @@ export interface IBudgetRepository {
    * escopada a UMA categoria. Usado pelo evento "orçamento estourado" (M11)
    * logo após uma transação de despesa ser gravada. `null` se a categoria
    * não tem orçamento cobrindo aquele período.
+   *
+   * Via `DRIZZLE` (request-scoped) — a transação recém-gravada por
+   * `CreateTransactionUseCase`/`CreateInstallmentTransactionUseCase` ainda
+   * está numa transação Postgres ABERTA nesta mesma conexão (a
+   * `RlsInterceptor` só dá COMMIT ao fim do request); ler por uma conexão
+   * diferente (ex.: DRIZZLE_ADMIN) não veria a escrita ainda não commitada.
+   * Use `findBudgetForCategoryPeriodAdmin` fora de request context (cron).
    */
   findBudgetForCategoryPeriod(
+    householdId: string,
+    categoryId: string,
+    month: number,
+    year: number,
+  ): Promise<{
+    budgetId: string;
+    categoryName: string;
+    limitCents: number;
+    spentCents: number;
+  } | null>;
+
+  /** Mesma resolução, via DRIZZLE_ADMIN — usada pelo engine de geração
+   *  automática (cron, sem request/RLS context, sem transação aberta a
+   *  esperar commit). */
+  findBudgetForCategoryPeriodAdmin(
     householdId: string,
     categoryId: string,
     month: number,

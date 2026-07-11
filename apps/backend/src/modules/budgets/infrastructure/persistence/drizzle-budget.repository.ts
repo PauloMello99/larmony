@@ -170,7 +170,36 @@ export class DrizzleBudgetRepository implements IBudgetRepository {
     if (rows.length === 0) throw new BudgetNotFoundException(id);
   }
 
-  async findBudgetForCategoryPeriod(
+  findBudgetForCategoryPeriod(
+    householdId: string,
+    categoryId: string,
+    month: number,
+    year: number,
+  ): Promise<{
+    budgetId: string;
+    categoryName: string;
+    limitCents: number;
+    spentCents: number;
+  } | null> {
+    return this.resolveBudgetForCategoryPeriod(this.db, householdId, categoryId, month, year);
+  }
+
+  findBudgetForCategoryPeriodAdmin(
+    householdId: string,
+    categoryId: string,
+    month: number,
+    year: number,
+  ): Promise<{
+    budgetId: string;
+    categoryName: string;
+    limitCents: number;
+    spentCents: number;
+  } | null> {
+    return this.resolveBudgetForCategoryPeriod(this.admin, householdId, categoryId, month, year);
+  }
+
+  private async resolveBudgetForCategoryPeriod(
+    db: DrizzleDB,
     householdId: string,
     categoryId: string,
     month: number,
@@ -187,7 +216,7 @@ export class DrizzleBudgetRepository implements IBudgetRepository {
     // Mesma resolução on-read do M10 (findAllByPeriod), escopada a UMA
     // categoria — usada pelo evento "orçamento estourado" (M11) logo após
     // uma despesa ser gravada.
-    const resolvedVersions = this.admin
+    const resolvedVersions = db
       .selectDistinctOn([schema.budgetVersions.budgetId], {
         budgetId: schema.budgetVersions.budgetId,
         amountCents: schema.budgetVersions.amountCents,
@@ -197,7 +226,7 @@ export class DrizzleBudgetRepository implements IBudgetRepository {
       .orderBy(schema.budgetVersions.budgetId, desc(schema.budgetVersions.effectiveFrom))
       .as("resolved_versions");
 
-    const [row] = await this.admin
+    const [row] = await db
       .select({
         budgetId: schema.budgets.id,
         categoryName: schema.categories.name,
