@@ -1,6 +1,6 @@
 ---
 name: roadmap
-description: Roadmap do Larmony — v1 completo (M1–M9 + ADR-0020); v1.1 em andamento (M10 budgets versionados ✅, M11 notificações multicanal ✅, M12 timezone planejado)
+description: Roadmap do Larmony — v1 completo (M1–M9 + ADR-0020); v1.1 em andamento (M10 budgets versionados ✅, M11 notificações multicanal ✅, M12 timezone dos disparos ✅)
 metadata:
   type: project
 ---
@@ -163,7 +163,7 @@ define o *quando* dos jobs que o M11 cria).
 |---|---|---|---|---|
 | M10 | Orçamentos recorrentes/versionados | [11-orcamentos-recorrentes.md](../docs/product/features/11-orcamentos-recorrentes.md) | **✅ entregue (2026-07-10)** — `budgets` vira série por categoria + `budget_versions` (histórico), limite resolvido on-read (`DISTINCT ON`, nunca materializado); editar = upsert da versão do mês corrente (nunca toca o passado); série encerrada (`ended_from`) → 422 ao editar; remover sempre encerra (nunca hard delete); migration `0006` sem backfill de valores | [ADR-0022](adr/0022-budget-series-versions.md) |
 | M11 | Notificações multicanal + preferências | [12-notificacoes-multicanal.md](../docs/product/features/12-notificacoes-multicanal.md) | **✅ entregue (2026-07-11)** — `DispatchNotificationUseCase` único ponto de entrada (in-app sempre + e-mail real + SMS/WhatsApp ports stub atrás de flag); `notification_preferences` (matriz por usuário) + `notification_dedup` (tabela dedicada, household-scoped); 5 eventos: lembrete migrado + meta atingida + orçamento estourado (M10) + lançamento automático + relatório mensal (cron `monthly-report`); `NotificationsSection` no Account | [ADR-0023](adr/0023-notification-dispatcher-multicanal.md) |
-| M12 | Disparos com horário + timezone | [13-cron-horario-timezone.md](../docs/product/features/13-cron-horario-timezone.md) | 🔲 não iniciado — tick continua burro; jobs comparam relógio local: `households.timezone` (dados/vencimentos) + `users.timezone`+`notification_hour` (entrega); IANA sempre; dedup em data local; auditoria dos jobs afetados (engine, reminders, monthly-report) | ADR-0024 (reservado) |
+| M12 | Disparos com horário + timezone | [13-cron-horario-timezone.md](../docs/product/features/13-cron-horario-timezone.md) | **✅ entregue (2026-07-11)** — timezone + hora **por lar** (`households.timezone` IANA + `notification_hour`, migration 0008); tick segue burro, cada job resolve "agora" no fuso do lar via helper `tz-clock` (date-fns-tz): engine gera na data local (teto UTC+14 + corte fino), lembrete/relatório saem a partir da hora local, dedup em data local; `currentPeriodStart` dos orçamentos migrado (cumpre ADR-0022). **Por-lar, não por-usuário** (hora/dedup por-destinatário → pós-v1.1). Front: fuso auto-detectado na criação + seletor de fuso/hora nas Configurações | [ADR-0024](adr/0024-cron-timezone-household.md) |
 | M13 | Open Finance (conexão bancária) | [14-open-finance.md](../docs/product/features/14-open-finance.md) | Importação/conciliação automática via agregador licenciado (Pluggy/Belvo/Klavi — escolher na Fase 0 com PoC + ADR); port `IBankAggregator`, dedup idempotente, consentimento LGPD; destrava plano "Conectado" da assinatura B2C (decisão comercial 2026-07-10: freemium + Premium R$ 14,90/mês por lar). Pré-requisito: entitlements/billing (Stripe) | ADR no kickoff |
 
 ## Fora de escopo do v1

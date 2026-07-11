@@ -1,11 +1,14 @@
 # 13 — Assertividade dos disparos: horário + timezone (M12)
 
-> **Proposta (2026-07-10)**: hoje o cron é um tick periódico (serviço Railway
-> dedicado batendo em `/internal/cron/tick`) e os jobs disparam na **primeira
-> janela do dia em UTC** — ou seja, um lembrete pode chegar ~00h–02h no Brasil.
-> Este milestone adiciona **timezone + horário preferido** a todos os disparos
-> agendados por data. Decisão de modelo temporal a formalizar em ADR no
-> kickoff (reservar ADR-0024).
+> **Entregue (2026-07-11, ADR-0024)**: timezone + hora preferida **por lar**
+> (`households.timezone` IANA + `households.notification_hour`). Cada job resolve
+> "agora" no fuso do lar (helper `tz-clock` sobre date-fns-tz) em vez do relógio
+> UTC do processo: engine gera na data local, lembrete/relatório saem a partir da
+> hora local. **Escopo por-lar, não por-usuário** — a hora/fuso por destinatário
+> e o dedup por-usuário do texto abaixo ficaram para pós-v1.1 (exigiriam
+> redesenhar o dedup que o ADR-0023 fixou como "nunca por usuário"; membros de um
+> lar familiar geralmente compartilham fuso). A âncora `currentPeriodStart` dos
+> orçamentos (M10) também migrou para o fuso do lar.
 
 ## Princípios
 

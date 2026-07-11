@@ -32,3 +32,4 @@
 - [ADR-0021: Design System Claude Design](adr/0021-design-system-claude-design.md) — logo, landing, glass app-wide
 - [ADR-0022: Orçamentos série + versões](adr/0022-budget-series-versions.md) — resolução on-read, upsert no mês corrente, remoção sempre encerra
 - [ADR-0023: Dispatcher multicanal de notificações](adr/0023-notification-dispatcher-multicanal.md) — in-app+e-mail+SMS/WhatsApp stub, dedup por evento em tabela dedicada
+- [ADR-0024: Timezone + hora dos disparos por lar](adr/0024-cron-timezone-household.md) — cron resolve "agora" no fuso do lar (date-fns-tz), hora preferida por lar, currentPeriodStart migrado

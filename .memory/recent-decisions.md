@@ -27,9 +27,30 @@
 | ADR-0021 | Adoção do Design System gerado no Claude Design (logo, landing, glass app-wide) | 2026-07-10 | Aceito |
 | ADR-0022 | Orçamentos como série + versões, resolução on-read (M10) | 2026-07-10 | Aceito |
 | ADR-0023 | Dispatcher multicanal de notificações + dedup por evento (M11) | 2026-07-11 | Aceito |
+| ADR-0024 | Assertividade dos disparos: timezone + hora por lar (M12) | 2026-07-11 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
 
+- **2026-07-11 — M12 timezone dos disparos entregue (ADR-0024)**: cron passa a
+  resolver "agora" no fuso do lar. `households.timezone` (IANA) +
+  `notification_hour` (migration 0008); helper `common/time/tz-clock.ts`
+  (date-fns-tz): `zonedNow`/`localISODate`/`localHour`. Engine auto gera quando
+  a data local do lar chega (`findDue` busca até teto UTC+14 + JOIN do fuso;
+  corte fino em código); lembrete e relatório mensal saem a partir da
+  `notification_hour` local, dedup em data local do lar. Âncora de orçamentos
+  (`currentPeriodStart`/`currentMonthYear`) migrada para exigir timezone
+  (cumpre a promessa do ADR-0022) — budgets/overview resolvem o fuso do lar.
+  **Escopo por-lar, não por-usuário** (hora/fuso e dedup por-destinatário
+  adiados p/ pós-v1.1 — evita redesenhar o dedup "nunca por usuário" do M11).
+  Frontend: criação auto-detecta o fuso do navegador; Configurações do lar têm
+  seletor de fuso (lista IANA via `Intl.supportedValuesOf`) + hora. 54 unit
+  (tz-clock Kiritimati/Midway/DST + 3 jobs com `now` controlado) + 78 e2e
+  (households cobre create/update/validação de fuso) verdes. Gotcha:
+  `Intl.supportedValuesOf` existe no runtime mas não na lib de tipos do TS
+  (cast pontual back+front); `toISODate`/`monthBounds` legados misturam
+  construtor local + `toISOString` (só corretos em processo UTC) — por isso os
+  helpers novos usam `formatInTimeZone` (robustos a qualquer TZ). Detalhes em
+  `domain-rules.md` §Timezone e `docs/product/features/13-cron-horario-timezone.md`.
 - **2026-07-04 — Bootstrap do Larmony**: repo nasceu como cópia da carcaça ink-ops;
   domínio de estúdio removido (Fase 1); old-larmony é a fonte do domínio, esta
   arquitetura é a fonte do *como*. Ver `project-overview.md` e `roadmap.md`.

@@ -53,6 +53,34 @@ describe("Households (e2e)", () => {
     expect(bySlug.body.id).toBe(created.body.id);
   });
 
+  it("timezone (M12): default no create, aceito no create e editável no update", async () => {
+    // Sem timezone → default do schema.
+    const def = await authed(app, "post", "/households", owner.accessToken)
+      .send({ name: "E2E Lar TZ Default" })
+      .expect(201);
+    expect(def.body.timezone).toBe("America/Sao_Paulo");
+    expect(def.body.notificationHour).toBe(9);
+
+    // Com timezone do navegador.
+    const created = await authed(app, "post", "/households", owner.accessToken)
+      .send({ name: "E2E Lar TZ", timezone: "America/New_York" })
+      .expect(201);
+    expect(created.body.timezone).toBe("America/New_York");
+
+    // Update de fuso + hora reflete no GET.
+    await authed(app, "patch", `/households/${created.body.id}`, owner.accessToken)
+      .send({ timezone: "Europe/Lisbon", notificationHour: 7 })
+      .expect(200);
+    const got = await authed(app, "get", `/households/${created.body.id}`, owner.accessToken).expect(200);
+    expect(got.body.timezone).toBe("Europe/Lisbon");
+    expect(got.body.notificationHour).toBe(7);
+
+    // Fuso inválido → 400 (validação IANA no ValidationPipe global).
+    await authed(app, "patch", `/households/${created.body.id}`, owner.accessToken)
+      .send({ timezone: "Marte/Olympus_Mons" })
+      .expect(400);
+  });
+
   it("update é owner-only: member recebe 403", async () => {
     const created = await authed(app, "post", "/households", owner.accessToken)
       .send({ name: "E2E Lar Update" })
