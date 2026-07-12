@@ -1,5 +1,6 @@
 import { INestApplication } from "@nestjs/common";
 import { Pool } from "pg";
+import request from "supertest";
 import {
   adminPool,
   authed,
@@ -119,5 +120,91 @@ describe("Admin subscription comp/discount (e2e)", () => {
       .send({ percent: 10, amountCents: 100, duration: "once" })
       .expect(422);
     expect(res.body.code).toBe("INVALID_DISCOUNT");
+  });
+
+  describe("billing-expiry-sweep (tick)", () => {
+    const cronSecret = process.env["CRON_SECRET"] ?? "";
+    const tick = () =>
+      request(app.getHttpServer())
+        .post("/internal/cron/tick")
+        .set("x-cron-secret", cronSecret);
+
+    it("comp com comp_expires_at no passado → sweep volta o lar para free", async () => {
+      // Concede comp e vence a validade via SQL (o grant real não aceita passado).
+      await authed(
+        app,
+        "post",
+        `/admin/households/${householdId}/subscription/comp`,
+        superAdmin.accessToken,
+      )
+        .send({ reason: "comp que vai vencer" })
+        .expect(204);
+      await pool.query(
+        `UPDATE public.subscriptions SET comp_expires_at = now() - interval '1 day' WHERE household_id = $1`,
+        [householdId],
+      );
+
+      await tick().expect(200);
+
+      const got = await authed(
+        app,
+        "get",
+        `/households/${householdId}/subscription`,
+        owner.accessToken,
+      ).expect(200);
+      expect(got.body.type).toBe("free");
+      expect(got.body.compReason).toBeNull();
+    });
+
+    it("trial com trial_ends_at no passado → sweep volta o lar para free", async () => {
+      // Seed direto (o grant administrativo de trial é coberto nos casos do H-3).
+      await pool.query(
+        `UPDATE public.subscriptions
+           SET type = 'trial', status = 'trialing', trial_ends_at = now() - interval '1 day'
+         WHERE household_id = $1`,
+        [householdId],
+      );
+
+      await tick().expect(200);
+
+      const got = await authed(
+        app,
+        "get",
+        `/households/${householdId}/subscription`,
+        owner.accessToken,
+      ).expect(200);
+      expect(got.body.type).toBe("free");
+      expect(got.body.status).toBe("active");
+      expect(got.body.entitlements.capabilities.advanced_reports).toBe(false);
+    });
+
+    it("comp com validade futura NÃO é expirado pelo sweep", async () => {
+      await authed(
+        app,
+        "post",
+        `/admin/households/${householdId}/subscription/comp`,
+        superAdmin.accessToken,
+      )
+        .send({ reason: "comp vigente", expiresAt: new Date(Date.now() + 7 * 86400000).toISOString() })
+        .expect(204);
+
+      await tick().expect(200);
+
+      const got = await authed(
+        app,
+        "get",
+        `/households/${householdId}/subscription`,
+        owner.accessToken,
+      ).expect(200);
+      expect(got.body.type).toBe("custom");
+
+      // Limpa para não interferir noutros casos.
+      await authed(
+        app,
+        "delete",
+        `/admin/households/${householdId}/subscription/comp`,
+        superAdmin.accessToken,
+      ).expect(204);
+    });
   });
 });

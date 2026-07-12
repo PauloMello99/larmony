@@ -14,6 +14,12 @@ export interface GrantCompInput {
   expiresAt: Date | null;
 }
 
+/** Assinatura local vencida (comp/trial) — alvo do billing-expiry-sweep. */
+export interface ExpiredSubscription {
+  householdId: string;
+  kind: "comp" | "trial";
+}
+
 export interface ISubscriptionRepository {
   /**
    * Garante 1 linha por household — cria free/active se ainda não existir.
@@ -63,4 +69,15 @@ export interface ISubscriptionRepository {
 
   /** Limpa o cache de desconto (após remover o coupon no Stripe). */
   clearDiscountCache(householdId: string): Promise<void>;
+
+  /**
+   * Comps/trials locais vencidos em relação a `now` (billing-expiry-sweep):
+   * `type='custom'` com `comp_expires_at` passado, e `type='trial'` com
+   * `trial_ends_at` passado. Expirações Stripe NÃO entram aqui (o próprio
+   * Stripe cancela e o webhook/reconciliação espelham).
+   */
+  findExpired(now: Date): Promise<ExpiredSubscription[]>;
+
+  /** Encerra um trial local vencido → volta a `free` (nunca apaga dados). */
+  expireTrial(householdId: string): Promise<void>;
 }

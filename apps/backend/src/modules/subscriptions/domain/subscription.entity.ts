@@ -10,6 +10,8 @@ export interface SubscriptionEntityProps {
   status: SubscriptionStatus;
   compReason: string | null;
   compExpiresAt: Date | null;
+  /** Fim do trial administrativo local (H-3) — aplicado pelo billing-expiry-sweep. */
+  trialEndsAt: Date | null;
   /** Coupon Stripe ativo, se houver desconto (cache de exibição — B-7). */
   stripeCouponId: string | null;
   /** % de desconto — cache local só para exibição admin (B-7). */
@@ -28,6 +30,7 @@ export class SubscriptionEntity {
   readonly status: SubscriptionStatus;
   readonly compReason: string | null;
   readonly compExpiresAt: Date | null;
+  readonly trialEndsAt: Date | null;
   readonly stripeCouponId: string | null;
   readonly discountPercent: number | null;
   readonly createdAt: Date;
@@ -42,6 +45,7 @@ export class SubscriptionEntity {
     this.status = props.status;
     this.compReason = props.compReason;
     this.compExpiresAt = props.compExpiresAt;
+    this.trialEndsAt = props.trialEndsAt;
     this.stripeCouponId = props.stripeCouponId;
     this.discountPercent = props.discountPercent;
     this.createdAt = props.createdAt;

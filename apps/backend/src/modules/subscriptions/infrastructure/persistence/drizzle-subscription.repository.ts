@@ -1,8 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq, isNotNull } from "drizzle-orm";
+import { and, eq, isNotNull, lt, or } from "drizzle-orm";
 import { DRIZZLE_ADMIN, type DrizzleDB } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
 import type {
+  ExpiredSubscription,
   GrantCompInput,
   ISubscriptionRepository,
   StripeLinkedSubscription,
@@ -168,6 +169,48 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
       .set({
         stripeCouponId: null,
         discountPercent: null,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.subscriptions.householdId, householdId));
+  }
+
+  async findExpired(now: Date): Promise<ExpiredSubscription[]> {
+    const rows = await this.db
+      .select({
+        householdId: schema.subscriptions.householdId,
+        type: schema.subscriptions.type,
+      })
+      .from(schema.subscriptions)
+      .where(
+        or(
+          and(
+            eq(schema.subscriptions.type, "custom"),
+            isNotNull(schema.subscriptions.compExpiresAt),
+            lt(schema.subscriptions.compExpiresAt, now),
+          ),
+          and(
+            eq(schema.subscriptions.type, "trial"),
+            isNotNull(schema.subscriptions.trialEndsAt),
+            lt(schema.subscriptions.trialEndsAt, now),
+          ),
+        ),
+      );
+
+    return rows.map((r) => ({
+      householdId: r.householdId,
+      kind: r.type === "custom" ? "comp" : "trial",
+    }));
+  }
+
+  async expireTrial(householdId: string): Promise<void> {
+    // Volta a free — nenhum dado do lar é apagado (downgrade nunca destrói).
+    await this.db
+      .update(schema.subscriptions)
+      .set({
+        type: "free",
+        status: "active",
+        priceCents: 0,
+        trialEndsAt: null,
         updatedAt: new Date(),
       })
       .where(eq(schema.subscriptions.householdId, householdId));
