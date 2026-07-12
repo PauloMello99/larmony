@@ -18,6 +18,18 @@ export interface PlanDefinition {
  */
 export const PLAN_CATALOG: PlanDefinition[] = [
   {
+    // Espelho do plano gratuito (hardening, cenário 1): existe como
+    // Product+Price R$ 0 no Stripe para o catálogo ficar completo no
+    // dashboard, mas lar Free NÃO passa por checkout nem vira subscription
+    // (decisão do responsável — espelho de catálogo apenas).
+    key: "free_monthly",
+    productKey: "free",
+    productName: "Larmony Grátis",
+    amountCents: 0,
+    currency: "brl",
+    interval: "month",
+  },
+  {
     key: "premium_monthly",
     productKey: "premium",
     productName: "Larmony Premium",
@@ -27,4 +39,5 @@ export const PLAN_CATALOG: PlanDefinition[] = [
   },
 ];
 
+/** Plano vendido no checkout — o Free (R$ 0) é só espelho de catálogo. */
 export const DEFAULT_PLAN_KEY = "premium_monthly";
