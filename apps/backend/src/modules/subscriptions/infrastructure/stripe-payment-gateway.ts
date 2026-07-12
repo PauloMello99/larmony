@@ -14,6 +14,8 @@ import type {
   EnsureProductOutput,
   CreatePriceInput,
   CreatePriceOutput,
+  CreateCouponInput,
+  CreateCouponOutput,
   BillingInterval,
   NormalizedSubscription,
   NormalizedPrice,
@@ -150,6 +152,42 @@ export class StripePaymentGateway implements IPaymentGateway {
       if (isResourceMissing(err)) return null;
       throw err;
     }
+  }
+
+  async createCoupon(input: CreateCouponInput): Promise<CreateCouponOutput> {
+    const client = this.requireClient();
+    const params: Stripe.CouponCreateParams = { duration: input.duration };
+    if (input.percentOff !== undefined) params.percent_off = input.percentOff;
+    if (input.amountOffCents !== undefined) {
+      params.amount_off = input.amountOffCents;
+      params.currency = input.currency;
+    }
+    if (input.duration === "repeating") {
+      params.duration_in_months = input.durationInMonths;
+    }
+    const coupon = await client.coupons.create(params);
+    return { couponId: coupon.id };
+  }
+
+  async applyCouponToSubscription(
+    subscriptionId: string,
+    couponId: string,
+  ): Promise<void> {
+    const client = this.requireClient();
+    // API v22: desconto via `discounts` (o param `coupon` no update foi deprecado).
+    await client.subscriptions.update(subscriptionId, {
+      discounts: [{ coupon: couponId }],
+    });
+  }
+
+  async removeSubscriptionDiscount(subscriptionId: string): Promise<void> {
+    const client = this.requireClient();
+    await client.subscriptions.deleteDiscount(subscriptionId);
+  }
+
+  async cancelSubscription(subscriptionId: string): Promise<void> {
+    const client = this.requireClient();
+    await client.subscriptions.cancel(subscriptionId);
   }
 
   private requireClient(): Stripe {

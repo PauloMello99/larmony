@@ -20,6 +20,8 @@ function sub(overrides: Partial<SubscriptionEntityProps> = {}): SubscriptionEnti
     status: "active",
     compReason: null,
     compExpiresAt: null,
+    stripeCouponId: null,
+    discountPercent: null,
     createdAt: new Date(),
     updatedAt: new Date(),
     ...overrides,

@@ -148,6 +148,67 @@ export function useAdminHouseholds() {
   }
 }
 
+/**
+ * Mutations de gestão de isenção/desconto (B-7). Invalida a árvore admin e o
+ * estado de assinatura do lar-alvo (`queryKeys.subscription.detail`).
+ */
+export function useAdminBilling() {
+  const queryClient = useQueryClient()
+  const invalidate = (householdId: string) => {
+    void queryClient.invalidateQueries({ queryKey: queryKeys.admin.all })
+    void queryClient.invalidateQueries({
+      queryKey: queryKeys.subscription.detail(householdId),
+    })
+  }
+
+  const grantComp = useMutation({
+    mutationFn: (v: { householdId: string; reason: string; expiresAt?: string }) =>
+      apiRequest<void>(`/admin/households/${v.householdId}/subscription/comp`, {
+        method: "POST",
+        body: JSON.stringify({ reason: v.reason, expiresAt: v.expiresAt }),
+      }),
+    onSuccess: (_d, v) => invalidate(v.householdId),
+  })
+
+  const revokeComp = useMutation({
+    mutationFn: (v: { householdId: string }) =>
+      apiRequest<void>(`/admin/households/${v.householdId}/subscription/comp`, {
+        method: "DELETE",
+      }),
+    onSuccess: (_d, v) => invalidate(v.householdId),
+  })
+
+  const applyDiscount = useMutation({
+    mutationFn: (v: {
+      householdId: string
+      percent?: number
+      amountCents?: number
+      duration: "once" | "repeating" | "forever"
+      durationInMonths?: number
+    }) =>
+      apiRequest<void>(`/admin/households/${v.householdId}/subscription/discount`, {
+        method: "POST",
+        body: JSON.stringify({
+          percent: v.percent,
+          amountCents: v.amountCents,
+          duration: v.duration,
+          durationInMonths: v.durationInMonths,
+        }),
+      }),
+    onSuccess: (_d, v) => invalidate(v.householdId),
+  })
+
+  const removeDiscount = useMutation({
+    mutationFn: (v: { householdId: string }) =>
+      apiRequest<void>(`/admin/households/${v.householdId}/subscription/discount`, {
+        method: "DELETE",
+      }),
+    onSuccess: (_d, v) => invalidate(v.householdId),
+  })
+
+  return { grantComp, revokeComp, applyDiscount, removeDiscount }
+}
+
 export function useAdminUsers() {
   const queryClient = useQueryClient()
 

@@ -27,6 +27,8 @@ export interface SubscriptionWithEntitlements {
   status: SubscriptionStatus
   compReason: string | null
   compExpiresAt: string | null
+  stripeCouponId: string | null
+  discountPercent: number | null
   createdAt: string
   updatedAt: string
   entitlements: ResolvedEntitlements

@@ -3,6 +3,7 @@ import { eq, isNotNull } from "drizzle-orm";
 import { DRIZZLE_ADMIN, type DrizzleDB } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
 import type {
+  GrantCompInput,
   ISubscriptionRepository,
   StripeLinkedSubscription,
 } from "../../domain/subscription.repository.interface";
@@ -108,6 +109,65 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
         priceCents: data.priceCents,
         billingInterval: data.interval,
         canceledAt: data.canceledAt,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.subscriptions.householdId, householdId));
+  }
+
+  async grantComp(householdId: string, input: GrantCompInput): Promise<void> {
+    await this.db
+      .update(schema.subscriptions)
+      .set({
+        type: "custom",
+        status: "active",
+        priceCents: 0,
+        // A sub Stripe (se havia) é cancelada pelo use-case antes; aqui só
+        // desvinculamos — o stripeCustomerId é preservado (permite reverter).
+        stripeSubscriptionId: null,
+        compReason: input.reason,
+        compGrantedBy: input.grantedByUserId,
+        compExpiresAt: input.expiresAt,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.subscriptions.householdId, householdId));
+  }
+
+  async revokeComp(householdId: string): Promise<void> {
+    // Volta a free — nenhum dado do lar é apagado (downgrade nunca destrói).
+    await this.db
+      .update(schema.subscriptions)
+      .set({
+        type: "free",
+        status: "active",
+        priceCents: 0,
+        compReason: null,
+        compGrantedBy: null,
+        compExpiresAt: null,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.subscriptions.householdId, householdId));
+  }
+
+  async setDiscountCache(
+    householdId: string,
+    input: { stripeCouponId: string; discountPercent: number | null },
+  ): Promise<void> {
+    await this.db
+      .update(schema.subscriptions)
+      .set({
+        stripeCouponId: input.stripeCouponId,
+        discountPercent: input.discountPercent,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.subscriptions.householdId, householdId));
+  }
+
+  async clearDiscountCache(householdId: string): Promise<void> {
+    await this.db
+      .update(schema.subscriptions)
+      .set({
+        stripeCouponId: null,
+        discountPercent: null,
         updatedAt: new Date(),
       })
       .where(eq(schema.subscriptions.householdId, householdId));

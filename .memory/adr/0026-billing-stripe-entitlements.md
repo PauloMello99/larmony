@@ -345,3 +345,53 @@ reflete `entitlements`/402 do backend).
    após promover a `standard` via SQL → página vira "Premium" + portal e a aba
    Anual dispara `/reports/annual → 200` e renderiza. `check-types`+`lint` limpos,
    sem erros de console. Backend intacto (B-6 não toca backend).
+
+## Adendo (2026-07-12) — Admin de isenção/desconto (B-7 — M14 concluído)
+
+Materializa o §5 (rotas admin), §2 (comp) e §3 (desconto). Backend + frontend
+no mesmo PR (decisão do responsável). O modelo de dados (colunas da migration
+0009, `auditActionEnum.subscription_changed`, `PlatformAdminGuard`) já existia;
+B-7 construiu a camada de aplicação/interface/gateway em cima.
+
+1. **Duração do desconto — contrato nativo do Stripe** (resolve o detalhe que o
+   ADR deixara em aberto): o corpo de `POST .../discount` é `{ percent? |
+   amountCents?, duration: "once"|"repeating"|"forever", durationInMonths? }`
+   (`durationInMonths` obrigatório só quando `repeating`). 1:1 com o Coupon do
+   Stripe; a tela admin oferece os 3 modos. Valor fixo em centavos (BRL).
+2. **Gateway** ganhou `createCoupon`/`applyCouponToSubscription`/
+   `removeSubscriptionDiscount`/`cancelSubscription` (SDK v22: `coupons.create`,
+   `subscriptions.update({ discounts: [{ coupon }] })`, `deleteDiscount`,
+   `cancel`). Stripe 100% na infra.
+3. **Comp (isenção) 100% local**: `GrantCompUseCase` — se há sub Stripe ativa,
+   cancela via API antes; grava `type='custom'`/`status='active'`/`priceCents=0`/
+   `comp_*` e desvincula `stripeSubscriptionId` (preserva `stripeCustomerId`).
+   `RevokeCompUseCase` → volta a `free`, limpa `comp_*`, **nunca apaga dados**.
+   Repo ganhou `grantComp`/`revokeComp`/`setDiscountCache`/`clearDiscountCache`;
+   a entity expõe `stripeCouponId`/`discountPercent` (o `GET subscription`
+   existente passa a mostrá-los; `compGrantedBy` fica interno — resolvido do ator
+   via USER_REPOSITORY).
+4. **Desconto sempre via Stripe** (`ApplyDiscountUseCase`): valida (exatamente um
+   de percent/amountCents; percent 1..100; `repeating` exige meses) → 422
+   `INVALID_DISCOUNT`; exige sub Stripe ativa → senão 422
+   `SUBSCRIPTION_NOT_STRIPE_LINKED`; cria coupon + anexa + cacheia. `RemoveDiscount`
+   remove no Stripe + limpa cache.
+5. **Rotas** (`admin-subscription.controller.ts`, prefixo
+   `admin/households/:householdId/subscription`, `AuthGuard`+`PlatformAdminGuard`):
+   `POST/DELETE comp`, `POST/DELETE discount`. GET de estado reusa o
+   `GET /households/:id/subscription` (super_admin passa no `HouseholdMembershipGuard`
+   por fallback `isSuperAdmin`). Toda ação audita `subscription_changed` com
+   `{ operation, reason?/percent?/amountCents? }`. SubscriptionsModule importa
+   `UserInfrastructureModule` (AuditService é global).
+6. **Frontend** `admin-billing.tsx` (antes placeholder → tela real; admin não usa
+   i18n, strings PT hardcoded): busca de lar → seleciona → estado da assinatura +
+   painel de isenção (motivo obrigatório + validade via DatePicker de datas
+   futuras; revogar via ConfirmDialog) + painel de desconto (percent/valor +
+   duração; some/hint quando não há sub Stripe). Mutations novas em `use-admin.ts`
+   invalidam `admin.all` + `subscription.detail`.
+7. **Verificado**: unit (11 casos: grant cancela sub, comp precede, validações de
+   desconto, cache) + e2e offline `admin-subscription.e2e-spec.ts` (comp grant/
+   revoke, não-admin 403, desconto sem sub 422, input inválido 422). Browser
+   (super_admin): busca → conceder isenção → lar vira custom ao vivo → revogar →
+   free; desconto mostra o hint "requer assinatura Stripe". Suíte completa
+   **17 specs / 100 testes** e2e verde, sem regressão. Happy-path de desconto real
+   precisa de sub Stripe viva → coberto por unit + verificação manual.

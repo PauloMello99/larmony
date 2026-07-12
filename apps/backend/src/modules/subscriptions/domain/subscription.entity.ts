@@ -10,6 +10,10 @@ export interface SubscriptionEntityProps {
   status: SubscriptionStatus;
   compReason: string | null;
   compExpiresAt: Date | null;
+  /** Coupon Stripe ativo, se houver desconto (cache de exibição — B-7). */
+  stripeCouponId: string | null;
+  /** % de desconto — cache local só para exibição admin (B-7). */
+  discountPercent: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,6 +28,8 @@ export class SubscriptionEntity {
   readonly status: SubscriptionStatus;
   readonly compReason: string | null;
   readonly compExpiresAt: Date | null;
+  readonly stripeCouponId: string | null;
+  readonly discountPercent: number | null;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -36,6 +42,8 @@ export class SubscriptionEntity {
     this.status = props.status;
     this.compReason = props.compReason;
     this.compExpiresAt = props.compExpiresAt;
+    this.stripeCouponId = props.stripeCouponId;
+    this.discountPercent = props.discountPercent;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
   }
