@@ -50,6 +50,9 @@ jobs:
       # bem-sucedido; o teste envia este mesmo secret e o CronSecretGuard compara.
       CRON_SECRET: ci-cron-secret
       NODE_ENV: test
+      # Usado para montar as success/cancel/return URLs do Stripe Checkout e
+      # Billing Portal (CreateCheckoutSessionUseCase/CreatePortalSessionUseCase).
+      FRONTEND_URL: http://localhost:3000
       # Stripe test mode (M14, ADR-0026) — os e2e de subscriptions chamam a
       # API real do Stripe (checkout/portal); secrets do repositório.
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
