@@ -64,6 +64,13 @@
       "when": 1783241797158,
       "tag": "0008_household_timezone",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1783241797159,
+      "tag": "0009_billing_stripe_entitlements",
+      "breakpoints": true
     }
   ]
 }
