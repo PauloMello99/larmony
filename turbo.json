@@ -18,7 +18,7 @@
       "persistent": true
     },
     "test": {
-      "dependsOn": []
+      "cache": false
     },
     "test:e2e": {
       "cache": false

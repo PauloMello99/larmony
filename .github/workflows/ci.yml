@@ -38,4 +38,55 @@ jobs:
       - name: Build
         run: pnpm build
 
-      # TODO(DX-3): adicionar `pnpm test` quando a suíte (TEST-2) existir.
+  # Gate de testes do backend (unit + e2e). Roda em paralelo ao `verify` e é um
+  # status check independente. e2e sobem o AppModule real contra o Supabase local.
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+      DATABASE_APP_URL: postgresql://app_user:app_user_dev@127.0.0.1:54322/postgres
+      NOTIFICATIONS_EMAIL_ENABLED: "false"
+      # Valor fixo de CI: os e2e de scheduled-transactions precisam de um tick
+      # bem-sucedido; o teste envia este mesmo secret e o CronSecretGuard compara.
+      CRON_SECRET: ci-cron-secret
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # Unit primeiro: sem banco, falha rápido e barato.
+      - name: Unit tests (backend)
+        run: pnpm --filter backend test
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase
+        run: supabase start
+
+      - name: Export Supabase env
+        run: |
+          supabase status -o env > supabase.env
+          echo "SUPABASE_URL=$(grep '^API_URL=' supabase.env | cut -d= -f2- | tr -d '\"')" >> "$GITHUB_ENV"
+          echo "SUPABASE_ANON_KEY=$(grep '^ANON_KEY=' supabase.env | cut -d= -f2- | tr -d '\"')" >> "$GITHUB_ENV"
+          echo "SUPABASE_SERVICE_ROLE_KEY=$(grep '^SERVICE_ROLE_KEY=' supabase.env | cut -d= -f2- | tr -d '\"')" >> "$GITHUB_ENV"
+
+      - name: Run migrations
+        run: pnpm --filter backend db:migrate
+
+      # e2e: serial (--runInBand no script), compartilham o banco.
+      - name: E2E tests (backend)
+        run: pnpm --filter backend test:e2e
