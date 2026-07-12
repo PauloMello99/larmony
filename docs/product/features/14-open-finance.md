@@ -6,6 +6,15 @@
 > plano de implementação + ADRs no kickoff; numeração de ADR a confirmar no
 > kickoff — a reserva 0021–0023 do roadmap ficou defasada, 0021 já foi consumido
 > pelo design system).
+>
+> **Atualização (2026-07-11, ADR-0025): milestone em espera com gatilho.** A
+> Fase 0 (discovery de custo dos agregadores) mostrou piso fixo inviável com
+> base zero de clientes (Pluggy R$ 2.500/mês mínimo) — a integração técnica em
+> si é rápida e compatível com o repo, o gargalo é comercial. Ativa com
+> ~150–200 lares Premium ou waitlist equivalente do plano Conectado. O
+> pré-requisito (billing/entitlements) foi endereçado no M14 (ADR-0026). Ver
+> `.memory/adr/0025-open-finance-desacoplado-lancamento.md` para a decisão
+> completa.
 
 ## Papel
 
@@ -32,9 +41,11 @@ O Larmony **não é instituição participante** do Open Finance Brasil e não v
 tornar uma. O acesso se dá via **agregador licenciado** (modelo usado por todos os
 apps de finanças do mercado). A Fase 0 deve avaliar e escolher entre candidatos
 como **Pluggy, Belvo, Klavi** (e outros que encontrarem), comparando: cobertura de
-bancos, preço por conexão/usuário/mês, modelo de consentimento (renovação a cada
-12 meses), webhooks vs polling, sandbox, SLA e aderência LGPD (nós nunca custodiamos
-credenciais bancárias — só o agregador).
+bancos, preço por conexão/usuário/mês, modelo de consentimento (**hoje por prazo
+indeterminado, Resolução Conjunta BCB/CVM nº 7/2023 — revogável a qualquer
+momento pelo usuário; a premissa anterior desta spec de "renovação a cada 12
+meses" estava defasada**), webhooks vs polling, sandbox, SLA e aderência LGPD
+(nós nunca custodiamos credenciais bancárias — só o agregador).
 
 ## Convenções do repositório que este trabalho DEVE seguir
 
@@ -81,7 +92,8 @@ mapeando categoria do agregador → categorias do lar.
 **Fase 3 — Integração com o diferencial do lar**
 Transação importada participa de rateio e relatórios (`person_id` = dono da conta
 conectada); regras de auto-rateio por conta ("tudo desta conta divide igual");
-lembrete de renovação do consentimento (12 meses) via módulo de notificações.
+lembrete de renovação do consentimento (condicional ao prazo que o agregador
+escolhido reportar — hoje indeterminado, Res. Conj. 7/2023) via módulo de notificações.
 
 ## Fora de escopo (explícito)
 
