@@ -33,6 +33,19 @@
 
 ## Decisões/registros recentes (sem ADR)
 
+- **2026-07-12 — Fase billing-hardening entregue (pós-M14, ADR-0026 adendo)**:
+  integração real local (Stripe test + webhooks reais via `stripe listen`,
+  script `stripe:webhook` + runbook `docs/billing-local-testing.md`) + bateria
+  de 8 cenários executada de verdade — **3 bugs pegos e corrigidos** (return
+  URL do checkout/portal com rota inexistente; `cancelSubscription`
+  não-idempotente; `source` classificava trial como stripe). Gaps fechados:
+  job `billing-expiry-sweep` (aplica `comp_expires_at`, que era write-only, e
+  `trial_ends_at`), **trial administrativo** por N meses (local, como comp;
+  `TRIAL_NOT_ALLOWED` 422; source `trial`; TrialPanel no front + painel no
+  admin) e **Free espelhado no Stripe** (`free_monthly` R$ 0, só catálogo —
+  sem checkout). **Novo modelo de entrega adotado**: 1 branch/PR por fase,
+  subtarefas como commits revisados+testados. Unit 96; e2e 17 specs/108.
+
 - **2026-07-12 — Admin de isenção/desconto entregue (B-7, ADR-0026 §2/§3/§5 +
   adendo) — M14 (billing) CONCLUÍDO**: 4 rotas admin
   (`POST/DELETE /admin/households/:id/subscription/comp|discount`,

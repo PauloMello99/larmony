@@ -395,3 +395,45 @@ B-7 construiu a camada de aplicação/interface/gateway em cima.
    free; desconto mostra o hint "requer assinatura Stripe". Suíte completa
    **17 specs / 100 testes** e2e verde, sem regressão. Happy-path de desconto real
    precisa de sub Stripe viva → coberto por unit + verificação manual.
+
+## Adendo (2026-07-12) — Fase billing-hardening (integração real local + trial + expiry)
+
+Fase pós-M14 (novo modelo de entrega: 1 branch/PR por fase, subtarefas em
+commits). Reproduz o fluxo de billing fielmente em local (Stripe test +
+webhooks **reais** via `stripe listen`) e fecha os gaps expostos pela bateria
+de 8 cenários do responsável.
+
+1. **Rig local** (H-1): script `pnpm --filter backend stripe:webhook`
+   (`stripe listen --forward-to localhost:3001/webhooks/stripe`, padrão
+   ZipTalk — ngrok desnecessário p/ Stripe) + runbook
+   `docs/billing-local-testing.md` (setup + bateria como checklist + registro
+   de execuções).
+2. **Job `billing-expiry-sweep`** (H-2): corrige bug latente do B-7 —
+   `comp_expires_at` era write-only (reconcile só varre subs Stripe-linked).
+   `ExpireSubscriptionsUseCase` + `@CronJobName`: comp vencido → `revokeComp`;
+   trial vencido → `expireTrial` (novo). Audita `comp_expired|trial_expired`
+   com ator null (sistema). Entity/mapper expõem `trialEndsAt` (coluna existia
+   sem uso).
+3. **Trial administrativo** (H-3, cenário 8): `POST/DELETE
+   /admin/households/:id/subscription/trial` `{months: 1..24}`. 100% local
+   (sem Stripe/cartão, espírito do comp §2): `type='trial'`/`status='trialing'`/
+   `trial_ends_at`; expira via sweep → free. Só concedível a lar free
+   (`TRIAL_NOT_ALLOWED` 422). `EntitlementSource` ganha `'trial'` (plan segue
+   premium). Frontend: TrialPanel na página de assinatura (validade + CTA
+   assinar; **portal só com `source==='stripe'`**) + painel Trial no admin.
+4. **Free espelhado no Stripe** (H-4, cenário 1, decisão do responsável):
+   `PLAN_CATALOG` ganha `free_monthly` (R$ 0) — Product+Price reais no
+   dashboard; lar Free NÃO passa por checkout nem vira subscription.
+5. **Bateria 1–8 executada de verdade** (H-5): upgrade via Checkout real
+   (cartão de teste) → webhooks reais → premium; portal; downgrade (portal =
+   fim do período; CLI = imediato) → free sem apagar dados; comp; desconto
+   repeating/forever (coupons conferidos no Stripe); trial + expiração via
+   sweep. **3 bugs pegos e corrigidos** (invisíveis aos e2e offline):
+   (a) return URL do checkout/portal usava `/dashboard/<uuid>` (rota
+   inexistente) → agora `/households/<slug>` via `findHouseholdSlug`;
+   (b) `cancelSubscription` não-idempotente (500 ao conceder comp sobre sub já
+   cancelada) → cancel idempotente no gateway;
+   (c) `source` classificava trial como `stripe` (id de sub cancelada fica
+   para registro) → resolve reordenado (trial antes de stripe) + `grantTrial`
+   limpa o id remanescente.
+   Detalhe/registro no runbook. Suíte final: unit 96, e2e 17 specs/108 testes.
