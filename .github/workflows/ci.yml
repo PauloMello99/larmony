@@ -50,6 +50,10 @@ jobs:
       # bem-sucedido; o teste envia este mesmo secret e o CronSecretGuard compara.
       CRON_SECRET: ci-cron-secret
       NODE_ENV: test
+      # Stripe test mode (M14, ADR-0026) — os e2e de subscriptions chamam a
+      # API real do Stripe (checkout/portal); secrets do repositório.
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+      STRIPE_PREMIUM_PRICE_ID: ${{ secrets.STRIPE_PREMIUM_PRICE_ID }}
     steps:
       - uses: actions/checkout@v4
 
