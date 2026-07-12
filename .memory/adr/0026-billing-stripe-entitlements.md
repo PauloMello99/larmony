@@ -307,3 +307,41 @@ o mecanismo + gatear só relatórios avançados por ora.
    200; promovido a standard → annual 200; comp/custom → 200). `reports.e2e-spec.ts`
    ajustado: promove seu lar a premium no `beforeAll` (testa agregação, não
    billing). Suíte completa (16 specs / 95 testes) verde sem regressão.
+
+## Adendo (2026-07-12) — Frontend de billing / paywall (B-6)
+
+Materializa o §5 do lado do cliente (`settings/subscription.tsx` deixa de ser
+placeholder) + paywall no ponto que B-4 gateou. Só frontend — nenhum backend
+tocado. Regra de produto respeitada: **nunca gatear no cliente** (o front só
+reflete `entitlements`/402 do backend).
+
+1. **Feature nova `features/subscription/`**: `use-subscription` (query GET
+   subscription, key nova `queryKeys.subscription.detail`), `use-entitlements`
+   (derivado; enquanto carrega assume o mais restritivo p/ não vazar conteúdo
+   premium num flash), `use-subscription-mutations` (`checkout`/`portal` →
+   `apiRequest<{url}>` POST → `window.location.assign(url)`; redirect pós-mutation
+   é padrão **novo** no repo). `SubscriptionPage` + `PremiumGate` (card de paywall
+   reutilizável).
+2. **`SubscriptionPage`** mostra plano/status/source (badges) e ramifica: **Free**
+   → oferta Premium + botão checkout; **premium** → "Premium ativo" + botão portal
+   (aviso extra se `past_due`); **custom/comp** → "Isenção concedida" (com motivo),
+   sem botões. Botões de ação só p/ `household.role === "owner"` (checkout/portal
+   são owner-only no backend; nav de settings já é owner-only). Lê
+   `?checkout=success|cancel` (URLs de retorno montadas pelo backend a partir de
+   `FRONTEND_URL`) → banner. Sem publishable key / sem PCI no front (ADR §5).
+3. **Paywall proativo** (decisão do responsável) no relatório anual: a página de
+   relatórios usa `useEntitlements`; a aba "Anual" ganha cadeado p/ Free e, ao
+   selecionar, renderiza `<PremiumGate/>` **sem disparar** a request condenada
+   (`useAnnualReport(householdId, year, enabled=canAnnual)`). O 402
+   `PREMIUM_REQUIRED` ainda é tratado defensivamente (`premiumRequired` no hook;
+   sem retry em 4xx).
+4. **i18n**: namespace novo `subscription` (pt-BR + en; es cai no fallback);
+   chaves `households.subscription.*` órfãs removidas. `PremiumGate` reusa o
+   namespace, então a página de relatórios também o carrega.
+5. **Verificado no browser** (backend+frontend locais): Free → página mostra
+   oferta + checkout → POST 201 → redirect real p/ `checkout.stripe.com` (test
+   mode, sem completar pagamento); `?checkout=success` → banner; Relatórios/Anual
+   (Free) → cadeado + PremiumGate, **nenhuma** request `/reports/annual` disparada;
+   após promover a `standard` via SQL → página vira "Premium" + portal e a aba
+   Anual dispara `/reports/annual → 200` e renderiza. `check-types`+`lint` limpos,
+   sem erros de console. Backend intacto (B-6 não toca backend).

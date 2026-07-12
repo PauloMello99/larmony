@@ -87,6 +87,11 @@ export const queryKeys = {
       ["reports", householdId, "annual", year] as const,
   },
 
+  // ─── Subscription / entitlements (M14, billing) ────────────────────────────
+  subscription: {
+    detail: (householdId: string) => ["subscription", householdId] as const,
+  },
+
   // ─── Admin (plataforma / super_admin) ──────────────────────────────────────
   admin: {
     all: ["admin"] as const,
