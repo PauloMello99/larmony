@@ -33,6 +33,19 @@
 
 ## Decisões/registros recentes (sem ADR)
 
+- **2026-07-12 — Frontend de billing / paywall entregue (B-6, ADR-0026 §5 +
+  adendo)**: `settings/subscription.tsx` deixa de ser placeholder — feature nova
+  `features/subscription/` (hooks `use-subscription`/`use-entitlements`/
+  `use-subscription-mutations` + `SubscriptionPage` + `PremiumGate`). Página
+  mostra plano/status/source e ramifica Free (checkout) / premium (portal) /
+  comp (isenção); botões owner-only; lê `?checkout=success|cancel`; redirect via
+  `window.location.assign(url)` (padrão novo). **Paywall proativo** (decisão do
+  responsável) no relatório anual: aba com cadeado + `PremiumGate` sem disparar
+  a request condenada; 402 tratado defensivamente. Namespace i18n novo
+  `subscription` (pt-BR+en). Só frontend — backend intacto. Verificado no
+  browser (checkout → Stripe test; paywall Free; premium → portal + anual 200).
+  Detalhe no adendo de `.memory/adr/0026-billing-stripe-entitlements.md`.
+
 - **2026-07-12 — Entitlements aplicado / gating por rota entregue (B-4, ADR-0026
   §7 + adendo)**: liga o `EntitlementsService` (antes dead-end com
   `capabilities: {}`) ponta a ponta. Modelo de capabilities no domínio

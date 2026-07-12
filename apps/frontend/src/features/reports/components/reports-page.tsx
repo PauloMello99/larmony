@@ -2,9 +2,11 @@
 
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
+import { Lock } from "lucide-react"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { cn } from "@/shared/lib/utils"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
+import { useEntitlements, PremiumGate } from "@/features/subscription"
 import { useMonthlyReport } from "../hooks/use-monthly-report"
 import { useAnnualReport } from "../hooks/use-annual-report"
 import { MonthlyView } from "./monthly-view"
@@ -22,10 +24,19 @@ export function ReportsPage() {
     month: now.getMonth() + 1,
   }))
 
-  const monthly = useMonthlyReport(householdId, monthRef.year, monthRef.month)
-  const annual = useAnnualReport(householdId, year)
+  // Relatório anual é premium-only (B-4). Reflete o backend — nunca decide
+  // acesso no cliente; só evita disparar a request condenada e oferece upgrade.
+  const { capabilities, loading: entLoading } = useEntitlements(householdId)
+  const canAnnual = capabilities.advanced_reports
 
-  const loading = view === "monthly" ? monthly.loading : annual.loading
+  const monthly = useMonthlyReport(householdId, monthRef.year, monthRef.month)
+  const annual = useAnnualReport(householdId, year, canAnnual)
+
+  const annualLocked = view === "annual" && !entLoading && !canAnnual
+  const loading =
+    view === "monthly"
+      ? monthly.loading
+      : entLoading || (canAnnual && annual.loading)
   const error = view === "monthly" ? monthly.error : annual.error
 
   // Ambas as vistas são navegáveis (mês / ano), então tratam "sem movimentação"
@@ -47,13 +58,16 @@ export function ReportsPage() {
               type="button"
               onClick={() => setView(v)}
               className={cn(
-                "flex-1 rounded px-4 py-1.5 font-medium transition-colors sm:flex-none",
+                "flex flex-1 items-center justify-center gap-1.5 rounded px-4 py-1.5 font-medium transition-colors sm:flex-none",
                 view === v
                   ? "bg-primary text-primary-foreground"
                   : "text-foreground/50 hover:text-foreground",
               )}
             >
               {v === "monthly" ? t("page.monthly") : t("page.annual")}
+              {v === "annual" && !canAnnual && !entLoading && (
+                <Lock className="h-3 w-3 opacity-70" />
+              )}
             </button>
           ))}
         </div>
@@ -65,7 +79,9 @@ export function ReportsPage() {
         </div>
       )}
 
-      {loading ? (
+      {annualLocked ? (
+        <PremiumGate />
+      ) : loading ? (
         <div className="space-y-4">
           <Skeleton className="h-64 w-full rounded-xl" />
           <div className="grid gap-4 lg:grid-cols-2">
@@ -75,7 +91,7 @@ export function ReportsPage() {
         </div>
       ) : view === "monthly" && monthly.report ? (
         <MonthlyView report={monthly.report} monthRef={monthRef} onMonthChange={setMonthRef} />
-      ) : annual.report ? (
+      ) : view === "annual" && annual.report ? (
         <AnnualView report={annual.report} year={year} onYearChange={setYear} />
       ) : null}
     </div>

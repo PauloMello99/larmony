@@ -116,12 +116,5 @@
     "rolePlaceholder": "Selecione uma função",
     "submitting": "Enviando…",
     "submit": "Enviar convite"
-  },
-  "subscription": {
-    "title": "Assinatura",
-    "description": "Plano, histórico de cobrança e gerenciamento da assinatura desta lar.",
-    "managementTitle": "Gerenciamento de assinatura",
-    "comingSoon": "Em breve",
-    "managementDescription": "Aqui você poderá visualizar o histórico de faturas, trocar de plano, atualizar o método de pagamento e cancelar a assinatura desta lar."
   }
 }

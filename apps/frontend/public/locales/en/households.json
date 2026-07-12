@@ -116,12 +116,5 @@
     "rolePlaceholder": "Select a role",
     "submitting": "Sending…",
     "submit": "Send invitation"
-  },
-  "subscription": {
-    "title": "Subscription",
-    "description": "Plan, billing history, and subscription management for this home.",
-    "managementTitle": "Subscription management",
-    "comingSoon": "Coming soon",
-    "managementDescription": "Here you can view your invoice history, change plans, update your payment method, and cancel the subscription for this home."
   }
 }
