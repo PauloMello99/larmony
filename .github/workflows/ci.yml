@@ -54,6 +54,10 @@ jobs:
       # API real do Stripe (checkout/portal); secrets do repositório.
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
       STRIPE_PREMIUM_PRICE_ID: ${{ secrets.STRIPE_PREMIUM_PRICE_ID }}
+      # Runners do GitHub Actions têm rota IPv6 instável para algumas APIs
+      # externas (Node 18+ prefere IPv6 por padrão) — força IPv4 para a
+      # chamada ao Stripe não cair em timeout/connection error.
+      NODE_OPTIONS: --dns-result-order=ipv4first
     steps:
       - uses: actions/checkout@v4
 
