@@ -54,9 +54,10 @@ jobs:
       # Billing Portal (CreateCheckoutSessionUseCase/CreatePortalSessionUseCase).
       FRONTEND_URL: http://localhost:3000
       # Stripe test mode (M14, ADR-0026) — os e2e de subscriptions chamam a
-      # API real do Stripe (checkout/portal); secrets do repositório.
+      # API real do Stripe (checkout/portal); secret do repositório. O price
+      # a usar vem do catálogo local (PlanCatalogService sincroniza com o
+      # Stripe no boot via lookup_key) — não precisa de env var de price id.
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-      STRIPE_PREMIUM_PRICE_ID: ${{ secrets.STRIPE_PREMIUM_PRICE_ID }}
     steps:
       - uses: actions/checkout@v4
 

@@ -9,6 +9,11 @@ import type {
   CreateCheckoutSessionOutput,
   CreatePortalSessionInput,
   CreatePortalSessionOutput,
+  FindPriceByLookupKeyOutput,
+  EnsureProductInput,
+  EnsureProductOutput,
+  CreatePriceInput,
+  CreatePriceOutput,
 } from "../domain/ports/payment-gateway.port";
 import { StripeNotConfiguredException } from "../domain/exceptions/stripe-not-configured.exception";
 
@@ -72,8 +77,55 @@ export class StripePaymentGateway implements IPaymentGateway {
     return { url: session.url };
   }
 
+  async findPriceByLookupKey(
+    lookupKey: string,
+  ): Promise<FindPriceByLookupKeyOutput | null> {
+    const client = this.requireClient();
+    const prices = await client.prices.list({ lookup_keys: [lookupKey], limit: 1 });
+    const price = prices.data[0];
+    if (!price) return null;
+
+    const productId = typeof price.product === "string" ? price.product : price.product.id;
+    return { priceId: price.id, productId };
+  }
+
+  async ensureProduct(input: EnsureProductInput): Promise<EnsureProductOutput> {
+    const client = this.requireClient();
+    try {
+      const product = await client.products.retrieve(input.id);
+      return { productId: product.id };
+    } catch (err) {
+      if (!isResourceMissing(err)) throw err;
+      const created = await client.products.create({ id: input.id, name: input.name });
+      return { productId: created.id };
+    }
+  }
+
+  async createPrice(input: CreatePriceInput): Promise<CreatePriceOutput> {
+    const client = this.requireClient();
+    const price = await client.prices.create({
+      product: input.productId,
+      unit_amount: input.unitAmountCents,
+      currency: input.currency,
+      recurring: { interval: input.interval },
+      lookup_key: input.lookupKey,
+    });
+    return { priceId: price.id };
+  }
+
   private requireClient(): Stripe {
     if (!this.client) throw new StripeNotConfiguredException();
     return this.client;
   }
+}
+
+/** Duck-typing (mesmo padrão de isUniqueViolation do Drizzle): evita import
+ *  direto da classe de erro do SDK só para checar um campo. */
+function isResourceMissing(err: unknown): boolean {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    "code" in err &&
+    (err as { code?: string }).code === "resource_missing"
+  );
 }

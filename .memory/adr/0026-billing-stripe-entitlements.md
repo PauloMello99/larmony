@@ -174,3 +174,36 @@ free (default, sem Stripe) ──checkout──► trialing ──► active ─
 - Implementação do job `billing-reconciliation` em detalhe — tarefa própria (B-3).
 - Tier "Conectado" (Open Finance) — permanece em espera com gatilho (ADR-0025);
   este ADR só prepara o mecanismo de billing que o tier usará no futuro.
+
+## Adendo (2026-07-12) — Catálogo de planos espelhado com o Stripe (MC-2)
+
+Correção sobre a decisão original: `STRIPE_PREMIUM_PRICE_ID` em env (§10
+original) foi **substituído** por um catálogo declarativo em código +
+reconciliação, a pedido do responsável — "espelharmos os dados que vêm do
+Stripe, ao mesmo tempo que refletimos os nossos" vale tanto para os
+planos (produtos/preços) quanto para as assinaturas em si.
+
+1. **`PLAN_CATALOG`** (`subscriptions/domain/plan-catalog.ts`) declara os
+   planos que o produto vende (hoje só `premium_monthly`, R$14,90/mês) — TS
+   puro, mesmo padrão de "catálogo estático" já usado em
+   `notifications/application/i18n/notification-messages.ts`.
+2. **`PlanCatalogService`** (`OnModuleInit`) sincroniza esse catálogo com o
+   Stripe no boot: busca um Price existente pelo `lookup_key` (mecanismo
+   nativo do Stripe para achar por chave estável nossa, até 10 por chamada);
+   se não achou, cria o Product (`id` customizado determinístico, ex.:
+   `"premium"`) e o Price (gravando o `lookup_key`). **O Stripe é a fonte de
+   verdade de existência** — a tabela nova `billing_plans` é só um cache
+   local rápido, sem GRANT/RLS (mesmo padrão de `stripe_webhook_events`).
+   Falha na reconciliação vira log de erro, nunca derruba o boot; um
+   checkout chamado antes dela completar lança `PlanNotAvailableException`
+   (503) — erro claro, não comportamento indefinido.
+3. `CreateCheckoutSessionUseCase` passa a resolver o price via
+   `billingPlanRepo.findByKey(DEFAULT_PLAN_KEY)`, nunca mais via
+   `ConfigService`. `STRIPE_PREMIUM_PRICE_ID` foi removido de
+   `.env`/`.env.example`/`turbo.json`/`ci.yml`.
+4. **A segunda metade do pedido (sync bidirecional de `subscriptions`) não
+   muda o desenho** — já era exatamente o escopo do webhook +
+   reconciliação periódica (§5/§8 originais, tarefa B-3): Stripe → nosso
+   banco via webhook/reconciliação; nosso sistema → Stripe já era verdade
+   desde o B-2 (checkout/portal chamam a API diretamente) e permanece via
+   B-7 (comp/desconto administrativo).
