@@ -31,6 +31,15 @@ describe("Reports (e2e)", () => {
       .expect(201);
     householdId = created.body.id;
 
+    // O relatório anual é premium-only (B-4, @RequireCapability advanced_reports).
+    // Este suite testa a agregação anual, não o billing — então promove o lar a
+    // premium: garante a linha (getOrCreate via GET) e marca type=standard.
+    await authed(app, "get", `/households/${householdId}/subscription`, owner.accessToken).expect(200);
+    await pool.query(
+      `UPDATE public.subscriptions SET type = 'standard', status = 'active' WHERE household_id = $1`,
+      [householdId],
+    );
+
     const internalUser = await pool.query<{ id: string }>(
       `SELECT id FROM public.users WHERE email = $1`,
       [owner.email],
