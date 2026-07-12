@@ -63,6 +63,25 @@ export interface CreatePriceOutput {
   priceId: string;
 }
 
+// ─── Coupon / desconto administrativo (M14, B-7) ────────────────────────────
+
+export type CouponDuration = "once" | "repeating" | "forever";
+
+export interface CreateCouponInput {
+  /** Exatamente um de percentOff / amountOffCents (validado no use-case). */
+  percentOff?: number;
+  amountOffCents?: number;
+  /** Obrigatório quando amountOffCents é usado (moeda do Coupon). */
+  currency?: string;
+  duration: CouponDuration;
+  /** Obrigatório quando duration === "repeating". */
+  durationInMonths?: number;
+}
+
+export interface CreateCouponOutput {
+  couponId: string;
+}
+
 // ─── Webhook (M14, B-3) — formas normalizadas: o Stripe fica 100% na infra ───
 
 export type BillingInterval = "monthly" | "annual";
@@ -139,4 +158,17 @@ export interface IPaymentGateway {
   getSubscription(
     subscriptionId: string,
   ): Promise<NormalizedSubscription | null>;
+
+  // ─── Desconto/isenção administrativo (B-7) ───────────────────────────────
+  /** Cria um Coupon no Stripe (desconto sempre passa pela API — ADR-0026 §3). */
+  createCoupon(input: CreateCouponInput): Promise<CreateCouponOutput>;
+  /** Anexa o coupon à assinatura (aplica o desconto na próxima fatura). */
+  applyCouponToSubscription(
+    subscriptionId: string,
+    couponId: string,
+  ): Promise<void>;
+  /** Remove o desconto ativo da assinatura. */
+  removeSubscriptionDiscount(subscriptionId: string): Promise<void>;
+  /** Cancela a assinatura no Stripe (usado ao conceder comp sobre uma sub ativa). */
+  cancelSubscription(subscriptionId: string): Promise<void>;
 }

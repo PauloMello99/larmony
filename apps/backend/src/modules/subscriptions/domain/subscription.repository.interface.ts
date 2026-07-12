@@ -8,6 +8,12 @@ export interface StripeLinkedSubscription {
   stripeSubscriptionId: string;
 }
 
+export interface GrantCompInput {
+  reason: string;
+  grantedByUserId: string | null;
+  expiresAt: Date | null;
+}
+
 export interface ISubscriptionRepository {
   /**
    * Garante 1 linha por household — cria free/active se ainda não existir.
@@ -37,4 +43,24 @@ export interface ISubscriptionRepository {
    * (status/período/ids) são atualizados normalmente para registro.
    */
   syncFromStripe(householdId: string, data: SyncFromStripeData): Promise<void>;
+
+  /**
+   * Concede isenção (comp, ADR-0026 §2, B-7): `type='custom'`, `status='active'`,
+   * `priceCents=0`, grava os campos comp_* e limpa o `stripeSubscriptionId`
+   * (a assinatura Stripe, se houver, é cancelada pelo use-case antes). Nunca
+   * apaga dados do lar.
+   */
+  grantComp(householdId: string, input: GrantCompInput): Promise<void>;
+
+  /** Revoga a isenção → volta a `free`/`active` e limpa os campos comp_*. */
+  revokeComp(householdId: string): Promise<void>;
+
+  /** Cache local de exibição do desconto (fonte de verdade é o Stripe). */
+  setDiscountCache(
+    householdId: string,
+    input: { stripeCouponId: string; discountPercent: number | null },
+  ): Promise<void>;
+
+  /** Limpa o cache de desconto (após remover o coupon no Stripe). */
+  clearDiscountCache(householdId: string): Promise<void>;
 }

@@ -14,6 +14,10 @@ function make() {
     createPrice: jest.fn(),
     constructWebhookEvent: jest.fn(),
     getSubscription: jest.fn(),
+    createCoupon: jest.fn(),
+    applyCouponToSubscription: jest.fn(),
+    removeSubscriptionDiscount: jest.fn(),
+    cancelSubscription: jest.fn(),
   };
   const subscriptions: jest.Mocked<ISubscriptionRepository> = {
     getOrCreate: jest.fn(),
@@ -21,6 +25,10 @@ function make() {
     findHouseholdIdByStripeCustomerId: jest.fn(),
     findAllStripeLinked: jest.fn(),
     syncFromStripe: jest.fn().mockResolvedValue(undefined),
+    grantComp: jest.fn().mockResolvedValue(undefined),
+    revokeComp: jest.fn().mockResolvedValue(undefined),
+    setDiscountCache: jest.fn().mockResolvedValue(undefined),
+    clearDiscountCache: jest.fn().mockResolvedValue(undefined),
   };
   const billingPlans: jest.Mocked<IBillingPlanRepository> = {
     findByKey: jest.fn(),

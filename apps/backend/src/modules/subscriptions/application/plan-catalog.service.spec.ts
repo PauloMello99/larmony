@@ -12,6 +12,10 @@ function makeService() {
     createPrice: jest.fn(),
     constructWebhookEvent: jest.fn(),
     getSubscription: jest.fn(),
+    createCoupon: jest.fn(),
+    applyCouponToSubscription: jest.fn(),
+    removeSubscriptionDiscount: jest.fn(),
+    cancelSubscription: jest.fn(),
   };
   const repo: jest.Mocked<IBillingPlanRepository> = {
     findByKey: jest.fn(),

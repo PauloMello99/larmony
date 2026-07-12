@@ -33,6 +33,21 @@
 
 ## Decisões/registros recentes (sem ADR)
 
+- **2026-07-12 — Admin de isenção/desconto entregue (B-7, ADR-0026 §2/§3/§5 +
+  adendo) — M14 (billing) CONCLUÍDO**: 4 rotas admin
+  (`POST/DELETE /admin/households/:id/subscription/comp|discount`,
+  `PlatformAdminGuard`). Comp 100% local (cancela sub Stripe se houver, preserva
+  customer, nunca apaga dados); desconto sempre via Stripe Coupon. **Contrato de
+  duração nativo do Stripe** (decisão do responsável): `{ percent?|amountCents?,
+  duration: once|repeating|forever, durationInMonths? }`. Gateway ganhou
+  createCoupon/applyCoupon/removeDiscount/cancelSubscription; repo ganhou
+  grantComp/revokeComp/set|clearDiscountCache; entity expõe stripeCouponId/
+  discountPercent. Exceções `INVALID_DISCOUNT`/`SUBSCRIPTION_NOT_STRIPE_LINKED`
+  (422). Frontend `admin-billing.tsx` vira tela real (busca lar → estado →
+  isenção/desconto; admin sem i18n). Auditoria `subscription_changed`. Backend +
+  frontend no mesmo PR. 17 specs / 100 testes e2e verdes; verificado no browser.
+  Detalhe no adendo de `.memory/adr/0026-billing-stripe-entitlements.md`.
+
 - **2026-07-12 — Frontend de billing / paywall entregue (B-6, ADR-0026 §5 +
   adendo)**: `settings/subscription.tsx` deixa de ser placeholder — feature nova
   `features/subscription/` (hooks `use-subscription`/`use-entitlements`/
