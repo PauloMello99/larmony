@@ -46,6 +46,9 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
       DATABASE_APP_URL: postgresql://app_user:app_user_dev@127.0.0.1:54322/postgres
       NOTIFICATIONS_EMAIL_ENABLED: "false"
+      # Valor fixo de CI: os e2e de scheduled-transactions precisam de um tick
+      # bem-sucedido; o teste envia este mesmo secret e o CronSecretGuard compara.
+      CRON_SECRET: ci-cron-secret
       NODE_ENV: test
     steps:
       - uses: actions/checkout@v4
