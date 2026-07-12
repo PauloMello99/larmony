@@ -13,7 +13,9 @@ export async function createTestApp(): Promise<INestApplication> {
     imports: [AppModule],
   }).compile();
 
-  const app = moduleRef.createNestApplication();
+  // rawBody: mesmo do main.ts — os e2e do webhook do Stripe precisam do
+  // req.rawBody para a verificação de assinatura.
+  const app = moduleRef.createNestApplication({ rawBody: true });
   app.useGlobalFilters(new AllExceptionsFilter(app.get(TelemetryService)));
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   await app.init();

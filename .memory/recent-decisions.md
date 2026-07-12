@@ -33,6 +33,19 @@
 
 ## Decisões/registros recentes (sem ADR)
 
+- **2026-07-12 — Webhook Stripe + reconciliação entregues (B-3, ADR-0026 §5/§8 +
+  adendo)**: `POST /webhooks/stripe` (público, `@SkipThrottle()`, verifica
+  assinatura via `rawBody: true` novo em `main.ts`) + `billing-reconciliation`
+  (cron). Caminho de sync único (`syncFromStripe` + `mapStripeStatus` em
+  `subscription-sync.ts`) usado tanto pelo webhook quanto pela reconciliação —
+  comp (`type='custom'`) tem precedência e nunca é rebaixado por evento
+  Stripe. `stripe_webhook_events` (B-1) usada pela 1ª vez para idempotência
+  (`claim` via `INSERT ON CONFLICT DO NOTHING`). Catálogo (`billing_plans`)
+  também passa a sincronizar ao vivo via `product.updated`/`price.updated`.
+  e2e offline com `generateTestHeaderString` (sem Stripe CLI). 15 specs / 91
+  testes e2e verdes, sem regressão. Detalhe completo no adendo de
+  `.memory/adr/0026-billing-stripe-entitlements.md`.
+
 - **2026-07-12 — ADR-0026 Billing/Entitlements entregue (checkpoint C1, M14)**:
   contrato técnico do billing definido antes de qualquer código. Estende o
   shell `subscriptions` existente (não substitui) — `type='custom'` já cobria

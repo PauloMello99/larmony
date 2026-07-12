@@ -6,7 +6,10 @@ import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
 import { TelemetryService } from "./common/telemetry/telemetry.service";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // rawBody: expõe req.rawBody (Buffer) para a verificação de assinatura do
+  // webhook do Stripe (POST /webhooks/stripe) — o parse JSON das outras rotas
+  // segue normal (ver stripe-webhook.controller.ts, M14/ADR-0026).
+  const app = await NestFactory.create(AppModule, { rawBody: true });
 
   app.enableCors({
     origin: process.env["FRONTEND_URL"] ?? "http://localhost:3000",

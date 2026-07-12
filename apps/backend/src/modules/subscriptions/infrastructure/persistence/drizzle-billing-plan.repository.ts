@@ -5,6 +5,8 @@ import * as schema from "../../../../database/schema";
 import type {
   IBillingPlanRepository,
   UpsertBillingPlanData,
+  UpdateFromStripeProductData,
+  UpdateFromStripePriceData,
 } from "../../domain/billing-plan.repository.interface";
 import type { BillingPlanEntity } from "../../domain/billing-plan.entity";
 import { BillingPlanMapper } from "./billing-plan.mapper";
@@ -55,5 +57,33 @@ export class DrizzleBillingPlanRepository implements IBillingPlanRepository {
 
     if (!row) throw new Error(`Failed to upsert billing plan ${data.key}`);
     return BillingPlanMapper.toDomain(row);
+  }
+
+  async updateFromStripeProduct(
+    stripeProductId: string,
+    data: UpdateFromStripeProductData,
+  ): Promise<void> {
+    // No-op se nenhum plano local referencia o produto (WHERE não casa).
+    await this.db
+      .update(schema.billingPlans)
+      .set({ name: data.name, lastSyncedAt: new Date(), updatedAt: new Date() })
+      .where(eq(schema.billingPlans.stripeProductId, stripeProductId));
+  }
+
+  async updateFromStripePrice(
+    stripePriceId: string,
+    data: UpdateFromStripePriceData,
+  ): Promise<void> {
+    await this.db
+      .update(schema.billingPlans)
+      .set({
+        active: data.active,
+        ...(data.amountCents !== null ? { amountCents: data.amountCents } : {}),
+        ...(data.currency !== null ? { currency: data.currency } : {}),
+        ...(data.interval !== null ? { interval: data.interval } : {}),
+        lastSyncedAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.billingPlans.stripePriceId, stripePriceId));
   }
 }
