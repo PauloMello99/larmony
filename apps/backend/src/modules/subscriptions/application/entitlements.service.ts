@@ -4,17 +4,23 @@ import {
   type ISubscriptionRepository,
 } from "../domain/subscription.repository.interface";
 import type { SubscriptionStatus } from "../domain/subscription.entity";
+import {
+  capabilitiesFor,
+  type Capability,
+  type ResolvedPlan,
+} from "../domain/entitlements";
 
-export type ResolvedPlan = "free" | "premium" | "custom";
+export type { ResolvedPlan } from "../domain/entitlements";
 export type EntitlementSource = "stripe" | "comp" | "free";
 
 export interface ResolvedEntitlements {
   plan: ResolvedPlan;
   status: SubscriptionStatus;
   source: EntitlementSource;
-  /** Lista de capabilities do plano Free fica em aberto (decisão de produto
-   *  D-1, ver ADR-0026 §7) — este serviço define o mecanismo, não a lista. */
-  capabilities: Record<string, boolean>;
+  /** Mapa capability → habilitada para o plano resolvido. A régua comercial
+   *  (que capabilities o Free perde) é decisão de produto (D-1); o mapa vive em
+   *  `domain/entitlements.ts`. */
+  capabilities: Record<Capability, boolean>;
 }
 
 /**
@@ -49,7 +55,7 @@ export class EntitlementsService {
       plan,
       status: subscription.status,
       source,
-      capabilities: {},
+      capabilities: capabilitiesFor(plan),
     };
   }
 }

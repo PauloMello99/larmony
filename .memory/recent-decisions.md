@@ -33,6 +33,22 @@
 
 ## Decisões/registros recentes (sem ADR)
 
+- **2026-07-12 — Entitlements aplicado / gating por rota entregue (B-4, ADR-0026
+  §7 + adendo)**: liga o `EntitlementsService` (antes dead-end com
+  `capabilities: {}`) ponta a ponta. Modelo de capabilities no domínio
+  (`subscriptions/domain/entitlements.ts`: `ResolvedPlan` + `CAPABILITIES` +
+  `PLAN_CAPABILITIES`; `custom`/comp = premium). Gate **capability-based**
+  (decisão do responsável): `@RequireCapability("advanced_reports")` +
+  `HouseholdEntitlementGuard`, espelhando `@RequireModule`/`HouseholdModuleGuard`.
+  Bloqueio → **HTTP 402** (`PremiumRequiredException`, code `PREMIUM_REQUIRED`)
+  para o paywall do B-6 distinguir "upgrade" de "sem permissão". `GET
+  subscription` passa a expor `entitlements` (aninhado, top-level preservado).
+  Rota-referência gateada: `reports/annual` = premium-only, `monthly` fica Free.
+  **D-1 (régua final do Free) segue em aberto** — só relatórios avançados
+  gateado por ora; limites por contagem (lares/membros) em follow-up. 16 e2e
+  specs / 95 testes verdes. Detalhe no adendo de
+  `.memory/adr/0026-billing-stripe-entitlements.md`.
+
 - **2026-07-12 — Webhook Stripe + reconciliação entregues (B-3, ADR-0026 §5/§8 +
   adendo)**: `POST /webhooks/stripe` (público, `@SkipThrottle()`, verifica
   assinatura via `rawBody: true` novo em `main.ts`) + `billing-reconciliation`

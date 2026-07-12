@@ -1,6 +1,8 @@
 import { Controller, Get, Param, ParseUUIDPipe, Query, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../../auth/guards/auth.guard";
 import { HouseholdMembershipGuard } from "../../auth/guards/household-membership.guard";
+import { HouseholdEntitlementGuard } from "../../subscriptions/interface/guards/household-entitlement.guard";
+import { RequireCapability } from "../../subscriptions/interface/decorators/require-capability.decorator";
 import { GetMonthlyReportUseCase } from "../application/use-cases/get-monthly-report.use-case";
 import { GetAnnualReportUseCase } from "../application/use-cases/get-annual-report.use-case";
 import { AnnualReportQueryDto } from "./dto/annual-report-query.dto";
@@ -25,7 +27,11 @@ export class ReportsController {
     return this.getMonthlyReport.execute(householdId, ref);
   }
 
+  // Relatório anual = "relatório avançado" (premium-only, B-4). O mensal
+  // permanece disponível no Free. Gate por método → roda após Auth+Membership.
   @Get("annual")
+  @RequireCapability("advanced_reports")
+  @UseGuards(HouseholdEntitlementGuard)
   annual(
     @Param("householdId", ParseUUIDPipe) householdId: string,
     @Query() query: AnnualReportQueryDto,

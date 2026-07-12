@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { AuthModule } from "../auth/auth.module";
 import { NotificationsModule } from "../notifications/notifications.module";
+import { SubscriptionsModule } from "../subscriptions/subscriptions.module";
 import { GetMonthlyReportUseCase } from "./application/use-cases/get-monthly-report.use-case";
 import { GetAnnualReportUseCase } from "./application/use-cases/get-annual-report.use-case";
 import { SendMonthlyReportUseCase } from "./application/use-cases/send-monthly-report.use-case";
@@ -9,7 +10,12 @@ import { ReportsInfrastructureModule } from "./infrastructure/reports-infrastruc
 import { ReportsController } from "./interface/reports.controller";
 
 @Module({
-  imports: [AuthModule, ReportsInfrastructureModule, NotificationsModule],
+  imports: [
+    AuthModule,
+    ReportsInfrastructureModule,
+    NotificationsModule,
+    SubscriptionsModule,
+  ],
   controllers: [ReportsController],
   providers: [
     GetMonthlyReportUseCase,

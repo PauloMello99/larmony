@@ -11,6 +11,7 @@ import { ReconcileSubscriptionsUseCase } from "./application/use-cases/reconcile
 import { BillingReconciliationJob } from "./application/jobs/billing-reconciliation.job";
 import { SubscriptionsController } from "./interface/subscriptions.controller";
 import { StripeWebhookController } from "./interface/stripe-webhook.controller";
+import { HouseholdEntitlementGuard } from "./interface/guards/household-entitlement.guard";
 
 @Module({
   imports: [AuthModule, SubscriptionsInfrastructureModule],
@@ -20,14 +21,16 @@ import { StripeWebhookController } from "./interface/stripe-webhook.controller";
     CreateCheckoutSessionUseCase,
     CreatePortalSessionUseCase,
     EntitlementsService,
+    HouseholdEntitlementGuard,
     PlanCatalogService,
     HandleStripeWebhookUseCase,
     ReconcileSubscriptionsUseCase,
     // Registrado no tick do internal-cron via @CronJobName (DiscoveryService).
     BillingReconciliationJob,
   ],
-  // Exportado para B-4 gatear outras rotas por entitlement (mesmo padrão de
-  // bridge cross-módulo do DispatchNotificationUseCase, ver ADR-0023).
-  exports: [EntitlementsService],
+  // Exportados para gatear rotas de outros módulos por entitlement (B-4, mesmo
+  // padrão de bridge cross-módulo do DispatchNotificationUseCase, ADR-0023):
+  // o consumidor importa SubscriptionsModule e usa @UseGuards(HouseholdEntitlementGuard).
+  exports: [EntitlementsService, HouseholdEntitlementGuard],
 })
 export class SubscriptionsModule {}

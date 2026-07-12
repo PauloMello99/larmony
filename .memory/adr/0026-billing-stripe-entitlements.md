@@ -260,3 +260,50 @@ desenho original. Sem mudança de contrato — só a materialização.
    rede. Cobre: assinatura inválida (400), sync de status ativo, idempotência
    de replay, cancelamento, comp não rebaixado, e mirror de produto/preço.
    Suíte completa (15 specs / 91 testes) verde sem regressão.
+
+## Adendo (2026-07-12) — Entitlements aplicado / gating por rota (B-4)
+
+Materializa o §7 (`EntitlementsService` como gating server-side). O serviço,
+criado no B-1, era um dead-end (`capabilities: {}`, nenhum consumidor); B-4
+liga o mecanismo ponta a ponta e prova em uma rota-referência. **D-1 (a régua
+comercial final do Free) segue em aberto** — decisão do responsável foi entregar
+o mecanismo + gatear só relatórios avançados por ora.
+
+1. **Modelo de capabilities no domínio** (`subscriptions/domain/entitlements.ts`):
+   `ResolvedPlan` (migrado da service p/ o domínio) + `CAPABILITIES` (hoje só
+   `advanced_reports`) + `PLAN_CAPABILITIES` (mapa plano→capability). **`custom`
+   (comp) recebe as mesmas capabilities de `premium`** (§2, precedência de comp).
+   `EntitlementsService.resolve` passou a preencher `capabilities` via
+   `capabilitiesFor(plan)` (era `{}`). Adicionar capability = 1 linha + coluna.
+2. **Gate capability-based, não plan-based** (decisão do responsável): espelha o
+   par `@RequireModule`/`HouseholdModuleGuard`. Novos
+   `@RequireCapability("advanced_reports")` (SetMetadata) +
+   `HouseholdEntitlementGuard` (`Reflector` + `EntitlementsService`): sem
+   metadata → libera; senão resolve entitlements do lar e bloqueia se a
+   capability não estiver ativa. Roda **após** `AuthGuard`+`HouseholdMembershipGuard`
+   (depende do `householdId` na rota).
+3. **Bloqueio → HTTP 402 Payment Required** (decisão do responsável, não 403):
+   nova `PremiumRequiredException` (`code = "PREMIUM_REQUIRED"`) + linha no
+   `domain-status.map.ts`. O `code` estável deixa o paywall do B-6 distinguir
+   "faça upgrade" (402) de "sem permissão" (403) pelo próprio status.
+4. **`GET /households/:id/subscription` expõe entitlements** (cumpre a linha
+   "estado resolvido: plano, status, entitlements, origem" do §5): resposta
+   ganhou `entitlements: { plan, status, source, capabilities }` **aninhado**,
+   preservando todo o top-level (os e2e de B-2/B-3 asseveram `body.type`/
+   `status`/`stripeSubscriptionId`). É o contrato que o B-6 consome.
+5. **Guard cross-módulo**: `SubscriptionsModule` provê+exporta
+   `HouseholdEntitlementGuard`; `ReportsModule` importa `SubscriptionsModule`.
+   Sem ciclo (subscriptions não importa reports). Padrão reutilizável por
+   qualquer módulo que queira gatear rota por capability.
+6. **Rota-referência gateada**: `GET .../reports/annual` vira premium-only
+   (`advanced_reports`); `GET .../reports/monthly` permanece Free — relatório
+   anual tratado como o "relatório avançado" da landing. Limites por contagem
+   (2º lar, teto de membros do Free) ficam para follow-up (tocam
+   households/invitations e dependem de D-1).
+7. **Testes**: unit `entitlements.service.spec.ts` (free/standard/trial/custom →
+   plano+source+capabilities) e `household-entitlement.guard.spec.ts`
+   (sem-metadata/allow/deny/missing-household); e2e offline
+   `entitlements.e2e-spec.ts` (Free → annual 402 `PREMIUM_REQUIRED`, monthly
+   200; promovido a standard → annual 200; comp/custom → 200). `reports.e2e-spec.ts`
+   ajustado: promove seu lar a premium no `beforeAll` (testa agregação, não
+   billing). Suíte completa (16 specs / 95 testes) verde sem regressão.
