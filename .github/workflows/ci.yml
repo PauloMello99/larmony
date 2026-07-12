@@ -73,6 +73,15 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      # DIAGNÓSTICO TEMPORÁRIO — remover após identificar a causa da falha
+      # de conectividade ao Stripe nos e2e (ver PR #10).
+      - name: Diagnose Stripe connectivity
+        run: |
+          echo "--- curl -v https://api.stripe.com ---"
+          curl -v --max-time 10 https://api.stripe.com/v1/customers 2>&1 || true
+          echo "--- node fetch ---"
+          node -e "fetch('https://api.stripe.com/v1/customers',{method:'POST',headers:{Authorization:'Bearer '+process.env.STRIPE_SECRET_KEY}}).then(r=>r.text()).then(t=>console.log('OK',t.slice(0,200))).catch(e=>console.log('FETCH_ERROR',e))"
+
       # Unit primeiro: sem banco, falha rápido e barato.
       - name: Unit tests (backend)
         run: pnpm --filter backend test
