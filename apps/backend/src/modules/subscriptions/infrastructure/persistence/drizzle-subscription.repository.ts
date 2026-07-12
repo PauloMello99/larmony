@@ -174,6 +174,19 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
       .where(eq(schema.subscriptions.householdId, householdId));
   }
 
+  async grantTrial(householdId: string, endsAt: Date): Promise<void> {
+    await this.db
+      .update(schema.subscriptions)
+      .set({
+        type: "trial",
+        status: "trialing",
+        priceCents: 0,
+        trialEndsAt: endsAt,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.subscriptions.householdId, householdId));
+  }
+
   async findExpired(now: Date): Promise<ExpiredSubscription[]> {
     const rows = await this.db
       .select({

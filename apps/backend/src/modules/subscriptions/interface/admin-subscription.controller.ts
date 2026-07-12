@@ -17,8 +17,11 @@ import { GrantCompUseCase } from "../application/use-cases/grant-comp.use-case";
 import { RevokeCompUseCase } from "../application/use-cases/revoke-comp.use-case";
 import { ApplyDiscountUseCase } from "../application/use-cases/apply-discount.use-case";
 import { RemoveDiscountUseCase } from "../application/use-cases/remove-discount.use-case";
+import { GrantTrialUseCase } from "../application/use-cases/grant-trial.use-case";
+import { RevokeTrialUseCase } from "../application/use-cases/revoke-trial.use-case";
 import { GrantCompDto } from "./dto/grant-comp.dto";
 import { ApplyDiscountDto } from "./dto/apply-discount.dto";
+import { GrantTrialDto } from "./dto/grant-trial.dto";
 
 /**
  * Gestão administrativa de isenção/desconto por lar (B-7, ADR-0026 §5).
@@ -33,6 +36,8 @@ export class AdminSubscriptionController {
     private readonly revokeComp: RevokeCompUseCase,
     private readonly applyDiscount: ApplyDiscountUseCase,
     private readonly removeDiscount: RemoveDiscountUseCase,
+    private readonly grantTrial: GrantTrialUseCase,
+    private readonly revokeTrial: RevokeTrialUseCase,
   ) {}
 
   @Post("comp")
@@ -84,5 +89,24 @@ export class AdminSubscriptionController {
     @CurrentUser() user: AuthUser,
   ) {
     await this.removeDiscount.execute(householdId, user.id);
+  }
+
+  @Post("trial")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async trial(
+    @Param("householdId", ParseUUIDPipe) householdId: string,
+    @Body() dto: GrantTrialDto,
+    @CurrentUser() user: AuthUser,
+  ) {
+    await this.grantTrial.execute(householdId, dto.months, user.id);
+  }
+
+  @Delete("trial")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async revokeTrialAction(
+    @Param("householdId", ParseUUIDPipe) householdId: string,
+    @CurrentUser() user: AuthUser,
+  ) {
+    await this.revokeTrial.execute(householdId, user.id);
   }
 }

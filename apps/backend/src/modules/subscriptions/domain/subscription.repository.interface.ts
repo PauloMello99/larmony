@@ -71,6 +71,13 @@ export interface ISubscriptionRepository {
   clearDiscountCache(householdId: string): Promise<void>;
 
   /**
+   * Concede trial administrativo local (H-3): `type='trial'`,
+   * `status='trialing'`, `trial_ends_at = endsAt`. 100% local (sem Stripe,
+   * sem cartão) — expira via billing-expiry-sweep.
+   */
+  grantTrial(householdId: string, endsAt: Date): Promise<void>;
+
+  /**
    * Comps/trials locais vencidos em relação a `now` (billing-expiry-sweep):
    * `type='custom'` com `comp_expires_at` passado, e `type='trial'` com
    * `trial_ends_at` passado. Expirações Stripe NÃO entram aqui (o próprio

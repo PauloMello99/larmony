@@ -11,7 +11,7 @@ import {
 } from "../domain/entitlements";
 
 export type { ResolvedPlan } from "../domain/entitlements";
-export type EntitlementSource = "stripe" | "comp" | "free";
+export type EntitlementSource = "stripe" | "comp" | "trial" | "free";
 
 export interface ResolvedEntitlements {
   plan: ResolvedPlan;
@@ -49,7 +49,9 @@ export class EntitlementsService {
       ? "comp"
       : subscription.stripeSubscriptionId
         ? "stripe"
-        : "free";
+        : subscription.type === "trial"
+          ? "trial"
+          : "free";
 
     return {
       plan,

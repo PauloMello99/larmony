@@ -4,7 +4,7 @@
 export type SubscriptionPlanType = "free" | "trial" | "standard" | "custom"
 export type SubscriptionStatus = "active" | "trialing" | "past_due" | "canceled"
 export type ResolvedPlan = "free" | "premium" | "custom"
-export type EntitlementSource = "stripe" | "comp" | "free"
+export type EntitlementSource = "stripe" | "comp" | "trial" | "free"
 
 /** Capabilities hoje expostas pelo backend (D-1 em aberto — só uma por ora). */
 export interface Capabilities {
@@ -27,6 +27,7 @@ export interface SubscriptionWithEntitlements {
   status: SubscriptionStatus
   compReason: string | null
   compExpiresAt: string | null
+  trialEndsAt: string | null
   stripeCouponId: string | null
   discountPercent: number | null
   createdAt: string

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Search, Building2, Gift, Percent, ShieldCheck } from "lucide-react"
+import { Search, Building2, Gift, Percent, ShieldCheck, Clock } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Badge } from "@/shared/components/ui/badge"
 import { Input } from "@/shared/components/ui/input"
@@ -117,6 +117,8 @@ function HouseholdBillingPanel({
   }
 
   const isComp = subscription.type === "custom"
+  const isTrial = subscription.type === "trial"
+  const isFree = subscription.type === "free"
   const hasStripeSub = !!subscription.stripeSubscriptionId
   const hasDiscount = !!subscription.stripeCouponId
 
@@ -141,10 +143,118 @@ function HouseholdBillingPanel({
 
       <div className="border-t border-foreground/[0.06]" />
 
+      <TrialPanel
+        householdId={householdId}
+        isTrial={isTrial}
+        isFree={isFree}
+        trialEndsAt={subscription.trialEndsAt}
+      />
+
+      <div className="border-t border-foreground/[0.06]" />
+
       <DiscountPanel
         householdId={householdId}
         hasStripeSub={hasStripeSub}
         hasDiscount={hasDiscount}
+      />
+    </div>
+  )
+}
+
+function TrialPanel({
+  householdId,
+  isTrial,
+  isFree,
+  trialEndsAt,
+}: {
+  householdId: string
+  isTrial: boolean
+  isFree: boolean
+  trialEndsAt: string | null
+}) {
+  const { grantTrial, revokeTrial } = useAdminBilling()
+  const [months, setMonths] = React.useState("")
+  const [confirmRevoke, setConfirmRevoke] = React.useState(false)
+  const [err, setErr] = React.useState<string | null>(null)
+
+  async function grant() {
+    const n = Number(months)
+    if (!Number.isInteger(n) || n < 1 || n > 24) {
+      setErr("Informe um número de meses entre 1 e 24.")
+      return
+    }
+    setErr(null)
+    try {
+      await grantTrial.mutateAsync({ householdId, months: n })
+      setMonths("")
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Não foi possível conceder o trial.")
+    }
+  }
+
+  return (
+    <div>
+      <div className="flex items-center gap-2">
+        <Clock className="h-4 w-4 text-orange-400" />
+        <h3 className="text-sm font-medium text-foreground">Trial</h3>
+      </div>
+
+      {isTrial ? (
+        <div className="mt-3">
+          <p className="text-sm text-foreground/70">
+            Trial ativo
+            {trialEndsAt
+              ? ` até ${new Date(trialEndsAt).toLocaleDateString("pt-BR")}.`
+              : "."}
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-3"
+            onClick={() => setConfirmRevoke(true)}
+          >
+            Revogar trial
+          </Button>
+        </div>
+      ) : !isFree ? (
+        <p className="mt-3 text-sm text-foreground/40">
+          Trial só pode ser concedido a um lar no plano gratuito.
+        </p>
+      ) : (
+        <div className="mt-3 space-y-3">
+          <div>
+            <label className="text-xs text-foreground/50">Duração (meses, 1–24)</label>
+            <Input
+              type="number"
+              min={1}
+              max={24}
+              value={months}
+              onChange={(e) => setMonths(e.target.value)}
+              className="mt-1"
+            />
+          </div>
+          {err && <p className="text-sm text-destructive">{err}</p>}
+          <Button size="sm" onClick={() => void grant()} disabled={grantTrial.isPending}>
+            {grantTrial.isPending ? "Concedendo…" : "Conceder trial"}
+          </Button>
+        </div>
+      )}
+
+      <ConfirmDialog
+        open={confirmRevoke}
+        onOpenChange={setConfirmRevoke}
+        title="Revogar trial?"
+        description="O lar volta ao plano Grátis imediatamente. Nenhum dado é apagado."
+        confirmLabel="Revogar"
+        destructive
+        loading={revokeTrial.isPending}
+        error={revokeTrial.error instanceof Error ? revokeTrial.error.message : null}
+        onConfirm={() =>
+          revokeTrial.mutate(
+            { householdId },
+            { onSuccess: () => setConfirmRevoke(false) },
+          )
+        }
       />
     </div>
   )

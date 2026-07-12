@@ -122,6 +122,84 @@ describe("Admin subscription comp/discount (e2e)", () => {
     expect(res.body.code).toBe("INVALID_DISCOUNT");
   });
 
+  describe("trial administrativo", () => {
+    it("não-admin → 403", async () => {
+      await authed(
+        app,
+        "post",
+        `/admin/households/${householdId}/subscription/trial`,
+        owner.accessToken,
+      )
+        .send({ months: 3 })
+        .expect(403);
+    });
+
+    it("super_admin concede trial → trialing + entitlements premium/source trial", async () => {
+      await authed(
+        app,
+        "post",
+        `/admin/households/${householdId}/subscription/trial`,
+        superAdmin.accessToken,
+      )
+        .send({ months: 3 })
+        .expect(204);
+
+      const got = await authed(
+        app,
+        "get",
+        `/households/${householdId}/subscription`,
+        owner.accessToken,
+      ).expect(200);
+      expect(got.body.type).toBe("trial");
+      expect(got.body.status).toBe("trialing");
+      expect(got.body.trialEndsAt).not.toBeNull();
+      expect(got.body.entitlements.plan).toBe("premium");
+      expect(got.body.entitlements.source).toBe("trial");
+      expect(got.body.entitlements.capabilities.advanced_reports).toBe(true);
+    });
+
+    it("conceder trial sobre lar que já está em trial → 422 TRIAL_NOT_ALLOWED", async () => {
+      const res = await authed(
+        app,
+        "post",
+        `/admin/households/${householdId}/subscription/trial`,
+        superAdmin.accessToken,
+      )
+        .send({ months: 1 })
+        .expect(422);
+      expect(res.body.code).toBe("TRIAL_NOT_ALLOWED");
+    });
+
+    it("revogar trial → volta a free", async () => {
+      await authed(
+        app,
+        "delete",
+        `/admin/households/${householdId}/subscription/trial`,
+        superAdmin.accessToken,
+      ).expect(204);
+
+      const got = await authed(
+        app,
+        "get",
+        `/households/${householdId}/subscription`,
+        owner.accessToken,
+      ).expect(200);
+      expect(got.body.type).toBe("free");
+      expect(got.body.trialEndsAt).toBeNull();
+      expect(got.body.entitlements.source).toBe("free");
+    });
+
+    it("revogar trial de lar que não está em trial → 422", async () => {
+      const res = await authed(
+        app,
+        "delete",
+        `/admin/households/${householdId}/subscription/trial`,
+        superAdmin.accessToken,
+      ).expect(422);
+      expect(res.body.code).toBe("TRIAL_NOT_ALLOWED");
+    });
+  });
+
   describe("billing-expiry-sweep (tick)", () => {
     const cronSecret = process.env["CRON_SECRET"] ?? "";
     const tick = () =>

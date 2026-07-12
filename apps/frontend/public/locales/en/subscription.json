@@ -30,6 +30,12 @@
     "portalCta": "Manage subscription",
     "portalPending": "Redirecting…"
   },
+  "trial": {
+    "title": "Trial active",
+    "description": "Your household has Premium access during the trial.",
+    "until": "Full Premium access until",
+    "cta": "Subscribe to Premium"
+  },
   "comp": {
     "title": "Comp granted",
     "description": "Your household has full access as a courtesy — no charge.",
