@@ -28,8 +28,29 @@
 | ADR-0022 | Orçamentos como série + versões, resolução on-read (M10) | 2026-07-10 | Aceito |
 | ADR-0023 | Dispatcher multicanal de notificações + dedup por evento (M11) | 2026-07-11 | Aceito |
 | ADR-0024 | Assertividade dos disparos: timezone + hora por lar (M12) | 2026-07-11 | Aceito |
+| ADR-0025 | M13 Open Finance desacoplado do lançamento + gatilho de ativação | 2026-07-11 | Aceito |
+| ADR-0026 | Billing (Stripe) + Entitlements + comp/desconto administrativo (M14) | 2026-07-12 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
+
+- **2026-07-12 — ADR-0026 Billing/Entitlements entregue (checkpoint C1, M14)**:
+  contrato técnico do billing definido antes de qualquer código. Estende o
+  shell `subscriptions` existente (não substitui) — `type='custom'` já cobria
+  o caso de isenção, nenhuma migração de enum necessária; RLS já era
+  super_admin-only para escrita, nenhuma policy nova. Requisito do responsável:
+  super-admin concede **desconto** (via Stripe Coupon, criado/anexado pela
+  nossa API) ou **isenção total/comp** (100% local, cancela a Stripe sub se
+  houver) — em ambos os casos **sem o operador abrir o dashboard do Stripe**,
+  tudo pelo admin do Larmony. Reusa guards/serviços existentes
+  (`PlatformAdminGuard`, `HouseholdOwnerGuard`, `AuditService.logByAuthId` com
+  `subscription_changed` já no enum) — nenhum mecanismo novo de autorização.
+  Nova tabela `stripe_webhook_events` para idempotência do webhook (PK =
+  event id do Stripe), sem persistir payload completo (minimização de dado
+  sensível). `EntitlementsService` como novo ponto único de gating
+  server-side, exportado no mesmo padrão de bridge cross-módulo do
+  `DispatchNotificationUseCase` (ADR-0023). Detalhes em
+  `docs/product/features/15-billing-entitlements.md`. Backlog de execução
+  (B-1..B-7) no plano de coordenação do ciclo de lançamento.
 
 - **2026-07-11 — M12 timezone dos disparos entregue (ADR-0024)**: cron passa a
   resolver "agora" no fuso do lar. `households.timezone` (IANA) +
