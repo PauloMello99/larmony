@@ -63,6 +63,54 @@ export interface CreatePriceOutput {
   priceId: string;
 }
 
+// ─── Webhook (M14, B-3) — formas normalizadas: o Stripe fica 100% na infra ───
+
+export type BillingInterval = "monthly" | "annual";
+
+/** Estado de uma assinatura, normalizado a partir do Stripe (sync bidirecional). */
+export interface NormalizedSubscription {
+  id: string;
+  customerId: string;
+  /** Status cru do Stripe (8 valores) — o mapeamento p/ nossa enum é no domínio. */
+  status: string;
+  currentPeriodStart: Date | null;
+  currentPeriodEnd: Date | null;
+  priceCents: number | null;
+  interval: BillingInterval | null;
+  cancelAtPeriodEnd: boolean;
+  canceledAt: Date | null;
+}
+
+export interface NormalizedProduct {
+  id: string;
+  name: string;
+  active: boolean;
+}
+
+export interface NormalizedPrice {
+  id: string;
+  productId: string | null;
+  active: boolean;
+  unitAmountCents: number | null;
+  currency: string | null;
+  interval: BillingInterval | null;
+}
+
+/** Evento de webhook já verificado e normalizado (campos por tipo). */
+export interface StripeWebhookEvent {
+  id: string;
+  type: string;
+  // checkout.session.completed
+  checkoutHouseholdId?: string | null;
+  checkoutSubscriptionId?: string | null;
+  // customer.subscription.*
+  subscription?: NormalizedSubscription;
+  // product.*
+  product?: NormalizedProduct;
+  // price.*
+  price?: NormalizedPrice;
+}
+
 /** Porta de pagamento (implementada por StripePaymentGateway). */
 export interface IPaymentGateway {
   createCustomer(input: CreateCustomerInput): Promise<CreateCustomerOutput>;
@@ -79,4 +127,16 @@ export interface IPaymentGateway {
   /** Retrieve-or-create por id customizado determinístico. */
   ensureProduct(input: EnsureProductInput): Promise<EnsureProductOutput>;
   createPrice(input: CreatePriceInput): Promise<CreatePriceOutput>;
+  /**
+   * Verifica a assinatura do webhook e normaliza o evento. Lança se a
+   * assinatura for inválida (B-3). `payload` é o RAW body.
+   */
+  constructWebhookEvent(
+    payload: Buffer | string,
+    signature: string,
+  ): StripeWebhookEvent;
+  /** Retrieve normalizado de uma assinatura (webhook checkout + reconciliação). */
+  getSubscription(
+    subscriptionId: string,
+  ): Promise<NormalizedSubscription | null>;
 }

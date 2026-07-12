@@ -58,6 +58,9 @@ jobs:
       # a usar vem do catálogo local (PlanCatalogService sincroniza com o
       # Stripe no boot via lookup_key) — não precisa de env var de price id.
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+      # Valor fixo de CI — os e2e do webhook (B-3) assinam o payload com este
+      # mesmo secret (generateTestHeaderString), então não vem do dashboard.
+      STRIPE_WEBHOOK_SECRET: whsec_test_ci_larmony_b3
     steps:
       - uses: actions/checkout@v4
 

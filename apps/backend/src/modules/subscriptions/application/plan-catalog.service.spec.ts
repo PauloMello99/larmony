@@ -10,10 +10,14 @@ function makeService() {
     findPriceByLookupKey: jest.fn(),
     ensureProduct: jest.fn(),
     createPrice: jest.fn(),
+    constructWebhookEvent: jest.fn(),
+    getSubscription: jest.fn(),
   };
   const repo: jest.Mocked<IBillingPlanRepository> = {
     findByKey: jest.fn(),
     upsert: jest.fn().mockResolvedValue({}),
+    updateFromStripeProduct: jest.fn(),
+    updateFromStripePrice: jest.fn(),
   };
   const service = new PlanCatalogService(gateway, repo);
   return { service, gateway, repo };

@@ -207,3 +207,56 @@ planos (produtos/preços) quanto para as assinaturas em si.
    banco via webhook/reconciliação; nosso sistema → Stripe já era verdade
    desde o B-2 (checkout/portal chamam a API diretamente) e permanece via
    B-7 (comp/desconto administrativo).
+
+## Adendo (2026-07-12) — Webhook + reconciliação entregues (B-3)
+
+Implementa §5 (`POST /webhooks/stripe`) e §8 (`billing-reconciliation`) do
+desenho original. Sem mudança de contrato — só a materialização.
+
+1. **Caminho de sync único**: webhook e reconciliação convergem para
+   `ISubscriptionRepository.syncFromStripe(householdId, NormalizedSubscription)`.
+   `subscription-sync.ts` centraliza `mapStripeStatus` (8 status do Stripe →
+   4 nossos: `active|trialing|past_due` mantém 1:1; `canceled/unpaid/
+   incomplete/incomplete_expired/paused` colapsam em `canceled`) — nenhum dos
+   dois caminhos decide o mapeamento por conta própria. **Comp tem
+   precedência**: se `type='custom'` local, o sync atualiza período/ids mas
+   nunca rebaixa `type` (a isenção do §2 não pode ser desfeita por um evento
+   Stripe atrasado).
+2. **`IPaymentGateway` ganhou `constructWebhookEvent`/`getSubscription`** —
+   verificação de assinatura e normalização (`NormalizedSubscription/Product/
+   Price`) ficam 100% na infra (`StripePaymentGateway`); o resto do módulo
+   nunca importa o SDK do Stripe diretamente. Gotcha confirmado (mesmo do
+   ZipTalk): `current_period_start/end` e `price` vivem em
+   `sub.items.data[0]`, não no top-level do objeto subscription (API v22).
+3. **`stripe_webhook_events` (B-1) usada pela primeira vez**: `claim(id, type)`
+   via `INSERT ... ON CONFLICT DO NOTHING RETURNING` — a PK garante
+   idempotência sem lock explícito; replay do mesmo `event.id` é no-op.
+   Assinatura inválida → `WebhookSignatureInvalidException` → 400 (não 500;
+   `AllExceptionsFilter` só trata exceções não mapeadas como 500).
+4. **Endpoint público**: `@Controller("webhooks/stripe")` sem `AuthGuard`,
+   `@SkipThrottle()` (primeiro uso no repo — o throttler global de 120/min
+   derrubaria retries do Stripe), escrita via `DRIZZLE_ADMIN` (mesmo padrão do
+   `internal-cron.controller.ts`).
+5. **Catálogo (`billing_plans`) também sincroniza ao vivo**: `product.updated`
+   e `price.updated`/`deleted` chamam
+   `IBillingPlanRepository.updateFromStripeProduct/updateFromStripePrice` —
+   update where-matches, no-op se o produto/preço não corresponder a nenhum
+   plano declarado (nunca cria plano novo a partir do dashboard; só espelha o
+   que o `PLAN_CATALOG` já declara, ver adendo MC-2 acima).
+6. **`ReconcileSubscriptionsUseCase` + `BillingReconciliationJob`**
+   (`@CronJobName("billing-reconciliation")`) varre `findAllStripeLinked()` e
+   chama `getSubscription` + `syncFromStripe` para cada household — pega
+   webhooks perdidos (rede instável, deploy durante o evento). Dunning/grace
+   period continuam sendo decisão do Stripe (`past_due → canceled` sai
+   naturalmente do próprio Stripe cancelar); não recalculamos grace localmente.
+7. **`main.ts` habilita `rawBody: true`** (`NestFactory.create(AppModule,
+   { rawBody: true })`) — necessário porque `constructEvent` exige o buffer
+   raw, e o parser JSON global já consome o body antes do handler. Não quebra
+   o parse das outras rotas. `test/helpers.ts` replica a mesma opção para os
+   e2e.
+8. **e2e offline** (`subscriptions-webhook.e2e-spec.ts`, 7 casos): assina
+   payloads com `stripe.webhooks.generateTestHeaderString` + um
+   `STRIPE_WEBHOOK_SECRET` de teste fixo — sem depender do Stripe CLI ou de
+   rede. Cobre: assinatura inválida (400), sync de status ativo, idempotência
+   de replay, cancelamento, comp não rebaixado, e mirror de produto/preço.
+   Suíte completa (15 specs / 91 testes) verde sem regressão.

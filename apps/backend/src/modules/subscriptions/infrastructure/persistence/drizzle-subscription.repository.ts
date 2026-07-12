@@ -1,9 +1,13 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq } from "drizzle-orm";
+import { eq, isNotNull } from "drizzle-orm";
 import { DRIZZLE_ADMIN, type DrizzleDB } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
-import type { ISubscriptionRepository } from "../../domain/subscription.repository.interface";
+import type {
+  ISubscriptionRepository,
+  StripeLinkedSubscription,
+} from "../../domain/subscription.repository.interface";
 import type { SubscriptionEntity } from "../../domain/subscription.entity";
+import type { SyncFromStripeData } from "../../domain/subscription-sync";
 import { SubscriptionMapper } from "./subscription.mapper";
 
 /**
@@ -50,5 +54,62 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
 
     if (!row) throw new Error(`Subscription not found for household ${householdId}`);
     return SubscriptionMapper.toDomain(row);
+  }
+
+  async findHouseholdIdByStripeCustomerId(
+    stripeCustomerId: string,
+  ): Promise<string | null> {
+    const [row] = await this.db
+      .select({ householdId: schema.subscriptions.householdId })
+      .from(schema.subscriptions)
+      .where(eq(schema.subscriptions.stripeCustomerId, stripeCustomerId))
+      .limit(1);
+
+    return row?.householdId ?? null;
+  }
+
+  async findAllStripeLinked(): Promise<StripeLinkedSubscription[]> {
+    const rows = await this.db
+      .select({
+        householdId: schema.subscriptions.householdId,
+        stripeSubscriptionId: schema.subscriptions.stripeSubscriptionId,
+      })
+      .from(schema.subscriptions)
+      .where(isNotNull(schema.subscriptions.stripeSubscriptionId));
+
+    // `stripeSubscriptionId` é notNull no filtro acima — o cast estreita o tipo.
+    return rows.map((r) => ({
+      householdId: r.householdId,
+      stripeSubscriptionId: r.stripeSubscriptionId as string,
+    }));
+  }
+
+  async syncFromStripe(
+    householdId: string,
+    data: SyncFromStripeData,
+  ): Promise<void> {
+    // Comp tem precedência (ADR-0026 §2): não rebaixa um lar isento.
+    const [current] = await this.db
+      .select({ type: schema.subscriptions.type })
+      .from(schema.subscriptions)
+      .where(eq(schema.subscriptions.householdId, householdId))
+      .limit(1);
+
+    const type = current?.type === "custom" ? "custom" : data.type;
+
+    await this.db
+      .update(schema.subscriptions)
+      .set({
+        stripeSubscriptionId: data.stripeSubscriptionId,
+        status: data.status,
+        type,
+        currentPeriodStart: data.currentPeriodStart,
+        currentPeriodEnd: data.currentPeriodEnd,
+        priceCents: data.priceCents,
+        billingInterval: data.interval,
+        canceledAt: data.canceledAt,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.subscriptions.householdId, householdId));
   }
 }

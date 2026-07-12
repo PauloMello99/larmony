@@ -6,17 +6,25 @@ import { CreateCheckoutSessionUseCase } from "./application/use-cases/create-che
 import { CreatePortalSessionUseCase } from "./application/use-cases/create-portal-session.use-case";
 import { EntitlementsService } from "./application/entitlements.service";
 import { PlanCatalogService } from "./application/plan-catalog.service";
+import { HandleStripeWebhookUseCase } from "./application/use-cases/handle-stripe-webhook.use-case";
+import { ReconcileSubscriptionsUseCase } from "./application/use-cases/reconcile-subscriptions.use-case";
+import { BillingReconciliationJob } from "./application/jobs/billing-reconciliation.job";
 import { SubscriptionsController } from "./interface/subscriptions.controller";
+import { StripeWebhookController } from "./interface/stripe-webhook.controller";
 
 @Module({
   imports: [AuthModule, SubscriptionsInfrastructureModule],
-  controllers: [SubscriptionsController],
+  controllers: [SubscriptionsController, StripeWebhookController],
   providers: [
     GetSubscriptionUseCase,
     CreateCheckoutSessionUseCase,
     CreatePortalSessionUseCase,
     EntitlementsService,
     PlanCatalogService,
+    HandleStripeWebhookUseCase,
+    ReconcileSubscriptionsUseCase,
+    // Registrado no tick do internal-cron via @CronJobName (DiscoveryService).
+    BillingReconciliationJob,
   ],
   // Exportado para B-4 gatear outras rotas por entitlement (mesmo padrão de
   // bridge cross-módulo do DispatchNotificationUseCase, ver ADR-0023).

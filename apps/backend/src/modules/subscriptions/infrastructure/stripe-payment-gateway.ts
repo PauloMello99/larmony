@@ -14,8 +14,13 @@ import type {
   EnsureProductOutput,
   CreatePriceInput,
   CreatePriceOutput,
+  BillingInterval,
+  NormalizedSubscription,
+  NormalizedPrice,
+  StripeWebhookEvent,
 } from "../domain/ports/payment-gateway.port";
 import { StripeNotConfiguredException } from "../domain/exceptions/stripe-not-configured.exception";
+import { WebhookSignatureInvalidException } from "../domain/exceptions/webhook-signature-invalid.exception";
 
 /**
  * Integração real com o Stripe (Checkout + Billing Portal hospedados — sem
@@ -29,10 +34,12 @@ import { StripeNotConfiguredException } from "../domain/exceptions/stripe-not-co
 export class StripePaymentGateway implements IPaymentGateway {
   private readonly logger = new Logger(StripePaymentGateway.name);
   private readonly client: Stripe | null;
+  private readonly webhookSecret: string | null;
 
   constructor(config: ConfigService) {
     const apiKey = config.get<string>("STRIPE_SECRET_KEY");
     this.client = apiKey ? new Stripe(apiKey) : null;
+    this.webhookSecret = config.get<string>("STRIPE_WEBHOOK_SECRET") ?? null;
     if (!this.client) {
       this.logger.warn(
         "STRIPE_SECRET_KEY ausente — StripePaymentGateway desabilitado (checkout/portal lançam se chamados).",
@@ -113,9 +120,115 @@ export class StripePaymentGateway implements IPaymentGateway {
     return { priceId: price.id };
   }
 
+  constructWebhookEvent(
+    payload: Buffer | string,
+    signature: string,
+  ): StripeWebhookEvent {
+    const client = this.requireClient();
+    if (!this.webhookSecret) throw new WebhookSignatureInvalidException();
+    let event: Stripe.Event;
+    try {
+      event = client.webhooks.constructEvent(
+        payload,
+        signature,
+        this.webhookSecret,
+      );
+    } catch {
+      throw new WebhookSignatureInvalidException();
+    }
+    return normalizeEvent(event);
+  }
+
+  async getSubscription(
+    subscriptionId: string,
+  ): Promise<NormalizedSubscription | null> {
+    const client = this.requireClient();
+    try {
+      const sub = await client.subscriptions.retrieve(subscriptionId);
+      return normalizeSubscription(sub);
+    } catch (err) {
+      if (isResourceMissing(err)) return null;
+      throw err;
+    }
+  }
+
   private requireClient(): Stripe {
     if (!this.client) throw new StripeNotConfiguredException();
     return this.client;
+  }
+}
+
+// ─── Normalização Stripe → domínio (mantém o SDK fora do resto do módulo) ───
+
+function unixToDate(secs: number | null | undefined): Date | null {
+  return typeof secs === "number" ? new Date(secs * 1000) : null;
+}
+
+function normalizeInterval(
+  interval: string | undefined,
+): BillingInterval | null {
+  if (interval === "month") return "monthly";
+  if (interval === "year") return "annual";
+  return null;
+}
+
+function normalizeSubscription(sub: Stripe.Subscription): NormalizedSubscription {
+  // API v22: current_period_* e price vivem no item, não no top-level.
+  const item = sub.items.data[0];
+  return {
+    id: sub.id,
+    customerId: typeof sub.customer === "string" ? sub.customer : sub.customer.id,
+    status: sub.status,
+    currentPeriodStart: item ? unixToDate(item.current_period_start) : null,
+    currentPeriodEnd: item ? unixToDate(item.current_period_end) : null,
+    priceCents: item?.price?.unit_amount ?? null,
+    interval: normalizeInterval(item?.price?.recurring?.interval),
+    cancelAtPeriodEnd: sub.cancel_at_period_end,
+    canceledAt: unixToDate(sub.canceled_at),
+  };
+}
+
+function normalizePrice(price: Stripe.Price): NormalizedPrice {
+  return {
+    id: price.id,
+    productId: typeof price.product === "string" ? price.product : price.product.id,
+    active: price.active,
+    unitAmountCents: price.unit_amount ?? null,
+    currency: price.currency ?? null,
+    interval: normalizeInterval(price.recurring?.interval),
+  };
+}
+
+function normalizeEvent(event: Stripe.Event): StripeWebhookEvent {
+  const base = { id: event.id, type: event.type };
+  switch (event.type) {
+    case "checkout.session.completed": {
+      const s = event.data.object;
+      return {
+        ...base,
+        checkoutHouseholdId: s.metadata?.["householdId"] ?? null,
+        checkoutSubscriptionId:
+          typeof s.subscription === "string"
+            ? s.subscription
+            : (s.subscription?.id ?? null),
+      };
+    }
+    case "customer.subscription.created":
+    case "customer.subscription.updated":
+    case "customer.subscription.deleted":
+      return { ...base, subscription: normalizeSubscription(event.data.object) };
+    case "product.created":
+    case "product.updated":
+    case "product.deleted": {
+      const p = event.data.object;
+      return { ...base, product: { id: p.id, name: p.name, active: p.active } };
+    }
+    case "price.created":
+    case "price.updated":
+    case "price.deleted":
+      return { ...base, price: normalizePrice(event.data.object) };
+    default:
+      return base;
   }
 }
 
