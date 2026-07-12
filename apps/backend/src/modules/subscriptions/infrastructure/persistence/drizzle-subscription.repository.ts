@@ -182,6 +182,10 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
         status: "trialing",
         priceCents: 0,
         trialEndsAt: endsAt,
+        // Trial exige lar free — qualquer sub id remanescente é de uma sub já
+        // cancelada (registro); limpa como o grantComp faz, senão o source
+        // dos entitlements classifica errado (bateria do hardening).
+        stripeSubscriptionId: null,
         updatedAt: new Date(),
       })
       .where(eq(schema.subscriptions.householdId, householdId));
@@ -213,6 +217,15 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
       householdId: r.householdId,
       kind: r.type === "custom" ? "comp" : "trial",
     }));
+  }
+
+  async findHouseholdSlug(householdId: string): Promise<string | null> {
+    const [row] = await this.db
+      .select({ slug: schema.households.slug })
+      .from(schema.households)
+      .where(eq(schema.households.id, householdId))
+      .limit(1);
+    return row?.slug ?? null;
   }
 
   async expireTrial(householdId: string): Promise<void> {

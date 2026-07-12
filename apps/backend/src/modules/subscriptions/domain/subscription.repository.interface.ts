@@ -87,4 +87,11 @@ export interface ISubscriptionRepository {
 
   /** Encerra um trial local vencido → volta a `free` (nunca apaga dados). */
   expireTrial(householdId: string): Promise<void>;
+
+  /**
+   * Slug do lar — usado para montar as URLs de retorno do checkout/portal
+   * (a rota do frontend é `/households/:slug/...`, não o UUID; bug pego pela
+   * bateria de integração real do hardening).
+   */
+  findHouseholdSlug(householdId: string): Promise<string | null>;
 }

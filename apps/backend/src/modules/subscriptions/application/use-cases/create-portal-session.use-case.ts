@@ -26,8 +26,12 @@ export class CreatePortalSessionUseCase {
       throw new NoStripeCustomerException(householdId);
     }
 
+    // Mesmo fix do checkout: a rota real é /households/:slug/... .
     const frontendUrl = this.config.getOrThrow<string>("FRONTEND_URL");
-    const returnUrl = `${frontendUrl}/dashboard/households/${householdId}/settings/subscription`;
+    const slug = await this.repo.findHouseholdSlug(householdId);
+    const returnUrl = slug
+      ? `${frontendUrl}/households/${slug}/settings/subscription`
+      : `${frontendUrl}/households`;
 
     return this.gateway.createPortalSession({
       customerId: subscription.stripeCustomerId,

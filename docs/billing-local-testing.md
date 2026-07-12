@@ -112,4 +112,21 @@ estado via `GET /households/:id/subscription` (ou UI) + tabela `subscriptions`.
 
 | Data | Cenários | Resultado | Observações |
 |---|---|---|---|
-| — | — | — | — |
+| 2026-07-12 | 1–8 (todos) | ✅ passou (após 3 fixes) | Primeira execução completa (fase billing-hardening). Upgrade real via Checkout (4242) + webhooks reais (`checkout.session.completed`/`customer.subscription.*`/`invoice.paid` → 200); portal com fatura/cartão/cancelamento; downgrade via portal (fim do período) e via CLI (imediato → free/canceled, dados intactos); comp/desconto (repeating 3m + forever, coupons conferidos no Stripe) e trial (concessão via UI + expiração via sweep) 100% pelo admin. |
+
+**Bugs pegos (e corrigidos) pela primeira execução** — todos invisíveis aos
+e2e offline:
+
+1. **URL de retorno do checkout/portal errada**: apontava para
+   `/dashboard/households/<uuid>/...` (rota inexistente; a real é
+   `/households/<slug>/...`) → retorno do Stripe caía em 404 e o banner de
+   sucesso nunca aparecia. Fix: repo ganhou `findHouseholdSlug`; use-cases
+   montam a URL com slug.
+2. **`cancelSubscription` não-idempotente**: conceder comp a um lar cuja sub
+   Stripe já tinha sido cancelada dava 500 (`resource_missing`). Fix: cancel
+   idempotente no gateway (sub inexistente = já cancelada, warn).
+3. **`source` dos entitlements classificava trial como `stripe`**: o id da
+   sub cancelada fica gravado para registro e vencia o check de trial → a
+   página mostrava botão de portal (que quebraria) em vez do painel de trial.
+   Fix: ordem do resolve (trial antes de stripe) + `grantTrial` limpa o id
+   remanescente (como o comp já fazia).

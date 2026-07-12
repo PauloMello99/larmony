@@ -187,7 +187,17 @@ export class StripePaymentGateway implements IPaymentGateway {
 
   async cancelSubscription(subscriptionId: string): Promise<void> {
     const client = this.requireClient();
-    await client.subscriptions.cancel(subscriptionId);
+    try {
+      await client.subscriptions.cancel(subscriptionId);
+    } catch (err) {
+      // Idempotente: sub que já não existe/já foi cancelada no Stripe não é
+      // erro para quem pediu o cancelamento (pego pela bateria do hardening —
+      // conceder comp a um lar cuja sub já tinha sido cancelada dava 500).
+      if (!isResourceMissing(err)) throw err;
+      this.logger.warn(
+        `cancelSubscription(${subscriptionId}): sub inexistente no Stripe — tratado como já cancelada.`,
+      );
+    }
   }
 
   private requireClient(): Stripe {

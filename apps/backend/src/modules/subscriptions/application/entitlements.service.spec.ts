@@ -64,6 +64,20 @@ describe("EntitlementsService.resolve", () => {
     expect(ent.capabilities.advanced_reports).toBe(true);
   });
 
+  it("trial com sub Stripe cancelada remanescente → source trial (não stripe)", async () => {
+    // Regressão da bateria do hardening: o id da sub cancelada fica gravado
+    // para registro e classificava um lar em trial como source=stripe.
+    const { service, repo } = make();
+    repo.getOrCreate.mockResolvedValue(
+      sub({ type: "trial", status: "trialing", stripeSubscriptionId: "sub_cancelada" }),
+    );
+
+    const ent = await service.resolve("hh_1");
+
+    expect(ent.source).toBe("trial");
+    expect(ent.plan).toBe("premium");
+  });
+
   it("custom (comp) → capabilities premium + source comp", async () => {
     const { service, repo } = make();
     repo.getOrCreate.mockResolvedValue(
