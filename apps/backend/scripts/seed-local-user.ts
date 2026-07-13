@@ -127,6 +127,7 @@ async function main(): Promise<void> {
       name: "Usuário Local",
       email: EMAIL,
       password: PASSWORD,
+      termsAccepted: true,
     },
     201,
   );
