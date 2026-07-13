@@ -57,3 +57,6 @@ apps/frontend/test-results/
 apps/frontend/playwright-report/
 # Dumps de banco (PII) - nunca versionar (docs/backup-restore.md)
 backups/
+
+# RAG eval output (regenerable)
+bin/scripts/rag/eval/results.json

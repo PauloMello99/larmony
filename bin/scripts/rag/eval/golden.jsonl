@@ -1,0 +1,30 @@
+{"q": "por que valores monetários são guardados como inteiros em centavos?", "expect_source": ".memory/adr/0017-money-integer-cents", "category": "semantic", "note": "money cents rule"}
+{"q": "como o isolamento de dados entre lares é garantido no banco?", "expect_source": ".memory/adr/0005-multitenant-single-db-rls", "category": "semantic", "note": "RLS multitenant"}
+{"q": "qual é a topologia de deploy no Railway e o fluxo de branches?", "expect_source": ".memory/adr/0011-deploy-topology-e-caching", "category": "semantic", "note": "deploy topology"}
+{"q": "o que é o app_user e por que cada request usa um pool de RLS separado?", "expect_source": "deployment.md", "category": "term", "note": "app_user gotcha (matches .memory or docs deployment)"}
+{"q": "como funciona o cron tick interno via private networking?", "expect_source": "deployment.md", "category": "semantic", "note": "internal cron"}
+{"q": "como funciona o migrador custom do Drizzle e o rollback por hash?", "expect_source": ".memory/adr/0003-drizzle-orm-custom-migrator", "category": "term", "note": "custom migrator"}
+{"q": "como os webhooks do Stripe garantem idempotência?", "expect_source": ".memory/adr/0026-billing-stripe-entitlements", "category": "semantic", "note": "billing webhooks"}
+{"q": "por que a sessão fica no localStorage em vez de cookie httpOnly?", "expect_source": ".memory/adr/0027-sessao-localstorage-vs-cookie-httponly", "category": "semantic", "note": "session decision"}
+{"q": "qual modelo de embedding o RAG usa e por que foi escolhido?", "expect_source": ".memory/adr/0016-rag-evolution-bge-m3-hybrid-parent", "category": "semantic", "note": "bge-m3"}
+{"q": "como funciona o parent-document retrieval da memória semântica?", "expect_source": ".memory/adr/0016-rag-evolution-bge-m3-hybrid-parent", "category": "semantic", "note": "parent retrieval"}
+{"q": "como fazer backup e restaurar o banco de dados?", "expect_source": "docs/backup-restore.md", "category": "term", "note": "backup runbook"}
+{"q": "por que a imagem docker do frontend usa output standalone?", "expect_source": "docs/docker-image-size.md", "category": "semantic", "note": "docker standalone"}
+{"q": "qual o modelo de cobrança e o ticket do plano premium?", "expect_source": "docs/product/precificacao-e-viabilidade.md", "category": "semantic", "note": "pricing"}
+{"q": "como funciona o rateio de despesas parceladas entre membros do lar?", "expect_source": "docs/product/features/04-parcelamento-e-rateio.md", "category": "semantic", "note": "rateio"}
+{"q": "como funciona o engine de recorrência dos lançamentos programados?", "expect_source": ".memory/adr/0020-unify-bills-recurrences-scheduled-transactions", "category": "semantic", "note": "scheduled tx engine"}
+{"q": "quais canais de notificação existem e como é feito o dedup?", "expect_source": ".memory/adr/0023-notification-dispatcher-multicanal", "category": "semantic", "note": "notifications"}
+{"q": "como o cron respeita o timezone e a hora preferida de cada lar?", "expect_source": ".memory/adr/0024-cron-timezone-household", "category": "semantic", "note": "cron timezone"}
+{"q": "por que o Open Finance foi adiado e qual é o gatilho de ativação?", "expect_source": ".memory/adr/0025-open-finance-desacoplado-lancamento", "category": "semantic", "note": "open finance deferral"}
+{"q": "como os orçamentos são versionados ao longo do tempo?", "expect_source": ".memory/adr/0022-budget-series-versions", "category": "semantic", "note": "budget versioning"}
+{"q": "o super admin da plataforma pode agir como owner de um lar?", "expect_source": ".memory/adr/0013-super-admin-acts-as-owner", "category": "term", "note": "super admin"}
+{"q": "qual biblioteca de e-mail transacional o projeto usa?", "expect_source": ".memory/adr/0012-transactional-email-react-email", "category": "term", "note": "react-email"}
+{"q": "como as feature flags são implementadas?", "expect_source": ".memory/adr/0009-feature-flags", "category": "term", "note": "feature flags"}
+{"q": "qual gerenciador de pacotes o monorepo usa e como instalar dependência em um package?", "expect_source": ".claude/CLAUDE.md", "category": "term", "note": "pnpm conventions"}
+{"q": "como está estruturada a arquitetura feature-based do frontend?", "expect_source": ".memory/adr/0007-frontend-feature-based-architecture", "category": "semantic", "note": "frontend architecture"}
+{"q": "o que é o padrão de um use-case por operação no backend NestJS?", "expect_source": ".memory/adr/0004-nestjs-use-case-module-architecture", "category": "semantic", "note": "use-case pattern"}
+{"q": "onde o webhook do Stripe é tratado no controller do backend?", "expect_source": "stripe-webhook.controller", "category": "term", "note": "code: webhook controller", "include_code": true, "app": "backend"}
+{"q": "como o gateway de pagamento Stripe cancela uma assinatura?", "expect_source": "stripe-payment-gateway", "category": "term", "note": "code: payment gateway", "include_code": true, "app": "backend"}
+{"q": "qual use-case cria a sessão de checkout do Stripe?", "expect_source": "create-checkout-session", "category": "term", "note": "code: checkout use-case", "include_code": true, "app": "backend"}
+{"q": "helper para merge seguro de classes do tailwind", "expect_source": "packages/utils", "category": "term", "note": "code: cn util", "include_code": true}
+{"q": "como funciona o guard que exige capability/entitlement por household?", "expect_source": "subscriptions", "category": "semantic", "note": "code: entitlement guard", "include_code": true, "app": "backend"}
