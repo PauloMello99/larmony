@@ -31,9 +31,18 @@ WORKDIR /app
 COPY --from=pruner /app/out/json/ ./
 RUN pnpm install --frozen-lockfile
 COPY --from=pruner /app/out/full/ ./
-# NEXT_PUBLIC_* tem que existir no build (Next inlina no bundle)
+# NEXT_PUBLIC_* tem que existir no build (Next inlina no bundle). O Railway
+# passa as variáveis do serviço como build args; cada NEXT_PUBLIC_* precisa de
+# um ARG aqui, senão fica `undefined` no bundle (foi o que zerou a telemetria
+# do Better Stack no browser em staging — logava no console mas não enviava).
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_BETTER_STACK_SOURCE_TOKEN
+ENV NEXT_PUBLIC_BETTER_STACK_SOURCE_TOKEN=$NEXT_PUBLIC_BETTER_STACK_SOURCE_TOKEN
+ARG NEXT_PUBLIC_BETTER_STACK_INGESTING_URL
+ENV NEXT_PUBLIC_BETTER_STACK_INGESTING_URL=$NEXT_PUBLIC_BETTER_STACK_INGESTING_URL
+ARG NEXT_PUBLIC_BETTER_STACK_LOG_LEVEL
+ENV NEXT_PUBLIC_BETTER_STACK_LOG_LEVEL=$NEXT_PUBLIC_BETTER_STACK_LOG_LEVEL
 RUN pnpm turbo run build --filter=frontend
 
 # ── 3. Runner (standalone — sem node_modules de produção) ────────────────
