@@ -1,31 +1,29 @@
 import { Button, Heading, Section, Text } from "@react-email/components";
 import { BaseLayout, sharedStyles } from "./base-layout";
+import { mailMessages } from "../i18n/mail-messages";
 
 export interface WelcomeEmailProps {
   name: string;
   /** Link de acesso ao app (opcional). */
   appUrl?: string;
+  /** Locale do destinatário (ADR-0018). Default pt-BR. */
+  locale?: string | null;
 }
 
-export function WelcomeEmail({ name, appUrl }: WelcomeEmailProps) {
+export function WelcomeEmail({ name, appUrl, locale }: WelcomeEmailProps) {
+  const m = mailMessages(locale);
   return (
-    <BaseLayout preview="Bem-vindo ao Larmony">
-      <Heading style={sharedStyles.heading}>Bem-vindo, {name}! 👋</Heading>
-      <Text style={sharedStyles.paragraph}>
-        Sua conta no <strong>Larmony</strong> está pronta. Agora você pode criar
-        seu estúdio, convidar a equipe e gerenciar estoque, agenda e clientes num
-        só lugar.
-      </Text>
+    <BaseLayout preview={m.welcome.preview} locale={locale}>
+      <Heading style={sharedStyles.heading}>{m.welcome.heading(name)}</Heading>
+      <Text style={sharedStyles.paragraph}>{m.welcome.body}</Text>
       {appUrl ? (
         <Section style={{ textAlign: "center", margin: "24px 0" }}>
           <Button href={appUrl} style={sharedStyles.button}>
-            Acessar o Larmony
+            {m.welcome.cta}
           </Button>
         </Section>
       ) : null}
-      <Text style={sharedStyles.muted}>
-        Qualquer dúvida, é só responder a este e-mail. Boa tatuagem! 🖤
-      </Text>
+      <Text style={sharedStyles.muted}>{m.welcome.footNote}</Text>
     </BaseLayout>
   );
 }

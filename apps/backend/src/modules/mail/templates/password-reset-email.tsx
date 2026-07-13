@@ -1,35 +1,35 @@
 import { Button, Heading, Section, Text } from "@react-email/components";
 import { BaseLayout, sharedStyles } from "./base-layout";
+import { mailMessages } from "../i18n/mail-messages";
 
 export interface PasswordResetEmailProps {
   /** Nome do usuário (opcional — saudação personalizada). */
   name?: string;
   resetUrl: string;
+  /** Locale do destinatário (ADR-0018). Default pt-BR. */
+  locale?: string | null;
 }
 
-export function PasswordResetEmail({ name, resetUrl }: PasswordResetEmailProps) {
+export function PasswordResetEmail({ name, resetUrl, locale }: PasswordResetEmailProps) {
+  const m = mailMessages(locale);
   return (
-    <BaseLayout preview="Redefina sua senha do Larmony">
-      <Heading style={sharedStyles.heading}>Redefinir senha</Heading>
+    <BaseLayout preview={m.passwordReset.preview} locale={locale}>
+      <Heading style={sharedStyles.heading}>{m.passwordReset.heading}</Heading>
       <Text style={sharedStyles.paragraph}>
-        {name ? `Olá, ${name}. ` : "Olá. "}
-        Recebemos um pedido para redefinir a senha da sua conta no Larmony.
-        Clique no botão abaixo para escolher uma nova senha.
+        {m.passwordReset.greeting(name)}
+        {m.passwordReset.body}
       </Text>
       <Section style={{ textAlign: "center", margin: "24px 0" }}>
         <Button href={resetUrl} style={sharedStyles.button}>
-          Redefinir senha
+          {m.passwordReset.cta}
         </Button>
       </Section>
       <Text style={sharedStyles.muted}>
-        Ou copie e cole este link no navegador:
+        {m.copyLink}
         <br />
         <span style={sharedStyles.link}>{resetUrl}</span>
       </Text>
-      <Text style={sharedStyles.muted}>
-        Se você não solicitou a redefinição, pode ignorar este e-mail com
-        segurança — sua senha continua a mesma.
-      </Text>
+      <Text style={sharedStyles.muted}>{m.passwordReset.ignoreNote}</Text>
     </BaseLayout>
   );
 }

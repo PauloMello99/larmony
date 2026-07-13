@@ -28,6 +28,8 @@ export interface CreateUserData {
   email: string;
   /** Versão dos Termos/Privacidade aceita no cadastro (LGPD). */
   termsVersion: string;
+  /** Locale da UI no cadastro (ADR-0018). Ausente → default do banco (pt-BR). */
+  locale?: string;
 }
 
 export interface UpdateUserData {

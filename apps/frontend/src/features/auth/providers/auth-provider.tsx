@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react"
 import { apiRequest } from "@/infrastructure/api/client"
 import { clearSession, getSession, saveSession } from "@/features/auth/lib/session"
+import { readLocaleCookie } from "@/shared/lib/locale"
 import type { AuthContextValue, AuthSession, AuthUser } from "@/features/auth/types"
 
 export const AuthContext = createContext<AuthContextValue | null>(null)
@@ -23,7 +24,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   ): Promise<void> => {
     const session = await apiRequest<AuthSession>("/auth/sign-up", {
       method: "POST",
-      body: JSON.stringify({ name, email, password, termsAccepted }),
+      // locale: quem se cadastra pela UI em ja-JP nasce com o perfil (e o
+      // e-mail de boas-vindas) em ja-JP — ADR-0018 + adendo 7 idiomas.
+      body: JSON.stringify({ name, email, password, termsAccepted, locale: readLocaleCookie() }),
       skipAuth: true,
     })
     saveSession(session)

@@ -1,46 +1,17 @@
+import { normalizeAppLocale, type AppLocale } from "../../../../common/i18n/app-locale";
+
 /**
  * i18n das notificações (backend) — render no envio, no idioma do destinatário
- * (`users.locale`). Espelha os 7 locales que a UI oferece
- * (`apps/frontend/src/shared/lib/locale.ts`), com fallback pt-BR e normalização
- * de tags legadas (`en`→`en-US`, `es`→`es-ES` — rows antigas de `users.locale`).
- * Moeda é sempre BRL (ADR-0017) — só a *formatação* muda por locale.
+ * (`users.locale`). A lista de locales e a normalização (tags legadas
+ * `en`→`en-US`/`es`→`es-ES`, match por idioma-base) vivem em
+ * `common/i18n/app-locale.ts`, compartilhadas com o catálogo de e-mail. Moeda é
+ * sempre BRL (ADR-0017) — só a *formatação* muda por locale.
  */
-export type NotificationLocale =
-  | "pt-BR"
-  | "en-US"
-  | "es-ES"
-  | "zh-CN"
-  | "de-DE"
-  | "fr-FR"
-  | "ja-JP";
+export type NotificationLocale = AppLocale;
 
-const SUPPORTED: readonly NotificationLocale[] = [
-  "pt-BR",
-  "en-US",
-  "es-ES",
-  "zh-CN",
-  "de-DE",
-  "fr-FR",
-  "ja-JP",
-];
-const DEFAULT_LOCALE: NotificationLocale = "pt-BR";
-
-/** Tags legadas (pré-7-idiomas) ainda possíveis em rows antigas. */
-const LEGACY: Record<string, NotificationLocale> = { en: "en-US", es: "es-ES" };
-
-/**
- * Garante um locale suportado: tag exata → legado (`en`/`es`) → idioma-base
- * (`de-AT`→`de-DE`) → default pt-BR.
- */
+/** Garante um locale suportado (delegando à normalização compartilhada). */
 export function normalizeLocale(value: string | null | undefined): NotificationLocale {
-  if ((SUPPORTED as readonly string[]).includes(value ?? "")) {
-    return value as NotificationLocale;
-  }
-  if (!value) return DEFAULT_LOCALE;
-  const legacy = LEGACY[value];
-  if (legacy) return legacy;
-  const base = value.toLowerCase().split("-")[0];
-  return SUPPORTED.find((l) => l.toLowerCase().startsWith(`${base}-`)) ?? DEFAULT_LOCALE;
+  return normalizeAppLocale(value);
 }
 
 export interface NotificationFormatters {
