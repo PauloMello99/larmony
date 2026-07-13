@@ -102,6 +102,8 @@
     "description": "为您的家庭创建一个空间。您将成为所有者。",
     "nameLabel": "名称",
     "namePlaceholder": "例如：我的家",
+    "timezoneLabel": "时区",
+    "timezoneHint": "决定计划收支的到期时间以及提醒的发送时间。已自动检测——如有需要可调整。",
     "submitting": "创建中……",
     "submit": "创建家庭"
   },

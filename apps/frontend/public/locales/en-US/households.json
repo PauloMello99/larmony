@@ -102,6 +102,8 @@
     "description": "Create a space for your home. You will be the owner.",
     "nameLabel": "Name",
     "namePlaceholder": "e.g., Family Home",
+    "timezoneLabel": "Time zone",
+    "timezoneHint": "Sets when scheduled entries are due and when alerts go out. Auto-detected — adjust if needed.",
     "submitting": "Creating…",
     "submit": "Create home"
   },

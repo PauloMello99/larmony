@@ -102,6 +102,8 @@
     "description": "ご家庭のための空間を作成します。あなたがオーナーになります。",
     "nameLabel": "名前",
     "namePlaceholder": "例: 田中家",
+    "timezoneLabel": "タイムゾーン",
+    "timezoneHint": "定期取引の期限や通知の送信タイミングを決定します。自動検出されます — 必要に応じて調整してください。",
     "submitting": "作成中…",
     "submit": "世帯を作成"
   },

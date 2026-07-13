@@ -102,6 +102,8 @@
     "description": "Erstelle einen Bereich für deinen Haushalt. Du wirst der Eigentümer.",
     "nameLabel": "Name",
     "namePlaceholder": "Z. B.: Familie Schmidt",
+    "timezoneLabel": "Zeitzone",
+    "timezoneHint": "Bestimmt, wann Einträge fällig werden und wann Hinweise gesendet werden. Automatisch erkannt — bei Bedarf anpassen.",
     "submitting": "Wird erstellt…",
     "submit": "Haushalt erstellen"
   },

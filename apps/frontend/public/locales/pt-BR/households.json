@@ -102,6 +102,8 @@
     "description": "Crie um espaço para o seu lar. Você será o proprietário.",
     "nameLabel": "Nome",
     "namePlaceholder": "Ex: Casa da Família",
+    "timezoneLabel": "Fuso horário",
+    "timezoneHint": "Define quando lançamentos vencem e quando os avisos são enviados. Detectado automaticamente — ajuste se necessário.",
     "submitting": "Criando…",
     "submit": "Criar lar"
   },
