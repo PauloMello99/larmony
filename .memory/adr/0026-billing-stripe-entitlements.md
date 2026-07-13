@@ -437,3 +437,75 @@ de 8 cenários do responsável.
    para registro) → resolve reordenado (trial antes de stripe) + `grantTrial`
    limpa o id remanescente.
    Detalhe/registro no runbook. Suíte final: unit 96, e2e 17 specs/108 testes.
+
+## Adendo (2026-07-13) — D-1 resolvido: régua final do Free (P-1..P-6)
+
+Fecha a decisão de produto deixada em aberto desde §7/Fora de escopo e o
+adendo B-4 ("D-1 segue em aberto"). Decisão do responsável — **régua final**:
+
+| Recurso | Free | Family (premium/custom) |
+|---|---|---|
+| Lares que o usuário **possui** (owner) | **1** | ilimitado |
+| Membros por lar (incl. o dono) | **2** (dono + 1) | ilimitado |
+| Categorias personalizadas | **0** (só as padrão) | ilimitado |
+| Metas simultâneas | **3** | ilimitado |
+| Orçamentos ativos simultâneos (`endedFrom IS NULL`) | **3** | ilimitado |
+| Relatórios avançados (`advanced_reports`, já existia) | não | sim |
+| Exportação CSV de relatórios (`report_export`, **novo**) | não | sim |
+
+1. **Domínio estendido** (`subscriptions/domain/entitlements.ts`): `CAPABILITIES`
+   ganha `report_export` e `custom_categories` (booleanas, mesmo mecanismo de
+   `advanced_reports`). Novo `PLAN_LIMITS` — **numérico**, não booleano —
+   com `maxHouseholdsOwned/maxMembersPerHousehold/maxActiveGoals/
+   maxActiveBudgets` (Free: 1/2/3/3; premium/custom: `Infinity`).
+   `EntitlementsService.resolve()` passa a retornar `limits` também.
+2. **Limite de lares não se encaixa no gate por rota** (billing é por lar, não
+   por usuário — não existe "plano do usuário"): resolvido no
+   `CreateHouseholdUseCase`, que conta quantos lares o usuário já é **owner**
+   (`findAllByAuthId` já retorna `role` por lar) e bloqueia o próximo se
+   nenhum for premium/custom (`HouseholdLimitReachedException`, 402). Upgrade
+   de **qualquer** lar já possuído libera criar mais.
+3. **Limite de membros**: `InviteMemberUseCase` conta membros ativos + convites
+   pendentes (evita burlar convidando em excesso) contra o lar convidante
+   (`MemberLimitReachedException`, 402).
+4. **Categorias personalizadas**: `categories.controller.ts` gateia só a
+   **criação** (`custom_categories`) — verificado que o seed das 13
+   categorias-padrão roda direto na transação de
+   `drizzle-household.repository.ts`, nunca pelo controller, então o
+   onboarding não é afetado.
+5. **Metas/orçamentos**: `GoalEntity` não tem conceito de "concluída" — o
+   limite é a contagem total do lar. `BudgetEntity` já tinha `endedFrom`
+   (ADR-0022) — "ativo" = `IS NULL`; novo `IBudgetRepository.countActiveSeries`.
+   Exceções dedicadas (`GoalLimitReachedException`/`BudgetLimitReachedException`,
+   402) em vez de reusar `PremiumRequiredException` com uma capability que não
+   correspondia ao limite real.
+6. **Exportação CSV (`report_export`, feature nova)**: reusa a infra RPT-2 que
+   já existia pronta e sem consumidor (`common/csv/csv.util.ts` +
+   `ExportMenu`/`downloadCsv` no frontend). Novos endpoints
+   `GET .../reports/{monthly,annual}/export` (`ExportMonthlyReportUseCase`/
+   `ExportAnnualReportUseCase`, reusam os use-cases de leitura existentes) —
+   capability **distinta** de `advanced_reports`: o relatório mensal continua
+   grátis para **visualizar**, só o export é Family-only.
+7. **Frontend**: 5 forms (`create-household`, `invite-member`, `category`,
+   `goal`, `budget`) ganharam tratamento de erro que **não existia antes**
+   (`translateApiError`) — gap pré-existente descoberto ao implementar os
+   gates. `PremiumGate` ganhou prop `descriptionKey` opcional para ser
+   reusado com uma mensagem específica por capability (antes hardcoded para
+   "relatórios avançados").
+8. **e2e**: cada gate tem teste dedicado com lar/usuário **isolado** (bloqueio
+   + liberação pós-upgrade). Vários e2e pré-existentes (households,
+   invitations, categories, transactions) já criavam fixtures que excediam a
+   nova régua no mesmo lar Free compartilhado — corrigido com um bootstrap de
+   comp (`INSERT ... ON CONFLICT DO UPDATE` em `subscriptions`) no `beforeAll`
+   de cada arquivo afetado, sem alterar o que cada teste realmente valida.
+   Suíte completa: unit 106, e2e 17 specs/118 testes.
+9. **Conflito com a landing (PR #20, overhaul da landing)**: o pricing
+   publicado listava "Transações e categorias ilimitadas" e "Múltiplos
+   membros e lares" como Free — ambas falsas com a régua acima. Corrigido
+   (P-8) nos 7 locales.
+
+**Fora de escopo desta resolução** (registrado, não implementado):
+- Categorias-padrão sempre em pt-BR independente do idioma do usuário —
+  follow-up futuro (perguntar idioma no signup + catálogo localizado).
+- Downgrade retroativo: o gate só impede **criar** além do limite; um lar que
+  já excedia antes desta fase (ex.: 5 membros) não perde acesso ao que já tem.
