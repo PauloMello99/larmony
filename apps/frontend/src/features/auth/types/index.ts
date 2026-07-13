@@ -41,7 +41,12 @@ export interface StoredSession {
 export interface AuthContextValue {
   user: AuthUser | null
   loading: boolean
-  signUp: (name: string, email: string, password: string) => Promise<void>
+  signUp: (
+    name: string,
+    email: string,
+    password: string,
+    termsAccepted: boolean,
+  ) => Promise<void>
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
   forgotPassword: (email: string) => Promise<void>

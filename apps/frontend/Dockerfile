@@ -1,7 +1,9 @@
 # syntax=docker/dockerfile:1
 # Multi-stage build do frontend Next.js num monorepo Turborepo + pnpm.
-# Mesmo padrão do backend (turbo prune): isola o subset do frontend, builda com
-# deps completas e roda com `next start` sobre deps de produção.
+# turbo prune isola o subset do frontend; o build gera o output STANDALONE
+# (next.config.js `output: "standalone"`, P-5) — o runner copia só
+# .next/standalone (server + deps traçadas), .next/static e public/, SEM
+# node_modules de produção (~2GB → centenas de MB).
 #
 # Build a partir da RAIZ do repo:
 #   docker build -f apps/frontend/Dockerfile \
@@ -34,18 +36,15 @@ ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 RUN pnpm turbo run build --filter=frontend
 
-# ── 3. Runner (deps de produção + next start) ───────────────────────────
-FROM base AS runner
+# ── 3. Runner (standalone — sem node_modules de produção) ────────────────
+FROM node:24-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=pruner /app/out/json/ ./
-RUN pnpm install --prod --frozen-lockfile
-# artefato buildado + configs + public/ (locale.ts é a fonte única de idiomas;
-# next-i18next.config.js segue copiado por convenção do next-i18next, mas não é
-# mais importado por next.config.js — o roteamento nativo de locale está desligado)
-COPY --from=builder /app/apps/frontend/.next ./apps/frontend/.next
-COPY --from=builder /app/apps/frontend/next.config.js ./apps/frontend/next.config.js
-COPY --from=builder /app/apps/frontend/next-i18next.config.js ./apps/frontend/next-i18next.config.js
+# O tracing do standalone preserva o layout do monorepo (outputFileTracingRoot
+# = raiz): server.js fica em apps/frontend/ dentro do standalone. static/ e
+# public/ NÃO entram no trace — copiados à parte, nos paths que o server espera.
+COPY --from=builder /app/apps/frontend/.next/standalone ./
+COPY --from=builder /app/apps/frontend/.next/static ./apps/frontend/.next/static
 COPY --from=builder /app/apps/frontend/public ./apps/frontend/public
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nextjs \
@@ -53,6 +52,7 @@ RUN addgroup --system --gid 1001 nodejs \
 USER nextjs
 WORKDIR /app/apps/frontend
 EXPOSE 3000
-# Invoca o next direto (sem pnpm) — evita o pnpm tentar recriar node_modules /
-# baixar o corepack em runtime. next start respeita a env PORT (Railway injeta).
-CMD ["node_modules/.bin/next", "start"]
+# Standalone binda 127.0.0.1 por default — Railway precisa de 0.0.0.0. PORT é
+# injetado pelo Railway e respeitado pelo server.js.
+ENV HOSTNAME=0.0.0.0
+CMD ["node", "server.js"]

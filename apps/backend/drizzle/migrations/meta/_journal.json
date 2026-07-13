@@ -5,78 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1783241797150,
-      "tag": "0000_nifty_squadron_sinister",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1783241797151,
-      "tag": "0001_rls_policies",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1783241797152,
-      "tag": "0002_recurrences",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1783241797153,
-      "tag": "0003_user_onboarding",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1783241797154,
-      "tag": "0004_users_select_household_peers",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1783241797155,
-      "tag": "0005_scheduled_transaction_entries",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1783241797156,
-      "tag": "0006_budget_versioning",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1783241797157,
-      "tag": "0007_notification_dispatcher",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1783241797158,
-      "tag": "0008_household_timezone",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1783241797159,
-      "tag": "0009_billing_stripe_entitlements",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "7",
-      "when": 1783241797160,
-      "tag": "0010_billing_plan_catalog",
+      "when": 1783909806670,
+      "tag": "0000_baseline",
       "breakpoints": true
     }
   ]

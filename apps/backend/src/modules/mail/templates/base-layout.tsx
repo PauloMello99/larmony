@@ -41,7 +41,10 @@ export function BaseLayout({ preview, children }: BaseLayoutProps) {
               <Link href="mailto:suporte@larmony.me" style={footerLink}>
                 suporte@larmony.me
               </Link>
-              .
+              {" · "}
+              <Link href="https://larmony.me/legal/privacidade" style={footerLink}>
+                Política de Privacidade
+              </Link>
             </Text>
           </Section>
         </Container>

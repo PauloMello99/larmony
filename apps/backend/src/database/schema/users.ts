@@ -20,6 +20,11 @@ export const users = pgTable("users", {
     .$type<Record<string, number>>()
     .notNull()
     .default({}),
+  // Aceite dos Termos de Uso/Política de Privacidade (LGPD, accountability):
+  // gravado no sign-up com a versão vigente dos documentos. Nullable para
+  // contas anteriores à introdução do aceite (re-aceite fica p/ fase futura).
+  termsAcceptedAt: timestamp("terms_accepted_at", { withTimezone: true }),
+  termsVersion: text("terms_version"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
