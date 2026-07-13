@@ -27,7 +27,11 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  // 'wasm-unsafe-eval': o modelo 3D da landing (three.js/GLTF com decoder WASM)
+  // faz WebAssembly.instantiate, bloqueado por CSP sem esta diretiva. É o
+  // allowance CSP3 específico p/ WASM — não libera eval() de string como
+  // 'unsafe-eval' (que só entra em dev p/ o react-refresh/turbopack).
+  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
