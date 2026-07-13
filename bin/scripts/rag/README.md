@@ -83,11 +83,32 @@ IDs de chunk são determinísticos — reindexar sobrescreve em vez de duplicar.
 | `memory_search(query, k, memory_type, document, section, app, module, layer, include_code)` | Top-k seções-pai (hybrid + parent expansion) |
 | `memory_status()` | Coleção + nº de chunks por memory_type |
 
+## Avaliação (eval)
+
+`eval.py` mede a qualidade do retrieval contra um golden set
+(`eval/golden.jsonl`), pelo **mesmo caminho de produção**. É um baseline de
+regressão relativo (não nota absoluta). Ver `EVAL.md` para o baseline e a
+metodologia.
+
+```bash
+~/larmony-rag-venv/bin/python bin/scripts/rag/eval.py
+~/larmony-rag-venv/bin/python bin/scripts/rag/eval.py --json bin/scripts/rag/eval/results.json
+```
+
+Reporta hit-rate@k, MRR (k∈{3,5,8,10}) e ablação dense/sparse/hybrid/dbsf por
+categoria (semantic vs term) + sensibilidade do `RAG_MIN_SCORE`. Rode após mudar
+chunking/modelo/fusão para pegar regressão.
+
 ## Automação (hooks)
+
+Definidos em `.claude/settings.json` (compartilhado). O Qdrant é **um container
+compartilhado** entre projetos (ver `docker-compose.rag.yml`); cada projeto usa
+sua coleção.
 
 | Hook | Ação |
 |---|---|
-| SessionStart | reindex incremental em background (fire-and-forget) |
+| SessionStart | sobe o Qdrant (`docker compose up -d`) + reindex incremental em background |
+| Stop | reindex incremental em background no fim da sessão |
 | PostToolUse (Write/Edit em `.memory/`) | reindex incremental imediato |
 
 ## Variáveis de ambiente (overrides)
