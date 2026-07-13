@@ -60,9 +60,9 @@
   },
   "tour": {
     "kicker": "The product",
-    "title": "A dashboard the whole family understands",
-    "subtitle": "No financial jargon. Whoever joined the home yesterday reads the dashboard the same way the person who created it does.",
-    "sidebar": {
+    "title": "Explore what Larmony does",
+    "subtitle": "No financial jargon. Click through the tabs and see, in seconds, how each part works in your home's daily life.",
+    "tabs": {
       "overview": "Overview",
       "transactions": "Transactions",
       "categories": "Categories",
@@ -70,79 +70,145 @@
       "goals": "Goals",
       "bills": "Bills"
     },
-    "greeting": "Good morning, Paulo 👋",
-    "kpis": {
-      "income": "Income this month",
-      "expenses": "Expenses this month",
-      "balance": "Balance this month"
+    "overview": {
+      "greeting": "Good morning, Paulo 👋",
+      "kpis": {
+        "income": "Income this month",
+        "expenses": "Expenses this month",
+        "balance": "Balance this month"
+      },
+      "rows": {
+        "r1": "Salary — July",
+        "r2": "Grocery Store",
+        "r3": "Rent"
+      }
     },
-    "rows": {
-      "r1": { "label": "Salary — July", "who": "Ana", "amount": "+$6,200.00" },
-      "r2": { "label": "Grocery Store", "who": "Paulo", "amount": "-$342.10" },
-      "r3": { "label": "Rent", "who": "Ana", "amount": "-$1,850.00" }
+    "transactions": {
+      "title": "Recent entries",
+      "splitBadge": "50/50 split",
+      "rows": {
+        "r1": "Grocery Store",
+        "r2": "Internet",
+        "r3": "Salary — July",
+        "r4": "Rent"
+      }
+    },
+    "categories": {
+      "title": "Spending by category",
+      "items": {
+        "c1": "Housing",
+        "c2": "Food",
+        "c3": "Transportation",
+        "c4": "Leisure"
+      }
+    },
+    "budgets": {
+      "title": "This month's budgets",
+      "items": {
+        "b1": "Housing",
+        "b2": "Food",
+        "b3": "Transportation"
+      }
+    },
+    "goals": {
+      "title": "Savings goals",
+      "items": {
+        "g1": "End-of-year trip",
+        "g2": "Emergency fund"
+      }
+    },
+    "bills": {
+      "title": "Upcoming bills",
+      "items": {
+        "b1": { "label": "Rent", "due": "Due in 3 days" },
+        "b2": { "label": "Electricity", "due": "Due in 8 days" },
+        "b3": { "label": "Internet", "due": "Due in 12 days" }
+      }
     }
   },
   "about": {
     "kicker": "About Larmony",
-    "titlePrefix": "Built for people who",
-    "titleHighlight": "split household bills",
-    "paragraph": "Managing your home's finances shouldn't depend on scattered spreadsheets and lost notes. Larmony handles the tracking so you can focus on what really matters.",
-    "bullets": {
-      "b1": "An interface designed for the daily financial life of a home",
-      "b2": "Invite the people you live with to share the finances",
-      "b3": "Secure data with per-home isolation and automatic backups",
-      "b4": "No long-term contracts — cancel anytime"
+    "title": "From zero to in control in three steps",
+    "subtitle": "No spreadsheets, no mandatory bank connection. You set up the home, invite whoever splits the bills, and start tracking together.",
+    "steps": {
+      "s1": {
+        "title": "Create your home",
+        "desc": "In under a minute and with no card. A home is the space where your household finances live together."
+      },
+      "s2": {
+        "title": "Invite the people you live with",
+        "desc": "Each person joins with their own login. Everyone sees the same accounts, each in their own language."
+      },
+      "s3": {
+        "title": "Track together",
+        "desc": "Log expenses, split costs, and watch goals and budgets grow in real time."
+      }
     },
-    "stats": {
-      "cents": "Exact cents, no rounding",
-      "members": "Members per home",
-      "languages": "7 languages supported",
-      "rls": "Data isolated per home"
+    "diff": {
+      "title": "Why Larmony instead of a spreadsheet",
+      "d1": {
+        "title": "Truly multi-user",
+        "desc": "It's not a shared spreadsheet: each member has their own login, and the owner controls who joins and leaves the home."
+      },
+      "d2": {
+        "title": "Exact cents",
+        "desc": "Every amount is stored in whole cents — no rounding. If the bill came out to R$ 33,33 for each person, that's exactly what shows up."
+      },
+      "d3": {
+        "title": "Data isolated per home",
+        "desc": "Each home is isolated in the database (RLS): a member of one home can never see another home's data. No card data stored locally — payments run through Stripe."
+      }
+    },
+    "proof": {
+      "title": "The end of lost spreadsheets and \"who paid for what?\"",
+      "description": "A single source of truth, clear for the whole family — whoever joined yesterday reads the dashboard the same way the person who created it does."
     }
   },
   "pricing": {
     "kicker": "Pricing",
     "title": "Simple and transparent",
-    "subtitle": "No hidden fees. Cancel anytime.",
+    "subtitle": "Start free. Upgrade whenever you want more — no lock-in.",
+    "note": "You create your account for free and upgrade to Family inside the app, with secure payments processed by Stripe. Cancel anytime; Pro is coming soon.",
     "plans": {
-      "personal": {
-        "name": "Personal",
+      "free": {
+        "name": "Free",
         "price": "Free",
-        "description": "For anyone just getting started organizing their own finances.",
+        "period": "",
+        "description": "To organize your household finances without paying a thing.",
         "cta": "Get started free",
         "features": {
           "f1": "Unlimited transactions and categories",
-          "f2": "1 home",
-          "f3": "Budgets and goals",
-          "f4": "Bill reminders by email",
-          "f5": "Advanced reports",
-          "f6": "Multiple members in the home"
+          "f2": "Budgets and goals",
+          "f3": "Bill reminders by email",
+          "f4": "Multiple members and homes",
+          "f5": "Dashboard and monthly report"
         }
       },
       "family": {
         "name": "Family",
-        "price": "Free",
-        "description": "For anyone splitting household bills with other people.",
-        "cta": "Get started free",
+        "price": "R$ 14,90",
+        "period": "/mo",
         "badge": "Recommended",
+        "description": "For anyone who wants advanced reports and to support the project.",
+        "cta": "Subscribe to Family",
         "features": {
-          "f1": "Unlimited transactions and categories",
-          "f2": "Unlimited members in the home",
-          "f3": "Budgets and goals",
-          "f4": "Bill reminders by email",
-          "f5": "Advanced reports",
-          "f6": "Multiple homes"
+          "f1": "Everything in the Free plan",
+          "f2": "Advanced reports — annual and comparative",
+          "f3": "New premium features as they launch",
+          "f4": "Support the development of Larmony"
         }
       },
-      "soon": {
-        "name": "Coming soon",
+      "pro": {
+        "name": "Pro",
         "price": "TBD",
+        "period": "",
+        "badge": "Coming soon",
         "description": "Advanced features for anyone who needs more control.",
-        "cta": "Join the waitlist",
+        "cta": "Coming soon",
         "features": {
-          "f1": "Report exports",
-          "f2": "Open Finance integration",
-          "f3": "Custom automations",
+          "f1": "Open Finance integration",
+          "f2": "Custom automations",
+          "f3": "Advanced report exports",
           "f4": "Priority support"
         }
       }
@@ -153,22 +219,26 @@
     "title": "Frequently asked questions",
     "items": {
       "q1": {
-        "question": "How many people can join a home?",
-        "answer": "As many as you want. Each person has their own login and password, and the home's owner controls who joins and who leaves — built for couples, families, and roommates."
+        "question": "Is Larmony free?",
+        "answer": "Yes. The Free plan covers your home's day-to-day at no cost. The Family plan (R$ 14,90/month) unlocks advanced reports and helps keep the project going — but you don't need it to get started."
       },
       "q2": {
-        "question": "Is my financial data secure?",
-        "answer": "Yes. Each home is isolated in the database — a member of one home can never see another home's data. Your password is encrypted, and we run automatic backups."
+        "question": "What comes with the Family plan?",
+        "answer": "Today, the advanced reports (annual view and comparisons). And as new premium features launch, they're included in Family at no extra cost. No lock-in."
       },
       "q3": {
-        "question": "Do I need to connect my bank account?",
-        "answer": "No. Larmony works with manual entries and automatic recurrences — you control exactly what goes in. Open Finance integration is on the roadmap."
+        "question": "Can I cancel anytime?",
+        "answer": "Yes. Your subscription is managed through Stripe's secure portal, with no penalty. You keep Family access until the end of the cycle you've already paid for, then return to Free."
       },
       "q4": {
-        "question": "Does Larmony round amounts?",
-        "answer": "Never. Every amount is stored in exact cents — if the bill came out to $33.33 for each person, that's exactly what shows up. Precision is a core principle of the product."
+        "question": "Do I need to connect my bank account?",
+        "answer": "No. Larmony works with manual entries and automatic recurrences — you control exactly what goes in. Open Finance integration is on the roadmap (Pro plan)."
       },
       "q5": {
+        "question": "Is my financial data secure?",
+        "answer": "Yes. Each home is isolated in the database (RLS) — a member of one home can never see another home's data. Your password is encrypted, and payments are processed by Stripe, with no card data stored in Larmony."
+      },
+      "q6": {
         "question": "Does it work in other languages?",
         "answer": "Yes — Larmony is available in 7 languages (Portuguese, English, Spanish, Chinese, German, French, and Japanese). Each person chooses their own language and sees the same home translated, including reminder emails."
       }
@@ -188,17 +258,8 @@
         "links": {
           "features": "Features",
           "pricing": "Pricing",
-          "changelog": "Changelog",
-          "roadmap": "Roadmap"
-        }
-      },
-      "company": {
-        "title": "Company",
-        "links": {
           "about": "About",
-          "blog": "Blog",
-          "careers": "Careers",
-          "press": "Press"
+          "faq": "FAQ"
         }
       },
       "legal": {

@@ -24,7 +24,7 @@
       "membersLine1": "membres",
       "membersLine2": "par foyer",
       "languagesLine1": "langues",
-      "languagesLine2": "dont portugais, anglais"
+      "languagesLine2": "dont anglais, espagnol"
     }
   },
   "features": {
@@ -60,9 +60,9 @@
   },
   "tour": {
     "kicker": "Le produit",
-    "title": "Un tableau de bord que toute la famille comprend",
-    "subtitle": "Sans jargon financier. Celui qui vient d’arriver dans le foyer lit le tableau de bord de la même façon que celui qui l’a créé.",
-    "sidebar": {
+    "title": "Navigue dans tout ce que Larmony fait",
+    "subtitle": "Sans jargon financier. Clique sur les onglets et vois, en quelques secondes, comment chaque partie fonctionne au quotidien du foyer.",
+    "tabs": {
       "overview": "Vue d’ensemble",
       "transactions": "Transactions",
       "categories": "Catégories",
@@ -70,79 +70,145 @@
       "goals": "Objectifs",
       "bills": "Factures"
     },
-    "greeting": "Bonjour, Paulo 👋",
-    "kpis": {
-      "income": "Revenus du mois",
-      "expenses": "Dépenses du mois",
-      "balance": "Solde du mois"
+    "overview": {
+      "greeting": "Bonjour, Paulo 👋",
+      "kpis": {
+        "income": "Revenus du mois",
+        "expenses": "Dépenses du mois",
+        "balance": "Solde du mois"
+      },
+      "rows": {
+        "r1": "Salaire — Juillet",
+        "r2": "Supermarché Extra",
+        "r3": "Loyer"
+      }
     },
-    "rows": {
-      "r1": { "label": "Salaire — Juillet", "who": "Ana", "amount": "+930,00 €" },
-      "r2": { "label": "Supermarché Extra", "who": "Paulo", "amount": "-51,30 €" },
-      "r3": { "label": "Loyer", "who": "Ana", "amount": "-277,50 €" }
+    "transactions": {
+      "title": "Écritures récentes",
+      "splitBadge": "Répartition 50/50",
+      "rows": {
+        "r1": "Supermarché Extra",
+        "r2": "Internet",
+        "r3": "Salaire — Juillet",
+        "r4": "Loyer"
+      }
+    },
+    "categories": {
+      "title": "Dépenses par catégorie",
+      "items": {
+        "c1": "Logement",
+        "c2": "Alimentation",
+        "c3": "Transport",
+        "c4": "Loisirs"
+      }
+    },
+    "budgets": {
+      "title": "Budgets du mois",
+      "items": {
+        "b1": "Logement",
+        "b2": "Alimentation",
+        "b3": "Transport"
+      }
+    },
+    "goals": {
+      "title": "Objectifs d’épargne",
+      "items": {
+        "g1": "Voyage de fin d’année",
+        "g2": "Épargne de précaution"
+      }
+    },
+    "bills": {
+      "title": "Prochaines factures",
+      "items": {
+        "b1": { "label": "Loyer", "due": "Échéance dans 3 jours" },
+        "b2": { "label": "Électricité", "due": "Échéance dans 8 jours" },
+        "b3": { "label": "Internet", "due": "Échéance dans 12 jours" }
+      }
     }
   },
   "about": {
     "kicker": "À propos de Larmony",
-    "titlePrefix": "Fait pour celles et ceux qui",
-    "titleHighlight": "partagent les comptes de la maison",
-    "paragraph": "Organiser les finances du foyer ne devrait pas dépendre de tableurs éparpillés et de notes perdues. Larmony s’occupe du suivi pour que tu te concentres sur l’essentiel.",
-    "bullets": {
-      "b1": "Interface conçue pour le quotidien financier d’une maison",
-      "b2": "Invite celles et ceux qui vivent avec toi pour partager les finances",
-      "b3": "Données sécurisées avec isolation par foyer et sauvegardes automatiques",
-      "b4": "Pas d’engagement de longue durée — résilie quand tu veux"
+    "title": "Du zéro au contrôle en trois étapes",
+    "subtitle": "Sans tableur, sans connexion bancaire obligatoire. Tu crées le foyer, tu invites celles et ceux qui partagent les comptes et vous commencez à suivre ensemble.",
+    "steps": {
+      "s1": {
+        "title": "Crée ton foyer",
+        "desc": "En moins d’une minute et sans carte. Le foyer est l’espace où les finances de la maison sont réunies."
+      },
+      "s2": {
+        "title": "Invite celles et ceux qui vivent avec toi",
+        "desc": "Chaque personne entre avec son propre identifiant. Tout le monde voit les mêmes comptes, chacun dans sa langue."
+      },
+      "s3": {
+        "title": "Suivez ensemble",
+        "desc": "Saisissez les dépenses, répartissez les frais et voyez objectifs et budgets évoluer en temps réel."
+      }
     },
-    "stats": {
-      "cents": "Centimes exacts, sans arrondi",
-      "members": "Membres par foyer",
-      "languages": "7 langues disponibles",
-      "rls": "Données isolées par foyer"
+    "diff": {
+      "title": "Pourquoi Larmony plutôt qu’un tableur",
+      "d1": {
+        "title": "Multi-utilisateur pour de vrai",
+        "desc": "Ce n’est pas un tableur partagé : chaque membre a son propre identifiant et le propriétaire contrôle qui entre et qui sort du foyer."
+      },
+      "d2": {
+        "title": "Centimes exacts",
+        "desc": "Chaque montant est stocké en centimes entiers — sans arrondi. Si le compte donne R$ 33,33 pour chacun, c’est exactement ce qui s’affiche."
+      },
+      "d3": {
+        "title": "Données isolées par foyer",
+        "desc": "Chaque foyer est isolé dans la base (RLS) : un membre d’un foyer ne voit jamais les données d’un autre. Aucune donnée PCI en local — paiement via Stripe."
+      }
+    },
+    "proof": {
+      "title": "La fin des tableurs perdus et du « qui a payé quoi ? »",
+      "description": "Une source unique, claire pour toute la famille — celui qui est arrivé hier lit le tableau de bord de la même façon que celui qui l’a créé."
     }
   },
   "pricing": {
     "kicker": "Tarifs",
     "title": "Simple et transparent",
-    "subtitle": "Sans frais cachés. Résilie quand tu veux.",
+    "subtitle": "Commence gratuitement. Passe à l’offre supérieure quand tu veux plus — sans engagement.",
+    "note": "Tu crées ton compte gratuitement et tu passes à Family dans l’app, avec un paiement sécurisé traité par Stripe. Résilie quand tu veux ; Pro arrive bientôt.",
     "plans": {
-      "personal": {
-        "name": "Personnel",
+      "free": {
+        "name": "Free",
         "price": "Gratuit",
-        "description": "Pour celles et ceux qui débutent dans l’organisation de leurs propres finances.",
+        "period": "",
+        "description": "Pour organiser les finances de la maison sans rien payer.",
         "cta": "Commencer gratuitement",
         "features": {
           "f1": "Transactions et catégories illimitées",
-          "f2": "1 foyer",
-          "f3": "Budgets et objectifs",
-          "f4": "Rappels de factures par e-mail",
-          "f5": "Rapports avancés",
-          "f6": "Plusieurs membres dans le foyer"
+          "f2": "Budgets et objectifs",
+          "f3": "Rappels de factures par e-mail",
+          "f4": "Plusieurs membres et foyers",
+          "f5": "Tableau de bord et rapport mensuel"
         }
       },
       "family": {
-        "name": "Famille",
-        "price": "Gratuit",
-        "description": "Pour celles et ceux qui partagent les comptes de la maison avec d’autres personnes.",
-        "cta": "Commencer gratuitement",
+        "name": "Family",
+        "price": "R$ 14,90",
+        "period": "/mois",
         "badge": "Recommandé",
+        "description": "Pour celles et ceux qui veulent des rapports avancés et soutenir le projet.",
+        "cta": "S’abonner à Family",
         "features": {
-          "f1": "Transactions et catégories illimitées",
-          "f2": "Membres illimités dans le foyer",
-          "f3": "Budgets et objectifs",
-          "f4": "Rappels de factures par e-mail",
-          "f5": "Rapports avancés",
-          "f6": "Plusieurs foyers"
+          "f1": "Tout le plan Free",
+          "f2": "Rapports avancés — annuels et comparatifs",
+          "f3": "Nouvelles fonctionnalités premium au fil des sorties",
+          "f4": "Soutiens le développement de Larmony"
         }
       },
-      "soon": {
-        "name": "Bientôt",
+      "pro": {
+        "name": "Pro",
         "price": "À définir",
+        "period": "",
+        "badge": "Bientôt",
         "description": "Fonctionnalités avancées pour celles et ceux qui ont besoin de plus de contrôle.",
-        "cta": "Rejoindre la liste d’attente",
+        "cta": "Bientôt",
         "features": {
-          "f1": "Export des rapports",
-          "f2": "Intégration Open Banking",
-          "f3": "Automatisations personnalisées",
+          "f1": "Intégration Open Finance",
+          "f2": "Automatisations personnalisées",
+          "f3": "Export avancé des rapports",
           "f4": "Support prioritaire"
         }
       }
@@ -153,23 +219,27 @@
     "title": "Questions fréquentes",
     "items": {
       "q1": {
-        "question": "Combien de personnes peuvent participer à un foyer ?",
-        "answer": "Autant que tu veux. Chaque personne a son propre identifiant et mot de passe, et le propriétaire du foyer contrôle qui entre et qui sort — pensé pour les couples, les familles et les colocations."
+        "question": "Larmony est-il gratuit ?",
+        "answer": "Oui. Le plan Free couvre le quotidien du foyer sans frais. Le plan Family (R$ 14,90/mois) débloque les rapports avancés et aide à faire vivre le projet — mais tu n’en as pas besoin pour commencer."
       },
       "q2": {
-        "question": "Mes données financières sont-elles en sécurité ?",
-        "answer": "Oui. Chaque foyer est isolé dans la base de données — un membre d’un foyer ne voit jamais les données d’un autre. Ton mot de passe est chiffré et nous effectuons des sauvegardes automatiques."
+        "question": "Qu’est-ce qui est inclus dans le plan Family ?",
+        "answer": "Aujourd’hui, les rapports avancés (vue annuelle et comparatifs). Et au fur et à mesure que de nouvelles fonctionnalités premium sortent, elles entrent dans Family sans coût supplémentaire. Sans engagement."
       },
       "q3": {
-        "question": "Dois-je connecter mon compte bancaire ?",
-        "answer": "Non. Larmony fonctionne avec des transactions manuelles et des récurrences automatiques — tu contrôles exactement ce qui entre. L’intégration Open Banking est sur la feuille de route."
+        "question": "Puis-je résilier quand je veux ?",
+        "answer": "Oui. L’abonnement est géré via le portail sécurisé de Stripe, sans pénalité. Tu conserves l’accès Family jusqu’à la fin du cycle déjà payé, puis tu reviens à Free."
       },
       "q4": {
-        "question": "Larmony arrondit-il les montants ?",
-        "answer": "Jamais. Chaque montant est stocké en centimes exacts — si le compte donne 33,33 € pour chacun, c’est exactement ce qui s’affiche. La précision est un principe du produit."
+        "question": "Dois-je connecter mon compte bancaire ?",
+        "answer": "Non. Larmony fonctionne avec des saisies manuelles et des récurrences automatiques — tu contrôles exactement ce qui entre. L’intégration Open Finance est sur la feuille de route (plan Pro)."
       },
       "q5": {
-        "question": "Fonctionne-t-il dans d'autres langues ?",
+        "question": "Mes données financières sont-elles en sécurité ?",
+        "answer": "Oui. Chaque foyer est isolé dans la base de données (RLS) — un membre d’un foyer ne voit jamais les données d’un autre. Ton mot de passe est chiffré et le paiement est traité par Stripe, sans aucune donnée de carte dans Larmony."
+      },
+      "q6": {
+        "question": "Fonctionne-t-il dans d’autres langues ?",
         "answer": "Oui — Larmony est disponible en 7 langues (portugais, anglais, espagnol, chinois, allemand, français et japonais). Chaque personne choisit sa propre langue et voit le même foyer traduit, y compris les e-mails de rappel."
       }
     }
@@ -188,17 +258,8 @@
         "links": {
           "features": "Fonctionnalités",
           "pricing": "Tarifs",
-          "changelog": "Journal des modifications",
-          "roadmap": "Feuille de route"
-        }
-      },
-      "company": {
-        "title": "Entreprise",
-        "links": {
           "about": "À propos",
-          "blog": "Blog",
-          "careers": "Carrières",
-          "press": "Presse"
+          "faq": "FAQ"
         }
       },
       "legal": {

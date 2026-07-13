@@ -8,7 +8,7 @@ import { SectionHeading } from "./section-heading"
 import { Reveal } from "./reveal"
 
 // Sufixos das chaves em `faq.items.<qN>` (indexadas p/ o checker de sync de locales).
-const FAQ_ITEMS = ["q1", "q2", "q3", "q4", "q5"]
+const FAQ_ITEMS = ["q1", "q2", "q3", "q4", "q5", "q6"]
 
 export function Faq() {
   const { t } = useTranslation("landing")

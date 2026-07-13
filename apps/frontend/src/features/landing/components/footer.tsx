@@ -9,17 +9,8 @@ const FOOTER_SECTIONS = [
     links: [
       { key: "features", href: "#recursos" },
       { key: "pricing", href: "#precos" },
-      { key: "changelog", href: "#" },
-      { key: "roadmap", href: "#" },
-    ],
-  },
-  {
-    key: "company",
-    links: [
       { key: "about", href: "#sobre" },
-      { key: "blog", href: "#" },
-      { key: "careers", href: "#" },
-      { key: "press", href: "#" },
+      { key: "faq", href: "#faq" },
     ],
   },
   {
@@ -39,7 +30,7 @@ export function Footer() {
   return (
     <footer className="border-t border-white/[0.07] bg-[#0d0d0f]">
       <div className="mx-auto max-w-7xl px-4 pb-10 pt-14 sm:px-6">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-[2fr_1fr_1fr_1fr]">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-[2fr_1fr_1fr]">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link

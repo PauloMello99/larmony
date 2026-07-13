@@ -60,9 +60,9 @@
   },
   "tour": {
     "kicker": "O produto",
-    "title": "Um painel que a família toda entende",
-    "subtitle": "Sem jargão financeiro. Quem entrou ontem no lar lê o painel do mesmo jeito que quem o criou.",
-    "sidebar": {
+    "title": "Navegue pelo que o Larmony faz",
+    "subtitle": "Sem jargão financeiro. Clique nas abas e veja, em segundos, como cada parte funciona no dia a dia do lar.",
+    "tabs": {
       "overview": "Visão geral",
       "transactions": "Transações",
       "categories": "Categorias",
@@ -70,79 +70,145 @@
       "goals": "Metas",
       "bills": "Contas"
     },
-    "greeting": "Bom dia, Paulo 👋",
-    "kpis": {
-      "income": "Receitas do mês",
-      "expenses": "Despesas do mês",
-      "balance": "Saldo do mês"
+    "overview": {
+      "greeting": "Bom dia, Paulo 👋",
+      "kpis": {
+        "income": "Receitas do mês",
+        "expenses": "Despesas do mês",
+        "balance": "Saldo do mês"
+      },
+      "rows": {
+        "r1": "Salário — Julho",
+        "r2": "Supermercado Extra",
+        "r3": "Aluguel"
+      }
     },
-    "rows": {
-      "r1": { "label": "Salário — Julho", "who": "Ana", "amount": "+R$ 6.200,00" },
-      "r2": { "label": "Supermercado Extra", "who": "Paulo", "amount": "-R$ 342,10" },
-      "r3": { "label": "Aluguel", "who": "Ana", "amount": "-R$ 1.850,00" }
+    "transactions": {
+      "title": "Lançamentos recentes",
+      "splitBadge": "Rateio 50/50",
+      "rows": {
+        "r1": "Supermercado Extra",
+        "r2": "Internet",
+        "r3": "Salário — Julho",
+        "r4": "Aluguel"
+      }
+    },
+    "categories": {
+      "title": "Gastos por categoria",
+      "items": {
+        "c1": "Moradia",
+        "c2": "Alimentação",
+        "c3": "Transporte",
+        "c4": "Lazer"
+      }
+    },
+    "budgets": {
+      "title": "Orçamentos do mês",
+      "items": {
+        "b1": "Moradia",
+        "b2": "Alimentação",
+        "b3": "Transporte"
+      }
+    },
+    "goals": {
+      "title": "Metas de economia",
+      "items": {
+        "g1": "Viagem de fim de ano",
+        "g2": "Reserva de emergência"
+      }
+    },
+    "bills": {
+      "title": "Próximas contas",
+      "items": {
+        "b1": { "label": "Aluguel", "due": "Vence em 3 dias" },
+        "b2": { "label": "Energia", "due": "Vence em 8 dias" },
+        "b3": { "label": "Internet", "due": "Vence em 12 dias" }
+      }
     }
   },
   "about": {
     "kicker": "Sobre o Larmony",
-    "titlePrefix": "Feito para quem",
-    "titleHighlight": "divide as contas de casa",
-    "paragraph": "Organizar as finanças do lar não deveria depender de planilhas soltas e anotações perdidas. O Larmony cuida do controle para você focar no que realmente importa.",
-    "bullets": {
-      "b1": "Interface projetada para o dia a dia financeiro de uma casa",
-      "b2": "Convide quem mora com você para dividir as finanças",
-      "b3": "Dados seguros com isolamento por lar e backups automáticos",
-      "b4": "Sem contratos de longo prazo — cancele quando quiser"
+    "title": "Do zero ao controle em três passos",
+    "subtitle": "Sem planilha, sem conexão bancária obrigatória. Você monta o lar, convida quem divide as contas e começa a acompanhar junto.",
+    "steps": {
+      "s1": {
+        "title": "Crie o seu lar",
+        "desc": "Em menos de um minuto e sem cartão. O lar é o espaço onde as finanças da casa ficam reunidas."
+      },
+      "s2": {
+        "title": "Convide quem mora com você",
+        "desc": "Cada pessoa entra com o próprio login. Todos veem as mesmas contas, cada um no seu idioma."
+      },
+      "s3": {
+        "title": "Acompanhem juntos",
+        "desc": "Lancem despesas, dividam os gastos e vejam metas e orçamentos evoluírem em tempo real."
+      }
     },
-    "stats": {
-      "cents": "Centavos exatos, sem arredondamento",
-      "members": "Membros por lar",
-      "languages": "7 idiomas suportados",
-      "rls": "Dados isolados por lar"
+    "diff": {
+      "title": "Por que o Larmony e não uma planilha",
+      "d1": {
+        "title": "Multiusuário de verdade",
+        "desc": "Não é uma planilha compartilhada: cada membro tem login próprio e o dono controla quem entra e sai do lar."
+      },
+      "d2": {
+        "title": "Centavos exatos",
+        "desc": "Todo valor é guardado em centavos inteiros — sem arredondamento. Se a conta deu R$ 33,33 para cada um, é isso que aparece."
+      },
+      "d3": {
+        "title": "Dados isolados por lar",
+        "desc": "Cada lar é isolado no banco (RLS): um membro de um lar jamais enxerga os dados de outro. Sem PCI local — pagamento pelo Stripe."
+      }
+    },
+    "proof": {
+      "title": "O fim das planilhas perdidas e do \"quem pagou o quê?\"",
+      "description": "Uma fonte única, clara para a família toda — quem entrou ontem lê o painel do mesmo jeito que quem o criou."
     }
   },
   "pricing": {
     "kicker": "Preços",
     "title": "Simples e transparente",
-    "subtitle": "Sem taxas escondidas. Cancele quando quiser.",
+    "subtitle": "Comece grátis. Faça upgrade quando quiser mais — sem fidelidade.",
+    "note": "Você cria a conta grátis e faz o upgrade para o Family dentro do app, com pagamento seguro processado pelo Stripe. Cancele quando quiser; o Pro chega em breve.",
     "plans": {
-      "personal": {
-        "name": "Pessoal",
+      "free": {
+        "name": "Free",
         "price": "Grátis",
-        "description": "Para quem está começando a organizar as próprias finanças.",
+        "period": "",
+        "description": "Para organizar as finanças da casa sem pagar nada.",
         "cta": "Começar grátis",
         "features": {
           "f1": "Transações e categorias ilimitadas",
-          "f2": "1 lar",
-          "f3": "Orçamentos e metas",
-          "f4": "Lembretes de contas por e-mail",
-          "f5": "Relatórios avançados",
-          "f6": "Múltiplos membros no lar"
+          "f2": "Orçamentos e metas",
+          "f3": "Lembretes de contas por e-mail",
+          "f4": "Múltiplos membros e lares",
+          "f5": "Dashboard e relatório mensal"
         }
       },
       "family": {
-        "name": "Família",
-        "price": "Grátis",
-        "description": "Para quem divide as contas da casa com outras pessoas.",
-        "cta": "Começar grátis",
+        "name": "Family",
+        "price": "R$ 14,90",
+        "period": "/mês",
         "badge": "Recomendado",
+        "description": "Para quem quer relatórios avançados e apoiar o projeto.",
+        "cta": "Assinar Family",
         "features": {
-          "f1": "Transações e categorias ilimitadas",
-          "f2": "Membros ilimitados no lar",
-          "f3": "Orçamentos e metas",
-          "f4": "Lembretes de contas por e-mail",
-          "f5": "Relatórios avançados",
-          "f6": "Múltiplos lares"
+          "f1": "Tudo do plano Free",
+          "f2": "Relatórios avançados — anual e comparativos",
+          "f3": "Novos recursos premium conforme lançam",
+          "f4": "Apoie o desenvolvimento do Larmony"
         }
       },
-      "soon": {
-        "name": "Em breve",
+      "pro": {
+        "name": "Pro",
         "price": "A definir",
+        "period": "",
+        "badge": "Em breve",
         "description": "Recursos avançados para quem precisa de mais controle.",
-        "cta": "Entrar na lista de espera",
+        "cta": "Em breve",
         "features": {
-          "f1": "Exportação de relatórios",
-          "f2": "Integração com Open Finance",
-          "f3": "Automações personalizadas",
+          "f1": "Integração com Open Finance",
+          "f2": "Automações personalizadas",
+          "f3": "Exportação avançada de relatórios",
           "f4": "Suporte prioritário"
         }
       }
@@ -153,22 +219,26 @@
     "title": "Perguntas frequentes",
     "items": {
       "q1": {
-        "question": "Quantas pessoas podem participar de um lar?",
-        "answer": "Quantas você quiser. Cada pessoa tem o próprio login e senha, e o dono do lar controla quem entra e quem sai — pensado para casais, famílias e repúblicas."
+        "question": "O Larmony é gratuito?",
+        "answer": "Sim. O plano Free cobre o dia a dia do lar sem custo. O plano Family (R$ 14,90/mês) desbloqueia os relatórios avançados e ajuda a manter o projeto — mas você não precisa dele para começar."
       },
       "q2": {
-        "question": "Meus dados financeiros estão seguros?",
-        "answer": "Sim. Cada lar é isolado no banco de dados — um membro de um lar jamais enxerga dados de outro. Sua senha é criptografada e fazemos backups automáticos."
+        "question": "O que vem no plano Family?",
+        "answer": "Hoje, os relatórios avançados (visão anual e comparativos). E, conforme novos recursos premium são lançados, eles já entram no Family sem custo adicional. Sem fidelidade."
       },
       "q3": {
-        "question": "Preciso conectar minha conta bancária?",
-        "answer": "Não. O Larmony funciona com lançamentos manuais e recorrências automáticas — você controla exatamente o que entra. Integração com Open Finance está no roadmap."
+        "question": "Posso cancelar quando quiser?",
+        "answer": "Sim. A assinatura é gerenciada pelo portal seguro do Stripe, sem multa. Você mantém o acesso Family até o fim do ciclo já pago e depois volta ao Free."
       },
       "q4": {
-        "question": "O Larmony arredonda valores?",
-        "answer": "Nunca. Todo valor é armazenado em centavos exatos — se a conta deu R$ 33,33 para cada um, é isso que aparece. Precisão é um princípio do produto."
+        "question": "Preciso conectar minha conta bancária?",
+        "answer": "Não. O Larmony funciona com lançamentos manuais e recorrências automáticas — você controla exatamente o que entra. A integração com Open Finance está no roadmap (plano Pro)."
       },
       "q5": {
+        "question": "Meus dados financeiros estão seguros?",
+        "answer": "Sim. Cada lar é isolado no banco de dados (RLS) — um membro de um lar jamais enxerga dados de outro. Sua senha é criptografada e o pagamento é processado pelo Stripe, sem dados de cartão no Larmony."
+      },
+      "q6": {
         "question": "Funciona em outros idiomas?",
         "answer": "Sim — o Larmony está disponível em 7 idiomas (português, inglês, espanhol, chinês, alemão, francês e japonês). Cada pessoa escolhe o próprio idioma e vê o mesmo lar traduzido, incluindo e-mails de lembrete."
       }
@@ -188,17 +258,8 @@
         "links": {
           "features": "Recursos",
           "pricing": "Preços",
-          "changelog": "Changelog",
-          "roadmap": "Roadmap"
-        }
-      },
-      "company": {
-        "title": "Empresa",
-        "links": {
           "about": "Sobre",
-          "blog": "Blog",
-          "careers": "Carreiras",
-          "press": "Imprensa"
+          "faq": "FAQ"
         }
       },
       "legal": {
