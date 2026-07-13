@@ -87,7 +87,7 @@ export function CategoryList({ categories, onEdit, onDelete }: CategoryListProps
   return (
     <>
       {/* Desktop table */}
-      <div className="hidden overflow-hidden rounded-lg border border-foreground/10 sm:block">
+      <div className="hidden overflow-hidden rounded-lg border border-foreground/[0.07] sm:block">
         <Table>
           <TableHeader>
             <TableRow className="bg-foreground/[0.02] hover:bg-transparent">
@@ -140,7 +140,7 @@ export function CategoryList({ categories, onEdit, onDelete }: CategoryListProps
         {categories.map((category) => (
           <div
             key={category.id}
-            className="flex items-center gap-3 rounded-lg border border-foreground/10 bg-foreground/[0.02] p-3"
+            className="flex items-center gap-3 rounded-lg border border-foreground/[0.07] bg-foreground/[0.03] p-3"
           >
             <CategoryIcon category={category} />
             <div className="min-w-0 flex-1">

@@ -5,43 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1783241797150,
-      "tag": "0000_nifty_squadron_sinister",
+      "when": 1783909806670,
+      "tag": "0000_baseline",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1783241797151,
-      "tag": "0001_rls_policies",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1783241797152,
-      "tag": "0002_recurrences",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1783241797153,
-      "tag": "0003_user_onboarding",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1783241797154,
-      "tag": "0004_users_select_household_peers",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1783241797155,
-      "tag": "0005_scheduled_transaction_entries",
+      "when": 1784090000000,
+      "tag": "0001_locale_tags",
       "breakpoints": true
     }
   ]

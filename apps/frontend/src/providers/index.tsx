@@ -11,14 +11,9 @@ interface AppProvidersProps {
 
 export function AppProviders({ children }: AppProvidersProps) {
   return (
-    // Tema via classe `.dark`/`.light` no <html> (next-themes). Default dark
-    // preserva a aparência atual; `system` segue a preferência do SO. THEME-1.
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      enableSystem
-      disableTransitionOnChange
-    >
+    // Tema dark-only (decisão do Design System 2026-07-10): `forcedTheme`
+    // mantém a classe `.dark` no <html> sem toggle nem preferência do SO.
+    <ThemeProvider attribute="class" forcedTheme="dark" disableTransitionOnChange>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <TooltipProvider>{children}</TooltipProvider>

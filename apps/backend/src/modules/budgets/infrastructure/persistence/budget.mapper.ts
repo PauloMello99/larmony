@@ -4,9 +4,7 @@ interface BudgetRow {
   id: string;
   householdId: string;
   categoryId: string;
-  month: number;
-  year: number;
-  amountCents: number;
+  endedFrom: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,9 +15,7 @@ export class BudgetMapper {
       id: row.id,
       householdId: row.householdId,
       categoryId: row.categoryId,
-      month: row.month,
-      year: row.year,
-      amountCents: row.amountCents,
+      endedFrom: row.endedFrom,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
     });

@@ -1,32 +1,38 @@
 import { Button, Heading, Section, Text } from "@react-email/components";
 import { BaseLayout, sharedStyles } from "./base-layout";
+import { mailMessages } from "../i18n/mail-messages";
 
 export interface NotificationEmailProps {
   title: string;
   body?: string | null;
-  /** CTA opcional (ex.: link para o agendamento / estoque). */
+  /** CTA opcional (ex.: link para lançamentos / orçamentos). */
   actionUrl?: string;
   actionLabel?: string;
+  /** Locale do destinatário (ADR-0018) — title/body já chegam renderizados
+   * pelo catálogo de notificações; aqui localiza o chrome (layout + CTA default). */
+  locale?: string | null;
 }
 
 /**
  * Template genérico usado por todas as notificações disparadas pelo
- * NotificationService (lembrete de agenda, conferência de estoque, etc.).
+ * NotificationService (metas, orçamentos, lançamentos, relatório mensal).
  */
 export function NotificationEmail({
   title,
   body,
   actionUrl,
   actionLabel,
+  locale,
 }: NotificationEmailProps) {
+  const m = mailMessages(locale);
   return (
-    <BaseLayout preview={title}>
+    <BaseLayout preview={title} locale={locale}>
       <Heading style={sharedStyles.heading}>{title}</Heading>
       {body ? <Text style={sharedStyles.paragraph}>{body}</Text> : null}
       {actionUrl ? (
         <Section style={{ textAlign: "center", margin: "24px 0" }}>
           <Button href={actionUrl} style={sharedStyles.button}>
-            {actionLabel ?? "Ver detalhes"}
+            {actionLabel ?? m.notification.defaultActionLabel}
           </Button>
         </Section>
       ) : null}
@@ -38,10 +44,10 @@ export function NotificationEmail({
 export default function NotificationEmailPreview() {
   return (
     <NotificationEmail
-      title="Hora de conferir o estoque"
-      body="Já se passaram 30 dias desde a última conferência de estoque."
+      title="Orçamento de Lazer estourado"
+      body="Gasto de R$ 290,33 superou o limite de R$ 250,00."
       actionUrl="https://app.larmony.me/households"
-      actionLabel="Conferir estoque"
+      actionLabel="Ver orçamentos"
     />
   );
 }

@@ -1,0 +1,89 @@
+{
+  "page": {
+    "title": "定期取引",
+    "subtitle": "繰り返し発生する請求や取引 — 手動記帳、またはLarmonyによる自動生成",
+    "newEntry": "新規定期取引",
+    "empty": "定期取引が登録されていません。",
+    "createEntry": "定期取引を作成"
+  },
+  "form": {
+    "createTitle": "新規定期取引",
+    "editTitle": "定期取引を編集",
+    "description": "周期を設定し、Larmonyによる自動記帳か、自分で確認して記帳するかを選択します。",
+    "postingModeLabel": "自動記帳",
+    "postingModeAutoHint": "各回の期日にLarmonyが自動で取引を生成します。",
+    "postingModeManualHint": "リマインダーを受け取り、好きなタイミングで自分で記帳します。",
+    "typeLabel": "種類",
+    "typeExpense": "支出",
+    "typeIncome": "収入",
+    "amountLabel": "金額",
+    "descriptionLabel": "説明",
+    "descriptionPlaceholder": "例: 家賃、給与、インターネット",
+    "frequencyLabel": "頻度",
+    "intervalLabel": "間隔",
+    "startLabel": "開始日",
+    "startImmutable": "{{date}}(変更不可)",
+    "startPlaceholder": "初回の日付",
+    "endLabel": "終了日(任意)",
+    "endPlaceholder": "終了日なし",
+    "clear": "クリア",
+    "categoryLabel": "カテゴリー",
+    "categoryPlaceholder": "カテゴリーなし",
+    "reminderLabel": "リマインダー",
+    "reminderNone": "リマインダーなし",
+    "reminderDaysBefore_one": "{{count}}日前",
+    "reminderDaysBefore_other": "{{count}}日前",
+    "activeLabel": "有効な定期取引",
+    "notesLabel": "メモ",
+    "notesPlaceholder": "任意の備考",
+    "saving": "保存中…",
+    "saveChanges": "変更を保存",
+    "create": "定期取引を作成"
+  },
+  "list": {
+    "headerDescription": "説明",
+    "headerCadence": "周期",
+    "headerAmount": "金額",
+    "headerActive": "有効"
+  },
+  "row": {
+    "dueToday": "本日期限",
+    "dueTomorrow": "明日期限",
+    "dueInDays_one": "あと{{count}}日で期限",
+    "dueInDays_other": "あと{{count}}日で期限",
+    "next": "次回 {{date}}",
+    "inactive": "無効",
+    "activateAria": "定期取引を有効化",
+    "deactivateAria": "定期取引を無効化",
+    "launchAsTransaction": "取引として記帳"
+  },
+  "deleteDialog": {
+    "title": "定期取引を削除",
+    "descriptionManual": "<span>{{description}}</span>を削除してもよろしいですか?すでに記帳済みの取引には影響しません。",
+    "descriptionAuto": "<span>{{description}}</span>を削除してもよろしいですか?すでに生成された取引は履歴に残ります(自動記帳のマークは外れます)。",
+    "deleting": "削除中…"
+  },
+  "frequency": {
+    "weekly": "毎週",
+    "biweekly": "隔週",
+    "monthly": "毎月",
+    "bimonthly": "隔月",
+    "quarterly": "四半期ごと",
+    "semiannual": "半年ごと",
+    "yearly": "毎年",
+    "everyWeeks_one": "{{count}}週間ごと",
+    "everyWeeks_other": "{{count}}週間ごと",
+    "everyMonths_one": "{{count}}か月ごと",
+    "everyMonths_other": "{{count}}か月ごと",
+    "everyYears_one": "{{count}}年ごと",
+    "everyYears_other": "{{count}}年ごと"
+  },
+  "validation": {
+    "amountRequired": "金額を入力してください",
+    "descriptionRequired": "説明は必須です",
+    "descriptionMax": "最大200文字までです",
+    "intervalMin": "最小1です",
+    "intervalMax": "最大365です",
+    "startDateRequired": "開始日を入力してください"
+  }
+}

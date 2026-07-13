@@ -3,11 +3,19 @@ import request from "supertest";
 import { Pool } from "pg";
 import { adminPool, authed, cleanupByEmailPattern, createTestApp, signUpUser, TestUser } from "./helpers";
 
-/** ISO (yyyy-MM-dd) deslocado `days` a partir de hoje. */
+/**
+ * ISO (yyyy-MM-dd) deslocado `days` a partir de hoje, em data LOCAL — espelha
+ * o `toISODate` do backend (`common/finance/due-date.ts`). Usar `toISOString()`
+ * (UTC) aqui causava flake de fuso na borda de meia-noite: p.ex. às 21h em
+ * UTC-3, `isoDaysFromNow(-1)` em UTC devolvia "hoje local", e o teste de
+ * "startDate no passado" falhava porque a validação (local) não o rejeitava.
+ */
 function isoDaysFromNow(days: number): string {
   const d = new Date();
   d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${month}-${day}`;
 }
 
 /**
@@ -80,6 +88,14 @@ describe("ScheduledTransactions (e2e)", () => {
       .send({ name: "E2E Lar Lancamentos" })
       .expect(201);
     householdId = created.body.id;
+
+    // M12: o job de lembrete só dispara a partir de households.notification_hour
+    // no fuso do lar. Fixamos UTC + hora 0 para o gate ficar sempre aberto e o
+    // "hoje" ser determinístico (senão o tick real dependeria da hora do CI).
+    await pool.query(
+      `UPDATE public.households SET timezone = 'UTC', notification_hour = 0 WHERE id = $1`,
+      [householdId],
+    );
 
     const categories = await authed(
       app,

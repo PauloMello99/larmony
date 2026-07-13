@@ -12,6 +12,10 @@ export interface HouseholdSummary {
   role: "owner" | "member"
   /** Módulos liberados ao funcionário (owner = acesso total, ignora). */
   permissions: string[]
+  /** Fuso IANA do lar (M12) — âncora dos disparos por data. */
+  timezone: string
+  /** Hora local (0–23) de saída de lembrete/relatório (M12). */
+  notificationHour: number
 }
 
 export function useHouseholds() {

@@ -72,7 +72,7 @@ export class HouseholdsController {
 
   @Post()
   create(@CurrentUser() user: AuthUser, @Body() dto: CreateHouseholdDto) {
-    return this.createHousehold.execute(dto.name, user.id);
+    return this.createHousehold.execute(dto.name, user.id, dto.timezone);
   }
 
   /** Resolve por slug (membro ou super_admin). Antes de `:householdId` por ser path fixo. */

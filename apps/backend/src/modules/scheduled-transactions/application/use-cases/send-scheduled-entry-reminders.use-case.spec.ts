@@ -1,5 +1,5 @@
 import { ConfigService } from "@nestjs/config";
-import { NotificationService } from "../../../notifications/application/notification.service";
+import type { DispatchNotificationUseCase } from "../../../notifications/application/use-cases/dispatch-notification.use-case";
 import { ScheduledEntryEntity, ScheduledEntryEntityProps } from "../../domain/scheduled-entry.entity";
 import type { IScheduledEntryRepository } from "../../domain/scheduled-entry.repository.interface";
 import { alreadySentToday, SendScheduledEntryRemindersUseCase } from "./send-scheduled-entry-reminders.use-case";
@@ -9,6 +9,10 @@ function entry(partial: Partial<ScheduledEntryEntityProps>): ScheduledEntryEntit
     id: "entry-1",
     householdId: "hh-1",
     householdSlug: "casa-teste",
+    // Fuso UTC + hora 0 nos testes de janela/dedup: isola a lógica de DIA do
+    // gate de hora (coberto por testes dedicados no e2e de cron). Ver M12.
+    householdTimezone: "UTC",
+    householdNotificationHour: 0,
     description: "Aluguel",
     amountCents: 150_000,
     frequency: "monthly",
@@ -36,29 +40,29 @@ function makeUseCase(entries: ScheduledEntryEntity[]) {
     markReminderSent: jest.fn().mockResolvedValue(undefined),
     findHouseholdMemberUserIds: jest.fn().mockResolvedValue(["user-a", "user-b"]),
   };
-  const notifications = { notify: jest.fn().mockResolvedValue({}) };
+  const dispatch = { execute: jest.fn().mockResolvedValue(undefined) };
   const config = { get: jest.fn().mockReturnValue("http://localhost:3000") };
   const useCase = new SendScheduledEntryRemindersUseCase(
     repo,
-    notifications as unknown as NotificationService,
+    dispatch as unknown as DispatchNotificationUseCase,
     config as unknown as ConfigService,
   );
-  return { useCase, repo, notifications };
+  return { useCase, repo, dispatch };
 }
 
-describe("alreadySentToday (dedup por dia-calendário)", () => {
+describe("alreadySentToday (dedup por dia-calendário local do lar)", () => {
   it("false sem envio anterior", () => {
-    expect(alreadySentToday(entry({}), new Date(2026, 6, 7))).toBe(false);
+    expect(alreadySentToday(entry({}), new Date(2026, 6, 7), "UTC")).toBe(false);
   });
 
-  it("true quando o último envio é do mesmo dia", () => {
-    const e = entry({ reminderLastSentAt: new Date(2026, 6, 7, 9, 0) });
-    expect(alreadySentToday(e, new Date(2026, 6, 7, 18, 0))).toBe(true);
+  it("true quando o último envio é do mesmo dia local", () => {
+    const e = entry({ reminderLastSentAt: new Date(Date.UTC(2026, 6, 7, 9, 0)) });
+    expect(alreadySentToday(e, new Date(Date.UTC(2026, 6, 7, 18, 0)), "UTC")).toBe(true);
   });
 
-  it("false quando o último envio foi em outro dia do mesmo mês", () => {
-    const e = entry({ reminderLastSentAt: new Date(2026, 6, 5) });
-    expect(alreadySentToday(e, new Date(2026, 6, 7))).toBe(false);
+  it("false quando o último envio foi em outro dia local", () => {
+    const e = entry({ reminderLastSentAt: new Date(Date.UTC(2026, 6, 5)) });
+    expect(alreadySentToday(e, new Date(Date.UTC(2026, 6, 7)), "UTC")).toBe(false);
   });
 });
 
@@ -66,35 +70,41 @@ describe("SendScheduledEntryRemindersUseCase", () => {
   // now = 2026-07-07; startDate dia 10 + reminder 3 → dispara exatamente hoje.
   const now = new Date(2026, 6, 7);
 
-  it("dispara na janela exata e notifica todos os membros", async () => {
-    const { useCase, repo, notifications } = makeUseCase([entry({})]);
+  it("dispara na janela exata e notifica todos os membros num único dispatch", async () => {
+    const { useCase, repo, dispatch } = makeUseCase([entry({})]);
 
     const result = await useCase.execute(now);
 
     expect(result).toEqual({ scanned: 1, sent: 1, skippedDedup: 0 });
     expect(repo.markReminderSent).toHaveBeenCalledWith("entry-1", now);
-    expect(notifications.notify).toHaveBeenCalledTimes(2); // user-a + user-b
-    expect(notifications.notify).toHaveBeenCalledWith(
-      expect.objectContaining({ type: "bill_reminder", householdId: "hh-1" }),
+    // Fan-out por destinatário é do dispatcher: 1 chamada com os 2 membros.
+    expect(dispatch.execute).toHaveBeenCalledTimes(1);
+    expect(dispatch.execute).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: "bill_reminder",
+        householdId: "hh-1",
+        recipientUserIds: ["user-a", "user-b"],
+        description: "Aluguel",
+      }),
     );
     // Guarda gravada ANTES do envio — e-mail best-effort nunca duplica.
     const markOrder = repo.markReminderSent.mock.invocationCallOrder[0]!;
-    const notifyOrder = notifications.notify.mock.invocationCallOrder[0]!;
-    expect(markOrder).toBeLessThan(notifyOrder);
+    const dispatchOrder = dispatch.execute.mock.invocationCallOrder[0]!;
+    expect(markOrder).toBeLessThan(dispatchOrder);
   });
 
   it("não dispara fora da janela", async () => {
-    const { useCase, repo, notifications } = makeUseCase([entry({ startDate: "2025-01-15" })]);
+    const { useCase, repo, dispatch } = makeUseCase([entry({ startDate: "2025-01-15" })]);
 
     const result = await useCase.execute(now); // faltam 8 dias ≠ 3
 
     expect(result).toEqual({ scanned: 1, sent: 0, skippedDedup: 0 });
     expect(repo.markReminderSent).not.toHaveBeenCalled();
-    expect(notifications.notify).not.toHaveBeenCalled();
+    expect(dispatch.execute).not.toHaveBeenCalled();
   });
 
   it("dedup: pula entrada já lembrada hoje (tick repetido não re-envia)", async () => {
-    const { useCase, repo, notifications } = makeUseCase([
+    const { useCase, repo, dispatch } = makeUseCase([
       entry({ reminderLastSentAt: new Date(2026, 6, 7, 9, 0) }),
     ]);
 
@@ -102,7 +112,7 @@ describe("SendScheduledEntryRemindersUseCase", () => {
 
     expect(result).toEqual({ scanned: 1, sent: 0, skippedDedup: 1 });
     expect(repo.markReminderSent).not.toHaveBeenCalled();
-    expect(notifications.notify).not.toHaveBeenCalled();
+    expect(dispatch.execute).not.toHaveBeenCalled();
   });
 
   it("clamp de mês curto: dia-de-origem 31 em abril dispara no dia 27 com reminder 3", async () => {
@@ -120,6 +130,33 @@ describe("SendScheduledEntryRemindersUseCase", () => {
     const result = await useCase.execute(new Date(2026, 6, 18));
 
     expect(result.sent).toBe(1);
+  });
+
+  describe("gate de hora no fuso do lar (M12)", () => {
+    // 2026-07-07 05:00 UTC → com startDate dia 10 + reminder 3, vence hoje.
+    const at5hUtc = new Date(Date.UTC(2026, 6, 7, 5, 0));
+
+    it("NÃO dispara antes da hora preferida local (05h < 09h)", async () => {
+      const { useCase, repo } = makeUseCase([
+        entry({ householdTimezone: "UTC", householdNotificationHour: 9 }),
+      ]);
+
+      const result = await useCase.execute(at5hUtc);
+
+      expect(result.sent).toBe(0);
+      expect(repo.markReminderSent).not.toHaveBeenCalled();
+    });
+
+    it("dispara a partir da hora preferida local (05h >= 05h)", async () => {
+      const { useCase, repo } = makeUseCase([
+        entry({ householdTimezone: "UTC", householdNotificationHour: 5 }),
+      ]);
+
+      const result = await useCase.execute(at5hUtc);
+
+      expect(result.sent).toBe(1);
+      expect(repo.markReminderSent).toHaveBeenCalledWith("entry-1", at5hUtc);
+    });
   });
 
   it("dedup por dia (não por mês): 2ª ocorrência semanal do mesmo mês dispara de novo", async () => {

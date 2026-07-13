@@ -121,7 +121,7 @@ export function MonthlyView({ report, monthRef, onMonthChange }: MonthlyViewProp
       </div>
 
       {/* Série 6 meses */}
-      <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
+      <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4">
         <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
           <BarChart3 className="h-4 w-4 text-primary" />
           {t("monthly.seriesTitle")}
@@ -172,7 +172,7 @@ export function MonthlyView({ report, monthRef, onMonthChange }: MonthlyViewProp
 
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Pizza por categoria */}
-        <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
+        <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4">
           <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
             <PieChartIcon className="h-4 w-4 text-primary" />
             {t("monthly.byCategory", { ref: refLabel })}
@@ -211,7 +211,7 @@ export function MonthlyView({ report, monthRef, onMonthChange }: MonthlyViewProp
         </div>
 
         {/* Gasto por pessoa */}
-        <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
+        <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4">
           <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
             <Users className="h-4 w-4 text-primary" />
             {t("monthly.byPerson", { ref: refLabel })}
@@ -219,7 +219,7 @@ export function MonthlyView({ report, monthRef, onMonthChange }: MonthlyViewProp
           {personTotal > 0 ? (
             <div className="space-y-3">
               {allUnassigned && (
-                <p className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs text-amber-600 dark:text-amber-400">
+                <p className="rounded-lg border border-warning/20 bg-warning/10 px-3 py-2 text-xs text-warning">
                   {t("monthly.assignPersonHint")}
                 </p>
               )}

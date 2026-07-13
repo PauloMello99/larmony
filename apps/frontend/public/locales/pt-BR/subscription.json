@@ -1,0 +1,56 @@
+{
+  "title": "Assinatura",
+  "description": "Plano, status e gerenciamento da assinatura desta lar.",
+  "planTitle": "Plano atual",
+  "loadError": "Não foi possível carregar a assinatura. Tente novamente.",
+  "ownerOnly": "Apenas o responsável pela lar pode gerenciar a assinatura.",
+  "plan": {
+    "free": "Grátis",
+    "premium": "Premium",
+    "custom": "Isenção"
+  },
+  "status": {
+    "active": "Ativa",
+    "trialing": "Período de teste",
+    "past_due": "Pagamento pendente",
+    "canceled": "Cancelada"
+  },
+  "premiumOffer": {
+    "title": "Larmony Premium — R$ 14,90/mês",
+    "description": "Relatórios avançados, múltiplos membros e tudo que sua lar precisa para controlar as finanças em conjunto."
+  },
+  "free": {
+    "description": "Sua lar está no plano Grátis.",
+    "cta": "Assinar o Premium",
+    "ctaPending": "Redirecionando…"
+  },
+  "premium": {
+    "description": "Sua lar tem o Premium ativo. Aproveite todos os recursos.",
+    "pastDue": "Há um pagamento pendente. Atualize o método de pagamento no portal para não perder o acesso.",
+    "portalCta": "Gerenciar assinatura",
+    "portalPending": "Redirecionando…"
+  },
+  "trial": {
+    "title": "Período de teste ativo",
+    "description": "Sua lar tem acesso Premium durante o período de teste.",
+    "until": "Acesso Premium completo até",
+    "cta": "Assinar o Premium"
+  },
+  "comp": {
+    "title": "Isenção concedida",
+    "description": "Sua lar tem acesso completo por cortesia — sem cobrança.",
+    "reasonLabel": "Motivo"
+  },
+  "banner": {
+    "success": "Assinatura confirmada! O acesso Premium é ativado assim que o Stripe confirma o pagamento.",
+    "cancel": "Checkout cancelado. Nenhuma cobrança foi feita."
+  },
+  "gate": {
+    "title": "Recurso Premium",
+    "description": "Relatórios avançados fazem parte do plano Premium. Faça o upgrade para desbloquear.",
+    "descriptionCategories": "Categorias personalizadas fazem parte do plano Premium. Faça o upgrade para desbloquear.",
+    "descriptionGoals": "Você atingiu o limite de metas do plano Grátis. Faça o upgrade para criar metas ilimitadas.",
+    "descriptionBudgets": "Você atingiu o limite de orçamentos ativos do plano Grátis. Faça o upgrade para criar orçamentos ilimitados.",
+    "cta": "Ver planos"
+  }
+}

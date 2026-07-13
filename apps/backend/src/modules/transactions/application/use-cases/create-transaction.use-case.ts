@@ -7,6 +7,7 @@ import {
 } from "../../domain/transaction.repository.interface";
 import { assertValidSplit } from "../../domain/split-validation";
 import { AuditService } from "../../../audit/audit.service";
+import { NotifyIfBudgetExceededUseCase } from "../../../budgets/application/use-cases/notify-if-budget-exceeded.use-case";
 
 export interface CreateTransactionInput {
   type: TransactionType;
@@ -26,6 +27,7 @@ export class CreateTransactionUseCase {
     @Inject(TRANSACTION_REPOSITORY)
     private readonly transactionRepo: ITransactionRepository,
     private readonly auditService: AuditService,
+    private readonly notifyIfBudgetExceeded: NotifyIfBudgetExceededUseCase,
   ) {}
 
   async execute(
@@ -58,6 +60,13 @@ export class CreateTransactionUseCase {
       entityType: "transaction",
       entityId: transaction.id,
       metadata: { type: transaction.type, amountCents: transaction.amountCents },
+    });
+
+    await this.notifyIfBudgetExceeded.execute({
+      householdId,
+      categoryId: transaction.categoryId,
+      type: transaction.type,
+      date: transaction.date,
     });
 
     return transaction;

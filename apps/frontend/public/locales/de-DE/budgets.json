@@ -1,0 +1,42 @@
+{
+  "page": {
+    "title": "Budgets",
+    "subtitle": "Monatliche Ausgabenlimits pro Kategorie",
+    "newBudget": "Neues Budget",
+    "empty": "Kein Budget in diesem Zeitraum.",
+    "createBudget": "Budget erstellen",
+    "readOnlyNotice": "Abgeschlossener Monat — das angezeigte Limit ist das, das in diesem Zeitraum galt, und kann nicht geändert werden.",
+    "projectedNotice": "Zukünftiger Monat — das angezeigte Limit ist eine Projektion des heute geltenden Werts."
+  },
+  "periodNav": {
+    "monthAria": "Budgetmonat",
+    "yearAria": "Budgetjahr"
+  },
+  "card": {
+    "exceeded": "Überschritten",
+    "of": "von {{value}}",
+    "overLimit": "{{value}} über dem Limit",
+    "available": "{{value}} verfügbar"
+  },
+  "form": {
+    "createTitle": "Neues Budget",
+    "editTitle": "Budget bearbeiten",
+    "description": "Lege ein monatliches Ausgabenlimit für eine Kategorie fest.",
+    "categoryLabel": "Kategorie",
+    "categoryImmutable": "(unveränderlich)",
+    "categoryPlaceholder": "Kategorie wählen",
+    "limitLabel": "Monatliches Limit",
+    "saving": "Wird gespeichert…",
+    "saveChanges": "Änderungen speichern",
+    "create": "Budget erstellen"
+  },
+  "deleteDialog": {
+    "title": "Budget löschen",
+    "description": "Das Budget für <span>{{name}}</span> in diesem Monat entfernen? Die Transaktionen sind davon nicht betroffen.",
+    "deleting": "Wird gelöscht…"
+  },
+  "validation": {
+    "categoryRequired": "Bitte wähle eine Kategorie",
+    "limitRequired": "Bitte gib ein Limit an"
+  }
+}

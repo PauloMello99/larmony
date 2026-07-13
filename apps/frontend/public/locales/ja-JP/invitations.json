@@ -1,0 +1,28 @@
+{
+  "roles": {
+    "owner": "オーナー",
+    "member": "メンバー"
+  },
+  "invalid": {
+    "title": "無効な招待",
+    "description": "この招待リンクは無効です。"
+  },
+  "unavailable": {
+    "title": "この招待は利用できません",
+    "accepted": "この招待はすでに承諾されています。",
+    "cancelled": "この招待はキャンセルされました。",
+    "expired": "この招待は期限切れです。",
+    "goToDashboard": "ダッシュボードへ進む"
+  },
+  "accept": {
+    "title": "{{householdName}}への招待",
+    "invitedAs": "<span>{{role}}</span>として招待されています。",
+    "emailMismatch": "この招待は<strong>{{inviteEmail}}</strong>宛のものですが、現在<strong>{{userEmail}}</strong>としてログインしています。承諾するには正しいアカウントでログインしてください。",
+    "acceptingAs": "<span>{{email}}</span>として承諾します。",
+    "switchAccount": "アカウントを切り替える",
+    "submit": "招待を承諾",
+    "decline": "辞退する",
+    "acceptError": "招待を承諾できませんでした。",
+    "declineError": "招待を辞退できませんでした。"
+  }
+}

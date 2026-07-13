@@ -1,0 +1,117 @@
+{
+  "app": {
+    "name": "Larmony",
+    "tagline": "ご家庭の家計管理"
+  },
+  "actions": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "create": "作成",
+    "confirm": "確定",
+    "close": "閉じる",
+    "clear": "クリア",
+    "all": "すべて",
+    "back": "戻る"
+  },
+  "export": {
+    "title": "CSVエクスポート",
+    "button": "エクスポート",
+    "fields": "CSVの項目",
+    "download": "CSVをダウンロード"
+  },
+  "filters": {
+    "label": "フィルター",
+    "advanced": "詳細フィルター",
+    "min": "最小",
+    "max": "最大"
+  },
+  "datePicker": {
+    "placeholder": "日付を選択"
+  },
+  "phoneInput": {
+    "placeholder": "電話番号",
+    "country": "国"
+  },
+  "notifications": {
+    "title": "通知",
+    "markAll": "すべて既読にする",
+    "empty": "通知はありません。"
+  },
+  "locale": {
+    "label": "言語",
+    "pt-BR": "Português (Brasil)",
+    "en": "English",
+    "es": "Español"
+  },
+  "pagination": {
+    "range": "{{total}}件中 {{from}}–{{to}}件",
+    "perPage": "1ページの表示件数",
+    "pageOf": "{{page}} / {{totalPages}}",
+    "previous": "前のページ",
+    "next": "次のページ"
+  },
+  "api": {
+    "USER_NOT_FOUND": "ユーザーが見つかりません。",
+    "INVALID_CREDENTIALS": "メールアドレスまたはパスワードが正しくありません。",
+    "AUTH_TOKEN_EXPIRED": "セッションの有効期限が切れました。再度ログインしてください。",
+    "ORGANIZATION_NOT_FOUND": "世帯が見つかりません。",
+    "SLUG_ALREADY_TAKEN": "この識別子はすでに使用されています。",
+    "ORG_FORBIDDEN": "この操作を行う権限がありません。",
+    "MEMBER_NOT_FOUND": "メンバーが見つかりません。",
+    "INVITATION_NOT_FOUND": "招待が見つかりません。",
+    "INVITATION_NOT_PENDING": "この招待はすでに保留中ではありません。",
+    "INVITATION_EXPIRED": "この招待は期限切れです。",
+    "INVITATION_EMAIL_MISMATCH": "この招待は別のメールアドレス宛に送信されています。",
+    "INVITATION_EMAIL_FAILED": "招待メールを送信できませんでした。",
+    "MATERIAL_NOT_FOUND": "資材が見つかりません。",
+    "MATERIAL_IN_USE_BY_SERVICES": "この資材はサービスで使用中のため削除できません。",
+    "INSUFFICIENT_STOCK": "在庫が不足しています。",
+    "CUSTOMER_NOT_FOUND": "顧客が見つかりません。",
+    "CALENDAR_EVENT_NOT_FOUND": "予定が見つかりません。",
+    "CALENDAR_EVENT_OVERLAP": "この時間帯にはすでに予定があります。",
+    "CALENDAR_EVENT_FORBIDDEN": "この予定を変更する権限がありません。",
+    "CALENDAR_EVENT_INVALID_RANGE": "予定の日時範囲が無効です。",
+    "TRANSACTION_NOT_FOUND": "取引が見つかりません。",
+    "TRANSACTION_ALREADY_REVERSED": "この取引はすでに取り消されています。",
+    "TRANSACTION_NOT_REVERSIBLE": "この取引は取り消せません。",
+    "CASHIER_FORBIDDEN": "このレジ操作を行う権限がありません。",
+    "AVATAR_UPLOAD_FAILED": "アバターの送信に失敗しました。もう一度お試しください。",
+    "LAST_ACTIVE_OWNER": "世帯には少なくとも1人の有効なオーナーが必要です。",
+    "SERVICE_NOT_FOUND": "サービスが見つかりません。",
+    "CUSTOMER_DISABLED": "この顧客は無効化されています。",
+    "EMPLOYEE_INACTIVE": "この従業員は無効です。",
+    "SERVICE_ALREADY_CANCELED": "このサービスはすでにキャンセルされています。",
+    "SERVICE_NOT_PAYABLE": "このサービスは支払いできません。",
+    "SERVICE_FORBIDDEN": "このサービスを変更する権限がありません。",
+    "PLATFORM_TARGET_NOT_FOUND": "レコードが見つかりません。",
+    "CANNOT_CHANGE_OWN_PLATFORM_ROLE": "自分自身のプラットフォーム上の役割は変更できません。",
+    "CATEGORY_NOT_FOUND": "カテゴリーが見つかりません。",
+    "BUDGET_NOT_FOUND": "予算が見つかりません。",
+    "BUDGET_ALREADY_EXISTS": "この月・このカテゴリーの予算はすでに存在します。",
+    "BUDGET_PERIOD_NOT_EDITABLE": "この予算は終了した期間のもので、編集できません。",
+    "GOAL_NOT_FOUND": "目標が見つかりません。",
+    "GOAL_CONTRIBUTION_NOT_FOUND": "目標への積立が見つかりません。",
+    "TRANSACTION_SPLIT_INVALID": "取引の割り勘設定が無効です。金額を確認してください。",
+    "INSTALLMENT_GROUP_NOT_FOUND": "分割払いグループが見つかりません。",
+    "SCHEDULED_ENTRY_NOT_FOUND": "定期取引が見つかりません。",
+    "SCHEDULED_ENTRY_START_DATE_IN_PAST": "自動モードでは、開始日を過去の日付にすることはできません。",
+    "SCHEDULED_ENTRY_INVALID_DATE_RANGE": "終了日は開始日より前にできません。",
+    "SCHEDULED_ENTRY_NOT_MANUAL": "この定期取引は手動モードではありません。",
+    "NO_STRIPE_CUSTOMER": "この世帯はまだサブスクリプションに加入していません。管理の前にご加入ください。",
+    "STRIPE_NOT_CONFIGURED": "現在お支払い機能をご利用いただけません。しばらくしてから再度お試しください。",
+    "PLAN_NOT_AVAILABLE": "このプランはまだご利用いただけません。しばらくしてから再度お試しください。",
+    "WEBHOOK_SIGNATURE_INVALID": "決済リクエストを検証できませんでした。",
+    "PREMIUM_REQUIRED": "この機能にはプレミアムプランが必要です。",
+    "INVALID_DISCOUNT": "割引が無効です。パラメーターを確認してください。",
+    "SUBSCRIPTION_NOT_STRIPE_LINKED": "この世帯には有効なStripeサブスクリプションがありません。",
+    "TRIAL_NOT_ALLOWED": "この世帯の現在のプランでは、トライアルをご利用いただけません。",
+    "HOUSEHOLD_LIMIT_REACHED": "Freeプランの世帯数の上限に達しました。既存の世帯をアップグレードすると、新しい世帯を作成できます。",
+    "MEMBER_LIMIT_REACHED": "この世帯はFreeプランのメンバー数の上限に達しました。アップグレードするとさらにメンバーを招待できます。",
+    "GOAL_LIMIT_REACHED": "この世帯はFreeプランの目標数の上限にすでに達しています。アップグレードするとさらに作成できます。",
+    "BUDGET_LIMIT_REACHED": "この世帯はFreeプランの有効な予算数の上限にすでに達しています。既存の予算を終了するか、アップグレードしてください。",
+    "NETWORK": "ネットワークエラーです。接続を確認して、もう一度お試しください。",
+    "UNEXPECTED": "予期しないエラーが発生しました。もう一度お試しください。"
+  }
+}

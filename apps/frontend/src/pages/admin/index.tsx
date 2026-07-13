@@ -14,4 +14,4 @@ AdminOverviewPage.getLayout = (page: ReactElement) => (
 
 export default AdminOverviewPage
 
-export const getServerSideProps = makeI18nProps(["common", "dashboard"])
+export const getServerSideProps = makeI18nProps(["common", "dashboard", "admin"])

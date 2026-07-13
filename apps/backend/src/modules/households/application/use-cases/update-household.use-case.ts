@@ -19,7 +19,7 @@ export class UpdateHouseholdUseCase {
   async execute(
     householdId: string,
     authId: string,
-    data: { name?: string },
+    data: { name?: string; timezone?: string; notificationHour?: number },
   ): Promise<HouseholdEntity> {
     const household = await this.householdRepo.findByIdAndAuthId(householdId, authId);
     if (!household) throw new HouseholdNotFoundException(householdId);

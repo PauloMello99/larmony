@@ -1,0 +1,117 @@
+{
+  "app": {
+    "name": "Larmony",
+    "tagline": "Manage your household finances"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "confirm": "Confirm",
+    "close": "Close",
+    "clear": "Clear",
+    "all": "All",
+    "back": "Back"
+  },
+  "export": {
+    "title": "Export CSV",
+    "button": "Export",
+    "fields": "CSV Fields",
+    "download": "Download CSV"
+  },
+  "filters": {
+    "label": "Filters",
+    "advanced": "Advanced filters",
+    "min": "Min",
+    "max": "Max"
+  },
+  "datePicker": {
+    "placeholder": "Select a date"
+  },
+  "phoneInput": {
+    "placeholder": "Phone number",
+    "country": "Country"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAll": "Mark all as read",
+    "empty": "No notifications."
+  },
+  "locale": {
+    "label": "Language",
+    "pt-BR": "Portuguese (Brazil)",
+    "en": "English",
+    "es": "Spanish"
+  },
+  "pagination": {
+    "range": "{{from}}–{{to}} of {{total}}",
+    "perPage": "Per page",
+    "pageOf": "{{page}} of {{totalPages}}",
+    "previous": "Previous page",
+    "next": "Next page"
+  },
+  "api": {
+    "USER_NOT_FOUND": "User not found.",
+    "INVALID_CREDENTIALS": "Invalid email or password.",
+    "AUTH_TOKEN_EXPIRED": "Your session has expired — please sign in again.",
+    "ORGANIZATION_NOT_FOUND": "Home not found.",
+    "SLUG_ALREADY_TAKEN": "This identifier is already in use.",
+    "ORG_FORBIDDEN": "You don't have permission to perform this action.",
+    "MEMBER_NOT_FOUND": "Member not found.",
+    "INVITATION_NOT_FOUND": "Invitation not found.",
+    "INVITATION_NOT_PENDING": "This invitation is no longer pending.",
+    "INVITATION_EXPIRED": "This invitation has expired.",
+    "INVITATION_EMAIL_MISMATCH": "This invitation was sent to a different email address.",
+    "INVITATION_EMAIL_FAILED": "Could not send the invitation email.",
+    "MATERIAL_NOT_FOUND": "Material not found.",
+    "MATERIAL_IN_USE_BY_SERVICES": "This material is in use by services and cannot be removed.",
+    "INSUFFICIENT_STOCK": "Insufficient stock.",
+    "CUSTOMER_NOT_FOUND": "Customer not found.",
+    "CALENDAR_EVENT_NOT_FOUND": "Event not found.",
+    "CALENDAR_EVENT_OVERLAP": "An event already exists at this time.",
+    "CALENDAR_EVENT_FORBIDDEN": "You don't have permission to change this event.",
+    "CALENDAR_EVENT_INVALID_RANGE": "The event's date range is invalid.",
+    "TRANSACTION_NOT_FOUND": "Transaction not found.",
+    "TRANSACTION_ALREADY_REVERSED": "This transaction has already been reversed.",
+    "TRANSACTION_NOT_REVERSIBLE": "This transaction cannot be reversed.",
+    "CASHIER_FORBIDDEN": "You don't have permission to perform this cashier operation.",
+    "AVATAR_UPLOAD_FAILED": "Failed to upload the avatar — please try again.",
+    "LAST_ACTIVE_OWNER": "The home needs at least one active owner.",
+    "SERVICE_NOT_FOUND": "Service not found.",
+    "CUSTOMER_DISABLED": "This customer is disabled.",
+    "EMPLOYEE_INACTIVE": "This employee is inactive.",
+    "SERVICE_ALREADY_CANCELED": "This service has already been canceled.",
+    "SERVICE_NOT_PAYABLE": "This service cannot be paid.",
+    "SERVICE_FORBIDDEN": "You don't have permission to change this service.",
+    "PLATFORM_TARGET_NOT_FOUND": "Record not found.",
+    "CANNOT_CHANGE_OWN_PLATFORM_ROLE": "You cannot change your own platform role.",
+    "CATEGORY_NOT_FOUND": "Category not found.",
+    "BUDGET_NOT_FOUND": "Budget not found.",
+    "BUDGET_ALREADY_EXISTS": "A budget already exists for this category in this month.",
+    "BUDGET_PERIOD_NOT_EDITABLE": "This budget belongs to a closed period and cannot be edited.",
+    "GOAL_NOT_FOUND": "Goal not found.",
+    "GOAL_CONTRIBUTION_NOT_FOUND": "Goal contribution not found.",
+    "TRANSACTION_SPLIT_INVALID": "The transaction split is invalid — please check the amounts.",
+    "INSTALLMENT_GROUP_NOT_FOUND": "Installment group not found.",
+    "SCHEDULED_ENTRY_NOT_FOUND": "Scheduled entry not found.",
+    "SCHEDULED_ENTRY_START_DATE_IN_PAST": "The start date cannot be in the past in automatic mode.",
+    "SCHEDULED_ENTRY_INVALID_DATE_RANGE": "The end date cannot be earlier than the start date.",
+    "SCHEDULED_ENTRY_NOT_MANUAL": "This scheduled entry is not in manual mode.",
+    "NO_STRIPE_CUSTOMER": "The home doesn't have a subscription yet — subscribe before managing it.",
+    "STRIPE_NOT_CONFIGURED": "Payments are unavailable right now — please try again later.",
+    "PLAN_NOT_AVAILABLE": "This plan isn't available yet — please try again in a moment.",
+    "WEBHOOK_SIGNATURE_INVALID": "Could not validate the payment request.",
+    "PREMIUM_REQUIRED": "This feature requires a premium plan.",
+    "INVALID_DISCOUNT": "Invalid discount — please check the parameters.",
+    "SUBSCRIPTION_NOT_STRIPE_LINKED": "The home doesn't have an active Stripe subscription.",
+    "TRIAL_NOT_ALLOWED": "The trial isn't available for the home's current plan.",
+    "HOUSEHOLD_LIMIT_REACHED": "You've reached the Free plan's home limit. Upgrade an existing home to create another.",
+    "MEMBER_LIMIT_REACHED": "This home has reached the Free plan's member limit. Upgrade to invite more people.",
+    "GOAL_LIMIT_REACHED": "This home already has the Free plan's maximum number of goals. Upgrade to create more.",
+    "BUDGET_LIMIT_REACHED": "This home already has the Free plan's maximum number of active budgets. Close an existing budget or upgrade.",
+    "NETWORK": "Network error — check your connection and try again.",
+    "UNEXPECTED": "An unexpected error occurred. Please try again."
+  }
+}

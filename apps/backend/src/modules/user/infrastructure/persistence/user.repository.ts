@@ -53,7 +53,16 @@ export class DrizzleUserRepository implements IUserRepository {
   async create(data: CreateUserData): Promise<UserEntity> {
     const [row] = await this.admin
       .insert(schema.users)
-      .values({ authId: data.authId, name: data.name, email: data.email })
+      .values({
+        authId: data.authId,
+        name: data.name,
+        email: data.email,
+        // Aceite dos Termos/Privacidade (LGPD): timestamp + versão vigente.
+        termsAcceptedAt: new Date(),
+        termsVersion: data.termsVersion,
+        // Locale da UI no cadastro; ausente → default do schema (pt-BR).
+        ...(data.locale !== undefined && { locale: data.locale }),
+      })
       .onConflictDoNothing()
       .returning();
     return UserMapper.toDomain(row!);

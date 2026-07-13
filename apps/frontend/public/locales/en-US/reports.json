@@ -1,0 +1,43 @@
+{
+  "page": {
+    "title": "Reports",
+    "description": "Monthly and annual view of your finances",
+    "monthly": "Monthly",
+    "annual": "Annual"
+  },
+  "chart": {
+    "income": "Income",
+    "expense": "Expense"
+  },
+  "monthly": {
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "seriesTitle": "Income vs. Expense · last 6 months",
+    "seriesEmpty": "No activity in the last 6 months.",
+    "byCategory": "Expenses by category · {{ref}}",
+    "byPerson": "Spending by person · {{ref}}",
+    "noExpenses": "No expenses this month.",
+    "assignPersonHint": "To see who spent what, assign a person when creating or editing each transaction."
+  },
+  "annual": {
+    "prevYear": "Previous year",
+    "nextYear": "Next year",
+    "totalIncome": "Total income",
+    "totalExpense": "Total expense",
+    "balance": "Balance",
+    "seriesTitle": "Income vs. Expense · {{year}}",
+    "seriesEmpty": "No activity in {{year}}."
+  },
+  "export": {
+    "upgradeHint": "Report export is a Family feature",
+    "columns": {
+      "category": "Category",
+      "amount": "Amount",
+      "year": "Year",
+      "month": "Month",
+      "income": "Income",
+      "expense": "Expense",
+      "balance": "Balance"
+    }
+  }
+}

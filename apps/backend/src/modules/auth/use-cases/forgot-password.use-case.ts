@@ -40,6 +40,8 @@ export class ForgotPasswordUseCase {
       to: email,
       name: user?.name,
       resetUrl,
+      // Idioma do destinatário (ADR-0018); sem row local, cai no default pt-BR.
+      locale: user?.locale,
     });
   }
 }

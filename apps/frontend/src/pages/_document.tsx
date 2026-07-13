@@ -30,7 +30,13 @@ function readLocaleCookie(cookieHeader: string | undefined): string | undefined 
 export default function Document({ lang }: Props) {
   return (
     <Html lang={lang} suppressHydrationWarning>
-      <Head />
+      <Head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content="#0d0d0f" />
+      </Head>
       <body>
         <Main />
         <NextScript />

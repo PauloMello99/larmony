@@ -32,7 +32,15 @@ export class TelemetryService implements OnModuleDestroy {
 
   constructor() {
     const token = process.env["BETTERSTACK_SOURCE_TOKEN"];
-    const endpoint = process.env["BETTERSTACK_INGESTING_URL"];
+    // O dashboard do Better Stack mostra o ingesting host "pelado" (sem
+    // esquema); colar assim faz o @logtail/node estourar `ERR_INVALID_URL` no
+    // envio — e como falha de envio é engolida (best-effort), a telemetria
+    // sumiria em silêncio. Normaliza prefixando https:// quando falta o esquema.
+    const rawEndpoint = process.env["BETTERSTACK_INGESTING_URL"];
+    const endpoint =
+      rawEndpoint && !/^https?:\/\//i.test(rawEndpoint)
+        ? `https://${rawEndpoint}`
+        : rawEndpoint;
 
     if (token && endpoint) {
       this.client = new Logtail(token, { endpoint });

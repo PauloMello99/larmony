@@ -1,7 +1,12 @@
+// Event key único, reusado por inbox in-app + preferências + dispatcher (M11)
+// — espelha o enum `notification_type` do schema.
 export type NotificationType =
   | "bill_reminder"
   | "invite_accepted"
-  | "goal_reached";
+  | "goal_reached"
+  | "auto_launch"
+  | "budget_exceeded"
+  | "monthly_report";
 
 export interface NotificationProps {
   id: string;

@@ -1,0 +1,93 @@
+{
+  "nav": {
+    "title": "Mi cuenta",
+    "profile": "Perfil",
+    "access": "Acceso",
+    "appearance": "Tema",
+    "locale": "Idioma",
+    "notifications": "Notificaciones",
+    "danger": "Eliminar cuenta"
+  },
+  "profile": {
+    "title": "Perfil",
+    "description": "Gestione su nombre, correo electrónico y foto de perfil.",
+    "loading": "Cargando…",
+    "avatarAlt": "Foto de perfil",
+    "avatarUpload": "Subir foto",
+    "avatarUploading": "Subiendo…",
+    "avatarHint": "PNG, JPG, WEBP o GIF · hasta 5 MB.",
+    "avatarInvalidType": "Seleccione un archivo de imagen.",
+    "avatarTooLarge": "La imagen debe tener hasta 5 MB.",
+    "avatarUploadError": "Error al subir la foto.",
+    "nameLabel": "Nombre",
+    "emailLabel": "Correo electrónico",
+    "emailHint": "Cambiar el correo electrónico también cambia su inicio de sesión.",
+    "saveError": "No se pudo guardar el perfil.",
+    "saved": "Perfil actualizado.",
+    "submit": "Guardar cambios",
+    "submitting": "Guardando…"
+  },
+  "access": {
+    "title": "Acceso",
+    "description": "Gestione su contraseña y seguridad de acceso.",
+    "changePassword": "Cambiar contraseña",
+    "sentMessage": "Hemos enviado un enlace a <strong>{{email}}</strong>. Abra para definir una nueva contraseña — la sesión se recupera de forma segura a través del enlace del correo electrónico.",
+    "explanation": "Por seguridad, el cambio de contraseña se realiza a través de un enlace enviado a su correo electrónico. Al hacer clic en el enlace, se abre la pantalla de nueva contraseña con la sesión recuperada automáticamente.",
+    "error": "No se pudo enviar el correo electrónico. Inténtelo de nuevo.",
+    "submit": "Enviar enlace de cambio"
+  },
+  "appearance": {
+    "title": "Tema",
+    "description": "Personaliza la apariencia del panel.",
+    "cardTitle": "Tema",
+    "cardDescription": "Selecciona entre claro, oscuro o automático (sigue la configuración del sistema).",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
+  "locale": {
+    "description": "Seleccione el idioma de la interfaz y los correos electrónicos.",
+    "loading": "Cargando…",
+    "error": "No se pudo cambiar el idioma."
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "description": "Elija cómo quiere ser avisado de cada evento.",
+    "loading": "Cargando…",
+    "error": "No se pudieron cargar sus preferencias.",
+    "columns": {
+      "event": "Evento",
+      "inapp": "En la app",
+      "email": "Correo electrónico",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "stubbedHint": "Aún no disponible en esta versión."
+    },
+    "events": {
+      "bill_reminder": "Recordatorio de lanzamiento",
+      "goal_reached": "Meta alcanzada",
+      "budget_exceeded": "Presupuesto excedido",
+      "auto_launch": "Lanzamiento automático",
+      "monthly_report": "Informe mensual"
+    }
+  },
+  "danger": {
+    "title": "Zona de peligro",
+    "description": "Acciones irreversibles en su cuenta.",
+    "cardTitle": "Eliminar cuenta",
+    "cardDescription": "La eliminación permanente de la cuenta eliminará todos sus datos personales. Esta acción es irreversible.",
+    "deleteTitle": "Eliminar mi cuenta",
+    "deleteHint": "Debe transferir o eliminar los hogares que posee antes de eliminar su cuenta.",
+    "deleteButton": "Eliminar cuenta",
+    "dialogTitle": "Eliminar mi cuenta",
+    "dialogDescription": "Esta acción es <span>irreversible</span>. Sus datos personales serán eliminados permanentemente. Si todavía posee algún hogar, la eliminación será bloqueada.",
+    "confirmLabel": "Ingrese su correo electrónico <span>{{email}}</span> para confirmar:",
+    "deleteError": "No se pudo eliminar la cuenta.",
+    "confirmDelete": "Eliminar permanentemente",
+    "deleting": "Eliminando…"
+  },
+  "validation": {
+    "nameRequired": "Nombre es requerido",
+    "invalidEmail": "Correo electrónico inválido"
+  }
+}

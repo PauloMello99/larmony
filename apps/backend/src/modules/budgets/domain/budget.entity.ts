@@ -2,20 +2,17 @@ export interface BudgetEntityProps {
   id: string;
   householdId: string;
   categoryId: string;
-  month: number;
-  year: number;
-  amountCents: number;
+  endedFrom: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
+/** Série de orçamento por categoria (M10) — o limite vive em `BudgetVersion`. */
 export class BudgetEntity {
   readonly id: string;
   readonly householdId: string;
   readonly categoryId: string;
-  readonly month: number;
-  readonly year: number;
-  readonly amountCents: number;
+  readonly endedFrom: string | null;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -23,9 +20,7 @@ export class BudgetEntity {
     this.id = props.id;
     this.householdId = props.householdId;
     this.categoryId = props.categoryId;
-    this.month = props.month;
-    this.year = props.year;
-    this.amountCents = props.amountCents;
+    this.endedFrom = props.endedFrom;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
   }

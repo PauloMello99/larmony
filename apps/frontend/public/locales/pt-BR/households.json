@@ -26,6 +26,16 @@
     "deleteTitle": "Excluir lar",
     "deleteDescription": "Remove permanentemente todos os dados deste lar."
   },
+  "membersPage": {
+    "loading": "Carregando membros…",
+    "title": "Membros",
+    "description": "Gerencie quem tem acesso a esta lar.",
+    "invite": "Convidar",
+    "inviteCreated": "Convite criado. Link de aceite (dev — copie para testar):",
+    "copy": "Copiar",
+    "updatePermissionsError": "Não foi possível atualizar as permissões.",
+    "toggleStatusError": "Não foi possível alterar o status do membro."
+  },
   "members": {
     "title": "Membros ({{count}})",
     "pendingInvitations": "Convites pendentes ({{count}})",
@@ -92,6 +102,9 @@
     "description": "Crie um espaço para o seu lar. Você será o proprietário.",
     "nameLabel": "Nome",
     "namePlaceholder": "Ex: Casa da Família",
+    "timezoneLabel": "Fuso horário",
+    "timezoneHint": "Define quando lançamentos vencem e quando os avisos são enviados. Detectado automaticamente — ajuste se necessário.",
+    "limitReached": "Você já tem um lar no plano Free. Acesse Configurações > Assinatura de um lar existente para fazer upgrade e criar outro.",
     "submitting": "Criando…",
     "submit": "Criar lar"
   },
@@ -100,6 +113,10 @@
     "namePlaceholder": "Ex: Casa da Família",
     "slugLabel": "Identificador (slug)",
     "slugHint": "Gerado automaticamente — não pode ser alterado.",
+    "timezoneLabel": "Fuso horário",
+    "timezoneHint": "Define quando lançamentos vencem e quando os avisos são enviados.",
+    "notificationHourLabel": "Hora dos avisos",
+    "notificationHourHint": "Lembretes e relatório mensal saem a partir desta hora, no fuso do lar.",
     "saving": "Salvando…",
     "submit": "Salvar alterações"
   },
@@ -112,12 +129,5 @@
     "rolePlaceholder": "Selecione uma função",
     "submitting": "Enviando…",
     "submit": "Enviar convite"
-  },
-  "subscription": {
-    "title": "Assinatura",
-    "description": "Plano, histórico de cobrança e gerenciamento da assinatura desta lar.",
-    "managementTitle": "Gerenciamento de assinatura",
-    "comingSoon": "Em breve",
-    "managementDescription": "Aqui você poderá visualizar o histórico de faturas, trocar de plano, atualizar o método de pagamento e cancelar a assinatura desta lar."
   }
 }

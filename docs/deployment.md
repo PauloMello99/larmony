@@ -54,14 +54,20 @@ Sem Redis. Sem Vercel/Render.
 | **Root Directory** | **raiz do repo** (turbo prune precisa do monorepo). |
 | **Config-as-code** | `apps/frontend/railway.json`. |
 | **Variável `NEXT_PUBLIC_API_URL`** | **crítico**: é inlinada em **build time**. Setar como variável do serviço **antes** do build = URL pública do backend Railway do ambiente. O Dockerfile a recebe via `ARG`. |
-| **PORT** | injetado pelo Railway; `next start` respeita `process.env.PORT`. Não crie var `PORT`. |
+| **PORT** | injetado pelo Railway; o `server.js` do standalone respeita `process.env.PORT` (e `HOSTNAME=0.0.0.0` já vem do Dockerfile). Não crie var `PORT`. |
+| **Imagem** | output **standalone** (P-5): o runner só carrega `.next/standalone` + `static` + `public` — sem `node_modules` de produção (imagem caiu de ~2 GB p/ centenas de MB). |
 | **Watch Paths** | `/apps/frontend/**`, `/packages/**`, `pnpm-lock.yaml`, `package.json`, `turbo.json` |
 
 ## Variáveis de ambiente (Railway, por Environment)
 
 `NODE_ENV=production`, `RUN_MIGRATIONS=true`, `DATABASE_URL`, `DATABASE_APP_URL`, `SUPABASE_URL`,
 `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `FRONTEND_URL`, `CRON_SECRET`. E-mail (opcional):
-`NOTIFICATIONS_EMAIL_ENABLED`, `RESEND_API_KEY`, `NOTIFICATIONS_FROM_EMAIL`.
+`NOTIFICATIONS_EMAIL_ENABLED`, `RESEND_API_KEY`, `NOTIFICATIONS_FROM_EMAIL`. SMS/WhatsApp (M11,
+ports stub — sem provedor integrado, manter `false`): `NOTIFICATIONS_SMS_ENABLED`,
+`NOTIFICATIONS_WHATSAPP_ENABLED`. **Billing (M14, ADR-0026)**: `STRIPE_SECRET_KEY` (test em
+staging, live em prod) e `STRIPE_WEBHOOK_SECRET` (`whsec_...` do endpoint registrado no dashboard
+do Stripe apontando p/ `https://<backend>/webhooks/stripe` — registrar o endpoint faz parte do
+provisionamento de cada ambiente).
 
 > `DATABASE_URL` = role `postgres` (migrações/admin, BYPASSRLS) — use a **Session pooler** do
 > Supabase (IPv4, porta 5432) para o container alcançar o banco.
@@ -80,6 +86,14 @@ os downs** e **não é preciso configurar nada dentro do Supabase** além das co
 
 > Replica única (`numReplicas: 1`) → sem corrida de migração no boot. Mantenha migrações
 > backward-compatible (expand-contract) para deploys seguros.
+
+> **Squash 2026-07-13**: a cadeia 0000–0011 virou um único `0000_baseline`. Bancos **já
+> migrados** pela cadeia antiga (staging/devs) precisam rodar **uma vez** o re-baseline
+> (`node dist/database/migrator.js baseline` no container, ou `tsx src/database/migrator.ts
+> baseline` local) ANTES do primeiro deploy desta versão — senão o boot tenta aplicar o
+> baseline por cima do schema existente. Bancos novos seguem pelo `up` normal.
+> Detalhe: `apps/backend/drizzle/migrations/README.md`. **Backup antes** (`pnpm db:backup`,
+> ver `docs/backup-restore.md`).
 
 ## Passo a passo (staging)
 

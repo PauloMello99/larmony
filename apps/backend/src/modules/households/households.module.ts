@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { AuthModule } from "../auth/auth.module";
 import { UserModule } from "../user/user.module";
 import { MailModule } from "../mail/mail.module";
+import { SubscriptionsModule } from "../subscriptions/subscriptions.module";
 import { HouseholdsInfrastructureModule } from "./infrastructure/households-infrastructure.module";
 import { ListUserHouseholdsUseCase } from "./application/use-cases/list-user-households.use-case";
 import { GetHouseholdUseCase } from "./application/use-cases/get-household.use-case";
@@ -26,7 +27,13 @@ import { HouseholdsController } from "./interface/households.controller";
 import { InvitationsController } from "./interface/invitations.controller";
 
 @Module({
-  imports: [AuthModule, UserModule, MailModule, HouseholdsInfrastructureModule],
+  imports: [
+    AuthModule,
+    UserModule,
+    MailModule,
+    HouseholdsInfrastructureModule,
+    SubscriptionsModule,
+  ],
   controllers: [HouseholdsController, InvitationsController],
   providers: [
     ListUserHouseholdsUseCase,

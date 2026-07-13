@@ -1,0 +1,43 @@
+{
+  "page": {
+    "title": "Informes",
+    "description": "Vista mensual y anual de sus finanzas",
+    "monthly": "Mensual",
+    "annual": "Anual"
+  },
+  "chart": {
+    "income": "Ingresos",
+    "expense": "Gastos"
+  },
+  "monthly": {
+    "prevMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
+    "seriesTitle": "Ingresos × Gastos · últimos 6 meses",
+    "seriesEmpty": "Sin actividad en los últimos 6 meses.",
+    "byCategory": "Gastos por categoría · {{ref}}",
+    "byPerson": "Gastos por persona · {{ref}}",
+    "noExpenses": "Sin gastos este mes.",
+    "assignPersonHint": "Para ver quién gastó qué, asigne una persona al crear o editar cada transacción."
+  },
+  "annual": {
+    "prevYear": "Año anterior",
+    "nextYear": "Año siguiente",
+    "totalIncome": "Ingresos totales",
+    "totalExpense": "Gastos totales",
+    "balance": "Saldo",
+    "seriesTitle": "Ingresos × Gastos · {{year}}",
+    "seriesEmpty": "Sin actividad en {{year}}."
+  },
+  "export": {
+    "upgradeHint": "La exportación de informes es una función Family",
+    "columns": {
+      "category": "Categoría",
+      "amount": "Valor",
+      "year": "Año",
+      "month": "Mes",
+      "income": "Ingresos",
+      "expense": "Gastos",
+      "balance": "Saldo"
+    }
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "overview": "概要",
+    "transactions": "取引",
+    "categories": "カテゴリー",
+    "budgets": "予算",
+    "goals": "目標",
+    "scheduledTransactions": "定期取引",
+    "reports": "レポート",
+    "members": "メンバー",
+    "settings": "設定",
+    "settingsGeneral": "一般",
+    "settingsSubscription": "サブスクリプション",
+    "billing": "請求",
+    "households": "世帯",
+    "sectionHousehold": "世帯"
+  },
+  "overview": {
+    "goodMorning": "おはようございます",
+    "goodAfternoon": "こんにちは",
+    "goodEvening": "こんばんは",
+    "incomeMonth": "今月の収入",
+    "expensesMonth": "今月の支出",
+    "balanceMonth": "今月の収支",
+    "goalsTotal": "目標への積立総額",
+    "recentTransactions": "最近の取引",
+    "seeAll": "すべて表示",
+    "upcomingEntries": "今後の定期取引",
+    "activeGoals": "進行中の目標",
+    "budgets": "予算",
+    "emptyTransactions": "まだ取引がありません",
+    "emptyTransactionsHint": "ご家庭の取引がここに表示されます。",
+    "emptyEntries": "期限が近い定期取引はありません",
+    "emptyEntriesHint": "手動記帳の定期取引を登録すると、リマインダーが届きます。",
+    "emptyGoals": "進行中の目標がありません",
+    "emptyGoalsHint": "目標を作成して、達成状況を確認しましょう。",
+    "emptyBudgets": "予算が設定されていません",
+    "emptyBudgetsHint": "カテゴリーごとに支出上限を設定しましょう。",
+    "vsLastMonth": "前月比",
+    "goalsActive_one": "進行中の目標{{count}}件",
+    "goalsActive_other": "進行中の目標{{count}}件",
+    "dueToday": "本日期限",
+    "dueInDays_one": "あと{{count}}日",
+    "dueInDays_other": "あと{{count}}日",
+    "budgetOver": "超過",
+    "seeAllTransactions": "すべて表示"
+  },
+  "userMenu": {
+    "account": "アカウント設定",
+    "language": "言語",
+    "platformPanel": "プラットフォームダッシュボード",
+    "signOut": "ログアウト"
+  },
+  "switcher": {
+    "label": "世帯",
+    "viewAll": "すべての世帯を表示"
+  },
+  "roles": {
+    "owner": "オーナー",
+    "member": "メンバー"
+  },
+  "chrome": {
+    "openMenu": "メニューを開く",
+    "closeMenu": "メニューを閉じる",
+    "expandMenu": "メニューを展開",
+    "collapseMenu": "メニューを折りたたむ"
+  },
+  "householdsList": {
+    "title": "世帯",
+    "subtitle": "続ける世帯を選択してください",
+    "new": "新規世帯",
+    "create": "世帯を作成",
+    "empty": "まだ世帯がありません。",
+    "welcomeTitle": "Larmonyへようこそ!",
+    "welcomeHint": "最初の世帯を作成して、ご家庭の家計管理を始めましょう。"
+  },
+  "adminBanner": {
+    "managingAs": "現在、super_adminとして<strong>{{name}}</strong>を管理しています。",
+    "backToPanel": "ダッシュボードに戻る",
+    "superAccess": "super_adminアクセス"
+  },
+  "placeholders": {
+    "arriving": "{{milestone}}で公開予定",
+    "underConstruction": "準備中",
+    "comingSoon": "このセクションは近日公開予定です",
+    "transactions": {
+      "title": "取引",
+      "description": "ご家庭の収入と支出・カテゴリー、担当者、分割払い、メンバー間の割り勘に対応した記帳。"
+    },
+    "categories": {
+      "title": "カテゴリー",
+      "description": "収入・支出のカテゴリー、色、アイコンでご家庭の家計を整理します。"
+    },
+    "budgets": {
+      "title": "予算",
+      "description": "カテゴリーごとに月間の支出上限を設定し、使用状況を確認します。"
+    },
+    "goals": {
+      "title": "目標",
+      "description": "ご家庭の目標に向けてお金を貯め、それぞれの進捗を確認します。"
+    },
+    "bills": {
+      "title": "請求",
+      "description": "期限前にメールでリマインダーが届く、固定費・定期的な請求。"
+    },
+    "reports": {
+      "title": "レポート",
+      "description": "カテゴリー別・担当者別に見る、ご家庭の月次・年次の家計分析。"
+    }
+  }
+}

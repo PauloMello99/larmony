@@ -1,0 +1,89 @@
+{
+  "page": {
+    "title": "Movimientos programados",
+    "subtitle": "Cuentas y movimientos que se repiten — regístralos manualmente o deja que Larmony los genere automáticamente",
+    "newEntry": "Nuevo movimiento",
+    "empty": "Aún no hay movimientos.",
+    "createEntry": "Crear movimiento"
+  },
+  "form": {
+    "createTitle": "Nuevo movimiento",
+    "editTitle": "Editar movimiento",
+    "description": "Define la cadencia y elige si Larmony lo registra automáticamente o si prefieres confirmarlo manualmente.",
+    "postingModeLabel": "Registrar automáticamente",
+    "postingModeAutoHint": "Larmony crea la transacción por sí solo, en la fecha de cada ocurrencia.",
+    "postingModeManualHint": "Recibes un recordatorio y lo registras manualmente cuando quieras.",
+    "typeLabel": "Tipo",
+    "typeExpense": "Gasto",
+    "typeIncome": "Ingreso",
+    "amountLabel": "Valor",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Ej.: Alquiler, Salario, Internet",
+    "frequencyLabel": "Frecuencia",
+    "intervalLabel": "Cada",
+    "startLabel": "Inicio",
+    "startImmutable": "{{date}} (inmutable)",
+    "startPlaceholder": "Fecha de la 1ª ocurrencia",
+    "endLabel": "Fin (opcional)",
+    "endPlaceholder": "Sin fecha de fin",
+    "clear": "Limpiar",
+    "categoryLabel": "Categoría",
+    "categoryPlaceholder": "Sin categoría",
+    "reminderLabel": "Recordatorio",
+    "reminderNone": "Sin recordatorio",
+    "reminderDaysBefore_one": "{{count}} día antes",
+    "reminderDaysBefore_other": "{{count}} días antes",
+    "activeLabel": "Movimiento activo",
+    "notesLabel": "Notas",
+    "notesPlaceholder": "Notas opcionales",
+    "saving": "Guardando…",
+    "saveChanges": "Guardar cambios",
+    "create": "Crear movimiento"
+  },
+  "list": {
+    "headerDescription": "Descripción",
+    "headerCadence": "Cadencia",
+    "headerAmount": "Importe",
+    "headerActive": "Activo"
+  },
+  "row": {
+    "dueToday": "Vence hoy",
+    "dueTomorrow": "Vence mañana",
+    "dueInDays_one": "Vence en {{count}} día",
+    "dueInDays_other": "Vence en {{count}} días",
+    "next": "próxima {{date}}",
+    "inactive": "Inactivo",
+    "activateAria": "Activar movimiento",
+    "deactivateAria": "Desactivar movimiento",
+    "launchAsTransaction": "Registrar como transacción"
+  },
+  "deleteDialog": {
+    "title": "Eliminar movimiento",
+    "descriptionManual": "¿Seguro que deseas eliminar <span>{{description}}</span>? Las transacciones ya registradas no se ven afectadas.",
+    "descriptionAuto": "¿Seguro que deseas eliminar <span>{{description}}</span>? Las transacciones ya generadas permanecen en el historial (solo dejan de marcarse como automáticas).",
+    "deleting": "Eliminando…"
+  },
+  "frequency": {
+    "weekly": "Semanal",
+    "biweekly": "Quincenal",
+    "monthly": "Mensual",
+    "bimonthly": "Bimestral",
+    "quarterly": "Trimestral",
+    "semiannual": "Semestral",
+    "yearly": "Anual",
+    "everyWeeks_one": "Cada {{count}} semana",
+    "everyWeeks_other": "Cada {{count}} semanas",
+    "everyMonths_one": "Cada {{count}} mes",
+    "everyMonths_other": "Cada {{count}} meses",
+    "everyYears_one": "Cada {{count}} año",
+    "everyYears_other": "Cada {{count}} años"
+  },
+  "validation": {
+    "amountRequired": "Ingresa un valor",
+    "descriptionRequired": "La descripción es obligatoria",
+    "descriptionMax": "Máximo 200 caracteres",
+    "intervalMin": "Mínimo 1",
+    "intervalMax": "Máximo 365",
+    "startDateRequired": "Ingresa la fecha de inicio"
+  }
+}

@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { zonedNow } from "../../../../common/time/tz-clock";
 import {
   ORGANIZATION_REPOSITORY,
   type IHouseholdRepository,
@@ -29,6 +30,8 @@ export class GetHouseholdOverviewUseCase {
     const household = await this.householdRepo.findByIdAndAuthId(householdId, authId);
     if (!household) throw new HouseholdNotFoundException(householdId);
 
-    return this.overviewRepo.getOverview(householdId, now);
+    // "Mês corrente"/vencimentos do overview no fuso do lar (M12) — reusa a
+    // entidade já carregada; getOverview deriva monthBounds/upcoming do `now`.
+    return this.overviewRepo.getOverview(householdId, zonedNow(household.timezone, now));
   }
 }

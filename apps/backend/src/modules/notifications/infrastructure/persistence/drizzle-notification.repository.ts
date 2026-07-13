@@ -102,10 +102,12 @@ export class DrizzleNotificationRepository implements INotificationRepository {
         id: schema.users.id,
         name: schema.users.name,
         email: schema.users.email,
+        phone: schema.users.phone,
+        locale: schema.users.locale,
       })
       .from(schema.users)
       .where(eq(schema.users.id, userId))
       .limit(1);
-    return row ?? null;
+    return row ? { ...row, phone: row.phone ?? null } : null;
   }
 }

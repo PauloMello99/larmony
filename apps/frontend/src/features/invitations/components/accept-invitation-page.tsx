@@ -14,6 +14,7 @@ import {
 } from "@/shared/components/ui/card"
 import { Button } from "@/shared/components/ui/button"
 import { useAuth } from "@/features/auth/hooks/use-auth"
+import { translateApiError } from "@/shared/lib/api-error"
 import {
   useInvitationLookup,
   useAcceptInvitation,
@@ -38,6 +39,7 @@ function Spinner() {
 
 export function AcceptInvitationPage() {
   const { t } = useTranslation("invitations")
+  const { t: tCommon } = useTranslation("common")
   const router = useRouter()
   const token =
     typeof router.query.token === "string" ? router.query.token : undefined
@@ -122,7 +124,9 @@ export function AcceptInvitationPage() {
       void router.replace(`/households/${res.householdSlug}`)
     } catch (err) {
       setAcceptError(
-        err instanceof Error ? err.message : t("accept.acceptError"),
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("accept.acceptError"),
       )
     }
   }
@@ -136,7 +140,9 @@ export function AcceptInvitationPage() {
       void router.replace("/households")
     } catch (err) {
       setAcceptError(
-        err instanceof Error ? err.message : t("accept.declineError"),
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("accept.declineError"),
       )
     }
   }

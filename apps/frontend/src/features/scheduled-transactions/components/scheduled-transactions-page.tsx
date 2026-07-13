@@ -1,10 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { CalendarClock, PlusCircle } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Skeleton } from "@/shared/components/ui/skeleton"
+import { Pagination } from "@/shared/components/ui/pagination"
+import { usePagination } from "@/shared/hooks/use-pagination"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
 import { useScheduledEntries } from "../hooks/use-scheduled-entries"
 import { useScheduledEntryMutations } from "../hooks/use-scheduled-entry-mutations"
@@ -18,6 +20,12 @@ export function ScheduledTransactionsPage() {
   const { t } = useTranslation("scheduled-transactions")
   const { householdId } = useCurrentHousehold()
   const { entries, loading } = useScheduledEntries(householdId)
+  // Ativos primeiro (inativos aparecem esmaecidos na tabela), depois pagina.
+  const sortedEntries = useMemo(
+    () => [...entries].sort((a, b) => Number(b.isActive) - Number(a.isActive)),
+    [entries],
+  )
+  const pagination = usePagination(sortedEntries)
   const { createEntry, updateEntry, deleteEntry, launchEntry } =
     useScheduledEntryMutations(householdId)
 
@@ -52,7 +60,7 @@ export function ScheduledTransactionsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="flex flex-col">
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
@@ -88,13 +96,25 @@ export function ScheduledTransactionsPage() {
           </Button>
         </div>
       ) : (
-        <ScheduledEntryList
-          entries={entries}
-          onToggleActive={handleToggleActive}
-          onEdit={openEdit}
-          onLaunch={handleLaunch}
-          onDelete={setDeleting}
-        />
+        <>
+          <ScheduledEntryList
+            entries={pagination.pageItems}
+            onToggleActive={handleToggleActive}
+            onEdit={openEdit}
+            onLaunch={handleLaunch}
+            onDelete={setDeleting}
+          />
+          <Pagination
+            page={pagination.page}
+            pageSize={pagination.pageSize}
+            totalPages={pagination.totalPages}
+            total={pagination.total}
+            from={pagination.from}
+            to={pagination.to}
+            onPageChange={pagination.setPage}
+            onPageSizeChange={pagination.setPageSize}
+          />
+        </>
       )}
 
       <ScheduledEntryForm

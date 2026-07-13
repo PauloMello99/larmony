@@ -24,7 +24,7 @@ export function BackgroundGrid({
         <div
           className="absolute inset-0 opacity-30"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.household/2000/svg' width='32' height='32'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23ffffff' fill-opacity='0.25'/%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23ffffff' fill-opacity='0.25'/%3E%3C/svg%3E")`,
             backgroundRepeat: "repeat",
           }}
         />
@@ -32,8 +32,16 @@ export function BackgroundGrid({
 
       {glows && (
         <>
-          <div className="absolute -left-40 -top-40 h-[600px] w-[600px] rounded-full bg-primary/10 blur-[120px]" />
-          <div className="absolute -bottom-20 -right-20 h-[500px] w-[500px] rounded-full bg-orange-600/8 blur-[100px]" />
+          {/* Blob teal (marca) */}
+          <div
+            className="absolute -left-44 -top-36 h-[560px] w-[560px] rounded-full blur-[110px]"
+            style={{ background: "oklch(0.6 0.118 184.704 / 0.13)" }}
+          />
+          {/* Blob laranja quente — decoração exclusiva da landing (readme do DS) */}
+          <div
+            className="absolute -right-28 top-72 h-[440px] w-[440px] rounded-full blur-[100px]"
+            style={{ background: "rgba(234,88,12,0.06)" }}
+          />
         </>
       )}
     </div>

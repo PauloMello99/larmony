@@ -39,10 +39,8 @@ export class BudgetsController {
     @Param("householdId", ParseUUIDPipe) householdId: string,
     @Query() query: ListBudgetsQueryDto,
   ) {
-    const now = new Date();
-    const month = query.month ?? now.getMonth() + 1;
-    const year = query.year ?? now.getFullYear();
-    return this.listBudgets.execute(householdId, month, year);
+    // Default de mês/ano (fuso do lar) resolvido no use-case — ver M12/ADR-0024.
+    return this.listBudgets.execute(householdId, query.month, query.year);
   }
 
   @Post()

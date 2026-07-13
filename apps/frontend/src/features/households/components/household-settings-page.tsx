@@ -138,7 +138,7 @@ export function HouseholdSettingsPage({ householdId }: HouseholdSettingsPageProp
               {t("settings.transferDescription")}
             </p>
           </div>
-          <div className="rounded-lg border border-foreground/[0.06] bg-foreground/[0.02] p-5">
+          <div className="rounded-lg border border-foreground/[0.07] bg-foreground/[0.03] p-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-foreground/50">
                 {t("settings.transferProse")}

@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next"
 import { PlusCircle, Tags } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Skeleton } from "@/shared/components/ui/skeleton"
+import { Pagination } from "@/shared/components/ui/pagination"
+import { usePagination } from "@/shared/hooks/use-pagination"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
 import { useCategories } from "../hooks/use-categories"
 import { useCategoryMutations } from "../hooks/use-category-mutations"
@@ -18,6 +20,7 @@ export function CategoriesPage() {
   const { t } = useTranslation("categories")
   const { householdId } = useCurrentHousehold()
   const { categories, loading } = useCategories(householdId)
+  const pagination = usePagination(categories)
   const { createCategory, updateCategory, deleteCategory } = useCategoryMutations(householdId)
 
   const [formOpen, setFormOpen] = useState(false)
@@ -43,7 +46,7 @@ export function CategoriesPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="flex flex-col">
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
@@ -79,7 +82,23 @@ export function CategoriesPage() {
           </Button>
         </div>
       ) : (
-        <CategoryList categories={categories} onEdit={openEdit} onDelete={setDeleting} />
+        <>
+          <CategoryList
+            categories={pagination.pageItems}
+            onEdit={openEdit}
+            onDelete={setDeleting}
+          />
+          <Pagination
+            page={pagination.page}
+            pageSize={pagination.pageSize}
+            totalPages={pagination.totalPages}
+            total={pagination.total}
+            from={pagination.from}
+            to={pagination.to}
+            onPageChange={pagination.setPage}
+            onPageSizeChange={pagination.setPageSize}
+          />
+        </>
       )}
 
       <CategoryForm

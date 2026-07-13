@@ -1,75 +1,102 @@
-import * as React from "react"
-import { Check } from "lucide-react"
-import { Badge } from "@/shared/components/ui/badge"
+"use client"
 
-const STATS = [
-  { value: "100%", label: "Centavos exatos, sem arredondamento" },
-  { value: "∞", label: "Membros por lar" },
-  { value: "PT-BR / EN", label: "Idiomas disponíveis" },
-  { value: "RLS", label: "Dados isolados por lar" },
+import * as React from "react"
+import { useTranslation } from "react-i18next"
+import { Home, UserPlus, LineChart, Users, Coins, ShieldCheck } from "lucide-react"
+import { SectionHeading } from "./section-heading"
+import { Reveal } from "./reveal"
+
+const DELAYS = ["", "lp-d1", "lp-d2"]
+
+const STEPS = [
+  { key: "s1", icon: Home },
+  { key: "s2", icon: UserPlus },
+  { key: "s3", icon: LineChart },
 ]
 
-const BULLETS = [
-  "Interface projetada para o dia a dia financeiro de uma casa",
-  "Sem contratos de longo prazo — cancele quando quiser",
-  "Convide quem mora com você para dividir as finanças",
-  "Atualizações contínuas baseadas no feedback dos usuários",
-  "Dados seguros com isolamento por lar e backups automáticos",
+const DIFFS = [
+  { key: "d1", icon: Users },
+  { key: "d2", icon: Coins },
+  { key: "d3", icon: ShieldCheck },
 ]
 
 export function About() {
+  const { t } = useTranslation("landing")
+
   return (
-    <section id="sobre" className="py-16 md:py-24">
+    <section id="sobre" className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          {/* Left: text */}
-          <div>
-            <div className="mb-4">
-              <Badge
-                variant="outline"
-                className="border-white/10 text-white/60"
-              >
-                Sobre o Larmony
-              </Badge>
-            </div>
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
-              Feito para quem
-              <br />
-              <span className="text-primary">divide as contas de casa</span>
-            </h2>
-            <p className="mt-6 leading-relaxed text-white/50">
-              Construído para famílias e casais. Sabemos que organizar as finanças
-              do lar não deveria depender de planilhas soltas e anotações perdidas.
-              O Larmony cuida do controle para você focar no que realmente importa.
-            </p>
+        <SectionHeading
+          kicker={t("about.kicker")}
+          title={t("about.title")}
+          subtitle={t("about.subtitle")}
+        />
 
-            <ul className="mt-8 space-y-3">
-              {BULLETS.map((bullet) => (
-                <li key={bullet} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/15">
-                    <Check className="h-3 w-3 text-primary" />
-                  </span>
-                  <span className="text-sm text-white/60">{bullet}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Right: stats */}
-          <div className="grid grid-cols-2 gap-4">
-            {STATS.map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-xl border border-white/5 bg-white/[0.03] p-4 sm:p-6"
+        {/* Como funciona — 3 passos */}
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+          {STEPS.map((step, i) => {
+            const Icon = step.icon
+            return (
+              <Reveal
+                key={step.key}
+                delay={DELAYS[i]}
+                className="relative overflow-hidden rounded-[20px] border border-white/[0.07] bg-white/[0.03] p-7"
               >
-                <p className="text-2xl font-bold text-primary sm:text-4xl">
-                  {stat.value}
+                <span className="pointer-events-none absolute right-5 top-3 text-[56px] font-black leading-none text-white/[0.05]">
+                  {i + 1}
+                </span>
+                <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-[13px] bg-primary/10">
+                  <Icon className="h-5 w-5 text-primary" />
+                </div>
+                <h3 className="mb-2 text-[16.5px] font-semibold text-white">
+                  {t(`about.steps.${step.key}.title`)}
+                </h3>
+                <p className="text-sm leading-relaxed text-white/55">
+                  {t(`about.steps.${step.key}.desc`)}
                 </p>
-                <p className="mt-1 text-sm text-white/50">{stat.label}</p>
-              </div>
-            ))}
+              </Reveal>
+            )
+          })}
+        </div>
+
+        {/* Diferenciais */}
+        <div className="mt-20">
+          <h3 className="text-center text-[22px] font-bold tracking-tight text-white sm:text-[26px]">
+            {t("about.diff.title")}
+          </h3>
+          <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-3">
+            {DIFFS.map((d, i) => {
+              const Icon = d.icon
+              return (
+                <Reveal
+                  key={d.key}
+                  delay={DELAYS[i]}
+                  className="rounded-[20px] border border-white/[0.07] bg-white/[0.03] p-6 transition-colors hover:border-primary/30"
+                >
+                  <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                    <Icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <h4 className="mb-1.5 text-[15px] font-semibold text-white">
+                    {t(`about.diff.${d.key}.title`)}
+                  </h4>
+                  <p className="text-[13.5px] leading-relaxed text-white/55">
+                    {t(`about.diff.${d.key}.desc`)}
+                  </p>
+                </Reveal>
+              )
+            })}
           </div>
         </div>
+
+        {/* Prova / resultado */}
+        <Reveal className="mt-20 rounded-3xl border border-primary/20 bg-primary/[0.06] p-10 text-center sm:p-12">
+          <h3 className="mx-auto max-w-2xl text-[22px] font-bold leading-snug tracking-tight text-white sm:text-[28px]">
+            {t("about.proof.title")}
+          </h3>
+          <p className="mx-auto mt-3.5 max-w-xl text-[15px] leading-relaxed text-white/60">
+            {t("about.proof.description")}
+          </p>
+        </Reveal>
       </div>
     </section>
   )

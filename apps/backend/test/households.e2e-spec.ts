@@ -11,6 +11,20 @@ describe("Households (e2e)", () => {
     app = await createTestApp();
     pool = adminPool();
     owner = await signUpUser(app, "hh.owner");
+
+    // Bootstrap: este arquivo cria VÁRIOS lares com o mesmo `owner` ao longo
+    // dos testes (fixtures pré-existentes ao gate de limite do Free, P-2).
+    // Concede comp no primeiro lar para destravar as criações seguintes —
+    // o teste do LIMITE em si usa um usuário isolado, mais abaixo.
+    const bootstrap = await authed(app, "post", "/households", owner.accessToken)
+      .send({ name: "E2E Lar Bootstrap (comp)" })
+      .expect(201);
+    await pool.query(
+      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
+       VALUES ($1, 'custom', 'active', 'e2e bootstrap — desbloqueia fixtures de households.e2e-spec')
+       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
+      [bootstrap.body.id],
+    );
   });
 
   afterAll(async () => {
@@ -53,6 +67,34 @@ describe("Households (e2e)", () => {
     expect(bySlug.body.id).toBe(created.body.id);
   });
 
+  it("timezone (M12): default no create, aceito no create e editável no update", async () => {
+    // Sem timezone → default do schema.
+    const def = await authed(app, "post", "/households", owner.accessToken)
+      .send({ name: "E2E Lar TZ Default" })
+      .expect(201);
+    expect(def.body.timezone).toBe("America/Sao_Paulo");
+    expect(def.body.notificationHour).toBe(9);
+
+    // Com timezone do navegador.
+    const created = await authed(app, "post", "/households", owner.accessToken)
+      .send({ name: "E2E Lar TZ", timezone: "America/New_York" })
+      .expect(201);
+    expect(created.body.timezone).toBe("America/New_York");
+
+    // Update de fuso + hora reflete no GET.
+    await authed(app, "patch", `/households/${created.body.id}`, owner.accessToken)
+      .send({ timezone: "Europe/Lisbon", notificationHour: 7 })
+      .expect(200);
+    const got = await authed(app, "get", `/households/${created.body.id}`, owner.accessToken).expect(200);
+    expect(got.body.timezone).toBe("Europe/Lisbon");
+    expect(got.body.notificationHour).toBe(7);
+
+    // Fuso inválido → 400 (validação IANA no ValidationPipe global).
+    await authed(app, "patch", `/households/${created.body.id}`, owner.accessToken)
+      .send({ timezone: "Marte/Olympus_Mons" })
+      .expect(400);
+  });
+
   it("update é owner-only: member recebe 403", async () => {
     const created = await authed(app, "post", "/households", owner.accessToken)
       .send({ name: "E2E Lar Update" })
@@ -89,5 +131,32 @@ describe("Households (e2e)", () => {
       [created.body.id],
     );
     expect(categories.rows[0].n).toBe(0);
+  });
+
+  it("limite de lares do Free (D-1, P-2): 1º lar ok, 2º bloqueado (402), libera após upgrade", async () => {
+    // Usuário isolado — não usa o `owner` compartilhado (já tem comp p/ outros
+    // testes deste arquivo; o gate testado aqui é o do plano Free real).
+    const solo = await signUpUser(app, "hh.limit");
+
+    const first = await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Limite 1" })
+      .expect(201);
+
+    const blocked = await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Limite 2" })
+      .expect(402);
+    expect(blocked.body.code).toBe("HOUSEHOLD_LIMIT_REACHED");
+
+    // Upgrade do 1º lar (comp) libera a criação do 2º.
+    await pool.query(
+      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
+       VALUES ($1, 'custom', 'active', 'e2e limite de lares — upgrade')
+       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
+      [first.body.id],
+    );
+
+    await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Limite 2" })
+      .expect(201);
   });
 });

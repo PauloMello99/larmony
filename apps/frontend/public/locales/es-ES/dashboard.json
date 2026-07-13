@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "overview": "Resumen",
+    "transactions": "Transacciones",
+    "categories": "Categorías",
+    "budgets": "Presupuestos",
+    "goals": "Metas",
+    "scheduledTransactions": "Movimientos programados",
+    "reports": "Informes",
+    "members": "Miembros",
+    "settings": "Ajustes",
+    "settingsGeneral": "General",
+    "settingsSubscription": "Suscripción",
+    "billing": "Facturación",
+    "households": "Hogares",
+    "sectionHousehold": "Hogar"
+  },
+  "overview": {
+    "goodMorning": "Buenos días",
+    "goodAfternoon": "Buenas tardes",
+    "goodEvening": "Buenas noches",
+    "incomeMonth": "Ingresos del mes",
+    "expensesMonth": "Gastos del mes",
+    "balanceMonth": "Saldo del mes",
+    "goalsTotal": "Ahorrado en metas",
+    "recentTransactions": "Transacciones recientes",
+    "seeAll": "Ver todas",
+    "upcomingEntries": "Movimientos próximos",
+    "activeGoals": "Metas activas",
+    "budgets": "Presupuestos",
+    "emptyTransactions": "Aún no hay transacciones",
+    "emptyTransactionsHint": "Los movimientos de tu hogar aparecerán aquí.",
+    "emptyEntries": "No hay movimientos por vencer",
+    "emptyEntriesHint": "Agrega movimientos manuales para recibir recordatorios.",
+    "emptyGoals": "No hay metas activas",
+    "emptyGoalsHint": "Crea metas para seguir tus objetivos.",
+    "emptyBudgets": "No hay presupuestos definidos",
+    "emptyBudgetsHint": "Define límites de gasto por categoría.",
+    "vsLastMonth": "vs. mes anterior",
+    "goalsActive_one": "{{count}} objetivo activo",
+    "goalsActive_other": "{{count}} objetivos activos",
+    "dueToday": "Vence hoy",
+    "dueInDays_one": "En {{count}} días",
+    "dueInDays_other": "En {{count}} días",
+    "budgetOver": "Excedido",
+    "seeAllTransactions": "Ver todas las transacciones"
+  },
+  "userMenu": {
+    "account": "Mi Cuenta",
+    "language": "Idioma",
+    "platformPanel": "Panel de la plataforma",
+    "signOut": "Cerrar sesión"
+  },
+  "switcher": {
+    "label": "Hogares",
+    "viewAll": "Ver todos los hogares"
+  },
+  "roles": {
+    "owner": "Propietario",
+    "member": "Miembro"
+  },
+  "chrome": {
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "expandMenu": "Expandir menú",
+    "collapseMenu": "Colapsar menú"
+  },
+  "householdsList": {
+    "title": "Hogares",
+    "subtitle": "Seleccione un hogar para continuar",
+    "new": "Nuevo hogar",
+    "create": "Crear hogar",
+    "empty": "No hay hogares aún.",
+    "welcomeTitle": "¡Bienvenido(a) a Larmony!",
+    "welcomeHint": "Vamos crear el primer hogar para organizar las finanzas de su casa."
+  },
+  "adminBanner": {
+    "managingAs": "Está gestionando <strong>{{name}}</strong> como super_admin.",
+    "backToPanel": "Volver al panel",
+    "superAccess": "Acceso de super_admin"
+  },
+  "placeholders": {
+    "arriving": "Disponible en {{milestone}}",
+    "underConstruction": "En construcción",
+    "comingSoon": "Esta sección estará disponible en breve",
+    "transactions": {
+      "title": "Transacciones",
+      "description": "Ingresos y gastos de su hogar: movimientos con categoría, persona, cuotas y división entre miembros."
+    },
+    "categories": {
+      "title": "Categorías",
+      "description": "Organiza las finanzas del hogar con categorías de ingresos y gastos, colores e íconos."
+    },
+    "budgets": {
+      "title": "Presupuestos",
+      "description": "Define límites de gasto mensuales por categoría y controla cuánto se ha usado."
+    },
+    "goals": {
+      "title": "Metas",
+      "description": "Ahorra dinero para los objetivos del hogar y sigue el progreso de cada meta."
+    },
+    "bills": {
+      "title": "Cuentas",
+      "description": "Cuentas fijas y recurrentes con recordatorios por correo antes del vencimiento."
+    },
+    "reports": {
+      "title": "Informes",
+      "description": "Análisis mensual y anual de las finanzas del hogar, por categoría y por persona."
+    }
+  }
+}

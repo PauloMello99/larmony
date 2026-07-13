@@ -3,6 +3,7 @@ import { and, eq, isNotNull, lte } from "drizzle-orm";
 import { DRIZZLE, DRIZZLE_ADMIN, type DrizzleDB } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
 import { daysBetween, nextManualOccurrence, toISODate } from "../../../../common/finance/due-date";
+import { findHouseholdMemberUserIds } from "../../../../common/household/household-members";
 import {
   ScheduledEntryEntity,
   type ScheduledEntryFrequency,
@@ -216,11 +217,12 @@ export class DrizzleScheduledEntryRepository implements IScheduledEntryRepositor
 
   // ─── Engine (admin, modo auto) ───
 
-  async findDue(today: string): Promise<DueScheduledEntry[]> {
+  async findDue(upperBound: string): Promise<DueScheduledEntry[]> {
     const rows = await this.admin
       .select({
         id: schema.scheduledTransactionEntries.id,
         householdId: schema.scheduledTransactionEntries.householdId,
+        householdTimezone: schema.households.timezone,
         createdBy: schema.scheduledTransactionEntries.createdBy,
         personId: schema.scheduledTransactionEntries.personId,
         categoryId: schema.scheduledTransactionEntries.categoryId,
@@ -233,12 +235,17 @@ export class DrizzleScheduledEntryRepository implements IScheduledEntryRepositor
         nextRunDate: schema.scheduledTransactionEntries.nextRunDate,
       })
       .from(schema.scheduledTransactionEntries)
+      .innerJoin(
+        schema.households,
+        eq(schema.households.id, schema.scheduledTransactionEntries.householdId),
+      )
       .where(
         and(
           eq(schema.scheduledTransactionEntries.postingMode, "auto"),
           eq(schema.scheduledTransactionEntries.isActive, true),
           isNotNull(schema.scheduledTransactionEntries.nextRunDate),
-          lte(schema.scheduledTransactionEntries.nextRunDate, today),
+          // Teto seguro (UTC+14) — o corte fino por fuso do lar é no engine (M12).
+          lte(schema.scheduledTransactionEntries.nextRunDate, upperBound),
         ),
       );
 
@@ -269,6 +276,8 @@ export class DrizzleScheduledEntryRepository implements IScheduledEntryRepositor
         id: schema.scheduledTransactionEntries.id,
         householdId: schema.scheduledTransactionEntries.householdId,
         householdSlug: schema.households.slug,
+        householdTimezone: schema.households.timezone,
+        householdNotificationHour: schema.households.notificationHour,
         description: schema.scheduledTransactionEntries.description,
         amountCents: schema.scheduledTransactionEntries.amountCents,
         frequency: schema.scheduledTransactionEntries.frequency,
@@ -302,16 +311,7 @@ export class DrizzleScheduledEntryRepository implements IScheduledEntryRepositor
   }
 
   async findHouseholdMemberUserIds(householdId: string): Promise<string[]> {
-    const rows = await this.admin
-      .select({ userId: schema.householdMemberships.userId })
-      .from(schema.householdMemberships)
-      .where(
-        and(
-          eq(schema.householdMemberships.householdId, householdId),
-          eq(schema.householdMemberships.enabled, true),
-        ),
-      );
-    return rows.map((r) => r.userId);
+    return findHouseholdMemberUserIds(this.admin, householdId);
   }
 
   private async getOne(id: string, householdId: string): Promise<ScheduledEntryListItem> {

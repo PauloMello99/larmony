@@ -83,7 +83,7 @@ src/
     ├── households/                # tenancy (multi-lar), membros, convites, overview (M3)
     ├── categories/                # CRUD de categorias (M2)
     ├── transactions/              # CRUD + filtros (M2) + parcelamento/rateio (M4)
-    ├── budgets/                   # CRUD de orçamentos + spending derivado (M5)
+    ├── budgets/                   # série + versões, limite resolvido on-read (M5, versionado M10)
     ├── goals/                     # CRUD de metas + aportes; savedCents derivado por SUM (M6)
     ├── bills/                     # CRUD + lançar como transação + job de lembrete (M7 completo)
     ├── reports/                   # agregações read-only mensal/anual (M8)

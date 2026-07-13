@@ -18,6 +18,10 @@ export const makeSignupSchema = (t: TFunction) =>
       email: z.string().email(t("validation.invalidEmail")),
       password: z.string().min(8, t("validation.passwordMin")),
       confirmPassword: z.string().min(1, t("validation.confirmPasswordRequired")),
+      // Aceite obrigatório dos Termos/Privacidade (LGPD) — backend re-valida.
+      termsAccepted: z
+        .boolean()
+        .refine((v) => v === true, t("validation.termsRequired")),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: t("validation.passwordsMismatch"),

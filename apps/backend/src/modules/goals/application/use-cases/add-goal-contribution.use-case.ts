@@ -6,12 +6,16 @@ import {
   type GoalContributionItem,
 } from "../../domain/goal.repository.interface";
 import { AuditService } from "../../../audit/audit.service";
+import { DispatchNotificationUseCase } from "../../../notifications/application/use-cases/dispatch-notification.use-case";
+import { NotificationDedupService } from "../../../notifications/application/notification-dedup.service";
 
 @Injectable()
 export class AddGoalContributionUseCase {
   constructor(
     @Inject(GOAL_REPOSITORY) private readonly goalRepo: IGoalRepository,
     private readonly auditService: AuditService,
+    private readonly dispatch: DispatchNotificationUseCase,
+    private readonly dedup: NotificationDedupService,
   ) {}
 
   async execute(
@@ -36,6 +40,36 @@ export class AddGoalContributionUseCase {
       metadata: { goalId, amountCents: contribution.amountCents },
     });
 
+    await this.notifyIfGoalReached(goalId, householdId);
+
     return contribution;
+  }
+
+  /**
+   * Meta atingida (M11) — event-driven, dedup 1×/meta (não por usuário: o
+   * claim é household-scoped; o fan-out por destinatário é ortogonal e
+   * resolvido pelo dispatcher). Se o aporte não cruzou o alvo, ou já
+   * notificou antes, não faz nada.
+   */
+  private async notifyIfGoalReached(goalId: string, householdId: string): Promise<void> {
+    const goal = await this.goalRepo.findById(goalId, householdId);
+    if (!goal) return;
+
+    const savedCents = await this.goalRepo.sumContributions(goalId);
+    if (savedCents < goal.targetAmountCents) return;
+
+    const claimed = await this.dedup.claim(householdId, "goal_reached", goalId, "once");
+    if (!claimed) return;
+
+    const memberIds = await this.goalRepo.findHouseholdMemberUserIds(householdId);
+    await this.dispatch.execute({
+      recipientUserIds: memberIds,
+      householdId,
+      type: "goal_reached",
+      goalName: goal.name,
+      savedCents,
+      targetCents: goal.targetAmountCents,
+      data: { goalId },
+    });
   }
 }

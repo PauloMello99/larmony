@@ -13,7 +13,9 @@ export async function createTestApp(): Promise<INestApplication> {
     imports: [AppModule],
   }).compile();
 
-  const app = moduleRef.createNestApplication();
+  // rawBody: mesmo do main.ts — os e2e do webhook do Stripe precisam do
+  // req.rawBody para a verificação de assinatura.
+  const app = moduleRef.createNestApplication({ rawBody: true });
   app.useGlobalFilters(new AllExceptionsFilter(app.get(TelemetryService)));
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   await app.init();
@@ -50,7 +52,7 @@ export async function signUpUser(
   const password = "SenhaForteE2e123!";
   const res = await request(app.getHttpServer())
     .post("/auth/sign-up")
-    .send({ name: `E2E ${prefix}`, email, password })
+    .send({ name: `E2E ${prefix}`, email, password, termsAccepted: true })
     .expect(201);
 
   const accessToken: string =
@@ -62,7 +64,7 @@ export async function signUpUser(
 
 export function authed(
   app: INestApplication,
-  method: "get" | "post" | "patch" | "delete",
+  method: "get" | "post" | "patch" | "put" | "delete",
   url: string,
   token: string,
 ) {

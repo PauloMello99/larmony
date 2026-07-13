@@ -1,0 +1,58 @@
+{
+  "page": {
+    "title": "分类",
+    "subtitle": "按分类整理您的交易、预算和账户",
+    "newCategory": "新建分类",
+    "empty": "暂无分类。",
+    "createCategory": "创建分类"
+  },
+  "types": {
+    "income": "收入",
+    "expense": "支出",
+    "both": "两者"
+  },
+  "form": {
+    "editTitle": "编辑分类",
+    "createTitle": "新建分类",
+    "description": "分类用于整理您的交易、预算和账户。",
+    "nameLabel": "名称",
+    "namePlaceholder": "例如：宠物",
+    "typeLabel": "类型",
+    "colorLabel": "颜色",
+    "iconLabel": "图标",
+    "iconPlaceholder": "选择",
+    "saving": "保存中……",
+    "saveChanges": "保存修改",
+    "create": "创建分类"
+  },
+  "list": {
+    "headerName": "名称",
+    "headerType": "类型",
+    "defaultSuffix": "（默认）"
+  },
+  "deleteDialog": {
+    "title": "删除分类",
+    "description": "确定要删除 <span>{{name}}</span> 吗？已使用该分类的交易将变为未分类——不会删除任何交易。",
+    "deleting": "删除中……"
+  },
+  "icons": {
+    "banknote": "现金",
+    "briefcase": "工作",
+    "trendingUp": "投资",
+    "utensilsCrossed": "饮食",
+    "home": "住房",
+    "car": "交通",
+    "heart": "健康",
+    "bookOpen": "教育",
+    "gamepad2": "娱乐",
+    "shirt": "服饰",
+    "refreshCw": "订阅",
+    "circlePlus": "其他（收入）",
+    "circleMinus": "其他（支出）"
+  },
+  "validation": {
+    "nameRequired": "名称为必填项",
+    "nameMax": "最多 60 个字符",
+    "colorInvalid": "颜色无效"
+  }
+}

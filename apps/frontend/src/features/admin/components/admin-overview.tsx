@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import {
   Building2,
   Ban,
@@ -47,7 +48,7 @@ function StatCard({
   loading: boolean
 }) {
   return (
-    <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
+    <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4">
       <div className="flex items-center gap-1.5 text-xs text-foreground/50">
         <Icon className="h-3.5 w-3.5 text-primary" />
         {label}
@@ -91,21 +92,24 @@ function ChartTooltip({
 }
 
 export function AdminOverview() {
+  const { t } = useTranslation("admin")
   const { stats, loading, error } = useAdminStats()
   const { series, loading: growthLoading } = useAdminGrowth()
   const reducedMotion = usePrefersReducedMotion()
 
+  const seriesHouseholdsLabel = t("overview.seriesHouseholds")
+  const seriesUsersLabel = t("overview.seriesUsers")
   const growthData = series.map((p) => ({
-    month: fmtMonth(p.month),
-    Lares: p.newHouseholds,
-    Usuários: p.newUsers,
+    month: fmtMonth(p.month, t),
+    [seriesHouseholdsLabel]: p.newHouseholds,
+    [seriesUsersLabel]: p.newUsers,
   }))
   const hasGrowth = series.some((p) => p.newHouseholds > 0 || p.newUsers > 0)
 
   const activeHouseholds = (stats?.totalHouseholds ?? 0) - (stats?.suspendedHouseholds ?? 0)
   const statusData = [
-    { name: "Ativas", value: activeHouseholds, color: COLORS.active },
-    { name: "Suspensas", value: stats?.suspendedHouseholds ?? 0, color: COLORS.suspended },
+    { name: t("overview.statusActive"), value: activeHouseholds, color: COLORS.active },
+    { name: t("overview.statusSuspended"), value: stats?.suspendedHouseholds ?? 0, color: COLORS.suspended },
   ]
   const hasHouseholds = (stats?.totalHouseholds ?? 0) > 0
 
@@ -113,10 +117,10 @@ export function AdminOverview() {
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-semibold text-foreground">
-          Painel da plataforma
+          {t("overview.title")}
         </h1>
         <p className="mt-0.5 text-sm text-foreground/40">
-          Visão global de lares, usuários e acessos (super_admin).
+          {t("overview.subtitle")}
         </p>
       </div>
 
@@ -127,19 +131,19 @@ export function AdminOverview() {
       )}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        <StatCard label="Lares" value={stats?.totalHouseholds ?? 0} icon={Building2} loading={loading} />
-        <StatCard label="Suspensas" value={stats?.suspendedHouseholds ?? 0} icon={Ban} loading={loading} />
-        <StatCard label="Usuários" value={stats?.totalUsers ?? 0} icon={Users} loading={loading} />
-        <StatCard label="Super admins" value={stats?.superAdmins ?? 0} icon={ShieldCheck} loading={loading} />
-        <StatCard label="Memberships" value={stats?.totalMemberships ?? 0} icon={Network} loading={loading} />
+        <StatCard label={t("overview.statHouseholds")} value={stats?.totalHouseholds ?? 0} icon={Building2} loading={loading} />
+        <StatCard label={t("overview.statSuspended")} value={stats?.suspendedHouseholds ?? 0} icon={Ban} loading={loading} />
+        <StatCard label={t("overview.statUsers")} value={stats?.totalUsers ?? 0} icon={Users} loading={loading} />
+        <StatCard label={t("overview.statSuperAdmins")} value={stats?.superAdmins ?? 0} icon={ShieldCheck} loading={loading} />
+        <StatCard label={t("overview.statMemberships")} value={stats?.totalMemberships ?? 0} icon={Network} loading={loading} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
         {/* Crescimento (últimos 12 meses) */}
-        <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4 lg:col-span-2">
+        <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4 lg:col-span-2">
           <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
             <TrendingUp className="h-4 w-4 text-primary" />
-            Crescimento · novos por mês (12 meses)
+            {t("overview.growthTitle")}
           </div>
           {growthLoading ? (
             <div className="h-64 animate-pulse rounded-lg bg-foreground/[0.04]" />
@@ -162,23 +166,23 @@ export function AdminOverview() {
                   <YAxis allowDecimals={false} tick={{ fill: COLORS.axis, fontSize: 11 }} tickLine={false} axisLine={false} width={32} />
                   <Tooltip content={<ChartTooltip />} />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <Area type="monotone" dataKey="Lares" stroke={COLORS.households} fill="url(#gHouseholds)" strokeWidth={2} isAnimationActive={!reducedMotion} />
-                  <Area type="monotone" dataKey="Usuários" stroke={COLORS.users} fill="url(#gUsers)" strokeWidth={2} isAnimationActive={!reducedMotion} />
+                  <Area type="monotone" dataKey={seriesHouseholdsLabel} stroke={COLORS.households} fill="url(#gHouseholds)" strokeWidth={2} isAnimationActive={!reducedMotion} />
+                  <Area type="monotone" dataKey={seriesUsersLabel} stroke={COLORS.users} fill="url(#gUsers)" strokeWidth={2} isAnimationActive={!reducedMotion} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
           ) : (
             <div className="flex h-64 items-center justify-center text-sm text-foreground/40">
-              Sem cadastros nos últimos 12 meses.
+              {t("overview.growthEmpty")}
             </div>
           )}
         </div>
 
         {/* Lares por status */}
-        <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-4">
+        <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4">
           <div className="mb-3 flex items-center gap-1.5 text-sm font-medium text-foreground">
             <Building2 className="h-4 w-4 text-primary" />
-            Lares por status
+            {t("overview.statusTitle")}
           </div>
           {loading ? (
             <div className="h-64 animate-pulse rounded-lg bg-foreground/[0.04]" />
@@ -206,7 +210,7 @@ export function AdminOverview() {
             </div>
           ) : (
             <div className="flex h-64 items-center justify-center text-sm text-foreground/40">
-              Nenhum lar ainda.
+              {t("overview.statusEmpty")}
             </div>
           )}
         </div>

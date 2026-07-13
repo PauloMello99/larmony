@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "overview": "Übersicht",
+    "transactions": "Transaktionen",
+    "categories": "Kategorien",
+    "budgets": "Budgets",
+    "goals": "Ziele",
+    "scheduledTransactions": "Einträge",
+    "reports": "Berichte",
+    "members": "Mitglieder",
+    "settings": "Einstellungen",
+    "settingsGeneral": "Allgemein",
+    "settingsSubscription": "Abonnement",
+    "billing": "Abrechnung",
+    "households": "Haushalte",
+    "sectionHousehold": "Haushalt"
+  },
+  "overview": {
+    "goodMorning": "Guten Morgen",
+    "goodAfternoon": "Guten Tag",
+    "goodEvening": "Guten Abend",
+    "incomeMonth": "Einnahmen des Monats",
+    "expensesMonth": "Ausgaben des Monats",
+    "balanceMonth": "Saldo des Monats",
+    "goalsTotal": "In Zielen gespart",
+    "recentTransactions": "Letzte Transaktionen",
+    "seeAll": "Alle ansehen",
+    "upcomingEntries": "Anstehende Einträge",
+    "activeGoals": "Aktive Ziele",
+    "budgets": "Budgets",
+    "emptyTransactions": "Noch keine Transaktion",
+    "emptyTransactionsHint": "Die Einträge deines Haushalts erscheinen hier.",
+    "emptyEntries": "Keine anstehenden Einträge",
+    "emptyEntriesHint": "Lege manuelle Einträge an, um Erinnerungen zu erhalten.",
+    "emptyGoals": "Kein aktives Ziel",
+    "emptyGoalsHint": "Erstelle Ziele, um deine Vorhaben zu verfolgen.",
+    "emptyBudgets": "Kein Budget festgelegt",
+    "emptyBudgetsHint": "Lege Ausgabenlimits pro Kategorie fest.",
+    "vsLastMonth": "ggü. Vormonat",
+    "goalsActive_one": "{{count}} aktives Ziel",
+    "goalsActive_other": "{{count}} aktive Ziele",
+    "dueToday": "Heute fällig",
+    "dueInDays_one": "In {{count}} Tag",
+    "dueInDays_other": "In {{count}} Tagen",
+    "budgetOver": "Überschritten",
+    "seeAllTransactions": "Alle ansehen"
+  },
+  "userMenu": {
+    "account": "Mein Konto",
+    "language": "Sprache",
+    "platformPanel": "Plattform-Dashboard",
+    "signOut": "Abmelden"
+  },
+  "switcher": {
+    "label": "Haushalte",
+    "viewAll": "Alle Haushalte ansehen"
+  },
+  "roles": {
+    "owner": "Eigentümer",
+    "member": "Mitglied"
+  },
+  "chrome": {
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "expandMenu": "Menü erweitern",
+    "collapseMenu": "Menü einklappen"
+  },
+  "householdsList": {
+    "title": "Haushalte",
+    "subtitle": "Wähle einen Haushalt, um fortzufahren",
+    "new": "Neuer Haushalt",
+    "create": "Haushalt erstellen",
+    "empty": "Noch kein Haushalt.",
+    "welcomeTitle": "Willkommen bei Larmony!",
+    "welcomeHint": "Lass uns den ersten Haushalt erstellen, um die Finanzen deines Zuhauses zu organisieren."
+  },
+  "adminBanner": {
+    "managingAs": "Du verwaltest <strong>{{name}}</strong> als super_admin.",
+    "backToPanel": "Zurück zum Dashboard",
+    "superAccess": "Super-Admin-Zugriff"
+  },
+  "placeholders": {
+    "arriving": "Kommt in {{milestone}}",
+    "underConstruction": "Im Aufbau",
+    "comingSoon": "Dieser Bereich wird in Kürze verfügbar sein",
+    "transactions": {
+      "title": "Transaktionen",
+      "description": "Einnahmen und Ausgaben deines Haushalts: Einträge mit Kategorie, Person, Ratenzahlung und Aufteilung zwischen Mitgliedern."
+    },
+    "categories": {
+      "title": "Kategorien",
+      "description": "Organisiere die Finanzen des Haushalts mit Einnahme- und Ausgabekategorien, Farben und Symbolen."
+    },
+    "budgets": {
+      "title": "Budgets",
+      "description": "Lege monatliche Ausgabenlimits pro Kategorie fest und verfolge, wie viel bereits verwendet wurde."
+    },
+    "goals": {
+      "title": "Ziele",
+      "description": "Spare für die Vorhaben deines Haushalts und verfolge den Fortschritt jedes Ziels."
+    },
+    "bills": {
+      "title": "Rechnungen",
+      "description": "Feste und wiederkehrende Rechnungen mit E-Mail-Erinnerungen vor Fälligkeit."
+    },
+    "reports": {
+      "title": "Berichte",
+      "description": "Monatliche und jährliche Analyse der Finanzen des Haushalts, nach Kategorie und nach Person."
+    }
+  }
+}

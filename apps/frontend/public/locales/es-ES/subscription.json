@@ -1,0 +1,56 @@
+{
+  "title": "Suscripción",
+  "description": "Plan, estado y gestión de la suscripción de este hogar.",
+  "planTitle": "Plan actual",
+  "loadError": "No se pudo cargar la suscripción. Inténtalo de nuevo.",
+  "ownerOnly": "Solo el propietario del hogar puede gestionar la suscripción.",
+  "plan": {
+    "free": "Gratis",
+    "premium": "Premium",
+    "custom": "Exención"
+  },
+  "status": {
+    "active": "Activa",
+    "trialing": "Periodo de prueba",
+    "past_due": "Pago pendiente",
+    "canceled": "Cancelada"
+  },
+  "premiumOffer": {
+    "title": "Larmony Premium — R$ 14,90/mes",
+    "description": "Informes avanzados, múltiples miembros y todo lo que tu hogar necesita para controlar las finanzas en conjunto."
+  },
+  "free": {
+    "description": "Tu hogar está en el plan Gratis.",
+    "cta": "Suscribirse a Premium",
+    "ctaPending": "Redirigiendo…"
+  },
+  "premium": {
+    "description": "Tu hogar tiene Premium activo. Disfruta de todas las funciones.",
+    "pastDue": "Hay un pago pendiente. Actualiza el método de pago en el portal para no perder el acceso.",
+    "portalCta": "Gestionar suscripción",
+    "portalPending": "Redirigiendo…"
+  },
+  "trial": {
+    "title": "Periodo de prueba activo",
+    "description": "Tu hogar tiene acceso Premium durante el periodo de prueba.",
+    "until": "Acceso Premium completo hasta",
+    "cta": "Suscribirse a Premium"
+  },
+  "comp": {
+    "title": "Exención concedida",
+    "description": "Tu hogar tiene acceso completo por cortesía — sin cargo.",
+    "reasonLabel": "Motivo"
+  },
+  "banner": {
+    "success": "¡Suscripción confirmada! El acceso Premium se activa en cuanto Stripe confirma el pago.",
+    "cancel": "Proceso de pago cancelado. No se realizó ningún cargo."
+  },
+  "gate": {
+    "title": "Función Premium",
+    "description": "Los informes avanzados forman parte del plan Premium. Actualiza tu plan para desbloquearlos.",
+    "descriptionCategories": "Las categorías personalizadas forman parte del plan Premium. Actualiza tu plan para desbloquearlas.",
+    "descriptionGoals": "Alcanzaste el límite de metas del plan Gratis. Actualiza tu plan para crear metas ilimitadas.",
+    "descriptionBudgets": "Alcanzaste el límite de presupuestos activos del plan Gratis. Actualiza tu plan para crear presupuestos ilimitados.",
+    "cta": "Ver planes"
+  }
+}

@@ -5,6 +5,7 @@
     "access": "Acesso",
     "appearance": "Tema",
     "locale": "Idioma",
+    "notifications": "Notificações",
     "danger": "Apagar Conta"
   },
   "profile": {
@@ -48,6 +49,27 @@
     "description": "Escolha o idioma da interface e dos e-mails.",
     "loading": "Carregando…",
     "error": "Não foi possível trocar o idioma."
+  },
+  "notifications": {
+    "title": "Notificações",
+    "description": "Escolha como você quer ser avisado de cada evento.",
+    "loading": "Carregando…",
+    "error": "Não foi possível carregar suas preferências.",
+    "columns": {
+      "event": "Evento",
+      "inapp": "No app",
+      "email": "E-mail",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "stubbedHint": "Ainda não disponível nesta versão."
+    },
+    "events": {
+      "bill_reminder": "Lembrete de lançamento",
+      "goal_reached": "Meta atingida",
+      "budget_exceeded": "Orçamento estourado",
+      "auto_launch": "Lançamento automático",
+      "monthly_report": "Relatório mensal"
+    }
   },
   "danger": {
     "title": "Zona de perigo",

@@ -1,0 +1,117 @@
+{
+  "app": {
+    "name": "Larmony",
+    "tagline": "Die Finanzen deines Zuhauses"
+  },
+  "actions": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "create": "Erstellen",
+    "confirm": "Bestätigen",
+    "close": "Schließen",
+    "clear": "Leeren",
+    "all": "Alle",
+    "back": "Zurück"
+  },
+  "export": {
+    "title": "CSV exportieren",
+    "button": "Exportieren",
+    "fields": "CSV-Felder",
+    "download": "CSV herunterladen"
+  },
+  "filters": {
+    "label": "Filter",
+    "advanced": "Erweiterte Filter",
+    "min": "Min",
+    "max": "Max"
+  },
+  "datePicker": {
+    "placeholder": "Datum auswählen"
+  },
+  "phoneInput": {
+    "placeholder": "Telefonnummer",
+    "country": "Land"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "markAll": "Alle als gelesen markieren",
+    "empty": "Keine Benachrichtigungen."
+  },
+  "locale": {
+    "label": "Sprache",
+    "pt-BR": "Português (Brasil)",
+    "en": "English",
+    "es": "Español"
+  },
+  "pagination": {
+    "range": "{{from}}–{{to}} von {{total}}",
+    "perPage": "Pro Seite",
+    "pageOf": "{{page}} von {{totalPages}}",
+    "previous": "Vorherige Seite",
+    "next": "Nächste Seite"
+  },
+  "api": {
+    "USER_NOT_FOUND": "Benutzer nicht gefunden.",
+    "INVALID_CREDENTIALS": "E-Mail oder Passwort ungültig.",
+    "AUTH_TOKEN_EXPIRED": "Deine Sitzung ist abgelaufen — bitte melde dich erneut an.",
+    "ORGANIZATION_NOT_FOUND": "Haushalt nicht gefunden.",
+    "SLUG_ALREADY_TAKEN": "Dieser Bezeichner wird bereits verwendet.",
+    "ORG_FORBIDDEN": "Du hast keine Berechtigung, diese Aktion auszuführen.",
+    "MEMBER_NOT_FOUND": "Mitglied nicht gefunden.",
+    "INVITATION_NOT_FOUND": "Einladung nicht gefunden.",
+    "INVITATION_NOT_PENDING": "Diese Einladung ist nicht mehr ausstehend.",
+    "INVITATION_EXPIRED": "Diese Einladung ist abgelaufen.",
+    "INVITATION_EMAIL_MISMATCH": "Diese Einladung wurde an eine andere E-Mail-Adresse gesendet.",
+    "INVITATION_EMAIL_FAILED": "Die Einladungs-E-Mail konnte nicht gesendet werden.",
+    "MATERIAL_NOT_FOUND": "Material nicht gefunden.",
+    "MATERIAL_IN_USE_BY_SERVICES": "Dieses Material wird von Dienstleistungen verwendet und kann nicht entfernt werden.",
+    "INSUFFICIENT_STOCK": "Unzureichender Bestand.",
+    "CUSTOMER_NOT_FOUND": "Kunde nicht gefunden.",
+    "CALENDAR_EVENT_NOT_FOUND": "Termin nicht gefunden.",
+    "CALENDAR_EVENT_OVERLAP": "Zu dieser Zeit existiert bereits ein Termin.",
+    "CALENDAR_EVENT_FORBIDDEN": "Du hast keine Berechtigung, diesen Termin zu ändern.",
+    "CALENDAR_EVENT_INVALID_RANGE": "Der Datumsbereich des Termins ist ungültig.",
+    "TRANSACTION_NOT_FOUND": "Transaktion nicht gefunden.",
+    "TRANSACTION_ALREADY_REVERSED": "Diese Transaktion wurde bereits storniert.",
+    "TRANSACTION_NOT_REVERSIBLE": "Diese Transaktion kann nicht storniert werden.",
+    "CASHIER_FORBIDDEN": "Du hast keine Berechtigung für diesen Kassenvorgang.",
+    "AVATAR_UPLOAD_FAILED": "Hochladen des Profilbilds fehlgeschlagen — bitte versuche es erneut.",
+    "LAST_ACTIVE_OWNER": "Der Haushalt benötigt mindestens einen aktiven Eigentümer.",
+    "SERVICE_NOT_FOUND": "Dienstleistung nicht gefunden.",
+    "CUSTOMER_DISABLED": "Dieser Kunde ist deaktiviert.",
+    "EMPLOYEE_INACTIVE": "Dieser Mitarbeiter ist inaktiv.",
+    "SERVICE_ALREADY_CANCELED": "Diese Dienstleistung wurde bereits storniert.",
+    "SERVICE_NOT_PAYABLE": "Diese Dienstleistung kann nicht bezahlt werden.",
+    "SERVICE_FORBIDDEN": "Du hast keine Berechtigung, diese Dienstleistung zu ändern.",
+    "PLATFORM_TARGET_NOT_FOUND": "Eintrag nicht gefunden.",
+    "CANNOT_CHANGE_OWN_PLATFORM_ROLE": "Du kannst deine eigene Plattformrolle nicht ändern.",
+    "CATEGORY_NOT_FOUND": "Kategorie nicht gefunden.",
+    "BUDGET_NOT_FOUND": "Budget nicht gefunden.",
+    "BUDGET_ALREADY_EXISTS": "Für diese Kategorie existiert in diesem Monat bereits ein Budget.",
+    "BUDGET_PERIOD_NOT_EDITABLE": "Dieses Budget gehört zu einem abgeschlossenen Zeitraum und kann nicht bearbeitet werden.",
+    "GOAL_NOT_FOUND": "Ziel nicht gefunden.",
+    "GOAL_CONTRIBUTION_NOT_FOUND": "Einzahlung zum Ziel nicht gefunden.",
+    "TRANSACTION_SPLIT_INVALID": "Die Aufteilung der Transaktion ist ungültig — bitte prüfe die Beträge.",
+    "INSTALLMENT_GROUP_NOT_FOUND": "Ratengruppe nicht gefunden.",
+    "SCHEDULED_ENTRY_NOT_FOUND": "Geplanter Eintrag nicht gefunden.",
+    "SCHEDULED_ENTRY_START_DATE_IN_PAST": "Das Startdatum darf im automatischen Modus nicht in der Vergangenheit liegen.",
+    "SCHEDULED_ENTRY_INVALID_DATE_RANGE": "Das Enddatum darf nicht vor dem Startdatum liegen.",
+    "SCHEDULED_ENTRY_NOT_MANUAL": "Dieser geplante Eintrag befindet sich nicht im manuellen Modus.",
+    "NO_STRIPE_CUSTOMER": "Der Haushalt hat noch kein Abonnement — schließe eines ab, bevor du es verwaltest.",
+    "STRIPE_NOT_CONFIGURED": "Zahlungen sind derzeit nicht verfügbar — bitte versuche es später erneut.",
+    "PLAN_NOT_AVAILABLE": "Der Plan ist noch nicht verfügbar — bitte versuche es in Kürze erneut.",
+    "WEBHOOK_SIGNATURE_INVALID": "Die Zahlungsanfrage konnte nicht validiert werden.",
+    "PREMIUM_REQUIRED": "Diese Funktion erfordert einen Premium-Plan.",
+    "INVALID_DISCOUNT": "Ungültiger Rabatt — bitte prüfe die Parameter.",
+    "SUBSCRIPTION_NOT_STRIPE_LINKED": "Der Haushalt hat kein aktives Stripe-Abonnement.",
+    "TRIAL_NOT_ALLOWED": "Die Testphase ist für den aktuellen Plan des Haushalts nicht verfügbar.",
+    "HOUSEHOLD_LIMIT_REACHED": "Du hast das Haushaltslimit des Free-Plans erreicht. Führe ein Upgrade für einen bestehenden Haushalt durch, um einen weiteren zu erstellen.",
+    "MEMBER_LIMIT_REACHED": "Dieser Haushalt hat das Mitgliederlimit des Free-Plans erreicht. Führe ein Upgrade durch, um mehr Personen einzuladen.",
+    "GOAL_LIMIT_REACHED": "Dieser Haushalt hat bereits die maximale Anzahl an Zielen des Free-Plans erreicht. Führe ein Upgrade durch, um weitere zu erstellen.",
+    "BUDGET_LIMIT_REACHED": "Dieser Haushalt hat bereits die maximale Anzahl aktiver Budgets des Free-Plans erreicht. Schließe ein bestehendes Budget oder führe ein Upgrade durch.",
+    "NETWORK": "Netzwerkfehler — bitte prüfe deine Verbindung und versuche es erneut.",
+    "UNEXPECTED": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut."
+  }
+}

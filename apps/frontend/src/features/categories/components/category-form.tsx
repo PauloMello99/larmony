@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -31,6 +31,9 @@ import {
 } from "@/shared/components/ui/select"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
+import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
+import { useEntitlements, PremiumGate } from "@/features/subscription"
+import { translateApiError } from "@/shared/lib/api-error"
 import { makeCategorySchema, type CategoryFormValues } from "../schemas/category.schemas"
 import { CATEGORY_ICON_OPTIONS } from "../lib/icon-options"
 import type { Category } from "../types"
@@ -53,8 +56,15 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
   const { t } = useTranslation("categories")
   const { t: tCommon } = useTranslation("common")
   const isEditing = !!category
+  const { household } = useCurrentHousehold()
+  const { capabilities } = useEntitlements(household.id)
+  // Categorias personalizadas são Family-only (P-4, D-1) — editar/excluir
+  // categorias já existentes (incl. as padrão) continua livre; só a criação
+  // de uma NOVA categoria é gateada.
+  const blocked = !isEditing && !capabilities.custom_categories
 
   const categorySchema = useMemo(() => makeCategorySchema(t), [t])
+  const [error, setError] = useState<string | null>(null)
 
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(categorySchema),
@@ -73,13 +83,41 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
             }
           : { name: "", type: "expense", color: "#8b8b8b", icon: undefined },
       )
+      setError(null)
     }
   }, [open, category, form])
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit(values)
-    onOpenChange(false)
+    setError(null)
+    try {
+      await onSubmit(values)
+      onOpenChange(false)
+    } catch (err) {
+      setError(translateApiError(err, tCommon))
+    }
   })
+
+  if (blocked) {
+    return (
+      <Sheet open={open} onOpenChange={onOpenChange}>
+        <SheetContent side="right" className="gap-0 sm:max-w-md">
+          <SheetHeader>
+            <SheetTitle>{t("form.createTitle")}</SheetTitle>
+          </SheetHeader>
+          <SheetBody className="py-6">
+            <PremiumGate descriptionKey="gate.descriptionCategories" />
+          </SheetBody>
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button variant="outline" className="w-full sm:w-auto">
+                {tCommon("actions.cancel")}
+              </Button>
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    )
+  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -195,6 +233,8 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
                   )}
                 />
               </div>
+
+              {error && <p className="text-sm text-red-400">{error}</p>}
             </SheetBody>
 
             <SheetFooter>

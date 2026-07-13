@@ -1,0 +1,42 @@
+{
+  "page": {
+    "title": "Budgets",
+    "subtitle": "Limites de dépenses mensuelles par catégorie",
+    "newBudget": "Nouveau budget",
+    "empty": "Aucun budget sur cette période.",
+    "createBudget": "Créer un budget",
+    "readOnlyNotice": "Mois clos — la limite affichée est celle en vigueur sur cette période et ne peut pas être modifiée.",
+    "projectedNotice": "Mois futur — la limite affichée est une projection de la valeur en vigueur aujourd’hui."
+  },
+  "periodNav": {
+    "monthAria": "Mois du budget",
+    "yearAria": "Année du budget"
+  },
+  "card": {
+    "exceeded": "Dépassé",
+    "of": "sur {{value}}",
+    "overLimit": "{{value}} au-dessus de la limite",
+    "available": "{{value}} disponible"
+  },
+  "form": {
+    "createTitle": "Nouveau budget",
+    "editTitle": "Modifier le budget",
+    "description": "Définis une limite de dépense mensuelle pour une catégorie.",
+    "categoryLabel": "Catégorie",
+    "categoryImmutable": "(immuable)",
+    "categoryPlaceholder": "Choisis une catégorie",
+    "limitLabel": "Limite mensuelle",
+    "saving": "Enregistrement…",
+    "saveChanges": "Enregistrer les modifications",
+    "create": "Créer le budget"
+  },
+  "deleteDialog": {
+    "title": "Supprimer le budget",
+    "description": "Supprimer le budget de <span>{{name}}</span> pour ce mois ? Les transactions ne sont pas affectées.",
+    "deleting": "Suppression…"
+  },
+  "validation": {
+    "categoryRequired": "Sélectionne une catégorie",
+    "limitRequired": "Indique une limite"
+  }
+}

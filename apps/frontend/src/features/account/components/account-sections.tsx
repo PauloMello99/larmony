@@ -7,24 +7,21 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import type { TFunction } from "i18next"
 import {
+  Check,
   KeyRound,
   Languages,
   Loader2,
   MailCheck,
-  Monitor,
-  Moon,
-  Palette,
   ShieldCheck,
-  Sun,
   Trash2,
   Upload,
 } from "lucide-react"
-import { useTheme } from "next-themes"
 import { Trans, useTranslation } from "react-i18next"
 import { useMe } from "@/features/auth"
 import { useAuth } from "@/features/auth"
 import { clearSession } from "@/features/auth/lib/session"
 import { apiRequest } from "@/infrastructure/api/client"
+import { translateApiError } from "@/shared/lib/api-error"
 import {
   Form,
   FormControl,
@@ -50,16 +47,30 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shared/components/ui/dialog"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/shared/components/ui/table"
+import { Switch } from "@/shared/components/ui/switch"
+import { Tooltip } from "@/shared/components/ui/tooltip"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
-import { cn } from "@/shared/lib/utils"
 import {
   DEFAULT_LOCALE,
   SUPPORTED_LOCALES,
   applyLocale,
   type AppLocale,
 } from "@/shared/lib/locale"
+import {
+  useNotificationPreferences,
+  type NotificationChannel,
+  type NotificationEventType,
+} from "../hooks/use-notification-preferences"
 
 function SectionHeader({
   title,
@@ -88,6 +99,7 @@ const MAX_AVATAR_BYTES = 5 * 1024 * 1024
 
 export function ProfileSection() {
   const { t } = useTranslation("account")
+  const { t: tCommon } = useTranslation("common")
   const { me, loading, updateMe, uploadAvatar } = useMe()
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -117,7 +129,11 @@ export function ProfileSection() {
       await updateMe({ name: values.name, email: values.email })
       setSaved(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("profile.saveError"))
+      setError(
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("profile.saveError"),
+      )
     }
   })
 
@@ -139,7 +155,9 @@ export function ProfileSection() {
       await uploadAvatar(file)
     } catch (err) {
       setAvatarError(
-        err instanceof Error ? err.message : t("profile.avatarUploadError"),
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("profile.avatarUploadError"),
       )
     } finally {
       setAvatarUploading(false)
@@ -158,7 +176,7 @@ export function ProfileSection() {
           {t("profile.loading")}
         </div>
       ) : (
-        <div className="grid max-w-lg gap-6">
+        <div className="grid gap-6">
           <div className="flex items-center gap-4">
             {me?.avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -292,7 +310,7 @@ export function AccessSection() {
         title={t("access.title")}
         description={t("access.description")}
       />
-      <section className="max-w-lg rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-5">
+      <section className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
         <div className="flex items-center gap-2">
           <KeyRound className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-medium">{t("access.changePassword")}</h3>
@@ -328,68 +346,6 @@ export function AccessSection() {
   )
 }
 
-/* ── Tema / Aparência ───────────────────────────────────────────── */
-
-const THEME_OPTIONS = [
-  { value: "light", labelKey: "appearance.light", icon: Sun },
-  { value: "dark", labelKey: "appearance.dark", icon: Moon },
-  { value: "system", labelKey: "appearance.system", icon: Monitor },
-] as const
-
-export function AppearanceSection() {
-  const { t } = useTranslation("account")
-  const { theme, setTheme } = useTheme()
-  // next-themes só resolve no cliente; evita mismatch de hidratação.
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
-  const current = mounted ? (theme ?? "system") : undefined
-
-  return (
-    <div className="grid gap-6">
-      <SectionHeader
-        title={t("appearance.title")}
-        description={t("appearance.description")}
-      />
-      <section className="max-w-lg rounded-xl border border-border bg-foreground/[0.02] p-5">
-        <div className="flex items-center gap-2">
-          <Palette className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-medium">{t("appearance.cardTitle")}</h3>
-        </div>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {t("appearance.cardDescription")}
-        </p>
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          {THEME_OPTIONS.map(({ value, labelKey, icon: Icon }) => {
-            const active = current === value
-            return (
-              <button
-                key={value}
-                type="button"
-                onClick={() => setTheme(value)}
-                aria-pressed={active}
-                className={cn(
-                  "flex flex-col items-center gap-1.5 rounded-lg border p-3 text-xs transition-colors",
-                  active
-                    ? "border-primary/60 bg-primary/10 text-foreground"
-                    : "border-border text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground",
-                )}
-              >
-                <Icon
-                  className={cn(
-                    "h-5 w-5",
-                    active ? "text-primary" : "text-muted-foreground",
-                  )}
-                />
-                {t(labelKey)}
-              </button>
-            )
-          })}
-        </div>
-      </section>
-    </div>
-  )
-}
-
 /* ── Idioma ─────────────────────────────────────────────────────── */
 
 export function LocaleSection() {
@@ -409,7 +365,9 @@ export function LocaleSection() {
         await updateMe({ locale: l })
       })
     } catch (err) {
-      setError(err instanceof Error ? err.message : tAccount("locale.error"))
+      setError(
+        err instanceof Error ? translateApiError(err, t) : tAccount("locale.error"),
+      )
     } finally {
       setSaving(false)
     }
@@ -421,7 +379,7 @@ export function LocaleSection() {
         title={t("locale.label")}
         description={tAccount("locale.description")}
       />
-      <section className="max-w-lg rounded-xl border border-border bg-foreground/[0.02] p-5">
+      <section className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
         <div className="flex items-center gap-2">
           <Languages className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-medium">{t("locale.label")}</h3>
@@ -457,10 +415,107 @@ export function LocaleSection() {
   )
 }
 
+/* ── Notificações ───────────────────────────────────────────────── */
+
+const CONFIGURABLE_CHANNELS: NotificationChannel[] = ["email", "sms", "whatsapp"]
+
+export function NotificationsSection() {
+  const { t } = useTranslation("account")
+  const { matrix, loading, error, updatePreference } = useNotificationPreferences()
+  const [pending, setPending] = useState<Set<string>>(new Set())
+
+  async function toggle(
+    eventType: NotificationEventType,
+    channel: NotificationChannel,
+    enabled: boolean,
+  ) {
+    const key = `${eventType}:${channel}`
+    setPending((prev) => new Set(prev).add(key))
+    try {
+      await updatePreference({ eventType, channel, enabled })
+    } finally {
+      setPending((prev) => {
+        const next = new Set(prev)
+        next.delete(key)
+        return next
+      })
+    }
+  }
+
+  return (
+    <div className="grid gap-6">
+      <SectionHeader
+        title={t("notifications.title")}
+        description={t("notifications.description")}
+      />
+      {loading ? (
+        <div className="flex items-center justify-center py-12 text-foreground/40">
+          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          {t("notifications.loading")}
+        </div>
+      ) : error ? (
+        <p className="text-sm text-red-400">{t("notifications.error")}</p>
+      ) : (
+        <section className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-5">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t("notifications.columns.event")}</TableHead>
+                <TableHead className="text-center">{t("notifications.columns.inapp")}</TableHead>
+                <TableHead className="text-center">{t("notifications.columns.email")}</TableHead>
+                <TableHead className="text-center">{t("notifications.columns.sms")}</TableHead>
+                <TableHead className="text-center">
+                  {t("notifications.columns.whatsapp")}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {matrix.map((row) => (
+                <TableRow key={row.eventType}>
+                  <TableCell className="font-medium">
+                    {t(`notifications.events.${row.eventType}`)}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Check className="mx-auto h-4 w-4 text-foreground/30" />
+                  </TableCell>
+                  {CONFIGURABLE_CHANNELS.map((channel) => {
+                    // SMS/WhatsApp são ports stub no M11 (ADR-0023) — visíveis,
+                    // sempre desabilitados, sem verificação de telefone ainda.
+                    const stubbed = channel !== "email"
+                    const switchEl = (
+                      <Switch
+                        checked={stubbed ? false : row[channel]}
+                        disabled={stubbed || pending.has(`${row.eventType}:${channel}`)}
+                        onCheckedChange={(checked) => void toggle(row.eventType, channel, checked)}
+                      />
+                    )
+                    return (
+                      <TableCell key={channel} className="text-center">
+                        {stubbed ? (
+                          <Tooltip content={t("notifications.columns.stubbedHint")}>
+                            <span className="inline-flex">{switchEl}</span>
+                          </Tooltip>
+                        ) : (
+                          switchEl
+                        )}
+                      </TableCell>
+                    )
+                  })}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </section>
+      )}
+    </div>
+  )
+}
+
 /* ── Zona de perigo ─────────────────────────────────────────────── */
 
 export function DangerSection() {
   const { t } = useTranslation("account")
+  const { t: tCommon } = useTranslation("common")
   const router = useRouter()
   const { user } = useAuth()
   const [open, setOpen] = useState(false)
@@ -480,7 +535,11 @@ export function DangerSection() {
       clearSession()
       await router.replace("/auth/login")
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("danger.deleteError"))
+      setError(
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("danger.deleteError"),
+      )
       setLoading(false)
     }
   }

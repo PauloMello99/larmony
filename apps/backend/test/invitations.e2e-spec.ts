@@ -17,6 +17,16 @@ describe("Invitations (e2e)", () => {
       .send({ name: "E2E Lar Convites" })
       .expect(201);
     householdId = created.body.id;
+
+    // Este arquivo acumula 3 convites no mesmo lar ao longo dos testes (nem
+    // todos aceitos/cancelados) — ultrapassa o limite do Free (P-3, D-1).
+    // Comp desbloqueia; o gate em si tem teste dedicado isolado noutro arquivo.
+    await pool.query(
+      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
+       VALUES ($1, 'custom', 'active', 'e2e bootstrap — desbloqueia fixtures de invitations.e2e-spec')
+       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
+      [householdId],
+    );
   });
 
   afterAll(async () => {
@@ -111,5 +121,41 @@ describe("Invitations (e2e)", () => {
       owner.accessToken,
     ).expect(200);
     expect(after.body.map((i: { email: string }) => i.email)).not.toContain(email);
+  });
+
+  it("limite de membros do Free (D-1, P-3): dono+1 ok, o próximo bloqueado (402), libera após upgrade", async () => {
+    // Lar isolado (Free real) — não usa o `householdId` compartilhado (tem comp).
+    const solo = await signUpUser(app, "mem.limit.owner");
+    const solo1 = await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Limite Membros" })
+      .expect(201);
+    const soloHouseholdId = solo1.body.id;
+
+    // Dono + 1 convite = 2, no teto (maxMembersPerHousehold do Free) — permitido.
+    await authed(app, "post", `/households/${soloHouseholdId}/members/invite`, solo.accessToken)
+      .send({ email: uniqueEmail("mem.limit.a") })
+      .expect(201);
+
+    // 3º (dono + 2 convites) excede o teto — bloqueado.
+    const blocked = await authed(
+      app,
+      "post",
+      `/households/${soloHouseholdId}/members/invite`,
+      solo.accessToken,
+    )
+      .send({ email: uniqueEmail("mem.limit.b") })
+      .expect(402);
+    expect(blocked.body.code).toBe("MEMBER_LIMIT_REACHED");
+
+    // Upgrade do lar libera convidar mais gente.
+    await pool.query(
+      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
+       VALUES ($1, 'custom', 'active', 'e2e limite de membros — upgrade')
+       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
+      [soloHouseholdId],
+    );
+    await authed(app, "post", `/households/${soloHouseholdId}/members/invite`, solo.accessToken)
+      .send({ email: uniqueEmail("mem.limit.c") })
+      .expect(201);
   });
 });

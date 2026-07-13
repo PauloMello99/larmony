@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { AuthModule } from "../auth/auth.module";
 import { UserModule } from "../user/user.module";
+import { BudgetsModule } from "../budgets/budgets.module";
 import { TransactionsInfrastructureModule } from "./infrastructure/transactions-infrastructure.module";
 import { ListTransactionsUseCase } from "./application/use-cases/list-transactions.use-case";
 import { CreateTransactionUseCase } from "./application/use-cases/create-transaction.use-case";
@@ -13,7 +14,7 @@ import { DeleteInstallmentGroupUseCase } from "./application/use-cases/delete-in
 import { TransactionsController } from "./interface/transactions.controller";
 
 @Module({
-  imports: [AuthModule, UserModule, TransactionsInfrastructureModule],
+  imports: [AuthModule, UserModule, TransactionsInfrastructureModule, BudgetsModule],
   controllers: [TransactionsController],
   providers: [
     ListTransactionsUseCase,

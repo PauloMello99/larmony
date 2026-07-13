@@ -11,6 +11,10 @@ export interface Budget {
   spentCents: number
   createdAt: string
   updatedAt: string
+  /** Período consultado é o mês corrente — só então create/edit/delete são válidos (M10). */
+  isEditable: boolean
+  /** Período consultado é futuro — limite exibido é projeção do vigente, sem versão própria. */
+  isProjected: boolean
 }
 
 export interface BudgetFilters {

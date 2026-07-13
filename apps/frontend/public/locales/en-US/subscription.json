@@ -1,0 +1,56 @@
+{
+  "title": "Subscription",
+  "description": "Plan, status and management of this household's subscription.",
+  "planTitle": "Current plan",
+  "loadError": "Could not load the subscription. Please try again.",
+  "ownerOnly": "Only the household owner can manage the subscription.",
+  "plan": {
+    "free": "Free",
+    "premium": "Premium",
+    "custom": "Comp"
+  },
+  "status": {
+    "active": "Active",
+    "trialing": "Trial",
+    "past_due": "Payment due",
+    "canceled": "Canceled"
+  },
+  "premiumOffer": {
+    "title": "Larmony Premium — R$ 14.90/mo",
+    "description": "Advanced reports, multiple members and everything your household needs to manage finances together."
+  },
+  "free": {
+    "description": "Your household is on the Free plan.",
+    "cta": "Subscribe to Premium",
+    "ctaPending": "Redirecting…"
+  },
+  "premium": {
+    "description": "Your household has Premium active. Enjoy all features.",
+    "pastDue": "There is a payment due. Update your payment method in the portal to keep access.",
+    "portalCta": "Manage subscription",
+    "portalPending": "Redirecting…"
+  },
+  "trial": {
+    "title": "Trial active",
+    "description": "Your household has Premium access during the trial.",
+    "until": "Full Premium access until",
+    "cta": "Subscribe to Premium"
+  },
+  "comp": {
+    "title": "Comp granted",
+    "description": "Your household has full access as a courtesy — no charge.",
+    "reasonLabel": "Reason"
+  },
+  "banner": {
+    "success": "Subscription confirmed! Premium access is enabled once Stripe confirms the payment.",
+    "cancel": "Checkout canceled. No charge was made."
+  },
+  "gate": {
+    "title": "Premium feature",
+    "description": "Advanced reports are part of the Premium plan. Upgrade to unlock.",
+    "descriptionCategories": "Custom categories are part of the Premium plan. Upgrade to unlock.",
+    "descriptionGoals": "You've reached the goal limit of the Free plan. Upgrade to create unlimited goals.",
+    "descriptionBudgets": "You've reached the active budget limit of the Free plan. Upgrade to create unlimited budgets.",
+    "cta": "See plans"
+  }
+}

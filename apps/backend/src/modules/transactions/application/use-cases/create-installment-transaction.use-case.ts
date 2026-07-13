@@ -7,6 +7,7 @@ import {
 } from "../../domain/transaction.repository.interface";
 import { assertEqualSplitOnly } from "../../domain/split-validation";
 import { AuditService } from "../../../audit/audit.service";
+import { NotifyIfBudgetExceededUseCase } from "../../../budgets/application/use-cases/notify-if-budget-exceeded.use-case";
 
 export interface CreateInstallmentInput {
   type: TransactionType;
@@ -28,6 +29,7 @@ export class CreateInstallmentTransactionUseCase {
     @Inject(TRANSACTION_REPOSITORY)
     private readonly transactionRepo: ITransactionRepository,
     private readonly auditService: AuditService,
+    private readonly notifyIfBudgetExceeded: NotifyIfBudgetExceededUseCase,
   ) {}
 
   async execute(
@@ -64,6 +66,17 @@ export class CreateInstallmentTransactionUseCase {
         count: input.installmentCount,
       },
     });
+
+    // Cada parcela pode cair num mês diferente — checa o orçamento daquele
+    // mês individualmente (dedup já é por budget×mês, então isso é seguro).
+    for (const parcel of parcels) {
+      await this.notifyIfBudgetExceeded.execute({
+        householdId,
+        categoryId: parcel.categoryId,
+        type: parcel.type,
+        date: parcel.date,
+      });
+    }
 
     return parcels;
   }

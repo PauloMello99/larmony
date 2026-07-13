@@ -1,0 +1,79 @@
+{
+  "page": {
+    "title": "Transaktionen",
+    "description": "Einnahmen und Ausgaben des Haushalts",
+    "newTransaction": "Neue Transaktion",
+    "empty": "Keine Transaktion in diesem Zeitraum.",
+    "emptyCta": "Transaktion buchen"
+  },
+  "form": {
+    "titleCreate": "Neue Transaktion",
+    "titleEdit": "Transaktion bearbeiten",
+    "description": "Erfasse eine Einnahme oder Ausgabe des Haushalts.",
+    "typeLabel": "Typ",
+    "typeIncome": "Einnahme",
+    "typeExpense": "Ausgabe",
+    "amountLabel": "Betrag",
+    "amountTotalLabel": "Gesamtbetrag",
+    "descriptionLabel": "Beschreibung",
+    "descriptionPlaceholder": "Z. B.: Supermarkt",
+    "dateLabel": "Datum",
+    "categoryLabel": "Kategorie",
+    "categoryPlaceholder": "Ohne Kategorie",
+    "personLabel": "Person",
+    "personPlaceholder": "Du",
+    "notesLabel": "Notizen",
+    "notesPlaceholder": "Optionale Anmerkungen",
+    "installmentsLabel": "In Raten aufteilen",
+    "installmentsHint": "Teilt den Gesamtbetrag auf mehrere monatliche Raten auf — eine Transaktion pro Rate, alle mit derselben Serie verknüpft.",
+    "installmentsPreview": "{{count}}× von ~{{amount}}",
+    "splitLabel": "Zwischen Mitgliedern aufteilen",
+    "splitHint": "Teilt den Betrag unter den Mitgliedern des Haushalts auf (gleichmäßig oder mit einem bestimmten Betrag für jeden) und fließt in die Berichte nach Person ein.",
+    "submitting": "Wird gespeichert…",
+    "submitEdit": "Änderungen speichern",
+    "submitInstallments": "Raten erstellen",
+    "submitCreate": "Transaktion erstellen"
+  },
+  "list": {
+    "headerDescription": "Beschreibung",
+    "headerCategory": "Kategorie",
+    "headerPerson": "Person",
+    "headerDate": "Datum",
+    "headerAmount": "Betrag",
+    "installmentBadge": "{{number}}/{{total}}",
+    "badgeSplit": "Aufteilung",
+    "badgeRecurring": "Wiederkehrend",
+    "noCategory": "Ohne Kategorie"
+  },
+  "filters": {
+    "byMonth": "Nach Monat filtern",
+    "byYear": "Nach Jahr filtern",
+    "byType": "Nach Typ filtern",
+    "byCategory": "Nach Kategorie filtern",
+    "typeAll": "Typ: alle",
+    "typeIncome": "Einnahme",
+    "typeExpense": "Ausgabe",
+    "categoryAll": "Kategorie: alle"
+  },
+  "split": {
+    "equal": "Gleichmäßig aufteilen",
+    "specific": "Bestimmte Beträge",
+    "sum": "Summe: {{sum}} / {{total}}",
+    "sumMismatch": " — muss mit dem Gesamtbetrag übereinstimmen",
+    "equalPreview": "{{count}}× von ~{{amount}}"
+  },
+  "deleteDialog": {
+    "title": "Transaktion löschen",
+    "installmentDescription": "<desc>{{description}}</desc> ist die Rate {{number}}/{{total}}. Nur diese Rate oder die gesamte Serie löschen?",
+    "normalDescription": "Möchtest du <desc>{{description}}</desc> wirklich löschen? Diese Aktion ist <emphasis>unumkehrbar</emphasis>.",
+    "deleting": "Wird gelöscht…",
+    "deleteSeries": "Gesamte Serie löschen",
+    "deleteInstallment": "Diese Rate löschen"
+  },
+  "validation": {
+    "amountRequired": "Bitte gib einen Betrag an",
+    "descriptionRequired": "Beschreibung ist erforderlich",
+    "descriptionMax": "Maximal 200 Zeichen",
+    "dateRequired": "Datum ist erforderlich"
+  }
+}

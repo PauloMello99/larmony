@@ -197,7 +197,7 @@ export function MemberList({
             return (
               <div
                 key={member.memberId}
-                className="flex items-center gap-3 rounded-lg border border-foreground/10 bg-foreground/[0.02] p-3"
+                className="flex items-center gap-3 rounded-lg border border-foreground/[0.07] bg-foreground/[0.03] p-3"
               >
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-foreground/10 text-sm font-semibold uppercase">
                   {member.userName.charAt(0)}
@@ -245,7 +245,7 @@ export function MemberList({
             {invitations.map((inv) => (
               <div
                 key={inv.id}
-                className="flex items-center gap-3 rounded-lg border border-foreground/10 bg-foreground/[0.02] p-3"
+                className="flex items-center gap-3 rounded-lg border border-foreground/[0.07] bg-foreground/[0.03] p-3"
               >
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-dashed border-foreground/20 text-foreground/30">
                   ?
@@ -341,7 +341,7 @@ export function MemberList({
               return (
                 <label
                   key={module}
-                  className="flex items-center justify-between gap-4 rounded-lg border border-foreground/[0.06] bg-foreground/[0.02] px-3 py-2.5"
+                  className="flex items-center justify-between gap-4 rounded-lg border border-foreground/[0.07] bg-foreground/[0.03] px-3 py-2.5"
                 >
                   {/* MODULE_KEYS está vazio (código legado do salão) — caminho
                       inalcançável hoje, traduzido mecanicamente via modules.*. */}

@@ -1,4 +1,12 @@
-# 05 — Orçamentos (M5)
+# 05 — Orçamentos (M5) — Superseded
+
+> **Superseded pelo M10 (2026-07-10)**: o modelo linha-por-mês abaixo foi
+> substituído por séries versionadas com herança automática entre meses — ver
+> [`11-orcamentos-recorrentes.md`](11-orcamentos-recorrentes.md) e
+> [ADR-0022](../../../.memory/adr/0022-budget-series-versions.md). Conteúdo
+> original preservado abaixo por histórico.
+
+---
 
 > **Entregue (2026-07-06)**: CRUD via `households/:householdId/budgets?month=&year=`
 > (RLS via `DRIZZLE`, guard `HouseholdMembershipGuard`). **Spending derivado em

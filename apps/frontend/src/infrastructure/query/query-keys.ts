@@ -11,6 +11,11 @@ export const queryKeys = {
   // ─── Current user ─────────────────────────────────────────────────────────
   me: ["me"] as const,
 
+  // ─── Preferências de notificação (M11) ─────────────────────────────────
+  notificationPreferences: {
+    all: ["notification-preferences"] as const,
+  },
+
   // ─── Households ────────────────────────────────────────────────────────
   households: {
     /** Matches every households key (list + all detail entries) */
@@ -80,6 +85,11 @@ export const queryKeys = {
       ["reports", householdId, "monthly", year, month] as const,
     annual: (householdId: string, year: number) =>
       ["reports", householdId, "annual", year] as const,
+  },
+
+  // ─── Subscription / entitlements (M14, billing) ────────────────────────────
+  subscription: {
+    detail: (householdId: string) => ["subscription", householdId] as const,
   },
 
   // ─── Admin (plataforma / super_admin) ──────────────────────────────────────

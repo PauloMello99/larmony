@@ -17,6 +17,7 @@ import { BudgetsModule } from "./modules/budgets/budgets.module";
 import { GoalsModule } from "./modules/goals/goals.module";
 import { ReportsModule } from "./modules/reports/reports.module";
 import { ScheduledTransactionsModule } from "./modules/scheduled-transactions/scheduled-transactions.module";
+import { SubscriptionsModule } from "./modules/subscriptions/subscriptions.module";
 import { InternalCronModule } from "./modules/internal-cron/internal-cron.module";
 import { TelemetryModule } from "./common/telemetry/telemetry.module";
 
@@ -39,6 +40,7 @@ import { TelemetryModule } from "./common/telemetry/telemetry.module";
     GoalsModule,
     ReportsModule,
     ScheduledTransactionsModule,
+    SubscriptionsModule,
     InternalCronModule,
   ],
   providers: [

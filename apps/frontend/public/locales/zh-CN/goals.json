@@ -1,0 +1,59 @@
+{
+  "page": {
+    "title": "目标",
+    "subtitle": "家庭储蓄目标，所有成员共同存款",
+    "newGoal": "新建目标",
+    "empty": "暂无目标。",
+    "createGoal": "创建目标"
+  },
+  "form": {
+    "editTitle": "编辑目标",
+    "createTitle": "新建目标",
+    "description": "家庭储蓄目标——进度来自成员的存款记录。",
+    "nameLabel": "名称",
+    "namePlaceholder": "例如：旅行",
+    "targetAmountLabel": "目标金额",
+    "colorLabel": "颜色",
+    "targetDateLabel": "目标日期",
+    "noTargetDate": "无目标日期",
+    "clearTargetDate": "清除目标日期",
+    "descriptionLabel": "描述",
+    "descriptionPlaceholder": "可选",
+    "saving": "保存中……",
+    "saveChanges": "保存修改",
+    "create": "创建目标"
+  },
+  "card": {
+    "done": "已完成",
+    "contributions": "存款记录",
+    "contribute": "存款",
+    "ofTarget": "/ 目标 {{value}}",
+    "progress": "{{pct}}%",
+    "progressWithDate": "{{pct}}% · 截至 {{date}}"
+  },
+  "contributionDialog": {
+    "title": "存款记录 — {{name}}",
+    "summary": "已存 {{saved}}，目标 {{target}}。",
+    "amountLabel": "金额",
+    "dateLabel": "日期",
+    "notesLabel": "备注",
+    "notesPlaceholder": "可选",
+    "submitting": "存款中……",
+    "submit": "存款",
+    "history": "历史记录",
+    "empty": "暂无存款记录。",
+    "deleteContribution": "删除该笔存款"
+  },
+  "deleteDialog": {
+    "title": "删除目标",
+    "description": "删除 <span>{{name}}</span>？其存款历史记录将一并删除——此操作无法撤销。",
+    "deleting": "删除中……"
+  },
+  "validation": {
+    "nameRequired": "名称为必填项",
+    "nameMax": "最多 80 个字符",
+    "amountRequired": "请输入金额",
+    "dateRequired": "请输入日期",
+    "colorInvalid": "颜色无效"
+  }
+}

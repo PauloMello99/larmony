@@ -1,88 +1,66 @@
 import * as React from "react"
 import Link from "next/link"
-import { Globe, AtSign, Link2 } from "lucide-react"
-import { Button } from "@/shared/components/ui/button"
-import { Input } from "@/shared/components/ui/input"
-import { Separator } from "@/shared/components/ui/separator"
+import { useTranslation } from "react-i18next"
+import { LogoMark } from "@/shared/components/brand/logo-mark"
 
-const FOOTER_LINKS = {
-  Produto: [
-    { label: "Recursos", href: "#recursos" },
-    { label: "Preços", href: "#precos" },
-    { label: "Changelog", href: "#" },
-    { label: "Roadmap", href: "#" },
-  ],
-  Empresa: [
-    { label: "Sobre", href: "#sobre" },
-    { label: "Blog", href: "#" },
-    { label: "Carreiras", href: "#" },
-    { label: "Imprensa", href: "#" },
-  ],
-  Legal: [
-    { label: "Termos de uso", href: "#" },
-    { label: "Privacidade", href: "#" },
-    { label: "Cookies", href: "#" },
-    { label: "Segurança", href: "#" },
-  ],
-}
-
-const SOCIAL_LINKS = [
-  { Icon: Globe, href: "https://larmony.me", label: "Site" },
-  { Icon: AtSign, href: "https://instagram.com", label: "Instagram" },
-  { Icon: Link2, href: "https://github.com", label: "GitHub" },
+const FOOTER_SECTIONS = [
+  {
+    key: "product",
+    links: [
+      { key: "features", href: "#recursos" },
+      { key: "pricing", href: "#precos" },
+      { key: "about", href: "#sobre" },
+      { key: "faq", href: "#faq" },
+    ],
+  },
+  {
+    key: "legal",
+    links: [
+      { key: "terms", href: "/legal/termos-de-uso" },
+      { key: "privacy", href: "/legal/privacidade" },
+      { key: "cookies", href: "/legal/privacidade#cookies" },
+      { key: "security", href: "/legal/privacidade#seguranca" },
+    ],
+  },
 ]
 
 export function Footer() {
-  return (
-    <footer className="border-t border-white/5 bg-[#0d0d0f]">
-      <div className="mx-auto max-w-7xl px-4 pb-6 pt-12 sm:px-6 sm:pb-8 sm:pt-16">
-        {/* Top grid */}
-        <div className="grid grid-cols-2 gap-8 sm:gap-12 md:grid-cols-5">
-          {/* Brand + newsletter */}
-          <div className="col-span-2 md:col-span-2">
-            <Link href="/" className="text-xl font-bold tracking-tight text-white">
-              <span className="text-primary">lar</span>mony
-            </Link>
-            <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/40">
-              Controle financeiro do seu lar. Transações, orçamentos e metas
-              em um só lugar.
-            </p>
+  const { t } = useTranslation("landing")
 
-            {/* Newsletter */}
-            <div className="mt-6">
-              <p className="mb-3 text-xs font-medium uppercase tracking-wider text-white/30">
-                Novidades por e-mail
-              </p>
-              <div className="flex gap-2">
-                <Input
-                  type="email"
-                  placeholder="seu@email.com"
-                  className="h-9 border-white/10 bg-white/5 text-sm text-white placeholder:text-white/30 focus-visible:ring-primary/50"
-                />
-                <Button
-                  size="sm"
-                  className="shrink-0 bg-primary text-primary-foreground hover:bg-primary/90"
-                >
-                  Assinar
-                </Button>
-              </div>
-            </div>
+  return (
+    <footer className="border-t border-white/[0.07] bg-[#0d0d0f]">
+      <div className="mx-auto max-w-7xl px-4 pb-10 pt-14 sm:px-6">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-[2fr_1fr_1fr]">
+          {/* Brand */}
+          <div className="col-span-2 md:col-span-1">
+            <Link
+              href="/"
+              className="flex items-center gap-2.5 text-lg font-bold tracking-tight text-white"
+            >
+              <LogoMark size={22} />
+              <span>
+                <span className="text-primary">lar</span>mony
+              </span>
+            </Link>
+            <p className="mt-3.5 max-w-[260px] text-[13.5px] leading-relaxed text-white/35">
+              {t("footer.description")}
+            </p>
           </div>
 
           {/* Link columns */}
-          {Object.entries(FOOTER_LINKS).map(([section, links]) => (
-            <div key={section}>
-              <p className="mb-4 text-xs font-medium uppercase tracking-wider text-white/30">
-                {section}
+          {FOOTER_SECTIONS.map((section) => (
+            <div key={section.key}>
+              <p className="mb-4 text-[11.5px] font-medium uppercase tracking-[0.1em] text-white/35">
+                {t(`footer.sections.${section.key}.title`)}
               </p>
               <ul className="space-y-2.5">
-                {links.map((link) => (
-                  <li key={link.label}>
+                {section.links.map((link) => (
+                  <li key={link.key}>
                     <Link
                       href={link.href}
-                      className="text-sm text-white/50 transition-colors hover:text-white"
+                      className="text-sm text-white/55 transition-colors hover:text-white"
                     >
-                      {link.label}
+                      {t(`footer.sections.${section.key}.links.${link.key}`)}
                     </Link>
                   </li>
                 ))}
@@ -91,28 +69,8 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Bottom bar */}
-        <Separator className="my-8 bg-white/5" />
-
-        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <p className="text-xs text-white/30">
-            © {new Date().getFullYear()} Larmony. Todos os direitos reservados.
-          </p>
-
-          <div className="flex items-center gap-4">
-            {SOCIAL_LINKS.map(({ Icon, href, label }) => (
-              <Link
-                key={label}
-                href={href}
-                aria-label={label}
-                className="text-white/30 transition-colors hover:text-white"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Icon className="h-4 w-4" />
-              </Link>
-            ))}
-          </div>
+        <div className="mt-10 border-t border-white/[0.07] pt-7 text-[12.5px] text-white/35">
+          {t("footer.copyright", { year: new Date().getFullYear() })}
         </div>
       </div>
     </footer>

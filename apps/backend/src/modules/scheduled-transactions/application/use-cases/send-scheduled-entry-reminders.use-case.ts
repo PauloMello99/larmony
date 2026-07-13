@@ -1,7 +1,8 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { daysBetween, nextManualOccurrence } from "../../../../common/finance/due-date";
-import { NotificationService } from "../../../notifications/application/notification.service";
+import { localHour, zonedNow } from "../../../../common/time/tz-clock";
+import { DispatchNotificationUseCase } from "../../../notifications/application/use-cases/dispatch-notification.use-case";
 import { ScheduledEntryEntity } from "../../domain/scheduled-entry.entity";
 import {
   IScheduledEntryRepository,
@@ -18,19 +19,21 @@ export interface SendScheduledEntryRemindersResult {
 }
 
 /**
- * Guarda anti-duplicata: já enviou lembrete desta entrada NO DIA-CALENDÁRIO de
- * `now`? (Antes: dedup por MÊS, correto só para cadência mensal — o gatilho
- * `daysUntil === reminderDaysBefore` cai em exatamente 1 dia por ocorrência
- * para QUALQUER cadência, então dedup por dia é o guarda correto e genérico —
- * byte-idêntico ao antigo para mensal, e agora também correto p/ weekly/yearly.)
+ * Guarda anti-duplicata: já enviou lembrete desta entrada NO DIA-CALENDÁRIO
+ * LOCAL DO LAR (M12)? O gatilho `daysUntil === reminderDaysBefore` cai em
+ * exatamente 1 dia por ocorrência para qualquer cadência, então dedup por dia
+ * local é o guarda correto. Tanto `reminderLastSentAt` (instante) quanto `now`
+ * são reexpressos no fuso do lar antes de comparar y/m/d — nunca getters crus.
  */
-export function alreadySentToday(entry: ScheduledEntryEntity, now: Date): boolean {
+export function alreadySentToday(entry: ScheduledEntryEntity, now: Date, timezone: string): boolean {
   const last = entry.reminderLastSentAt;
   if (!last) return false;
+  const lastLocal = zonedNow(timezone, last);
+  const nowLocal = zonedNow(timezone, now);
   return (
-    last.getFullYear() === now.getFullYear() &&
-    last.getMonth() === now.getMonth() &&
-    last.getDate() === now.getDate()
+    lastLocal.getFullYear() === nowLocal.getFullYear() &&
+    lastLocal.getMonth() === nowLocal.getMonth() &&
+    lastLocal.getDate() === nowLocal.getDate()
   );
 }
 
@@ -49,7 +52,7 @@ export class SendScheduledEntryRemindersUseCase {
   constructor(
     @Inject(SCHEDULED_ENTRY_REPOSITORY)
     private readonly entries: IScheduledEntryRepository,
-    private readonly notifications: NotificationService,
+    private readonly dispatch: DispatchNotificationUseCase,
     private readonly config: ConfigService,
   ) {}
 
@@ -64,11 +67,19 @@ export class SendScheduledEntryRemindersUseCase {
     for (const entry of candidates) {
       if (entry.reminderDaysBefore === null) continue;
 
-      const due = nextManualOccurrence(entry.startDate, now, entry.frequency, entry.interval);
-      const daysUntil = daysBetween(now, due);
+      // Tudo avaliado no fuso do lar (M12): o "hoje" e a hora são locais.
+      const tz = entry.householdTimezone;
+      const nowLocal = zonedNow(tz, now);
+
+      const due = nextManualOccurrence(entry.startDate, nowLocal, entry.frequency, entry.interval);
+      const daysUntil = daysBetween(nowLocal, due);
       if (daysUntil !== entry.reminderDaysBefore) continue;
 
-      if (alreadySentToday(entry, now)) {
+      // Gate de hora: só a partir da hora preferida local do lar (>=, tolera
+      // atraso de tick; a dedup diária impede reenvio nos ticks seguintes).
+      if (localHour(tz, now) < entry.householdNotificationHour) continue;
+
+      if (alreadySentToday(entry, now, tz)) {
         result.skippedDedup++;
         continue;
       }
@@ -77,28 +88,22 @@ export class SendScheduledEntryRemindersUseCase {
       await this.entries.markReminderSent(entry.id, now);
 
       const memberIds = await this.entries.findHouseholdMemberUserIds(entry.householdId);
-      const amount = (entry.amountCents / 100).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      });
-      const when =
-        daysUntil === 0 ? "vence hoje" : `vence em ${daysUntil} dia${daysUntil > 1 ? "s" : ""}`;
       const frontendUrl = this.config.get<string>("FRONTEND_URL") ?? "";
 
-      for (const userId of memberIds) {
-        await this.notifications.notify({
-          userId,
-          householdId: entry.householdId,
-          type: "bill_reminder",
-          title: `Lançamento "${entry.description}" ${when}`,
-          body: `Valor: ${amount}. Vencimento no dia ${due.getDate()}.`,
-          data: { scheduledTransactionEntryId: entry.id, dueDate: due.toISOString().slice(0, 10) },
-          actionUrl: frontendUrl
-            ? `${frontendUrl}/households/${entry.householdSlug}/scheduled-transactions`
-            : undefined,
-          actionLabel: "Ver lançamentos",
-        });
-      }
+      // actionLabel ("Ver lançamentos") vem do catálogo i18n — aqui só o actionUrl.
+      await this.dispatch.execute({
+        recipientUserIds: memberIds,
+        householdId: entry.householdId,
+        type: "bill_reminder",
+        description: entry.description,
+        amountCents: entry.amountCents,
+        daysUntil,
+        dueDay: due.getDate(),
+        data: { scheduledTransactionEntryId: entry.id, dueDate: due.toISOString().slice(0, 10) },
+        actionUrl: frontendUrl
+          ? `${frontendUrl}/households/${entry.householdSlug}/scheduled-transactions`
+          : undefined,
+      });
 
       result.sent++;
       this.logger.log(

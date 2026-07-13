@@ -28,6 +28,16 @@ describe("Transactions (e2e)", () => {
     categoryId = categories.body.find(
       (c: { name: string }) => c.name === "Alimentação",
     ).id;
+
+    // Este arquivo cria uma categoria personalizada descartável (teste de
+    // categoria vinculada) — Family-only (P-4, D-1). Comp desbloqueia; o
+    // gate em si tem teste dedicado isolado em categories.e2e-spec.ts.
+    await pool.query(
+      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
+       VALUES ($1, 'custom', 'active', 'e2e bootstrap — desbloqueia fixtures de transactions.e2e-spec')
+       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
+      [householdId],
+    );
   });
 
   afterAll(async () => {

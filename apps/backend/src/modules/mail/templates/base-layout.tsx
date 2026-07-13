@@ -10,20 +10,25 @@ import {
   Text,
 } from "@react-email/components";
 import type { ReactNode } from "react";
+import { mailMessages } from "../i18n/mail-messages";
 
 interface BaseLayoutProps {
   /** Texto curto exibido na prévia da caixa de entrada. */
   preview: string;
+  /** Locale do destinatário (ADR-0018) — resolve lang + footer. Default pt-BR. */
+  locale?: string | null;
   children: ReactNode;
 }
 
 /**
  * Layout/branding compartilhado por todos os e-mails transacionais do Larmony.
- * Mantém header, footer, tipografia e cores num só lugar.
+ * Mantém header, footer, tipografia e cores num só lugar. Strings via catálogo
+ * `mail-messages.ts`, no idioma do destinatário.
  */
-export function BaseLayout({ preview, children }: BaseLayoutProps) {
+export function BaseLayout({ preview, locale, children }: BaseLayoutProps) {
+  const m = mailMessages(locale);
   return (
-    <Html lang="pt-BR">
+    <Html lang={m.layout.lang}>
       <Head />
       <Preview>{preview}</Preview>
       <Body style={body}>
@@ -35,13 +40,16 @@ export function BaseLayout({ preview, children }: BaseLayoutProps) {
           <Hr style={hr} />
           <Section>
             <Text style={footer}>
-              Você recebeu este e-mail porque possui uma conta no Larmony.
+              {m.layout.footerAccount}
               <br />
-              Precisa de ajuda? Fale com a gente em{" "}
+              {m.layout.footerHelp}{" "}
               <Link href="mailto:suporte@larmony.me" style={footerLink}>
                 suporte@larmony.me
               </Link>
-              .
+              {" · "}
+              <Link href="https://larmony.me/legal/privacidade" style={footerLink}>
+                {m.layout.footerPrivacy}
+              </Link>
             </Text>
           </Section>
         </Container>
