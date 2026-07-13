@@ -271,6 +271,17 @@ export class DrizzleBudgetRepository implements IBudgetRepository {
   async findHouseholdMemberUserIds(householdId: string): Promise<string[]> {
     return findHouseholdMemberUserIds(this.admin, householdId);
   }
+
+  /** Séries ATIVAS (`endedFrom IS NULL`) do lar — régua do Free (D-1, P-5). */
+  async countActiveSeries(householdId: string): Promise<number> {
+    const [row] = await this.db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(schema.budgets)
+      .where(
+        and(eq(schema.budgets.householdId, householdId), isNull(schema.budgets.endedFrom)),
+      );
+    return row?.count ?? 0;
+  }
 }
 
 /** O Drizzle embrulha o erro do pg — o `code` 23505 pode estar no erro ou em `.cause`. */

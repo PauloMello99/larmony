@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Lock } from "lucide-react";
 import {
   Sheet,
   SheetBody,
@@ -32,6 +33,8 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 import { browserTimeZone, IANA_TIMEZONES } from "@/shared/lib/timezones";
+import { ApiError } from "@/infrastructure/api/client";
+import { translateApiError } from "@/shared/lib/api-error";
 import {
   makeCreateHouseholdSchema,
   type CreateHouseholdFormValues,
@@ -51,6 +54,8 @@ export function CreateHouseholdForm({
   const { t } = useTranslation("households");
   const { t: tCommon } = useTranslation("common");
   const schema = useMemo(() => makeCreateHouseholdSchema(t), [t]);
+  const [limitReached, setLimitReached] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const form = useForm<CreateHouseholdFormValues>({
     resolver: zodResolver(schema),
     // Fuso do lar (M12) pré-preenchido do navegador do criador — visível e
@@ -60,13 +65,35 @@ export function CreateHouseholdForm({
   });
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit({ ...values, timezone: values.timezone ?? browserTimeZone() });
-    form.reset();
-    onOpenChange(false);
+    setLimitReached(false);
+    setError(null);
+    try {
+      await onSubmit({ ...values, timezone: values.timezone ?? browserTimeZone() });
+      form.reset();
+      onOpenChange(false);
+    } catch (err) {
+      // Limite de lares do Free (D-1): upsell dedicado em vez do erro genérico
+      // (mesmo racional do PremiumGate em reports — mas aqui não há um lar já
+      // criado para linkar; orienta a fazer upgrade em Configurações de um lar
+      // existente).
+      if (err instanceof ApiError && err.code === "HOUSEHOLD_LIMIT_REACHED") {
+        setLimitReached(true);
+        return;
+      }
+      setError(translateApiError(err, tCommon));
+    }
   });
 
+  function handleOpenChange(next: boolean) {
+    if (!next) {
+      setLimitReached(false);
+      setError(null);
+    }
+    onOpenChange(next);
+  }
+
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent side="right" className="gap-0 sm:max-w-md">
         <Form {...form}>
           <form onSubmit={handleSubmit} className="flex h-full flex-col">
@@ -128,6 +155,16 @@ export function CreateHouseholdForm({
                   </FormItem>
                 )}
               />
+
+              {limitReached && (
+                <div className="flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/[0.06] p-4">
+                  <Lock className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                  <p className="text-[13px] leading-relaxed text-foreground/70">
+                    {t("createForm.limitReached")}
+                  </p>
+                </div>
+              )}
+              {error && <p className="text-sm text-red-400">{error}</p>}
             </SheetBody>
 
             <SheetFooter>

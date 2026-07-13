@@ -47,7 +47,40 @@
   passos / diferenciais vs planilha / prova-resultado). FAQ expandiu de 5→6
   perguntas ancoradas em objeções reais de billing. Footer removeu links
   mortos (`href="#"`) e a coluna "Empresa". Todas as strings novas traduzidas
-  nos 7 locales (checker de sync verde).
+  nos 7 locales (checker de sync verde). **A régua do Free citada aqui como
+  "em aberto (D-1)" foi resolvida em 2026-07-13** — ver entrada P-1..P-9
+  abaixo; o pricing da landing foi corrigido em seguida (P-8) pra refletir a
+  régua final.
+
+- **2026-07-13 — Timezone visível na criação do lar (adendo ADR-0024)**: campo
+  de fuso (`Select` sobre `IANA_TIMEZONES`, espelhando `edit-household-form`)
+  adicionado ao formulário de criação — reverte a decisão original do
+  ADR-0024 ("sem campo visível", auto-detecção silenciosa via
+  `browserTimeZone()`). Auto-preenchimento mantido; agora editável antes de
+  criar. Backend já suportava 100% (gap era só de UI). 7 locales.
+
+- **2026-07-13 — D-1 resolvido: régua final do Free + paywall completo
+  (adendo ADR-0026, P-1..P-9)**: até então só existia 1 capability
+  (`advanced_reports`) e 1 rota gateada. Régua comercial decidida e
+  implementada: **1 lar por dono, 2 membros/lar (dono+1), 0 categorias
+  personalizadas (só as 13 padrão), 3 metas, 3 orçamentos ativos**; Family
+  ilimitado em tudo. Capabilities novas: `custom_categories`, `report_export`
+  (distinta de `advanced_reports` — visualizar o relatório mensal continua
+  grátis, só o export CSV é Family). Feature nova: export CSV de relatório
+  mensal/anual, reusando infra RPT-2 que já existia pronta sem consumidor
+  (`csv.util.ts`, `ExportMenu`, `downloadCsv`). Limite de lares-por-dono não
+  se encaixa no `HouseholdEntitlementGuard` (não há lar ainda na criação) —
+  resolvido contando lares onde o usuário é `owner` via `findAllByAuthId`.
+  Exceções dedicadas por recurso (não reusa `PremiumRequiredException`).
+  Descobertos e corrigidos de passagem: 5 formulários do frontend sem
+  nenhum tratamento de erro (`create-household`, `invite-member`,
+  `category`, `goal`, `budget` — erros eram engolidos silenciosamente).
+  Pricing da landing (PR #20) corrigido pra refletir a régua (P-8). **Fora de
+  escopo, registrado como follow-up**: categorias-padrão sempre em pt-BR,
+  independente do idioma do usuário — falta perguntar idioma no signup.
+  Sem downgrade retroativo em lares que já excedem os novos limites. Ver
+  detalhe completo em `domain-rules.md` §Free/Family e no adendo do
+  ADR-0026.
 
 - **2026-07-13 — Rollout de i18n para 7 idiomas + fechamento dos gaps (adendo
   ADR-0018)**: `pt-BR`/`en-US`/`es-ES`/`zh-CN`/`de-DE`/`fr-FR`/`ja-JP` (tags BCP

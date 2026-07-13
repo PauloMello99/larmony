@@ -107,6 +107,10 @@
     "INVALID_DISCOUNT": "Desconto inválido — confira os parâmetros.",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "O lar não tem uma assinatura Stripe ativa.",
     "TRIAL_NOT_ALLOWED": "O trial não está disponível para o plano atual do lar.",
+    "HOUSEHOLD_LIMIT_REACHED": "Você atingiu o limite de lares do plano Free. Faça upgrade de um lar existente para criar outro.",
+    "MEMBER_LIMIT_REACHED": "Este lar atingiu o limite de membros do plano Free. Faça upgrade para convidar mais pessoas.",
+    "GOAL_LIMIT_REACHED": "Este lar já tem o número máximo de metas do plano Free. Faça upgrade para criar mais.",
+    "BUDGET_LIMIT_REACHED": "Este lar já tem o número máximo de orçamentos ativos do plano Free. Encerre um orçamento existente ou faça upgrade.",
     "NETWORK": "Falha de rede — verifique sua conexão e tente novamente.",
     "UNEXPECTED": "Ocorreu um erro inesperado. Tente novamente."
   }

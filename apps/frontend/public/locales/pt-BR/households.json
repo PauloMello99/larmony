@@ -104,6 +104,7 @@
     "namePlaceholder": "Ex: Casa da Família",
     "timezoneLabel": "Fuso horário",
     "timezoneHint": "Define quando lançamentos vencem e quando os avisos são enviados. Detectado automaticamente — ajuste se necessário.",
+    "limitReached": "Você já tem um lar no plano Free. Acesse Configurações > Assinatura de um lar existente para fazer upgrade e criar outro.",
     "submitting": "Criando…",
     "submit": "Criar lar"
   },

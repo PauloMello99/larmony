@@ -17,6 +17,16 @@ describe("Categories (e2e)", () => {
       .send({ name: "E2E Lar Categorias" })
       .expect(201);
     householdId = created.body.id;
+
+    // Categorias personalizadas são Family-only (P-4, D-1) — este arquivo
+    // testa CRUD de categoria custom, não o gate em si (que tem teste
+    // dedicado isolado abaixo). Comp desbloqueia as fixtures existentes.
+    await pool.query(
+      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
+       VALUES ($1, 'custom', 'active', 'e2e bootstrap — desbloqueia fixtures de categories.e2e-spec')
+       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
+      [householdId],
+    );
   });
 
   afterAll(async () => {
@@ -113,5 +123,44 @@ describe("Categories (e2e)", () => {
     )
       .send({ name: "Invasor", type: "expense" })
       .expect(403);
+  });
+
+  it("categoria personalizada é Family-only (P-4, D-1): bloqueada no Free, liberada após upgrade", async () => {
+    // Lar isolado (Free real) — não usa o `householdId` compartilhado (tem comp).
+    const solo = await signUpUser(app, "cat.limit.owner");
+    const solo1 = await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Categoria Free" })
+      .expect(201);
+    const soloHouseholdId = solo1.body.id;
+
+    const blocked = await authed(
+      app,
+      "post",
+      `/households/${soloHouseholdId}/categories`,
+      solo.accessToken,
+    )
+      .send({ name: "Pets", type: "expense", color: "#a855f7", icon: "PawPrint" })
+      .expect(402);
+    expect(blocked.body.code).toBe("PREMIUM_REQUIRED");
+
+    await pool.query(
+      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
+       VALUES ($1, 'custom', 'active', 'e2e categoria personalizada — upgrade')
+       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
+      [soloHouseholdId],
+    );
+    await authed(app, "post", `/households/${soloHouseholdId}/categories`, solo.accessToken)
+      .send({ name: "Pets", type: "expense", color: "#a855f7", icon: "PawPrint" })
+      .expect(201);
+
+    // Categorias-padrão continuam livres de gate — seed na criação do lar
+    // já provou 13 categorias no lar isolado também (mesmo caminho do repo).
+    const list = await authed(
+      app,
+      "get",
+      `/households/${soloHouseholdId}/categories`,
+      solo.accessToken,
+    ).expect(200);
+    expect(list.body.filter((c: { isDefault: boolean }) => c.isDefault)).toHaveLength(13);
   });
 });

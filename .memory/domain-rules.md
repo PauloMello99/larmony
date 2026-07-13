@@ -478,6 +478,46 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
   (M10); é assim mesmo que qualquer seed de histórico de orçamento precisa
   ser feito.
 
+### Free/Family — régua de billing (M14, D-1 resolvido — adendo ADR-0026)
+
+- Billing é **por household**, não por usuário — não existe "plano do
+  usuário". `EntitlementsService.resolve(householdId)` retorna `plan` +
+  `capabilities` + **`limits: PlanLimits`** (novo, numérico — distinto das
+  capabilities booleanas de `@RequireCapability`).
+- **`PLAN_LIMITS`** (`subscriptions/domain/entitlements.ts`) — Free:
+  `maxHouseholdsOwned=1`, `maxMembersPerHousehold=2` (dono+1),
+  `maxActiveGoals=3`, `maxActiveBudgets=3`; premium/custom: `Infinity` nos 4.
+  Capabilities booleanas novas: `custom_categories` (Free=false) e
+  `report_export` (Free=false, **distinta** de `advanced_reports` — o
+  relatório mensal continua grátis pra visualizar, só o CSV é Family).
+- **Limite de lares por dono não usa o `HouseholdEntitlementGuard`** (esse
+  resolve entitlements de um lar **já existente**; criar um lar novo não tem
+  lar ainda). `CreateHouseholdUseCase` conta lares onde o usuário é `owner`
+  via `findAllByAuthId` (já retorna `role`) — se `>=1` e **nenhum** deles for
+  premium/custom, bloqueia (upgrade de qualquer lar existente libera criar
+  outro). Demais limites (membros, metas, orçamentos) são resolvidos no
+  `householdId` do próprio recurso, dentro do use-case de criação.
+- **Membros**: conta ativos + convites pendentes (não só ativos) — senão dava
+  pra burlar convidando em excesso. **Categorias**: só a rota de criação é
+  gateada (`custom_categories`); listar/editar/excluir continua livre. As 13
+  categorias padrão são inseridas direto na transação de criação do household
+  (não passam pelo endpoint de criação), então o gate não afeta onboarding.
+  **Metas**: contagem total (`GoalEntity` não tem status de conclusão — sem
+  "ativa" vs "concluída"). **Orçamentos**: conta séries com `ended_from IS
+  NULL` (ADR-0022 — a aberta é a "ativa"; encerrar uma libera criar outra).
+- **Exceções dedicadas por recurso** (`HouseholdLimitReachedException`,
+  `MemberLimitReachedException`, `GoalLimitReachedException`,
+  `BudgetLimitReachedException`), cada uma com `code` próprio → 402 em
+  `domain-status.map.ts` — não reusar `PremiumRequiredException` pra limite
+  numérico (mensagem ficaria incoerente com a capability errada).
+- **Sem downgrade retroativo**: o gate só impede **criar** além do limite;
+  lares que já excedem (ex.: 5 membros antes desta régua) não perdem dados
+  nem ficam bloqueados de usar o que já têm.
+- **Fora de escopo, registrado como follow-up futuro**: categorias-padrão
+  hoje são sempre criadas em pt-BR, independente do idioma do usuário —
+  falta perguntar idioma no signup e localizar o catálogo de categorias
+  padrão. Não implementado nesta fase.
+
 ### Pendências não bloqueantes para V1
 
 - Landing page com copy do Larmony (hoje já tem copy de finanças domésticas).

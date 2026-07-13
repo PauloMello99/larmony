@@ -104,6 +104,7 @@
     "namePlaceholder": "e.g., Family Home",
     "timezoneLabel": "Time zone",
     "timezoneHint": "Sets when scheduled entries are due and when alerts go out. Auto-detected — adjust if needed.",
+    "limitReached": "You already have a home on the Free plan. Go to Settings > Subscription for an existing home to upgrade and create another.",
     "submitting": "Creating…",
     "submit": "Create home"
   },

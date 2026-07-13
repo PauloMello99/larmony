@@ -13,6 +13,8 @@ import {
 } from "@nestjs/common";
 import { AuthGuard } from "../../auth/guards/auth.guard";
 import { HouseholdMembershipGuard } from "../../auth/guards/household-membership.guard";
+import { HouseholdEntitlementGuard } from "../../subscriptions/interface/guards/household-entitlement.guard";
+import { RequireCapability } from "../../subscriptions/interface/decorators/require-capability.decorator";
 import { CurrentUser } from "../../auth/decorators/current-user.decorator";
 import type { AuthUser } from "../../auth/application/ports/auth-provider.interface";
 import { ListCategoriesUseCase } from "../application/use-cases/list-categories.use-case";
@@ -37,7 +39,13 @@ export class CategoriesController {
     return this.listCategories.execute(householdId);
   }
 
+  // Categorias personalizadas são Family-only (régua do Free, D-1). As 13
+  // categorias-padrão são semeadas direto na transação de criação do lar
+  // (drizzle-household.repository.ts) — nunca passam por este endpoint —
+  // então gatear a criação aqui não afeta o onboarding.
   @Post()
+  @RequireCapability("custom_categories")
+  @UseGuards(HouseholdEntitlementGuard)
   create(
     @Param("householdId", ParseUUIDPipe) householdId: string,
     @CurrentUser() user: AuthUser,

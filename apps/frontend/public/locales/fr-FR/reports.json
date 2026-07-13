@@ -27,5 +27,17 @@
     "balance": "Solde",
     "seriesTitle": "Revenu × Dépense · {{year}}",
     "seriesEmpty": "Aucun mouvement en {{year}}."
+  },
+  "export": {
+    "upgradeHint": "L'export de rapports est une fonctionnalité Family",
+    "columns": {
+      "category": "Catégorie",
+      "amount": "Montant",
+      "year": "Année",
+      "month": "Mois",
+      "income": "Revenus",
+      "expense": "Dépenses",
+      "balance": "Solde"
+    }
   }
 }

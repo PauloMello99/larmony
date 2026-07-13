@@ -104,6 +104,7 @@
     "namePlaceholder": "Ex : Maison de la famille",
     "timezoneLabel": "Fuseau horaire",
     "timezoneHint": "Définit quand les transactions programmées arrivent à échéance et quand les alertes sont envoyées. Détecté automatiquement — ajuste si besoin.",
+    "limitReached": "Tu as déjà un foyer sur le plan Free. Va dans Paramètres > Abonnement d'un foyer existant pour le mettre à niveau et en créer un autre.",
     "submitting": "Création…",
     "submit": "Créer le foyer"
   },

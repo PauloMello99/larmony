@@ -104,6 +104,7 @@
     "namePlaceholder": "Z. B.: Familie Schmidt",
     "timezoneLabel": "Zeitzone",
     "timezoneHint": "Bestimmt, wann Einträge fällig werden und wann Hinweise gesendet werden. Automatisch erkannt — bei Bedarf anpassen.",
+    "limitReached": "Du hast bereits einen Haushalt im Free-Plan. Gehe zu Einstellungen > Abo eines bestehenden Haushalts, um ein Upgrade durchzuführen und einen weiteren zu erstellen.",
     "submitting": "Wird erstellt…",
     "submit": "Haushalt erstellen"
   },

@@ -177,10 +177,10 @@
         "description": "Pour organiser les finances de la maison sans rien payer.",
         "cta": "Commencer gratuitement",
         "features": {
-          "f1": "Transactions et catégories illimitées",
-          "f2": "Budgets et objectifs",
+          "f1": "Transactions illimitées avec les catégories par défaut",
+          "f2": "Budgets et objectifs (jusqu’à 3 chacun)",
           "f3": "Rappels de factures par e-mail",
-          "f4": "Plusieurs membres et foyers",
+          "f4": "1 foyer, toi + 1 membre",
           "f5": "Tableau de bord et rapport mensuel"
         }
       },
@@ -193,9 +193,12 @@
         "cta": "S’abonner à Family",
         "features": {
           "f1": "Tout le plan Free",
-          "f2": "Rapports avancés — annuels et comparatifs",
-          "f3": "Nouvelles fonctionnalités premium au fil des sorties",
-          "f4": "Soutiens le développement de Larmony"
+          "f2": "Membres et foyers illimités",
+          "f3": "Catégories personnalisées illimitées",
+          "f4": "Rapports avancés — annuels et comparatifs",
+          "f5": "Export CSV des rapports",
+          "f6": "Nouvelles fonctionnalités premium au fil des sorties",
+          "f7": "Soutiens le développement de Larmony"
         }
       },
       "pro": {
@@ -224,7 +227,7 @@
       },
       "q2": {
         "question": "Qu’est-ce qui est inclus dans le plan Family ?",
-        "answer": "Aujourd’hui, les rapports avancés (vue annuelle et comparatifs). Et au fur et à mesure que de nouvelles fonctionnalités premium sortent, elles entrent dans Family sans coût supplémentaire. Sans engagement."
+        "answer": "Membres et foyers illimités, catégories personnalisées, rapports avancés (vue annuelle et comparatifs) et export CSV des rapports. Et au fur et à mesure que de nouvelles fonctionnalités premium sortent, elles entrent dans Family sans coût supplémentaire. Sans engagement."
       },
       "q3": {
         "question": "Puis-je résilier quand je veux ?",

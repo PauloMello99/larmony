@@ -27,5 +27,17 @@
     "balance": "Saldo",
     "seriesTitle": "Receita × Despesa · {{year}}",
     "seriesEmpty": "Sem movimentação em {{year}}."
+  },
+  "export": {
+    "upgradeHint": "Exportação de relatórios é um recurso Family",
+    "columns": {
+      "category": "Categoria",
+      "amount": "Valor",
+      "year": "Ano",
+      "month": "Mês",
+      "income": "Receitas",
+      "expense": "Despesas",
+      "balance": "Saldo"
+    }
   }
 }

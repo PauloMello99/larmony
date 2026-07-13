@@ -27,5 +27,17 @@
     "balance": "Balance",
     "seriesTitle": "Income vs. Expense · {{year}}",
     "seriesEmpty": "No activity in {{year}}."
+  },
+  "export": {
+    "upgradeHint": "Report export is a Family feature",
+    "columns": {
+      "category": "Category",
+      "amount": "Amount",
+      "year": "Year",
+      "month": "Month",
+      "income": "Income",
+      "expense": "Expense",
+      "balance": "Balance"
+    }
   }
 }

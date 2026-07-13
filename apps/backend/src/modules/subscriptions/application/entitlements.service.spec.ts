@@ -30,7 +30,7 @@ function sub(overrides: Partial<SubscriptionEntityProps> = {}): SubscriptionEnti
 }
 
 describe("EntitlementsService.resolve", () => {
-  it("free → plano free, sem advanced_reports, source free", async () => {
+  it("free → plano free, sem advanced_reports, source free, limites do Free", async () => {
     const { service, repo } = make();
     repo.getOrCreate.mockResolvedValue(sub({ type: "free" }));
 
@@ -38,7 +38,15 @@ describe("EntitlementsService.resolve", () => {
 
     expect(ent.plan).toBe("free");
     expect(ent.capabilities.advanced_reports).toBe(false);
+    expect(ent.capabilities.report_export).toBe(false);
+    expect(ent.capabilities.custom_categories).toBe(false);
     expect(ent.source).toBe("free");
+    expect(ent.limits).toEqual({
+      maxHouseholdsOwned: 1,
+      maxMembersPerHousehold: 2,
+      maxActiveGoals: 3,
+      maxActiveBudgets: 3,
+    });
   });
 
   it("standard com sub Stripe → premium, advanced_reports true, source stripe", async () => {
@@ -51,6 +59,7 @@ describe("EntitlementsService.resolve", () => {
 
     expect(ent.plan).toBe("premium");
     expect(ent.capabilities.advanced_reports).toBe(true);
+    expect(ent.limits.maxHouseholdsOwned).toBe(Infinity);
     expect(ent.source).toBe("stripe");
   });
 

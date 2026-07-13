@@ -104,6 +104,7 @@
     "namePlaceholder": "例如：我的家",
     "timezoneLabel": "时区",
     "timezoneHint": "决定计划收支的到期时间以及提醒的发送时间。已自动检测——如有需要可调整。",
+    "limitReached": "您已经拥有一个 Free 套餐的家庭。请前往某个现有家庭的“设置 > 订阅”进行升级，以创建新的家庭。",
     "submitting": "创建中……",
     "submit": "创建家庭"
   },

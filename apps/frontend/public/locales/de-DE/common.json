@@ -107,6 +107,10 @@
     "INVALID_DISCOUNT": "Ungültiger Rabatt — bitte prüfe die Parameter.",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "Der Haushalt hat kein aktives Stripe-Abonnement.",
     "TRIAL_NOT_ALLOWED": "Die Testphase ist für den aktuellen Plan des Haushalts nicht verfügbar.",
+    "HOUSEHOLD_LIMIT_REACHED": "Du hast das Haushaltslimit des Free-Plans erreicht. Führe ein Upgrade für einen bestehenden Haushalt durch, um einen weiteren zu erstellen.",
+    "MEMBER_LIMIT_REACHED": "Dieser Haushalt hat das Mitgliederlimit des Free-Plans erreicht. Führe ein Upgrade durch, um mehr Personen einzuladen.",
+    "GOAL_LIMIT_REACHED": "Dieser Haushalt hat bereits die maximale Anzahl an Zielen des Free-Plans erreicht. Führe ein Upgrade durch, um weitere zu erstellen.",
+    "BUDGET_LIMIT_REACHED": "Dieser Haushalt hat bereits die maximale Anzahl aktiver Budgets des Free-Plans erreicht. Schließe ein bestehendes Budget oder führe ein Upgrade durch.",
     "NETWORK": "Netzwerkfehler — bitte prüfe deine Verbindung und versuche es erneut.",
     "UNEXPECTED": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut."
   }

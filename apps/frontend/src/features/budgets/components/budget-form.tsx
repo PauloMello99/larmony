@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -32,6 +32,8 @@ import {
 import { Button } from "@/shared/components/ui/button"
 import { CurrencyInput } from "@/shared/components/ui/currency-input"
 import { useCategories } from "@/features/categories/hooks/use-categories"
+import { PremiumGate } from "@/features/subscription"
+import { translateApiError } from "@/shared/lib/api-error"
 import { makeCreateBudgetSchema, type CreateBudgetFormValues } from "../schemas/budget.schemas"
 import type { Budget } from "../types"
 
@@ -42,6 +44,8 @@ interface BudgetFormProps {
   budget?: Budget | null
   /** Categorias já orçadas neste período — excluídas do Select ao criar. */
   budgetedCategoryIds: string[]
+  /** Lar já atingiu o limite de orçamentos ativos do Free (D-1) — bloqueia só a criação. */
+  atLimit?: boolean
   onSubmit: (values: CreateBudgetFormValues) => Promise<void>
 }
 
@@ -51,11 +55,13 @@ export function BudgetForm({
   householdId,
   budget,
   budgetedCategoryIds,
+  atLimit,
   onSubmit,
 }: BudgetFormProps) {
   const { t } = useTranslation("budgets")
   const { t: tCommon } = useTranslation("common")
   const isEditing = !!budget
+  const blocked = !isEditing && !!atLimit
   const { categories } = useCategories(householdId)
 
   // Orçamento soma só despesas → categorias income não fazem sentido.
@@ -65,6 +71,7 @@ export function BudgetForm({
   )
 
   const schema = useMemo(() => makeCreateBudgetSchema(t), [t])
+  const [error, setError] = useState<string | null>(null)
   const form = useForm<CreateBudgetFormValues>({
     resolver: zodResolver(schema),
     defaultValues: { categoryId: "", amountCents: 0 },
@@ -77,13 +84,43 @@ export function BudgetForm({
           ? { categoryId: budget.categoryId, amountCents: budget.limitCents }
           : { categoryId: "", amountCents: 0 },
       )
+      setError(null)
     }
   }, [open, budget, form])
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit(values)
-    onOpenChange(false)
+    setError(null)
+    try {
+      await onSubmit(values)
+      onOpenChange(false)
+    } catch (err) {
+      // Limite de orçamentos ativos do Free (D-1) chega aqui via
+      // api.BUDGET_LIMIT_REACHED.
+      setError(translateApiError(err, tCommon))
+    }
   })
+
+  if (blocked) {
+    return (
+      <Sheet open={open} onOpenChange={onOpenChange}>
+        <SheetContent side="right" className="gap-0 sm:max-w-md">
+          <SheetHeader>
+            <SheetTitle>{t("form.createTitle")}</SheetTitle>
+          </SheetHeader>
+          <SheetBody className="py-6">
+            <PremiumGate descriptionKey="gate.descriptionBudgets" />
+          </SheetBody>
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button variant="outline" className="w-full sm:w-auto">
+                {tCommon("actions.cancel")}
+              </Button>
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    )
+  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -155,6 +192,8 @@ export function BudgetForm({
                   </FormItem>
                 )}
               />
+
+              {error && <p className="text-sm text-red-400">{error}</p>}
             </SheetBody>
 
             <SheetFooter>

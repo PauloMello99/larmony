@@ -4,6 +4,8 @@ import { NotificationsModule } from "../notifications/notifications.module";
 import { SubscriptionsModule } from "../subscriptions/subscriptions.module";
 import { GetMonthlyReportUseCase } from "./application/use-cases/get-monthly-report.use-case";
 import { GetAnnualReportUseCase } from "./application/use-cases/get-annual-report.use-case";
+import { ExportMonthlyReportUseCase } from "./application/use-cases/export-monthly-report.use-case";
+import { ExportAnnualReportUseCase } from "./application/use-cases/export-annual-report.use-case";
 import { SendMonthlyReportUseCase } from "./application/use-cases/send-monthly-report.use-case";
 import { MonthlyReportJob } from "./application/jobs/monthly-report.job";
 import { ReportsInfrastructureModule } from "./infrastructure/reports-infrastructure.module";
@@ -20,6 +22,8 @@ import { ReportsController } from "./interface/reports.controller";
   providers: [
     GetMonthlyReportUseCase,
     GetAnnualReportUseCase,
+    ExportMonthlyReportUseCase,
+    ExportAnnualReportUseCase,
     SendMonthlyReportUseCase,
     MonthlyReportJob,
   ],

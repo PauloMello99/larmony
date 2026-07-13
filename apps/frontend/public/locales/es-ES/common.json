@@ -107,6 +107,10 @@
     "INVALID_DISCOUNT": "Descuento no válido — revise los parámetros.",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "El hogar no tiene una suscripción de Stripe activa.",
     "TRIAL_NOT_ALLOWED": "El período de prueba no está disponible para el plan actual del hogar.",
+    "HOUSEHOLD_LIMIT_REACHED": "Has alcanzado el límite de hogares del plan Free. Mejora un hogar existente para crear otro.",
+    "MEMBER_LIMIT_REACHED": "Este hogar alcanzó el límite de miembros del plan Free. Mejora el plan para invitar a más personas.",
+    "GOAL_LIMIT_REACHED": "Este hogar ya tiene el número máximo de metas del plan Free. Mejora el plan para crear más.",
+    "BUDGET_LIMIT_REACHED": "Este hogar ya tiene el número máximo de presupuestos activos del plan Free. Cierra un presupuesto existente o mejora el plan.",
     "NETWORK": "Fallo de red — verifique su conexión e inténtelo de nuevo.",
     "UNEXPECTED": "Se produjo un error inesperado. Inténtelo de nuevo."
   }

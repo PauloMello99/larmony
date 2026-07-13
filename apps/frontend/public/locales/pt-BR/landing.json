@@ -177,10 +177,10 @@
         "description": "Para organizar as finanças da casa sem pagar nada.",
         "cta": "Começar grátis",
         "features": {
-          "f1": "Transações e categorias ilimitadas",
-          "f2": "Orçamentos e metas",
+          "f1": "Transações ilimitadas com as categorias padrão",
+          "f2": "Orçamentos e metas (até 3 de cada)",
           "f3": "Lembretes de contas por e-mail",
-          "f4": "Múltiplos membros e lares",
+          "f4": "1 lar, você + 1 membro",
           "f5": "Dashboard e relatório mensal"
         }
       },
@@ -193,9 +193,12 @@
         "cta": "Assinar Family",
         "features": {
           "f1": "Tudo do plano Free",
-          "f2": "Relatórios avançados — anual e comparativos",
-          "f3": "Novos recursos premium conforme lançam",
-          "f4": "Apoie o desenvolvimento do Larmony"
+          "f2": "Membros e lares ilimitados",
+          "f3": "Categorias personalizadas ilimitadas",
+          "f4": "Relatórios avançados — anual e comparativos",
+          "f5": "Exportação de relatórios em CSV",
+          "f6": "Novos recursos premium conforme lançam",
+          "f7": "Apoie o desenvolvimento do Larmony"
         }
       },
       "pro": {
@@ -224,7 +227,7 @@
       },
       "q2": {
         "question": "O que vem no plano Family?",
-        "answer": "Hoje, os relatórios avançados (visão anual e comparativos). E, conforme novos recursos premium são lançados, eles já entram no Family sem custo adicional. Sem fidelidade."
+        "answer": "Membros e lares ilimitados, categorias personalizadas, relatórios avançados (visão anual e comparativos) e exportação de relatórios em CSV. E, conforme novos recursos premium são lançados, eles já entram no Family sem custo adicional. Sem fidelidade."
       },
       "q3": {
         "question": "Posso cancelar quando quiser?",

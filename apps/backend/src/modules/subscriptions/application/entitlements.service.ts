@@ -6,7 +6,9 @@ import {
 import type { SubscriptionStatus } from "../domain/subscription.entity";
 import {
   capabilitiesFor,
+  limitsFor,
   type Capability,
+  type PlanLimits,
   type ResolvedPlan,
 } from "../domain/entitlements";
 
@@ -17,10 +19,11 @@ export interface ResolvedEntitlements {
   plan: ResolvedPlan;
   status: SubscriptionStatus;
   source: EntitlementSource;
-  /** Mapa capability → habilitada para o plano resolvido. A régua comercial
-   *  (que capabilities o Free perde) é decisão de produto (D-1); o mapa vive em
-   *  `domain/entitlements.ts`. */
+  /** Mapa capability → habilitada para o plano resolvido. Régua comercial
+   *  (D-1, resolvida — ver adendo ADR-0026) vive em `domain/entitlements.ts`. */
   capabilities: Record<Capability, boolean>;
+  /** Limites de contagem (lares/membros/metas/orçamentos) para o plano. */
+  limits: PlanLimits;
 }
 
 /**
@@ -61,6 +64,7 @@ export class EntitlementsService {
       status: subscription.status,
       source,
       capabilities: capabilitiesFor(plan),
+      limits: limitsFor(plan),
     };
   }
 }

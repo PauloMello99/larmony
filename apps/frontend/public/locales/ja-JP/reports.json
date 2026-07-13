@@ -27,5 +27,17 @@
     "balance": "収支",
     "seriesTitle": "収入 × 支出・{{year}}年",
     "seriesEmpty": "{{year}}年の記帳はありません。"
+  },
+  "export": {
+    "upgradeHint": "レポートのエクスポートはプレミアム機能です",
+    "columns": {
+      "category": "カテゴリー",
+      "amount": "金額",
+      "year": "年",
+      "month": "月",
+      "income": "収入",
+      "expense": "支出",
+      "balance": "収支"
+    }
   }
 }

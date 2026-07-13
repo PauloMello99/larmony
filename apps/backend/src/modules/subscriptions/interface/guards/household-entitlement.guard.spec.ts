@@ -38,7 +38,13 @@ describe("HouseholdEntitlementGuard", () => {
       plan: "premium",
       status: "active",
       source: "stripe",
-      capabilities: { advanced_reports: true },
+      capabilities: { advanced_reports: true, report_export: true, custom_categories: true },
+      limits: {
+        maxHouseholdsOwned: Infinity,
+        maxMembersPerHousehold: Infinity,
+        maxActiveGoals: Infinity,
+        maxActiveBudgets: Infinity,
+      },
     });
 
     await expect(guard.canActivate(contextWith("hh_1"))).resolves.toBe(true);
@@ -51,7 +57,13 @@ describe("HouseholdEntitlementGuard", () => {
       plan: "free",
       status: "active",
       source: "free",
-      capabilities: { advanced_reports: false },
+      capabilities: { advanced_reports: false, report_export: false, custom_categories: false },
+      limits: {
+        maxHouseholdsOwned: 1,
+        maxMembersPerHousehold: 2,
+        maxActiveGoals: 3,
+        maxActiveBudgets: 3,
+      },
     });
 
     await expect(guard.canActivate(contextWith("hh_1"))).rejects.toBeInstanceOf(
