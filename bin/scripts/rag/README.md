@@ -51,6 +51,12 @@ python3 -m venv ~/larmony-rag-venv
 
 Ou rode o slash command `/rag-setup` (documenta os passos acima).
 
+> **Hygiene:** o venv de runtime é o do **WSL** (`~/larmony-rag-venv`), fora do
+> repo. Não crie um `.venv` dentro de `bin/scripts/rag/` — além de gitignored, um
+> venv Windows sem `fastembed`/`tokenizers` faria a busca cair em dense-only e a
+> tokenização em `chars/3.3` silenciosamente. `reindex.sh` fixa o Python do WSL de
+> propósito por isso.
+
 ## Uso
 
 ```bash
@@ -94,7 +100,20 @@ IDs de chunk são determinísticos — reindexar sobrescreve em vez de duplicar.
 | `RAG_EMBED_DIM` | `1024` |
 | `RAG_COLLECTION` | `larmony_memory` |
 | `RAG_CHUNK_TOKENS` / `RAG_OVERLAP_TOKENS` | `400` / `60` |
+| `RAG_MIN_CHUNK_TOKENS` | `80` (fragmentos menores são fundidos) |
+| `RAG_PARENT_MAX_TOKENS` / `RAG_PARENT_MAX_CHARS` | `1600` / `2000` (cap da seção-pai no index / no query) |
 | `RAG_MIN_SCORE` | `0.35` (threshold do prefetch dense) |
+
+## Constantes internas (não-env, `mcp_server.py`)
+
+Fixadas em código porque a avaliação (`eval.py`) não mostrou ganho em variá-las:
+
+| Constante | Valor | Papel |
+|---|---|---|
+| `k` (default de `memory_search`) | `5` | top-k retornado; o recall satura em 5 (ver `EVAL.md`) |
+| `_PREFETCH` | `20` | candidatos por ramo (dense/sparse) antes da fusão RRF |
+| limite de fusão | `max(k*3, k)` | folga para o dedupe por seção-pai antes de truncar em `k` |
+| `PARENT_MAX_CHARS` | `2000` | corte do texto da seção-pai lido do disco no query |
 
 ## O que é indexado
 
