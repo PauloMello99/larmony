@@ -17,6 +17,7 @@
     "db:status": "tsx src/database/migrator.ts status",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
+    "db:backup": "tsx scripts/db-backup.ts",
     "seed:local": "tsx scripts/seed-local-user.ts",
     "stripe:webhook": "stripe listen --forward-to localhost:3001/webhooks/stripe",
     "clean": "pnpm -r exec rm -rf dist .turbo",
