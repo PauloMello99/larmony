@@ -48,6 +48,7 @@
   "gate": {
     "title": "Función Premium",
     "description": "Los informes avanzados forman parte del plan Premium. Actualiza tu plan para desbloquearlos.",
+    "descriptionCategories": "Las categorías personalizadas forman parte del plan Premium. Actualiza tu plan para desbloquearlas.",
     "cta": "Ver planes"
   }
 }

@@ -48,6 +48,7 @@
   "gate": {
     "title": "Recurso Premium",
     "description": "Relatórios avançados fazem parte do plano Premium. Faça o upgrade para desbloquear.",
+    "descriptionCategories": "Categorias personalizadas fazem parte do plano Premium. Faça o upgrade para desbloquear.",
     "cta": "Ver planos"
   }
 }

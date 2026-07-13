@@ -48,6 +48,7 @@
   "gate": {
     "title": "高级版功能",
     "description": "高级报告属于高级版套餐。请升级以解锁。",
+    "descriptionCategories": "自定义分类属于高级版套餐。请升级以解锁。",
     "cta": "查看套餐"
   }
 }

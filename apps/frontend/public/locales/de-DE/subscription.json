@@ -48,6 +48,7 @@
   "gate": {
     "title": "Premium-Funktion",
     "description": "Erweiterte Berichte sind Teil des Premium-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
+    "descriptionCategories": "Individuelle Kategorien sind Teil des Premium-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
     "cta": "Pläne ansehen"
   }
 }

@@ -7,12 +7,19 @@ import { buttonVariants } from "@/shared/components/ui/button"
 import { cn } from "@/shared/lib/utils"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
 
+interface PremiumGateProps {
+  className?: string
+  /** Sobrescreve a descrição default (relatórios avançados) para outras capabilities. */
+  descriptionKey?: string
+}
+
 /**
  * Card de paywall reutilizável, mostrado onde uma capability premium falta.
  * Reflete o backend — não decide acesso, só oferece o upgrade. O CTA leva pra
- * página de assinatura do lar.
+ * página de assinatura do lar. `descriptionKey` permite reusar o mesmo card
+ * para capabilities além de `advanced_reports` (ex.: categorias personalizadas).
  */
-export function PremiumGate({ className }: { className?: string }) {
+export function PremiumGate({ className, descriptionKey }: PremiumGateProps) {
   const { t } = useTranslation("subscription")
   const { household } = useCurrentHousehold()
   const href = `/households/${household.slug}/settings/subscription`
@@ -31,7 +38,7 @@ export function PremiumGate({ className }: { className?: string }) {
         {t("gate.title")}
       </h3>
       <p className="mt-1 max-w-sm text-sm text-foreground/50">
-        {t("gate.description")}
+        {t(descriptionKey ?? "gate.description")}
       </p>
       <Link href={href} className={cn(buttonVariants({ size: "sm" }), "mt-6")}>
         {t("gate.cta")}

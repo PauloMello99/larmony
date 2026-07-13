@@ -48,6 +48,7 @@
   "gate": {
     "title": "Premium feature",
     "description": "Advanced reports are part of the Premium plan. Upgrade to unlock.",
+    "descriptionCategories": "Custom categories are part of the Premium plan. Upgrade to unlock.",
     "cta": "See plans"
   }
 }

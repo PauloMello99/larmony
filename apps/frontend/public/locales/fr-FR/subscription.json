@@ -48,6 +48,7 @@
   "gate": {
     "title": "Fonctionnalité Premium",
     "description": "Les rapports avancés font partie du plan Premium. Passe au niveau supérieur pour les débloquer.",
+    "descriptionCategories": "Les catégories personnalisées font partie du plan Premium. Passe au niveau supérieur pour les débloquer.",
     "cta": "Voir les plans"
   }
 }
