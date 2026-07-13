@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +31,7 @@ import {
 } from "@/shared/components/ui/select";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
+import { translateApiError } from "@/shared/lib/api-error";
 import { makeInviteSchema, type InviteFormValues } from "../schemas/household.schemas";
 
 interface InviteMemberFormProps {
@@ -47,22 +48,38 @@ export function InviteMemberForm({
   const { t } = useTranslation("households");
   const { t: tCommon } = useTranslation("common");
   const schema = useMemo(() => makeInviteSchema(t), [t]);
+  const [error, setError] = useState<string | null>(null);
   const form = useForm<InviteFormValues>({
     resolver: zodResolver(schema),
     defaultValues: { email: "", role: "member" },
   });
 
   useEffect(() => {
-    if (open) form.reset({ email: "", role: "member" });
+    if (open) {
+      form.reset({ email: "", role: "member" });
+      setError(null);
+    }
   }, [open, form]);
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit(values);
-    onOpenChange(false);
+    setError(null);
+    try {
+      await onSubmit(values);
+      onOpenChange(false);
+    } catch (err) {
+      // Limite de membros do Free (D-1) chega aqui via api.MEMBER_LIMIT_REACHED
+      // — mensagem já orienta upgrade (translateApiError, sem UI dedicada).
+      setError(translateApiError(err, tCommon));
+    }
   });
 
+  function handleOpenChange(next: boolean) {
+    if (!next) setError(null);
+    onOpenChange(next);
+  }
+
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent side="right" className="gap-0 sm:max-w-md">
         <Form {...form}>
           <form onSubmit={handleSubmit} className="flex h-full flex-col">
@@ -124,6 +141,8 @@ export function InviteMemberForm({
                   )}
                 />
               </div>
+
+              {error && <p className="text-sm text-red-400">{error}</p>}
             </SheetBody>
 
             <SheetFooter>
