@@ -33,6 +33,22 @@
 
 ## Decisões/registros recentes (sem ADR)
 
+- **2026-07-13 — Overhaul da landing page (billing real + UX)**: pricing passou
+  a refletir o catálogo real — **Free** (grátis, o que hoje não é gated),
+  **Family** (`premium_monthly`, R$ 14,90/mês — mesmo produto do Stripe, sem
+  mudança de catálogo; único recurso gated de fato é `advanced_reports`) e
+  **Pro** (card desabilitado "em breve", sem produto no Stripe — Open Finance/
+  automações). Cards agora com **altura igual** (`items-stretch`+`h-full`,
+  confirmado 423px×3 via DOM) independente do nº de features listadas. **A
+  régua completa do Free segue em aberto (D-1)** — não resolvida aqui. Header
+  ganhou link de login (antes só cadastro). Tour (`#tour`) virou navegável —
+  6 abas clicáveis com paineis mock por feature (antes só "Visão geral"
+  estática). About trocou os 4 stat cards por 3 blocos (como funciona em 3
+  passos / diferenciais vs planilha / prova-resultado). FAQ expandiu de 5→6
+  perguntas ancoradas em objeções reais de billing. Footer removeu links
+  mortos (`href="#"`) e a coluna "Empresa". Todas as strings novas traduzidas
+  nos 7 locales (checker de sync verde).
+
 - **2026-07-13 — Rollout de i18n para 7 idiomas + fechamento dos gaps (adendo
   ADR-0018)**: `pt-BR`/`en-US`/`es-ES`/`zh-CN`/`de-DE`/`fr-FR`/`ja-JP` (tags BCP
   47 completas; normalização de legado `en`→`en-US`/`es`→`es-ES` + migration
