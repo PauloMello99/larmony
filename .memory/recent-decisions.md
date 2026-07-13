@@ -33,6 +33,25 @@
 
 ## Decisões/registros recentes (sem ADR)
 
+- **2026-07-13 — Fase pre-production entregue (P-1..P-6)**: LGPD (páginas
+  legais reais `pages/legal/*` — controlador "Larmony" + suporte@larmony.me;
+  consentimento obrigatório no signup com `terms_accepted_at`/`terms_version`
+  na migration 0011 e `TERMS_VERSION`); **ADR-0027** sessão localStorage vs
+  cookie httpOnly (decisão: manter localStorage + hardening helmet/CSP;
+  cookie inviável cross-site — `railway.app` na Public Suffix List; gatilho =
+  domínio próprio) — a validação da CSP pegou e corrigiu quebra real (blob:
+  p/ texturas GLTF do 3D da landing); **backup/restore** com script
+  `db:backup` (fallback docker exec) + runbook + drill verificado (contagens
+  idênticas); **squash das migrations** 0000–0011 → `0000_baseline`
+  (concatenação literal; comando novo `migrator baseline` p/ bancos
+  existentes — staging roda UMA VEZ; adendo no ADR-0003; validado com
+  restore do estado antigo + `supabase db reset` + e2e full); **imagem
+  standalone** do frontend (runner sem node_modules; `HOSTNAME=0.0.0.0`;
+  healthcheck no railway.json). Gotcha registrado: 2 e2e de
+  scheduled-transactions flakam na janela 21h–00h local (runner UTC-3 × lar
+  UTC no spec) — verdes no CI/UTC; recalibrar o helper `isoDaysFromNow` fica
+  como follow-up.
+
 - **2026-07-12 — Fase billing-hardening entregue (pós-M14, ADR-0026 adendo)**:
   integração real local (Stripe test + webhooks reais via `stripe listen`,
   script `stripe:webhook` + runbook `docs/billing-local-testing.md`) + bateria
