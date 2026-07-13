@@ -1,0 +1,79 @@
+{
+  "page": {
+    "title": "交易",
+    "description": "家庭的收入与支出",
+    "newTransaction": "新建交易",
+    "empty": "本期暂无交易。",
+    "emptyCta": "记录交易"
+  },
+  "form": {
+    "titleCreate": "新建交易",
+    "titleEdit": "编辑交易",
+    "description": "记录家庭的一笔收入或支出。",
+    "typeLabel": "类型",
+    "typeIncome": "收入",
+    "typeExpense": "支出",
+    "amountLabel": "金额",
+    "amountTotalLabel": "总金额",
+    "descriptionLabel": "描述",
+    "descriptionPlaceholder": "例如：超市",
+    "dateLabel": "日期",
+    "categoryLabel": "分类",
+    "categoryPlaceholder": "无分类",
+    "personLabel": "经手人",
+    "personPlaceholder": "您",
+    "notesLabel": "备注",
+    "notesPlaceholder": "可选说明",
+    "installmentsLabel": "分期",
+    "installmentsHint": "将总金额拆分为多期每月分期——每期对应一笔交易，均归入同一系列。",
+    "installmentsPreview": "{{count}} 期，每期约 {{amount}}",
+    "splitLabel": "在成员间分摊",
+    "splitHint": "在家庭成员间分摊金额（平均分摊或为每人指定具体金额），数据将计入按人统计的报告。",
+    "submitting": "保存中……",
+    "submitEdit": "保存修改",
+    "submitInstallments": "创建分期",
+    "submitCreate": "创建交易"
+  },
+  "list": {
+    "headerDescription": "描述",
+    "headerCategory": "分类",
+    "headerPerson": "经手人",
+    "headerDate": "日期",
+    "headerAmount": "金额",
+    "installmentBadge": "{{number}}/{{total}}",
+    "badgeSplit": "分摊",
+    "badgeRecurring": "周期性",
+    "noCategory": "无分类"
+  },
+  "filters": {
+    "byMonth": "按月份筛选",
+    "byYear": "按年份筛选",
+    "byType": "按类型筛选",
+    "byCategory": "按分类筛选",
+    "typeAll": "类型：全部",
+    "typeIncome": "收入",
+    "typeExpense": "支出",
+    "categoryAll": "分类：全部"
+  },
+  "split": {
+    "equal": "平均分摊",
+    "specific": "指定金额",
+    "sum": "合计：{{sum}} / {{total}}",
+    "sumMismatch": "——需要与总金额一致",
+    "equalPreview": "{{count}} 份，每份约 {{amount}}"
+  },
+  "deleteDialog": {
+    "title": "删除交易",
+    "installmentDescription": "<desc>{{description}}</desc> 是第 {{number}}/{{total}} 期。仅删除本期，还是删除整个系列？",
+    "normalDescription": "确定要删除 <desc>{{description}}</desc> 吗？此操作<emphasis>不可撤销</emphasis>。",
+    "deleting": "删除中……",
+    "deleteSeries": "删除整个系列",
+    "deleteInstallment": "仅删除本期"
+  },
+  "validation": {
+    "amountRequired": "请输入金额",
+    "descriptionRequired": "描述为必填项",
+    "descriptionMax": "最多 200 个字符",
+    "dateRequired": "日期为必填项"
+  }
+}

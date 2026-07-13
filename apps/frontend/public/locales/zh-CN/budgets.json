@@ -1,0 +1,42 @@
+{
+  "page": {
+    "title": "预算",
+    "subtitle": "按分类设置每月支出上限",
+    "newBudget": "新建预算",
+    "empty": "本期暂无预算。",
+    "createBudget": "创建预算",
+    "readOnlyNotice": "本月已结束——显示的是当时生效的额度，不能再修改。",
+    "projectedNotice": "未来月份——显示的额度是当前生效额度的预测值。"
+  },
+  "periodNav": {
+    "monthAria": "预算月份",
+    "yearAria": "预算年份"
+  },
+  "card": {
+    "exceeded": "已超支",
+    "of": "/ {{value}}",
+    "overLimit": "超出预算 {{value}}",
+    "available": "剩余 {{value}}"
+  },
+  "form": {
+    "createTitle": "新建预算",
+    "editTitle": "编辑预算",
+    "description": "为某个分类设置每月支出上限。",
+    "categoryLabel": "分类",
+    "categoryImmutable": "（不可修改）",
+    "categoryPlaceholder": "选择一个分类",
+    "limitLabel": "每月额度",
+    "saving": "保存中……",
+    "saveChanges": "保存修改",
+    "create": "创建预算"
+  },
+  "deleteDialog": {
+    "title": "删除预算",
+    "description": "删除本月 <span>{{name}}</span> 的预算？不会影响相关交易。",
+    "deleting": "删除中……"
+  },
+  "validation": {
+    "categoryRequired": "请选择一个分类",
+    "limitRequired": "请输入额度"
+  }
+}

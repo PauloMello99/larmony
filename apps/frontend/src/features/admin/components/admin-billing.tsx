@@ -1,18 +1,21 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { Search, Building2, Gift, Percent, ShieldCheck, Clock } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Badge } from "@/shared/components/ui/badge"
 import { Input } from "@/shared/components/ui/input"
 import { DatePicker } from "@/shared/components/ui/date-picker"
 import { useSubscription } from "@/features/subscription"
+import { translateApiError } from "@/shared/lib/api-error"
 import { useAdminHouseholds, useAdminBilling } from "../hooks/use-admin"
 import { useDebouncedValue } from "../lib/use-debounced-value"
 import { ConfirmDialog } from "./confirm-dialog"
 import type { AdminHousehold } from "../types"
 
 export function AdminBilling() {
+  const { t } = useTranslation("admin")
   const { households, loading } = useAdminHouseholds()
   const [query, setQuery] = React.useState("")
   const debounced = useDebouncedValue(query)
@@ -35,10 +38,10 @@ export function AdminBilling() {
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-semibold text-foreground">
-          Assinaturas &amp; Financeiro
+          {t("billing.title")}
         </h1>
         <p className="mt-0.5 text-sm text-foreground/40">
-          Conceda isenção ou desconto a um lar — tudo aqui, sem abrir o Stripe.
+          {t("billing.subtitle")}
         </p>
       </div>
 
@@ -48,7 +51,7 @@ export function AdminBilling() {
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Buscar lar por nome, slug ou dono…"
+          placeholder={t("billing.searchPlaceholder")}
           className="pl-9"
         />
       </div>
@@ -64,7 +67,7 @@ export function AdminBilling() {
         {!loading && rows.length === 0 && (
           <div className="flex flex-col items-center gap-2 px-4 py-10 text-center">
             <Building2 className="h-6 w-6 text-foreground/20" />
-            <p className="text-sm text-foreground/50">Nenhum lar corresponde à busca.</p>
+            <p className="text-sm text-foreground/50">{t("billing.emptyNoMatch")}</p>
           </div>
         )}
         {rows.map((o) => (
@@ -103,6 +106,7 @@ function HouseholdBillingPanel({
   householdId: string
   householdName: string
 }) {
+  const { t } = useTranslation("admin")
   const { subscription, loading, error } = useSubscription(householdId)
 
   if (loading) {
@@ -111,7 +115,7 @@ function HouseholdBillingPanel({
   if (error || !subscription) {
     return (
       <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
-        {error ?? "Não foi possível carregar a assinatura."}
+        {error ?? t("billing.loadError")}
       </div>
     )
   }
@@ -172,6 +176,8 @@ function TrialPanel({
   isFree: boolean
   trialEndsAt: string | null
 }) {
+  const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const { grantTrial, revokeTrial } = useAdminBilling()
   const [months, setMonths] = React.useState("")
   const [confirmRevoke, setConfirmRevoke] = React.useState(false)
@@ -180,7 +186,7 @@ function TrialPanel({
   async function grant() {
     const n = Number(months)
     if (!Number.isInteger(n) || n < 1 || n > 24) {
-      setErr("Informe um número de meses entre 1 e 24.")
+      setErr(t("billing.trialMonthsError"))
       return
     }
     setErr(null)
@@ -188,7 +194,11 @@ function TrialPanel({
       await grantTrial.mutateAsync({ householdId, months: n })
       setMonths("")
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Não foi possível conceder o trial.")
+      setErr(
+        e instanceof Error
+          ? translateApiError(e, tCommon)
+          : t("billing.grantTrialError"),
+      )
     }
   }
 
@@ -196,16 +206,17 @@ function TrialPanel({
     <div>
       <div className="flex items-center gap-2">
         <Clock className="h-4 w-4 text-orange-400" />
-        <h3 className="text-sm font-medium text-foreground">Trial</h3>
+        <h3 className="text-sm font-medium text-foreground">{t("billing.trialTitle")}</h3>
       </div>
 
       {isTrial ? (
         <div className="mt-3">
           <p className="text-sm text-foreground/70">
-            Trial ativo
             {trialEndsAt
-              ? ` até ${new Date(trialEndsAt).toLocaleDateString("pt-BR")}.`
-              : "."}
+              ? t("billing.trialActiveUntil", {
+                  date: new Date(trialEndsAt).toLocaleDateString(t("format.dateLocale")),
+                })
+              : t("billing.trialActive")}
           </p>
           <Button
             variant="outline"
@@ -213,17 +224,17 @@ function TrialPanel({
             className="mt-3"
             onClick={() => setConfirmRevoke(true)}
           >
-            Revogar trial
+            {t("billing.revokeTrial")}
           </Button>
         </div>
       ) : !isFree ? (
         <p className="mt-3 text-sm text-foreground/40">
-          Trial só pode ser concedido a um lar no plano gratuito.
+          {t("billing.trialOnlyFree")}
         </p>
       ) : (
         <div className="mt-3 space-y-3">
           <div>
-            <label className="text-xs text-foreground/50">Duração (meses, 1–24)</label>
+            <label className="text-xs text-foreground/50">{t("billing.trialDurationLabel")}</label>
             <Input
               type="number"
               min={1}
@@ -235,7 +246,7 @@ function TrialPanel({
           </div>
           {err && <p className="text-sm text-destructive">{err}</p>}
           <Button size="sm" onClick={() => void grant()} disabled={grantTrial.isPending}>
-            {grantTrial.isPending ? "Concedendo…" : "Conceder trial"}
+            {grantTrial.isPending ? t("billing.granting") : t("billing.grantTrial")}
           </Button>
         </div>
       )}
@@ -243,12 +254,16 @@ function TrialPanel({
       <ConfirmDialog
         open={confirmRevoke}
         onOpenChange={setConfirmRevoke}
-        title="Revogar trial?"
-        description="O lar volta ao plano Grátis imediatamente. Nenhum dado é apagado."
-        confirmLabel="Revogar"
+        title={t("billing.confirmRevokeTrialTitle")}
+        description={t("billing.confirmRevokeTrialDescription")}
+        confirmLabel={t("billing.revoke")}
         destructive
         loading={revokeTrial.isPending}
-        error={revokeTrial.error instanceof Error ? revokeTrial.error.message : null}
+        error={
+          revokeTrial.error instanceof Error
+            ? translateApiError(revokeTrial.error, tCommon)
+            : null
+        }
         onConfirm={() =>
           revokeTrial.mutate(
             { householdId },
@@ -269,6 +284,8 @@ function CompPanel({
   isComp: boolean
   reason: string | null
 }) {
+  const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const { grantComp, revokeComp } = useAdminBilling()
   const [newReason, setNewReason] = React.useState("")
   const [expiresAt, setExpiresAt] = React.useState<string>("")
@@ -277,7 +294,7 @@ function CompPanel({
 
   async function grant() {
     if (!newReason.trim()) {
-      setErr("O motivo é obrigatório.")
+      setErr(t("billing.compReasonRequired"))
       return
     }
     setErr(null)
@@ -290,7 +307,11 @@ function CompPanel({
       setNewReason("")
       setExpiresAt("")
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Não foi possível conceder a isenção.")
+      setErr(
+        e instanceof Error
+          ? translateApiError(e, tCommon)
+          : t("billing.grantCompError"),
+      )
     }
   }
 
@@ -298,7 +319,7 @@ function CompPanel({
     <div>
       <div className="flex items-center gap-2">
         <Gift className="h-4 w-4 text-orange-400" />
-        <h3 className="text-sm font-medium text-foreground">Isenção (comp)</h3>
+        <h3 className="text-sm font-medium text-foreground">{t("billing.compTitle")}</h3>
       </div>
 
       {isComp ? (
@@ -306,9 +327,9 @@ function CompPanel({
           <div className="flex items-start gap-2">
             <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
             <div>
-              <p className="text-sm text-foreground/70">Isenção ativa.</p>
+              <p className="text-sm text-foreground/70">{t("billing.compActive")}</p>
               {reason && (
-                <p className="mt-0.5 text-sm text-foreground/40">Motivo: {reason}</p>
+                <p className="mt-0.5 text-sm text-foreground/40">{t("billing.compReason", { reason })}</p>
               )}
             </div>
           </div>
@@ -318,22 +339,22 @@ function CompPanel({
             className="mt-3"
             onClick={() => setConfirmRevoke(true)}
           >
-            Revogar isenção
+            {t("billing.revokeComp")}
           </Button>
         </div>
       ) : (
         <div className="mt-3 space-y-3">
           <div>
-            <label className="text-xs text-foreground/50">Motivo (obrigatório)</label>
+            <label className="text-xs text-foreground/50">{t("billing.compReasonLabel")}</label>
             <Input
               value={newReason}
               onChange={(e) => setNewReason(e.target.value)}
-              placeholder="Ex.: parceria, tester, caso de suporte"
+              placeholder={t("billing.compReasonPlaceholder")}
               className="mt-1"
             />
           </div>
           <div>
-            <label className="text-xs text-foreground/50">Validade (opcional)</label>
+            <label className="text-xs text-foreground/50">{t("billing.compExpiresLabel")}</label>
             <div className="mt-1">
               {/* Validade é uma data futura — o default do DatePicker é passado. */}
               <DatePicker
@@ -341,13 +362,13 @@ function CompPanel({
                 onChange={setExpiresAt}
                 startMonth={new Date()}
                 endMonth={new Date(2100, 0)}
-                placeholder="Sem validade"
+                placeholder={t("billing.compExpiresPlaceholder")}
               />
             </div>
           </div>
           {err && <p className="text-sm text-destructive">{err}</p>}
           <Button size="sm" onClick={() => void grant()} disabled={grantComp.isPending}>
-            {grantComp.isPending ? "Concedendo…" : "Conceder isenção"}
+            {grantComp.isPending ? t("billing.granting") : t("billing.grantComp")}
           </Button>
         </div>
       )}
@@ -355,12 +376,16 @@ function CompPanel({
       <ConfirmDialog
         open={confirmRevoke}
         onOpenChange={setConfirmRevoke}
-        title="Revogar isenção?"
-        description="O lar volta ao plano Grátis e precisará assinar novamente. Nenhum dado é apagado."
-        confirmLabel="Revogar"
+        title={t("billing.confirmRevokeCompTitle")}
+        description={t("billing.confirmRevokeCompDescription")}
+        confirmLabel={t("billing.revoke")}
         destructive
         loading={revokeComp.isPending}
-        error={revokeComp.error instanceof Error ? revokeComp.error.message : null}
+        error={
+          revokeComp.error instanceof Error
+            ? translateApiError(revokeComp.error, tCommon)
+            : null
+        }
         onConfirm={() =>
           revokeComp.mutate(
             { householdId },
@@ -384,6 +409,8 @@ function DiscountPanel({
   hasStripeSub: boolean
   hasDiscount: boolean
 }) {
+  const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const { applyDiscount, removeDiscount } = useAdminBilling()
   const [mode, setMode] = React.useState<DiscountMode>("percent")
   const [percent, setPercent] = React.useState("")
@@ -407,7 +434,11 @@ function DiscountPanel({
       setAmountReais("")
       setMonths("")
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Não foi possível aplicar o desconto.")
+      setErr(
+        e instanceof Error
+          ? translateApiError(e, tCommon)
+          : t("billing.applyDiscountError"),
+      )
     }
   }
 
@@ -415,12 +446,12 @@ function DiscountPanel({
     <div>
       <div className="flex items-center gap-2">
         <Percent className="h-4 w-4 text-orange-400" />
-        <h3 className="text-sm font-medium text-foreground">Desconto (Stripe)</h3>
+        <h3 className="text-sm font-medium text-foreground">{t("billing.discountTitle")}</h3>
       </div>
 
       {hasDiscount ? (
         <div className="mt-3">
-          <p className="text-sm text-foreground/70">Desconto ativo nesta assinatura.</p>
+          <p className="text-sm text-foreground/70">{t("billing.discountActive")}</p>
           <Button
             variant="outline"
             size="sm"
@@ -428,26 +459,26 @@ function DiscountPanel({
             onClick={() => removeDiscount.mutate({ householdId })}
             disabled={removeDiscount.isPending}
           >
-            {removeDiscount.isPending ? "Removendo…" : "Remover desconto"}
+            {removeDiscount.isPending ? t("billing.removing") : t("billing.removeDiscount")}
           </Button>
         </div>
       ) : !hasStripeSub ? (
         <p className="mt-3 text-sm text-foreground/40">
-          O desconto exige uma assinatura Stripe ativa. Este lar ainda não assinou.
+          {t("billing.discountRequiresStripe")}
         </p>
       ) : (
         <div className="mt-3 space-y-3">
           <Toggle
             options={[
-              { value: "percent", label: "Percentual" },
-              { value: "amount", label: "Valor fixo" },
+              { value: "percent", label: t("billing.modePercent") },
+              { value: "amount", label: t("billing.modeAmount") },
             ]}
             value={mode}
             onChange={(v) => setMode(v as DiscountMode)}
           />
           {mode === "percent" ? (
             <div>
-              <label className="text-xs text-foreground/50">Percentual (1–100)</label>
+              <label className="text-xs text-foreground/50">{t("billing.percentLabel")}</label>
               <Input
                 type="number"
                 min={1}
@@ -459,7 +490,7 @@ function DiscountPanel({
             </div>
           ) : (
             <div>
-              <label className="text-xs text-foreground/50">Valor do desconto (R$)</label>
+              <label className="text-xs text-foreground/50">{t("billing.amountLabel")}</label>
               <Input
                 type="number"
                 min={0}
@@ -471,13 +502,13 @@ function DiscountPanel({
             </div>
           )}
           <div>
-            <label className="text-xs text-foreground/50">Duração</label>
+            <label className="text-xs text-foreground/50">{t("billing.durationLabel")}</label>
             <div className="mt-1">
               <Toggle
                 options={[
-                  { value: "once", label: "1 fatura" },
-                  { value: "repeating", label: "Alguns meses" },
-                  { value: "forever", label: "Para sempre" },
+                  { value: "once", label: t("billing.durationOnce") },
+                  { value: "repeating", label: t("billing.durationRepeating") },
+                  { value: "forever", label: t("billing.durationForever") },
                 ]}
                 value={duration}
                 onChange={(v) => setDuration(v as Duration)}
@@ -486,7 +517,7 @@ function DiscountPanel({
           </div>
           {duration === "repeating" && (
             <div>
-              <label className="text-xs text-foreground/50">Nº de meses</label>
+              <label className="text-xs text-foreground/50">{t("billing.monthsLabel")}</label>
               <Input
                 type="number"
                 min={1}
@@ -498,7 +529,7 @@ function DiscountPanel({
           )}
           {err && <p className="text-sm text-destructive">{err}</p>}
           <Button size="sm" onClick={() => void apply()} disabled={applyDiscount.isPending}>
-            {applyDiscount.isPending ? "Aplicando…" : "Aplicar desconto"}
+            {applyDiscount.isPending ? t("billing.applying") : t("billing.applyDiscount")}
           </Button>
         </div>
       )}

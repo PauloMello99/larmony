@@ -1,0 +1,59 @@
+{
+  "page": {
+    "title": "Ziele",
+    "subtitle": "Sparziele des Haushalts, mit Einzahlungen von allen",
+    "newGoal": "Neues Ziel",
+    "empty": "Noch kein Ziel.",
+    "createGoal": "Ziel erstellen"
+  },
+  "form": {
+    "editTitle": "Ziel bearbeiten",
+    "createTitle": "Neues Ziel",
+    "description": "Sparziele des Haushalts — der Fortschritt ergibt sich aus den Einzahlungen.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Z. B.: Reise",
+    "targetAmountLabel": "Zielbetrag",
+    "colorLabel": "Farbe",
+    "targetDateLabel": "Zieldatum",
+    "noTargetDate": "Kein Zieldatum",
+    "clearTargetDate": "Zieldatum entfernen",
+    "descriptionLabel": "Beschreibung",
+    "descriptionPlaceholder": "Optional",
+    "saving": "Wird gespeichert…",
+    "saveChanges": "Änderungen speichern",
+    "create": "Ziel erstellen"
+  },
+  "card": {
+    "done": "Abgeschlossen",
+    "contributions": "Einzahlungen",
+    "contribute": "Einzahlen",
+    "ofTarget": "von {{value}}",
+    "progress": "{{pct}}%",
+    "progressWithDate": "{{pct}}% · bis {{date}}"
+  },
+  "contributionDialog": {
+    "title": "Einzahlungen — {{name}}",
+    "summary": "{{saved}} von {{target}} gespart.",
+    "amountLabel": "Betrag",
+    "dateLabel": "Datum",
+    "notesLabel": "Notizen",
+    "notesPlaceholder": "Optional",
+    "submitting": "Wird eingezahlt…",
+    "submit": "Einzahlen",
+    "history": "Verlauf",
+    "empty": "Noch keine Einzahlung.",
+    "deleteContribution": "Einzahlung löschen"
+  },
+  "deleteDialog": {
+    "title": "Ziel löschen",
+    "description": "<span>{{name}}</span> löschen? Der Einzahlungsverlauf wird mitgelöscht — diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleting": "Wird gelöscht…"
+  },
+  "validation": {
+    "nameRequired": "Name ist erforderlich",
+    "nameMax": "Maximal 80 Zeichen",
+    "amountRequired": "Bitte gib einen Betrag an",
+    "dateRequired": "Bitte gib das Datum an",
+    "colorInvalid": "Ungültige Farbe"
+  }
+}

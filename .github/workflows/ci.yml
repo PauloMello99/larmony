@@ -35,6 +35,10 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # Drift de tradução (chaves/placeholders fora de sync com pt-BR) quebra o CI.
+      - name: Check locales
+        run: pnpm check-locales
+
       - name: Build
         run: pnpm build
 

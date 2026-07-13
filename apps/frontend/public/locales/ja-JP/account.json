@@ -1,0 +1,93 @@
+{
+  "nav": {
+    "title": "アカウント設定",
+    "profile": "プロフィール",
+    "access": "アクセス",
+    "appearance": "テーマ",
+    "locale": "言語",
+    "notifications": "通知",
+    "danger": "アカウントを削除"
+  },
+  "profile": {
+    "title": "プロフィール",
+    "description": "名前、メールアドレス、プロフィール写真を管理します。",
+    "loading": "読み込み中…",
+    "avatarAlt": "プロフィール写真",
+    "avatarUpload": "写真をアップロード",
+    "avatarUploading": "アップロード中…",
+    "avatarHint": "PNG、JPG、WEBP、GIF・最大5MB。",
+    "avatarInvalidType": "画像ファイルを選択してください。",
+    "avatarTooLarge": "画像は最大5MBまでです。",
+    "avatarUploadError": "写真のアップロードに失敗しました。",
+    "nameLabel": "名前",
+    "emailLabel": "メールアドレス",
+    "emailHint": "メールアドレスを変更すると、ログインにも使用されます。",
+    "saveError": "プロフィールを保存できませんでした。",
+    "saved": "プロフィールを更新しました。",
+    "submit": "変更を保存",
+    "submitting": "保存中…"
+  },
+  "access": {
+    "title": "アクセス",
+    "description": "パスワードとアクセスのセキュリティを管理します。",
+    "changePassword": "パスワードを変更",
+    "sentMessage": "<strong>{{email}}</strong> 宛にリンクを送信しました。リンクを開いて新しいパスワードを設定してください。セッションはメール内のリンクから安全に復元されます。",
+    "explanation": "セキュリティのため、パスワードの変更はメールで送信されるリンクから行います。リンクをクリックすると、セッションが自動的に復元された状態で新しいパスワードの設定画面が開きます。",
+    "error": "メールを送信できませんでした。もう一度お試しください。",
+    "submit": "変更リンクを送信"
+  },
+  "appearance": {
+    "title": "テーマ",
+    "description": "画面の外観をカスタマイズします。",
+    "cardTitle": "テーマ",
+    "cardDescription": "ライト、ダーク、または自動(システムに合わせる)から選択してください。",
+    "light": "ライト",
+    "dark": "ダーク",
+    "system": "システム"
+  },
+  "locale": {
+    "description": "画面とメールで使用する言語を選択します。",
+    "loading": "読み込み中…",
+    "error": "言語を変更できませんでした。"
+  },
+  "notifications": {
+    "title": "通知",
+    "description": "各イベントの通知方法を選択します。",
+    "loading": "読み込み中…",
+    "error": "設定を読み込めませんでした。",
+    "columns": {
+      "event": "イベント",
+      "inapp": "アプリ内",
+      "email": "メール",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "stubbedHint": "このバージョンではまだご利用いただけません。"
+    },
+    "events": {
+      "bill_reminder": "取引のリマインダー",
+      "goal_reached": "目標達成",
+      "budget_exceeded": "予算超過",
+      "auto_launch": "自動記帳",
+      "monthly_report": "月次レポート"
+    }
+  },
+  "danger": {
+    "title": "危険な操作",
+    "description": "アカウントに対する取り消せない操作です。",
+    "cardTitle": "アカウントを削除",
+    "cardDescription": "アカウントを完全に削除すると、個人データがすべて削除されます。この操作は取り消せません。",
+    "deleteTitle": "アカウントを削除",
+    "deleteHint": "アカウントを削除する前に、オーナーである世帯を譲渡または削除する必要があります。",
+    "deleteButton": "アカウントを削除",
+    "dialogTitle": "アカウントを削除",
+    "dialogDescription": "この操作は<span>取り消せません</span>。個人データは完全に削除されます。いずれかの世帯のオーナーである場合、削除はブロックされます。",
+    "confirmLabel": "確認のため、メールアドレス <span>{{email}}</span> を入力してください:",
+    "deleteError": "アカウントを削除できませんでした。",
+    "confirmDelete": "完全に削除",
+    "deleting": "削除中…"
+  },
+  "validation": {
+    "nameRequired": "名前は必須です",
+    "invalidEmail": "メールアドレスが無効です"
+  }
+}

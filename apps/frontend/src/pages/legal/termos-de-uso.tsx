@@ -1,5 +1,6 @@
 import * as React from "react"
 import Link from "next/link"
+import { makeI18nProps } from "@/shared/lib/i18n"
 import { LegalLayout, LegalSection } from "@/features/landing/components/legal-layout"
 
 /**
@@ -152,3 +153,6 @@ export default function TermosDeUsoPage() {
     </LegalLayout>
   )
 }
+
+// A prosa legal fica hardcoded pt-BR; o namespace `landing` traduz o chrome do LegalLayout.
+export const getServerSideProps = makeI18nProps(["common", "landing"])

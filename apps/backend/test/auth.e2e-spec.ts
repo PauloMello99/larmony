@@ -75,12 +75,12 @@ describe("Auth (e2e)", () => {
     const user = await signUpUser(app, "auth");
 
     const updated = await authed(app, "patch", "/auth/me", user.accessToken)
-      .send({ locale: "en" })
+      .send({ locale: "en-US" })
       .expect(200);
-    expect(updated.body.locale).toBe("en");
+    expect(updated.body.locale).toBe("en-US");
 
     await authed(app, "patch", "/auth/me", user.accessToken)
-      .send({ locale: "fr" })
+      .send({ locale: "xx-XX" })
       .expect(400);
   });
 });

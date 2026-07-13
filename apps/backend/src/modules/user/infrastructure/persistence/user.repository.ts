@@ -60,6 +60,8 @@ export class DrizzleUserRepository implements IUserRepository {
         // Aceite dos Termos/Privacidade (LGPD): timestamp + versão vigente.
         termsAcceptedAt: new Date(),
         termsVersion: data.termsVersion,
+        // Locale da UI no cadastro; ausente → default do schema (pt-BR).
+        ...(data.locale !== undefined && { locale: data.locale }),
       })
       .onConflictDoNothing()
       .returning();

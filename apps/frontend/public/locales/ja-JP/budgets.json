@@ -1,0 +1,42 @@
+{
+  "page": {
+    "title": "予算",
+    "subtitle": "カテゴリー別の月間支出上限",
+    "newBudget": "新規予算",
+    "empty": "この期間に予算はありません。",
+    "createBudget": "予算を作成",
+    "readOnlyNotice": "終了済みの月です・表示されている上限はその期間に有効だった値で、変更できません。",
+    "projectedNotice": "未来の月です・表示されている上限は現在の設定に基づく予測値です。"
+  },
+  "periodNav": {
+    "monthAria": "予算の月",
+    "yearAria": "予算の年"
+  },
+  "card": {
+    "exceeded": "超過",
+    "of": "{{value}}中",
+    "overLimit": "上限を{{value}}超過",
+    "available": "残り{{value}}"
+  },
+  "form": {
+    "createTitle": "新規予算",
+    "editTitle": "予算を編集",
+    "description": "カテゴリーごとに月間の支出上限を設定します。",
+    "categoryLabel": "カテゴリー",
+    "categoryImmutable": "(変更不可)",
+    "categoryPlaceholder": "カテゴリーを選択",
+    "limitLabel": "月間上限",
+    "saving": "保存中…",
+    "saveChanges": "変更を保存",
+    "create": "予算を作成"
+  },
+  "deleteDialog": {
+    "title": "予算を削除",
+    "description": "今月の<span>{{name}}</span>の予算を削除しますか?取引には影響しません。",
+    "deleting": "削除中…"
+  },
+  "validation": {
+    "categoryRequired": "カテゴリーを選択してください",
+    "limitRequired": "上限を入力してください"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "nav": {
+    "title": "我的账户",
+    "profile": "个人资料",
+    "access": "登录与安全",
+    "appearance": "主题",
+    "locale": "语言",
+    "notifications": "通知",
+    "danger": "删除账户"
+  },
+  "profile": {
+    "title": "个人资料",
+    "description": "管理您的姓名、邮箱和头像。",
+    "loading": "加载中……",
+    "avatarAlt": "头像",
+    "avatarUpload": "上传头像",
+    "avatarUploading": "上传中……",
+    "avatarHint": "PNG、JPG、WEBP 或 GIF · 最大 5 MB。",
+    "avatarInvalidType": "请选择一个图片文件。",
+    "avatarTooLarge": "图片大小不能超过 5 MB。",
+    "avatarUploadError": "头像上传失败。",
+    "nameLabel": "姓名",
+    "emailLabel": "邮箱",
+    "emailHint": "修改邮箱也会同时修改您的登录账号。",
+    "saveError": "个人资料保存失败。",
+    "saved": "个人资料已更新。",
+    "submit": "保存修改",
+    "submitting": "保存中……"
+  },
+  "access": {
+    "title": "登录与安全",
+    "description": "管理您的密码和登录安全。",
+    "changePassword": "修改密码",
+    "sentMessage": "我们已向 <strong>{{email}}</strong> 发送了一个链接。打开它即可设置新密码——该链接会自动安全地恢复您的登录会话。",
+    "explanation": "出于安全考虑，修改密码需要通过发送到您邮箱的链接完成。点击链接后，会自动恢复登录会话并打开设置新密码的页面。",
+    "error": "邮件发送失败，请重试。",
+    "submit": "发送修改链接"
+  },
+  "appearance": {
+    "title": "主题",
+    "description": "自定义控制面板的外观。",
+    "cardTitle": "主题",
+    "cardDescription": "在浅色、深色或自动（跟随系统）之间选择。",
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统"
+  },
+  "locale": {
+    "description": "选择界面和邮件使用的语言。",
+    "loading": "加载中……",
+    "error": "语言切换失败。"
+  },
+  "notifications": {
+    "title": "通知",
+    "description": "选择您希望如何接收每类事件的提醒。",
+    "loading": "加载中……",
+    "error": "无法加载您的通知偏好设置。",
+    "columns": {
+      "event": "事件",
+      "inapp": "站内",
+      "email": "邮箱",
+      "sms": "短信",
+      "whatsapp": "WhatsApp",
+      "stubbedHint": "此版本暂未提供。"
+    },
+    "events": {
+      "bill_reminder": "收支提醒",
+      "goal_reached": "目标达成",
+      "budget_exceeded": "预算超支",
+      "auto_launch": "自动记账",
+      "monthly_report": "月度报告"
+    }
+  },
+  "danger": {
+    "title": "危险操作区",
+    "description": "账户中的不可逆操作。",
+    "cardTitle": "删除账户",
+    "cardDescription": "永久删除账户将移除您的所有个人数据。此操作不可撤销。",
+    "deleteTitle": "删除我的账户",
+    "deleteHint": "删除账户前，您需要先转让或删除您作为所有者的家庭。",
+    "deleteButton": "删除账户",
+    "dialogTitle": "删除我的账户",
+    "dialogDescription": "此操作<span>不可撤销</span>。您的个人数据将被永久删除。如果您仍是某个家庭的所有者，删除操作将被阻止。",
+    "confirmLabel": "输入您的邮箱 <span>{{email}}</span> 以确认：",
+    "deleteError": "账户删除失败。",
+    "confirmDelete": "永久删除",
+    "deleting": "删除中……"
+  },
+  "validation": {
+    "nameRequired": "姓名为必填项",
+    "invalidEmail": "邮箱格式无效"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "roles": {
+    "owner": "所有者",
+    "member": "成员"
+  },
+  "validation": {
+    "nameMin": "至少 2 个字符",
+    "nameMax": "最多 80 个字符",
+    "emailInvalid": "邮箱格式无效"
+  },
+  "settings": {
+    "loading": "加载中……",
+    "notFound": "未找到该家庭。",
+    "generalTitle": "基本信息",
+    "generalDescription": "家庭的名称和公开标识符。",
+    "nameLabel": "名称",
+    "slugLabel": "Slug",
+    "membersTitle": "成员",
+    "membersDescription": "管理可以访问该家庭的成员。",
+    "invite": "邀请",
+    "transferTitle": "转让家庭",
+    "transferDescription": "将该家庭的所有权转让给其他成员。",
+    "transferProse": "所有权将转移给选定的成员。您将变为具有全部模块访问权限的成员。",
+    "dangerTitle": "危险操作区",
+    "dangerDescription": "不可逆操作，请谨慎操作。",
+    "deleteTitle": "删除家庭",
+    "deleteDescription": "将永久删除该家庭的所有数据。"
+  },
+  "membersPage": {
+    "loading": "正在加载成员……",
+    "title": "成员",
+    "description": "管理可以访问该家庭的成员。",
+    "invite": "邀请",
+    "inviteCreated": "邀请已创建。接受链接（开发环境——复制以测试）：",
+    "copy": "复制",
+    "updatePermissionsError": "权限更新失败。",
+    "toggleStatusError": "成员状态修改失败。"
+  },
+  "members": {
+    "title": "成员（{{count}}）",
+    "pendingInvitations": "待处理邀请（{{count}}）",
+    "nameHeader": "姓名",
+    "emailHeader": "邮箱",
+    "roleHeader": "角色",
+    "you": "（您）",
+    "invitationMeta": "{{role}} · 过期时间 {{date}}",
+    "actions": {
+      "permissions": "权限",
+      "makeOwner": "设为所有者",
+      "makeMember": "设为成员",
+      "enable": "启用",
+      "disable": "停用",
+      "remove": "移除"
+    }
+  },
+  "modules": {
+    "services": "服务",
+    "clients": "客户",
+    "schedule": "日程",
+    "stock": "库存",
+    "cashier": "收银"
+  },
+  "roleDialog": {
+    "title": "修改角色",
+    "description": "修改 <span>{{name}}</span> 的角色。",
+    "newRoleLabel": "新角色",
+    "saving": "保存中……"
+  },
+  "permissionsDialog": {
+    "title": "成员权限",
+    "description": "选择 <span>{{name}}</span> 可以访问的模块。在每个模块中，成员只能查看自己的记录。",
+    "saving": "保存中……",
+    "submit": "保存权限"
+  },
+  "removeDialog": {
+    "title": "移除成员",
+    "description": "确定要将 <span>{{name}}</span> 从该家庭中移除吗？",
+    "removing": "移除中……",
+    "submit": "移除"
+  },
+  "transferDialog": {
+    "trigger": "转让",
+    "title": "转让家庭",
+    "description": "选择将成为新所有者的成员。您将获得具有全部模块访问权限的<span>成员</span>身份。",
+    "newOwnerLabel": "新所有者",
+    "selectPlaceholder": "选择一位成员",
+    "memberOption": "{{name}}（{{email}}）",
+    "error": "家庭转让失败。",
+    "submitting": "转让中……",
+    "submit": "转让所有权"
+  },
+  "deleteDialog": {
+    "trigger": "删除家庭",
+    "title": "删除家庭",
+    "description": "此操作<span>不可撤销</span>。该家庭的所有数据将被永久删除。",
+    "confirmLabel": "输入 <span>{{name}}</span> 以确认：",
+    "deleting": "删除中……",
+    "submit": "永久删除"
+  },
+  "createForm": {
+    "title": "新建家庭",
+    "description": "为您的家庭创建一个空间。您将成为所有者。",
+    "nameLabel": "名称",
+    "namePlaceholder": "例如：我的家",
+    "submitting": "创建中……",
+    "submit": "创建家庭"
+  },
+  "editForm": {
+    "nameLabel": "家庭名称",
+    "namePlaceholder": "例如：我的家",
+    "slugLabel": "标识符（slug）",
+    "slugHint": "自动生成——不可修改。",
+    "timezoneLabel": "时区",
+    "timezoneHint": "决定计划收支的到期时间以及提醒的发送时间。",
+    "notificationHourLabel": "提醒发送时间",
+    "notificationHourHint": "提醒和月度报告会在该家庭时区的这个时间之后发送。",
+    "saving": "保存中……",
+    "submit": "保存修改"
+  },
+  "inviteForm": {
+    "title": "邀请成员",
+    "description": "邀请将以带访问链接的邮件形式发送。",
+    "emailLabel": "邮箱",
+    "emailPlaceholder": "name@example.com",
+    "roleLabel": "角色",
+    "rolePlaceholder": "选择一个角色",
+    "submitting": "发送中……",
+    "submit": "发送邀请"
+  }
+}

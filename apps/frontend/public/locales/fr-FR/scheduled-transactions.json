@@ -1,0 +1,89 @@
+{
+  "page": {
+    "title": "Transactions programmées",
+    "subtitle": "Factures et transactions qui se répètent — enregistre-les manuellement ou laisse Larmony les générer automatiquement",
+    "newEntry": "Nouvelle transaction programmée",
+    "empty": "Aucune transaction programmée.",
+    "createEntry": "Créer une transaction programmée"
+  },
+  "form": {
+    "createTitle": "Nouvelle transaction programmée",
+    "editTitle": "Modifier la transaction programmée",
+    "description": "Définis la cadence et choisis si Larmony l’enregistre automatiquement ou si tu préfères confirmer manuellement.",
+    "postingModeLabel": "Enregistrer automatiquement",
+    "postingModeAutoHint": "Larmony génère la transaction tout seul, à la date de chaque occurrence.",
+    "postingModeManualHint": "Tu reçois un rappel et l’enregistres manuellement quand tu veux.",
+    "typeLabel": "Type",
+    "typeExpense": "Dépense",
+    "typeIncome": "Revenu",
+    "amountLabel": "Montant",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Ex : Loyer, Salaire, Internet",
+    "frequencyLabel": "Fréquence",
+    "intervalLabel": "Tous les",
+    "startLabel": "Début",
+    "startImmutable": "{{date}} (immuable)",
+    "startPlaceholder": "Date de la 1ère occurrence",
+    "endLabel": "Fin (facultatif)",
+    "endPlaceholder": "Sans fin",
+    "clear": "Effacer",
+    "categoryLabel": "Catégorie",
+    "categoryPlaceholder": "Sans catégorie",
+    "reminderLabel": "Rappel",
+    "reminderNone": "Sans rappel",
+    "reminderDaysBefore_one": "{{count}} jour avant",
+    "reminderDaysBefore_other": "{{count}} jours avant",
+    "activeLabel": "Transaction active",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Remarques facultatives",
+    "saving": "Enregistrement…",
+    "saveChanges": "Enregistrer les modifications",
+    "create": "Créer la transaction programmée"
+  },
+  "list": {
+    "headerDescription": "Description",
+    "headerCadence": "Cadence",
+    "headerAmount": "Montant",
+    "headerActive": "Active"
+  },
+  "row": {
+    "dueToday": "Échéance aujourd’hui",
+    "dueTomorrow": "Échéance demain",
+    "dueInDays_one": "Échéance dans {{count}} jour",
+    "dueInDays_other": "Échéance dans {{count}} jours",
+    "next": "prochaine le {{date}}",
+    "inactive": "Inactive",
+    "activateAria": "Activer la transaction programmée",
+    "deactivateAria": "Désactiver la transaction programmée",
+    "launchAsTransaction": "Enregistrer comme transaction"
+  },
+  "deleteDialog": {
+    "title": "Supprimer la transaction programmée",
+    "descriptionManual": "Es-tu sûr(e) de vouloir supprimer <span>{{description}}</span> ? Les transactions déjà enregistrées ne sont pas affectées.",
+    "descriptionAuto": "Es-tu sûr(e) de vouloir supprimer <span>{{description}}</span> ? Les transactions déjà générées restent dans l’historique (elles ne sont plus marquées comme automatiques).",
+    "deleting": "Suppression…"
+  },
+  "frequency": {
+    "weekly": "Hebdomadaire",
+    "biweekly": "Bimensuelle",
+    "monthly": "Mensuelle",
+    "bimonthly": "Bimestrielle",
+    "quarterly": "Trimestrielle",
+    "semiannual": "Semestrielle",
+    "yearly": "Annuelle",
+    "everyWeeks_one": "Toutes les {{count}} semaine",
+    "everyWeeks_other": "Toutes les {{count}} semaines",
+    "everyMonths_one": "Tous les {{count}} mois",
+    "everyMonths_other": "Tous les {{count}} mois",
+    "everyYears_one": "Tous les {{count}} an",
+    "everyYears_other": "Tous les {{count}} ans"
+  },
+  "validation": {
+    "amountRequired": "Indique un montant",
+    "descriptionRequired": "La description est obligatoire",
+    "descriptionMax": "200 caractères maximum",
+    "intervalMin": "Minimum 1",
+    "intervalMax": "Maximum 365",
+    "startDateRequired": "Indique la date de début"
+  }
+}

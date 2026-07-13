@@ -1,8 +1,10 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { apiRequest } from "@/infrastructure/api/client"
 import { queryKeys } from "@/infrastructure/query/query-keys"
+import { translateApiError } from "@/shared/lib/api-error"
 import type { AppLocale } from "@/shared/lib/locale"
 import type { Me } from "../types"
 
@@ -14,6 +16,7 @@ export interface UpdateMeBody {
 }
 
 export function useMe() {
+  const { t } = useTranslation("common")
   const queryClient = useQueryClient()
 
   const { data, isLoading, error } = useQuery({
@@ -46,7 +49,7 @@ export function useMe() {
   return {
     me: data ?? null,
     loading: isLoading,
-    error: error instanceof Error ? error.message : null,
+    error: error instanceof Error ? translateApiError(error, t) : null,
     updateMe: (body: UpdateMeBody) => updateMutation.mutateAsync(body),
     uploadAvatar: (file: File) => uploadAvatarMutation.mutateAsync(file),
   }

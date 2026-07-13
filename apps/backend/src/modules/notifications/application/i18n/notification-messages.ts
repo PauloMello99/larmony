@@ -67,7 +67,7 @@ const CATALOG: Record<NotificationLocale, Builders> = {
       };
     },
   },
-  en: {
+  "en-US": {
     goal_reached: (p, f) => ({
       title: `Goal "${p.goalName}" reached! 🎉`,
       body: `You've saved ${f.brl(p.savedCents)} — the ${f.brl(p.targetCents)} goal was reached.`,
@@ -94,7 +94,7 @@ const CATALOG: Record<NotificationLocale, Builders> = {
       };
     },
   },
-  es: {
+  "es-ES": {
     goal_reached: (p, f) => ({
       title: `¡Meta "${p.goalName}" alcanzada! 🎉`,
       body: `Guardaron ${f.brl(p.savedCents)} — la meta de ${f.brl(p.targetCents)} fue alcanzada.`,
@@ -118,6 +118,114 @@ const CATALOG: Record<NotificationLocale, Builders> = {
         title: `Lanzamiento "${p.description}" ${when}`,
         body: `Valor: ${f.brl(p.amountCents)}. Vencimiento el día ${p.dueDay}.`,
         actionLabel: "Ver lanzamientos",
+      };
+    },
+  },
+  "zh-CN": {
+    goal_reached: (p, f) => ({
+      title: `目标"${p.goalName}"已达成！🎉`,
+      body: `你们已存下 ${f.brl(p.savedCents)} — 达成了 ${f.brl(p.targetCents)} 的目标。`,
+    }),
+    budget_exceeded: (p, f) => ({
+      title: `"${p.categoryName}"预算已超支`,
+      body: `支出 ${f.brl(p.spentCents)} 超过了 ${f.brl(p.limitCents)} 的限额。`,
+    }),
+    auto_launch: (p, f) => ({
+      title: `自动记账：${p.description}`,
+      body: `${f.brl(p.amountCents)} 已于 ${f.date(p.date)} 自动入账。`,
+    }),
+    monthly_report: (p, f) => ({
+      title: `月度报告 — ${p.year}年${f.monthName(p.month)}`,
+      body: `收入：${f.brl(p.incomeCents)}。支出：${f.brl(p.expenseCents)}。结余：${f.brl(p.balanceCents)}。`,
+    }),
+    bill_reminder: (p, f) => {
+      const when = p.daysUntil === 0 ? "今天到期" : `将在 ${p.daysUntil} 天后到期`;
+      return {
+        title: `账目"${p.description}"${when}`,
+        body: `金额：${f.brl(p.amountCents)}。到期日：每月 ${p.dueDay} 日。`,
+        actionLabel: "查看账目",
+      };
+    },
+  },
+  "de-DE": {
+    goal_reached: (p, f) => ({
+      title: `Ziel "${p.goalName}" erreicht! 🎉`,
+      body: `Ihr habt ${f.brl(p.savedCents)} gespart — das Ziel von ${f.brl(p.targetCents)} wurde erreicht.`,
+    }),
+    budget_exceeded: (p, f) => ({
+      title: `Budget für "${p.categoryName}" überschritten`,
+      body: `Ausgaben von ${f.brl(p.spentCents)} haben das Limit von ${f.brl(p.limitCents)} überschritten.`,
+    }),
+    auto_launch: (p, f) => ({
+      title: `Automatische Buchung: ${p.description}`,
+      body: `${f.brl(p.amountCents)} wurde am ${f.date(p.date)} automatisch gebucht.`,
+    }),
+    monthly_report: (p, f) => ({
+      title: `Monatsbericht — ${f.monthName(p.month)} ${p.year}`,
+      body: `Einnahmen: ${f.brl(p.incomeCents)}. Ausgaben: ${f.brl(p.expenseCents)}. Saldo: ${f.brl(p.balanceCents)}.`,
+    }),
+    bill_reminder: (p, f) => {
+      const when =
+        p.daysUntil === 0
+          ? "ist heute fällig"
+          : `ist in ${p.daysUntil} Tag${p.daysUntil > 1 ? "en" : ""} fällig`;
+      return {
+        title: `Buchung "${p.description}" ${when}`,
+        body: `Betrag: ${f.brl(p.amountCents)}. Fällig am ${p.dueDay}.`,
+        actionLabel: "Buchungen ansehen",
+      };
+    },
+  },
+  "fr-FR": {
+    goal_reached: (p, f) => ({
+      title: `Objectif « ${p.goalName} » atteint ! 🎉`,
+      body: `Vous avez économisé ${f.brl(p.savedCents)} — l'objectif de ${f.brl(p.targetCents)} a été atteint.`,
+    }),
+    budget_exceeded: (p, f) => ({
+      title: `Budget « ${p.categoryName} » dépassé`,
+      body: `Les dépenses de ${f.brl(p.spentCents)} ont dépassé la limite de ${f.brl(p.limitCents)}.`,
+    }),
+    auto_launch: (p, f) => ({
+      title: `Écriture automatique : ${p.description}`,
+      body: `${f.brl(p.amountCents)} enregistré automatiquement le ${f.date(p.date)}.`,
+    }),
+    monthly_report: (p, f) => ({
+      title: `Rapport mensuel — ${f.monthName(p.month)} ${p.year}`,
+      body: `Revenus : ${f.brl(p.incomeCents)}. Dépenses : ${f.brl(p.expenseCents)}. Solde : ${f.brl(p.balanceCents)}.`,
+    }),
+    bill_reminder: (p, f) => {
+      const when =
+        p.daysUntil === 0 ? "arrive à échéance aujourd'hui" : `arrive à échéance dans ${p.daysUntil} jour${p.daysUntil > 1 ? "s" : ""}`;
+      return {
+        title: `L'écriture « ${p.description} » ${when}`,
+        body: `Montant : ${f.brl(p.amountCents)}. Échéance le ${p.dueDay}.`,
+        actionLabel: "Voir les écritures",
+      };
+    },
+  },
+  "ja-JP": {
+    goal_reached: (p, f) => ({
+      title: `目標「${p.goalName}」達成！🎉`,
+      body: `${f.brl(p.savedCents)} を貯めて、${f.brl(p.targetCents)} の目標を達成しました。`,
+    }),
+    budget_exceeded: (p, f) => ({
+      title: `「${p.categoryName}」の予算を超過しました`,
+      body: `支出 ${f.brl(p.spentCents)} が上限 ${f.brl(p.limitCents)} を超えました。`,
+    }),
+    auto_launch: (p, f) => ({
+      title: `自動記帳：${p.description}`,
+      body: `${f.brl(p.amountCents)} が ${f.date(p.date)} に自動的に記帳されました。`,
+    }),
+    monthly_report: (p, f) => ({
+      title: `月次レポート — ${p.year}年${f.monthName(p.month)}`,
+      body: `収入：${f.brl(p.incomeCents)}。支出：${f.brl(p.expenseCents)}。残高：${f.brl(p.balanceCents)}。`,
+    }),
+    bill_reminder: (p, f) => {
+      const when = p.daysUntil === 0 ? "本日が期日です" : `期日まであと${p.daysUntil}日です`;
+      return {
+        title: `「${p.description}」は${when}`,
+        body: `金額：${f.brl(p.amountCents)}。毎月 ${p.dueDay} 日が期日。`,
+        actionLabel: "記帳を見る",
       };
     },
   },

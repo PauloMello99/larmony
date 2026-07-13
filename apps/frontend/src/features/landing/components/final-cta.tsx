@@ -1,9 +1,12 @@
 import * as React from "react"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/shared/components/ui/button"
 import { Reveal } from "./reveal"
 
 export function FinalCta() {
+  const { t } = useTranslation("landing")
+
   return (
     <section className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -15,12 +18,12 @@ export function FinalCta() {
           }}
         >
           <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl">
-            Traga harmonia para
+            {t("finalCta.titleLine1")}
             <br />
-            as contas da sua casa
+            {t("finalCta.titleLine2")}
           </h2>
           <p className="mx-auto mt-3.5 max-w-md text-base leading-relaxed text-white/55">
-            Crie o seu lar em menos de um minuto. Grátis, sem cartão de crédito.
+            {t("finalCta.subtitle")}
           </p>
           <div className="mt-9 flex justify-center">
             <Button
@@ -28,7 +31,7 @@ export function FinalCta() {
               asChild
               className="rounded-full bg-primary px-8 py-4 text-base text-primary-foreground hover:bg-primary/90"
             >
-              <Link href="/auth/signup">Criar meu lar grátis →</Link>
+              <Link href="/auth/signup">{t("finalCta.cta")}</Link>
             </Button>
           </div>
         </Reveal>

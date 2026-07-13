@@ -1,0 +1,139 @@
+{
+  "nav": {
+    "back": "Retour",
+    "skip": "Passer",
+    "next": "Suivant",
+    "done": "Compris",
+    "step": "Étape {{current}} sur {{total}}"
+  },
+  "sidebar": {
+    "welcome": {
+      "title": "Bienvenue sur Larmony !",
+      "body": "Faisons un tour rapide du menu latéral pour que tu saches où trouver chaque fonctionnalité de ton foyer."
+    },
+    "overview": {
+      "title": "Vue d’ensemble",
+      "body": "Le résumé de ton foyer : solde du mois, budgets, objectifs et factures proches de l’échéance, tout en un seul endroit."
+    },
+    "transactions": {
+      "title": "Transactions",
+      "body": "Tous les revenus et dépenses enregistrés dans le foyer, avec des filtres par mois, catégorie et type."
+    },
+    "categories": {
+      "title": "Catégories",
+      "body": "Elles organisent tes transactions, budgets et récurrences. Ton foyer vient déjà avec 13 catégories par défaut."
+    },
+    "budgets": {
+      "title": "Budgets",
+      "body": "Définis une limite de dépense mensuelle par catégorie et suis combien a déjà été dépensé."
+    },
+    "goals": {
+      "title": "Objectifs",
+      "body": "Crée des objectifs d’épargne avec un montant visé et enregistre des versements jusqu’à atteindre le but."
+    },
+    "scheduledTransactions": {
+      "title": "Transactions programmées",
+      "body": "Enregistre des factures fixes ou des transactions automatiques — avec rappel par e-mail ou générées seules par Larmony."
+    },
+    "reports": {
+      "title": "Rapports",
+      "body": "Graphiques mensuels et annuels avec l’évolution des finances de ton foyer."
+    },
+    "settings": {
+      "title": "Paramètres",
+      "body": "Gère les informations de ton foyer et invite d’autres membres."
+    }
+  },
+  "overview": {
+    "intro": {
+      "title": "Vue d’ensemble de ton foyer",
+      "body": "Ce tableau de bord affiche un résumé rapide : solde du mois, budgets, objectifs et factures proches de l’échéance. Il évolue tout seul au fur et à mesure que tu utilises Larmony."
+    }
+  },
+  "transactions": {
+    "intro": {
+      "title": "Transactions",
+      "body": "Ici se trouvent tous les revenus et dépenses du foyer. Utilise les filtres pour retrouver des transactions par mois, catégorie ou type."
+    },
+    "new": {
+      "title": "Nouvelle transaction",
+      "body": "Clique ici pour enregistrer un revenu ou une dépense à tout moment."
+    }
+  },
+  "transactionForm": {
+    "intro": {
+      "title": "Comment enregistrer une transaction",
+      "body": "Remplis les informations de base et utilise les champs ci-dessous pour catégoriser, échelonner ou partager la dépense avec d’autres personnes du foyer."
+    },
+    "category": {
+      "title": "Catégorie",
+      "body": "Classe la transaction (ex. : Courses, Transport) pour suivre les dépenses dans les rapports et les budgets. C’est facultatif."
+    },
+    "person": {
+      "title": "Personne",
+      "body": "Indique qui a effectué la dépense — différent de qui l’enregistre. Les rapports par personne utilisent ce champ. Sans sélection, c’est toi qui es supposé(e)."
+    },
+    "installments": {
+      "title": "Payer en plusieurs fois",
+      "body": "Active pour répartir le montant total en plusieurs mensualités. Larmony crée une transaction par mensualité, liées à la même série."
+    },
+    "split": {
+      "title": "Répartir entre les membres",
+      "body": "Active pour répartir le montant entre les membres du foyer — à parts égales ou avec un montant spécifique pour chacun."
+    }
+  },
+  "categories": {
+    "intro": {
+      "title": "Catégories",
+      "body": "Les catégories classent tes transactions, budgets et récurrences. Ton foyer vient déjà avec 13 catégories par défaut, et tu peux créer les tiennes."
+    }
+  },
+  "budgets": {
+    "intro": {
+      "title": "Budgets",
+      "body": "Définis une limite de dépense mensuelle par catégorie. Larmony calcule automatiquement combien a déjà été dépensé et t’avertit quand tu dépasses la limite."
+    }
+  },
+  "goals": {
+    "intro": {
+      "title": "Objectifs",
+      "body": "Crée des objectifs d’épargne avec un montant visé et, éventuellement, une date. Enregistre des versements au fil du temps jusqu’à atteindre le but."
+    }
+  },
+  "scheduledTransactions": {
+    "intro": {
+      "title": "Transactions programmées",
+      "body": "Enregistre les factures et transactions qui se répètent — choisis entre les enregistrer manuellement (avec rappel par e-mail) ou laisser Larmony générer la transaction automatiquement à la bonne date."
+    }
+  },
+  "scheduledTransactionForm": {
+    "postingMode": {
+      "title": "Enregistrer automatiquement",
+      "body": "Active pour que Larmony génère la transaction tout seul à la date de chaque occurrence. Laisse désactivé pour recevoir un rappel et l’enregistrer toi-même, en confirmant le montant sur le moment."
+    },
+    "frequency": {
+      "title": "Fréquence",
+      "body": "Définit la cadence de la transaction (hebdomadaire, mensuelle ou annuelle) et, dans le champ « Tous les », tous les combien de périodes elle se répète — ex. : mensuelle tous les 1, ou hebdomadaire tous les 2 pour une fréquence bimensuelle."
+    },
+    "reminder": {
+      "title": "Rappel",
+      "body": "Uniquement en mode manuel : combien de jours avant l’échéance Larmony envoie un e-mail pour que tu n’oublies pas de l’enregistrer."
+    }
+  },
+  "reports": {
+    "intro": {
+      "title": "Rapports",
+      "body": "Suis l’évolution des finances du foyer avec des graphiques mensuels et annuels, les dépenses par catégorie et par personne."
+    }
+  },
+  "settings": {
+    "intro": {
+      "title": "Paramètres",
+      "body": "C’est ici que tu gères les informations de ton foyer."
+    },
+    "members": {
+      "title": "Membres",
+      "body": "Invite d’autres personnes à gérer les finances du foyer avec toi. Chaque membre peut enregistrer et consulter transactions, budgets et objectifs."
+    }
+  }
+}

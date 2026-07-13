@@ -14,4 +14,4 @@ AdminUsersPage.getLayout = (page: ReactElement) => (
 
 export default AdminUsersPage
 
-export const getServerSideProps = makeI18nProps(["common", "dashboard"])
+export const getServerSideProps = makeI18nProps(["common", "dashboard", "admin"])

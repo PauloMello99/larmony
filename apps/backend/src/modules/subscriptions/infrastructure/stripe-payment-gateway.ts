@@ -23,6 +23,27 @@ import type {
 } from "../domain/ports/payment-gateway.port";
 import { StripeNotConfiguredException } from "../domain/exceptions/stripe-not-configured.exception";
 import { WebhookSignatureInvalidException } from "../domain/exceptions/webhook-signature-invalid.exception";
+import { normalizeAppLocale, type AppLocale } from "../../../common/i18n/app-locale";
+
+/**
+ * AppLocale → tag de locale do Stripe (Checkout/Billing Portal hospedados).
+ * O Stripe usa idioma-base (exceto pt-BR, que ele suporta por extenso).
+ * Sempre explícito — nunca deixar o Stripe adivinhar (evita o bug clássico de
+ * portal preso num idioma fixo).
+ */
+const STRIPE_LOCALE: Record<AppLocale, string> = {
+  "pt-BR": "pt-BR",
+  "en-US": "en",
+  "es-ES": "es",
+  "zh-CN": "zh",
+  "de-DE": "de",
+  "fr-FR": "fr",
+  "ja-JP": "ja",
+};
+
+function toStripeLocale(locale: string | null | undefined): string {
+  return STRIPE_LOCALE[normalizeAppLocale(locale)];
+}
 
 /**
  * Integração real com o Stripe (Checkout + Billing Portal hospedados — sem
@@ -69,6 +90,8 @@ export class StripePaymentGateway implements IPaymentGateway {
       success_url: input.successUrl,
       cancel_url: input.cancelUrl,
       metadata: input.metadata,
+      // Página hospedada no idioma da UI do usuário (adendo ADR-0018).
+      locale: toStripeLocale(input.locale) as Stripe.Checkout.SessionCreateParams.Locale,
     });
 
     if (!session.url) throw new Error("Stripe não retornou uma URL de checkout.");
@@ -82,6 +105,8 @@ export class StripePaymentGateway implements IPaymentGateway {
     const session = await client.billingPortal.sessions.create({
       customer: input.customerId,
       return_url: input.returnUrl,
+      // Billing Portal no idioma da UI do usuário (adendo ADR-0018).
+      locale: toStripeLocale(input.locale) as Stripe.BillingPortal.SessionCreateParams.Locale,
     });
     return { url: session.url };
   }

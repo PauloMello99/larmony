@@ -1,0 +1,59 @@
+{
+  "page": {
+    "title": "目標",
+    "subtitle": "ご家庭全員で積み立てる貯蓄目標",
+    "newGoal": "新規目標",
+    "empty": "まだ目標がありません。",
+    "createGoal": "目標を作成"
+  },
+  "form": {
+    "editTitle": "目標を編集",
+    "createTitle": "新規目標",
+    "description": "ご家庭の貯蓄目標・進捗は積立額から計算されます。",
+    "nameLabel": "名前",
+    "namePlaceholder": "例: 旅行",
+    "targetAmountLabel": "目標金額",
+    "colorLabel": "色",
+    "targetDateLabel": "目標日",
+    "noTargetDate": "目標日なし",
+    "clearTargetDate": "目標日をクリア",
+    "descriptionLabel": "説明",
+    "descriptionPlaceholder": "任意",
+    "saving": "保存中…",
+    "saveChanges": "変更を保存",
+    "create": "目標を作成"
+  },
+  "card": {
+    "done": "達成",
+    "contributions": "積立",
+    "contribute": "積み立てる",
+    "ofTarget": "{{value}}中",
+    "progress": "{{pct}}%",
+    "progressWithDate": "{{pct}}%・{{date}}まで"
+  },
+  "contributionDialog": {
+    "title": "積立 — {{name}}",
+    "summary": "{{target}}中{{saved}}を積立済みです。",
+    "amountLabel": "金額",
+    "dateLabel": "日付",
+    "notesLabel": "メモ",
+    "notesPlaceholder": "任意",
+    "submitting": "積立中…",
+    "submit": "積み立てる",
+    "history": "履歴",
+    "empty": "まだ積立がありません。",
+    "deleteContribution": "積立を削除"
+  },
+  "deleteDialog": {
+    "title": "目標を削除",
+    "description": "<span>{{name}}</span>を削除しますか?積立の履歴も一緒に削除され、この操作は元に戻せません。",
+    "deleting": "削除中…"
+  },
+  "validation": {
+    "nameRequired": "名前は必須です",
+    "nameMax": "最大80文字までです",
+    "amountRequired": "金額を入力してください",
+    "dateRequired": "日付を入力してください",
+    "colorInvalid": "色が無効です"
+  }
+}

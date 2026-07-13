@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/shared/components/ui/button"
 import { Badge } from "@/shared/components/ui/badge"
 import { BackgroundGrid } from "./background-grid"
@@ -24,6 +25,8 @@ function ProofNumber({
 }
 
 export function Hero() {
+  const { t } = useTranslation("landing")
+
   return (
     <section className="relative overflow-hidden pb-24 pt-32 md:pt-40 lg:pt-44">
       <BackgroundGrid variant="dots" glows={true} />
@@ -53,21 +56,20 @@ export function Hero() {
               variant="outline"
               className="rounded-full border-primary/25 bg-primary/[0.09] px-3.5 py-1.5 text-primary"
             >
-              ✦ Novo — Lembretes automáticos de contas
+              {t("hero.badge")}
             </Badge>
           </div>
 
           {/* Headline — mobile-first sizing */}
           <h1 className="text-4xl font-extrabold leading-[1.06] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            As finanças da casa,
+            {t("hero.titleLine1")}
             <br />
-            <span className="text-primary">em harmonia.</span>
+            <span className="text-primary">{t("hero.titleHighlight")}</span>
           </h1>
 
           {/* Subtitle */}
           <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-white/55 sm:text-lg md:mx-0">
-            Transações, orçamentos, metas e contas a pagar — compartilhados com
-            quem divide o lar com você. Centavos exatos, zero planilha.
+            {t("hero.subtitle")}
           </p>
 
           {/* CTAs */}
@@ -77,7 +79,7 @@ export function Hero() {
               asChild
               className="w-full rounded-full bg-primary px-8 text-primary-foreground hover:bg-primary/90 sm:w-auto"
             >
-              <Link href="/auth/signup">Começar grátis →</Link>
+              <Link href="/auth/signup">{t("hero.ctaPrimary")}</Link>
             </Button>
             <Button
               size="lg"
@@ -85,7 +87,7 @@ export function Hero() {
               asChild
               className="w-full rounded-full border-white/15 bg-transparent text-white/80 hover:bg-white/5 hover:text-white sm:w-auto"
             >
-              <Link href="#tour">Ver demonstração</Link>
+              <Link href="#tour">{t("hero.ctaSecondary")}</Link>
             </Button>
           </div>
 
@@ -94,9 +96,9 @@ export function Hero() {
             <div>
               <ProofNumber target={100} suffix="%" />
               <p className="mt-0.5 text-xs leading-tight text-white/35 sm:text-[12.5px]">
-                centavos exatos,
+                {t("hero.proof.centsLine1")}
                 <br />
-                sem arredondamento
+                {t("hero.proof.centsLine2")}
               </p>
             </div>
             <div>
@@ -104,17 +106,17 @@ export function Hero() {
                 ∞
               </span>
               <p className="mt-0.5 text-xs leading-tight text-white/35 sm:text-[12.5px]">
-                membros
+                {t("hero.proof.membersLine1")}
                 <br />
-                por lar
+                {t("hero.proof.membersLine2")}
               </p>
             </div>
             <div>
-              <ProofNumber target={2} />
+              <ProofNumber target={7} />
               <p className="mt-0.5 text-xs leading-tight text-white/35 sm:text-[12.5px]">
-                idiomas
+                {t("hero.proof.languagesLine1")}
                 <br />
-                pt-BR e inglês
+                {t("hero.proof.languagesLine2")}
               </p>
             </div>
           </div>

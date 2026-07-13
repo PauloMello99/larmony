@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/router"
+import { useTranslation } from "react-i18next"
 import { RefreshCw, ShieldCheck, ShieldOff, Search, Users } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Badge } from "@/shared/components/ui/badge"
@@ -15,6 +16,7 @@ import {
   TableRow,
 } from "@/shared/components/ui/table"
 import { useMe } from "@/features/auth/hooks/use-me"
+import { translateApiError } from "@/shared/lib/api-error"
 import { useAdminUsers } from "../hooks/use-admin"
 import { fmtDate } from "../lib/format"
 import { useDebouncedValue } from "../lib/use-debounced-value"
@@ -22,13 +24,15 @@ import { ConfirmDialog } from "./confirm-dialog"
 import { SortHead } from "./sort-head"
 import type { AdminUser, SortDir, UserRoleFilter, UserSortKey } from "../types"
 
-const ROLE_TABS: { value: UserRoleFilter; label: string }[] = [
-  { value: "all", label: "Todos" },
-  { value: "super_admin", label: "Super admins" },
-  { value: "user", label: "Usuários" },
+const ROLE_TABS: { value: UserRoleFilter; labelKey: string }[] = [
+  { value: "all", labelKey: "users.tabAll" },
+  { value: "super_admin", labelKey: "users.tabSuperAdmins" },
+  { value: "user", labelKey: "users.tabUsers" },
 ]
 
 export function AdminUsers() {
+  const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const router = useRouter()
   const { me } = useMe()
   const { users, loading, error, refetch, setPlatformRole } = useAdminUsers()
@@ -81,7 +85,9 @@ export function AdminUsers() {
       setTarget(null)
     } catch (err) {
       setActionError(
-        err instanceof Error ? err.message : "Não foi possível atualizar.",
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("users.updateError"),
       )
     } finally {
       setBusy(false)
@@ -92,9 +98,9 @@ export function AdminUsers() {
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-foreground">Usuários</h1>
+          <h1 className="text-xl font-semibold text-foreground">{t("users.title")}</h1>
           <p className="mt-0.5 text-sm text-foreground/40">
-            {users.length} na plataforma · {rows.length} exibidos
+            {t("users.countSummary", { total: users.length, shown: rows.length })}
           </p>
         </div>
         <Button
@@ -102,7 +108,7 @@ export function AdminUsers() {
           size="icon"
           onClick={() => void refetch()}
           disabled={loading}
-          title="Atualizar"
+          title={t("users.refresh")}
         >
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
         </Button>
@@ -120,7 +126,7 @@ export function AdminUsers() {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar por nome ou e-mail…"
+            placeholder={t("users.searchPlaceholder")}
             className="pl-9"
           />
         </div>
@@ -136,7 +142,7 @@ export function AdminUsers() {
                   : "text-foreground/50 hover:text-foreground"
               }`}
             >
-              {tab.label}
+              {t(tab.labelKey)}
             </button>
           ))}
         </div>
@@ -146,11 +152,11 @@ export function AdminUsers() {
         <Table>
           <TableHeader>
             <TableRow>
-              <SortHead label="Usuário" active={sortKey === "name"} dir={sortDir} onClick={() => toggleSort("name")} />
-              <TableHead>Papel</TableHead>
-              <SortHead label="Households" active={sortKey === "householdCount"} dir={sortDir} onClick={() => toggleSort("householdCount")} align="right" />
-              <SortHead label="Criado" active={sortKey === "createdAt"} dir={sortDir} onClick={() => toggleSort("createdAt")} />
-              <TableHead className="text-right">Ações</TableHead>
+              <SortHead label={t("users.colUser")} active={sortKey === "name"} dir={sortDir} onClick={() => toggleSort("name")} />
+              <TableHead>{t("users.colRole")}</TableHead>
+              <SortHead label={t("users.colHouseholds")} active={sortKey === "householdCount"} dir={sortDir} onClick={() => toggleSort("householdCount")} align="right" />
+              <SortHead label={t("users.colCreated")} active={sortKey === "createdAt"} dir={sortDir} onClick={() => toggleSort("createdAt")} />
+              <TableHead className="text-right">{t("users.colActions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -170,24 +176,24 @@ export function AdminUsers() {
                   <TableCell>
                     {isSuper ? (
                       <Badge className="bg-primary/15 text-primary">
-                        super_admin
+                        {t("users.roleSuperAdmin")}
                       </Badge>
                     ) : (
-                      <span className="text-foreground/50">usuário</span>
+                      <span className="text-foreground/50">{t("users.roleUser")}</span>
                     )}
                   </TableCell>
                   <TableCell className="text-right tabular-nums text-foreground/70">
                     {u.householdCount}
                   </TableCell>
                   <TableCell className="text-foreground/50">
-                    {fmtDate(u.createdAt)}
+                    {fmtDate(u.createdAt, t)}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button
                       variant="ghost"
                       size="sm"
                       disabled={isSelf}
-                      title={isSelf ? "Você não pode alterar o próprio papel" : undefined}
+                      title={isSelf ? t("users.selfRoleTitle") : undefined}
                       onClick={(e) => {
                         e.stopPropagation()
                         setActionError(null)
@@ -198,12 +204,12 @@ export function AdminUsers() {
                       {isSuper ? (
                         <>
                           <ShieldOff className="h-4 w-4" />
-                          <span className="hidden sm:inline">Rebaixar</span>
+                          <span className="hidden sm:inline">{t("users.demote")}</span>
                         </>
                       ) : (
                         <>
                           <ShieldCheck className="h-4 w-4" />
-                          <span className="hidden sm:inline">Promover</span>
+                          <span className="hidden sm:inline">{t("users.promote")}</span>
                         </>
                       )}
                     </Button>
@@ -219,8 +225,8 @@ export function AdminUsers() {
             <Users className="h-6 w-6 text-foreground/20" />
             <p className="text-sm text-foreground/50">
               {users.length === 0
-                ? "Nenhum usuário ainda."
-                : "Nenhum usuário corresponde à busca."}
+                ? t("users.emptyNone")
+                : t("users.emptyNoMatch")}
             </p>
           </div>
         )}
@@ -238,15 +244,15 @@ export function AdminUsers() {
         onOpenChange={(o) => !o && setTarget(null)}
         title={
           target?.platformRole === "super_admin"
-            ? `Rebaixar "${target.name}" para usuário?`
-            : `Promover "${target?.name}" a super_admin?`
+            ? t("users.confirmDemoteTitle", { name: target.name })
+            : t("users.confirmPromoteTitle", { name: target?.name })
         }
         description={
           target?.platformRole === "super_admin"
-            ? "O usuário perde acesso ao painel da plataforma."
-            : "O usuário passa a ter poder total sobre todas as lares."
+            ? t("users.confirmDemoteDescription")
+            : t("users.confirmPromoteDescription")
         }
-        confirmLabel={target?.platformRole === "super_admin" ? "Rebaixar" : "Promover"}
+        confirmLabel={target?.platformRole === "super_admin" ? t("users.demote") : t("users.promote")}
         destructive={target?.platformRole === "super_admin"}
         loading={busy}
         error={actionError}

@@ -1,0 +1,130 @@
+{
+  "roles": {
+    "owner": "オーナー",
+    "member": "メンバー"
+  },
+  "validation": {
+    "nameMin": "2文字以上で入力してください",
+    "nameMax": "最大80文字までです",
+    "emailInvalid": "メールアドレスが無効です"
+  },
+  "settings": {
+    "loading": "読み込み中…",
+    "notFound": "世帯が見つかりません。",
+    "generalTitle": "基本情報",
+    "generalDescription": "世帯の名前と公開識別子。",
+    "nameLabel": "名前",
+    "slugLabel": "スラッグ",
+    "membersTitle": "メンバー",
+    "membersDescription": "この世帯へのアクセス権を管理します。",
+    "invite": "招待",
+    "transferTitle": "世帯を譲渡",
+    "transferDescription": "この世帯のオーナー権限を別のメンバーに譲渡します。",
+    "transferProse": "オーナー権限は選択したメンバーに移ります。あなたはすべてのモジュールに全アクセスできるメンバーになります。",
+    "dangerTitle": "危険な操作",
+    "dangerDescription": "取り消せない操作です。慎重に行ってください。",
+    "deleteTitle": "世帯を削除",
+    "deleteDescription": "この世帯のすべてのデータを完全に削除します。"
+  },
+  "membersPage": {
+    "loading": "メンバーを読み込み中…",
+    "title": "メンバー",
+    "description": "この世帯へのアクセス権を管理します。",
+    "invite": "招待",
+    "inviteCreated": "招待を作成しました。承諾用リンク(開発用・テスト用にコピーしてください):",
+    "copy": "コピー",
+    "updatePermissionsError": "権限を更新できませんでした。",
+    "toggleStatusError": "メンバーのステータスを変更できませんでした。"
+  },
+  "members": {
+    "title": "メンバー({{count}})",
+    "pendingInvitations": "保留中の招待({{count}})",
+    "nameHeader": "名前",
+    "emailHeader": "メールアドレス",
+    "roleHeader": "役割",
+    "you": "(あなた)",
+    "invitationMeta": "{{role}}・{{date}}に期限切れ",
+    "actions": {
+      "permissions": "権限",
+      "makeOwner": "オーナーにする",
+      "makeMember": "メンバーにする",
+      "enable": "有効化",
+      "disable": "無効化",
+      "remove": "削除"
+    }
+  },
+  "modules": {
+    "services": "サービス",
+    "clients": "顧客",
+    "schedule": "予定",
+    "stock": "在庫",
+    "cashier": "レジ"
+  },
+  "roleDialog": {
+    "title": "役割を変更",
+    "description": "<span>{{name}}</span>の役割を変更します。",
+    "newRoleLabel": "新しい役割",
+    "saving": "保存中…"
+  },
+  "permissionsDialog": {
+    "title": "メンバーの権限",
+    "description": "<span>{{name}}</span>がアクセスできるモジュールを選択してください。各モジュールで、メンバーは自分自身のレコードのみを閲覧できます。",
+    "saving": "保存中…",
+    "submit": "権限を保存"
+  },
+  "removeDialog": {
+    "title": "メンバーを削除",
+    "description": "<span>{{name}}</span>を世帯から削除してもよろしいですか?",
+    "removing": "削除中…",
+    "submit": "削除"
+  },
+  "transferDialog": {
+    "trigger": "譲渡",
+    "title": "世帯を譲渡",
+    "description": "新しいオーナーとなるメンバーを選択してください。あなたは<span>メンバー</span>の役割となり、すべてのモジュールに全アクセスできます。",
+    "newOwnerLabel": "新しいオーナー",
+    "selectPlaceholder": "メンバーを選択",
+    "memberOption": "{{name}}({{email}})",
+    "error": "世帯を譲渡できませんでした。",
+    "submitting": "譲渡中…",
+    "submit": "オーナー権限を譲渡"
+  },
+  "deleteDialog": {
+    "trigger": "世帯を削除",
+    "title": "世帯を削除",
+    "description": "この操作は<span>取り消せません</span>。この世帯のすべてのデータが完全に削除されます。",
+    "confirmLabel": "確認のため<span>{{name}}</span>を入力してください:",
+    "deleting": "削除中…",
+    "submit": "完全に削除"
+  },
+  "createForm": {
+    "title": "新規世帯",
+    "description": "ご家庭のための空間を作成します。あなたがオーナーになります。",
+    "nameLabel": "名前",
+    "namePlaceholder": "例: 田中家",
+    "submitting": "作成中…",
+    "submit": "世帯を作成"
+  },
+  "editForm": {
+    "nameLabel": "世帯の名前",
+    "namePlaceholder": "例: 田中家",
+    "slugLabel": "識別子(スラッグ)",
+    "slugHint": "自動生成されます・変更はできません。",
+    "timezoneLabel": "タイムゾーン",
+    "timezoneHint": "定期取引の期限や通知の送信タイミングを決定します。",
+    "notificationHourLabel": "通知の送信時刻",
+    "notificationHourHint": "リマインダーと月次レポートは、世帯のタイムゾーンでこの時刻以降に送信されます。",
+    "saving": "保存中…",
+    "submit": "変更を保存"
+  },
+  "inviteForm": {
+    "title": "メンバーを招待",
+    "description": "アクセス用リンク付きの招待メールが送信されます。",
+    "emailLabel": "メールアドレス",
+    "emailPlaceholder": "name@example.com",
+    "roleLabel": "役割",
+    "rolePlaceholder": "役割を選択",
+    "submitting": "送信中…",
+    "submit": "招待を送信"
+  }
+}

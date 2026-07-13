@@ -1,11 +1,14 @@
 "use client"
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { apiRequest } from "@/infrastructure/api/client"
 import { queryKeys } from "@/infrastructure/query/query-keys"
+import { translateApiError } from "@/shared/lib/api-error"
 import type { MonthlyReport } from "../types"
 
 export function useMonthlyReport(householdId: string, year: number, month: number) {
+  const { t } = useTranslation("common")
   const query = useQuery({
     queryKey: queryKeys.reports.monthly(householdId, year, month),
     queryFn: () =>
@@ -21,6 +24,6 @@ export function useMonthlyReport(householdId: string, year: number, month: numbe
   return {
     report: query.data ?? null,
     loading: query.isLoading,
-    error: query.error instanceof Error ? query.error.message : null,
+    error: query.error instanceof Error ? translateApiError(query.error, t) : null,
   }
 }

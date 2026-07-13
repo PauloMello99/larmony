@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import {
   ArrowLeft,
   Ban,
@@ -22,11 +23,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/components/ui/table"
+import { translateApiError } from "@/shared/lib/api-error"
 import { useAdminHouseholdDetail, useSetHouseholdSuspended } from "../hooks/use-admin"
 import { fmtDate } from "../lib/format"
 import { ConfirmDialog } from "./confirm-dialog"
 
 export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
+  const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const { household, loading, error } = useAdminHouseholdDetail(id)
   const setSuspended = useSetHouseholdSuspended()
 
@@ -42,7 +46,11 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
       await setSuspended(household.id, household.suspendedAt === null)
       setConfirming(false)
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : "Falha ao atualizar.")
+      setActionError(
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("householdDetail.updateError"),
+      )
     } finally {
       setBusy(false)
     }
@@ -61,7 +69,7 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
       <div className="space-y-4">
         <BackLink />
         <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
-          {error ?? "Lar não encontrada."}
+          {error ?? t("householdDetail.notFound")}
         </div>
       </div>
     )
@@ -81,18 +89,18 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
             </h1>
             {suspended && (
               <Badge variant="destructive" className="bg-red-500/15 text-red-400">
-                Suspensa
+                {t("householdDetail.suspendedBadge")}
               </Badge>
             )}
           </div>
           <p className="mt-0.5 text-sm text-foreground/40">
-            /{household.slug} · criada em {fmtDate(household.createdAt)}
+            {t("householdDetail.slugCreatedAt", { slug: household.slug, date: fmtDate(household.createdAt, t) })}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <Button asChild variant="default">
             <Link href={`/households/${household.slug}`}>
-              <ExternalLink className="h-4 w-4" /> Gerenciar
+              <ExternalLink className="h-4 w-4" /> {t("householdDetail.manage")}
             </Link>
           </Button>
           <Button
@@ -104,11 +112,11 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
           >
             {suspended ? (
               <>
-                <RotateCcw className="h-4 w-4" /> Reativar
+                <RotateCcw className="h-4 w-4" /> {t("householdDetail.reactivate")}
               </>
             ) : (
               <>
-                <Ban className="h-4 w-4" /> Suspender
+                <Ban className="h-4 w-4" /> {t("householdDetail.suspend")}
               </>
             )}
           </Button>
@@ -117,31 +125,31 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <InfoCard icon={Users} label="Membros" value={String(household.memberCount)} />
+        <InfoCard icon={Users} label={t("householdDetail.infoMembers")} value={String(household.memberCount)} />
         <InfoCard
           icon={Crown}
-          label="Dono"
+          label={t("householdDetail.infoOwner")}
           value={household.owner?.name ?? "—"}
           sub={household.owner?.email}
         />
         <InfoCard
           icon={Mail}
-          label="Convites pendentes"
+          label={t("householdDetail.infoPendingInvitations")}
           value={String(household.pendingInvitations.length)}
         />
       </div>
 
       {/* Membros */}
       <section className="space-y-3">
-        <h2 className="text-sm font-medium text-foreground">Membros</h2>
+        <h2 className="text-sm font-medium text-foreground">{t("householdDetail.membersTitle")}</h2>
         <div className="overflow-hidden rounded-xl border border-foreground/[0.06]">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>Papel</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Entrou</TableHead>
+                <TableHead>{t("householdDetail.colName")}</TableHead>
+                <TableHead>{t("householdDetail.colRole")}</TableHead>
+                <TableHead>{t("householdDetail.colStatus")}</TableHead>
+                <TableHead>{t("householdDetail.colJoined")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -158,19 +166,19 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
                   </TableCell>
                   <TableCell>
                     {m.role === "owner" ? (
-                      <Badge className="bg-primary/15 text-primary">owner</Badge>
+                      <Badge className="bg-primary/15 text-primary">{t("householdDetail.roleOwner")}</Badge>
                     ) : (
                       <span className="text-foreground/60">{m.role}</span>
                     )}
                   </TableCell>
                   <TableCell>
                     {m.enabled ? (
-                      <span className="text-foreground/60">ativo</span>
+                      <span className="text-foreground/60">{t("householdDetail.statusActive")}</span>
                     ) : (
-                      <span className="text-red-400">inativo</span>
+                      <span className="text-red-400">{t("householdDetail.statusInactive")}</span>
                     )}
                   </TableCell>
-                  <TableCell className="text-foreground/50">{fmtDate(m.joinedAt)}</TableCell>
+                  <TableCell className="text-foreground/50">{fmtDate(m.joinedAt, t)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -181,15 +189,15 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
       {/* Convites pendentes */}
       {household.pendingInvitations.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-foreground">Convites pendentes</h2>
+          <h2 className="text-sm font-medium text-foreground">{t("householdDetail.invitationsTitle")}</h2>
           <div className="overflow-hidden rounded-xl border border-foreground/[0.06]">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>E-mail</TableHead>
-                  <TableHead>Papel</TableHead>
-                  <TableHead>Enviado</TableHead>
-                  <TableHead>Expira</TableHead>
+                  <TableHead>{t("householdDetail.colEmail")}</TableHead>
+                  <TableHead>{t("householdDetail.colRole")}</TableHead>
+                  <TableHead>{t("householdDetail.colSent")}</TableHead>
+                  <TableHead>{t("householdDetail.colExpires")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -197,8 +205,8 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
                   <TableRow key={inv.id}>
                     <TableCell className="text-foreground/80">{inv.email}</TableCell>
                     <TableCell className="text-foreground/60">{inv.role}</TableCell>
-                    <TableCell className="text-foreground/50">{fmtDate(inv.createdAt)}</TableCell>
-                    <TableCell className="text-foreground/50">{fmtDate(inv.expiresAt)}</TableCell>
+                    <TableCell className="text-foreground/50">{fmtDate(inv.createdAt, t)}</TableCell>
+                    <TableCell className="text-foreground/50">{fmtDate(inv.expiresAt, t)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -210,13 +218,13 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
       <ConfirmDialog
         open={confirming}
         onOpenChange={setConfirming}
-        title={suspended ? `Reativar "${household.name}"?` : `Suspender "${household.name}"?`}
+        title={suspended ? t("householdDetail.confirmReactivateTitle", { name: household.name }) : t("householdDetail.confirmSuspendTitle", { name: household.name })}
         description={
           suspended
-            ? "A lar volta a ter acesso à plataforma."
-            : "Os membros perdem acesso até a reativação."
+            ? t("householdDetail.confirmReactivateDescription")
+            : t("householdDetail.confirmSuspendDescription")
         }
-        confirmLabel={suspended ? "Reativar" : "Suspender"}
+        confirmLabel={suspended ? t("householdDetail.reactivate") : t("householdDetail.suspend")}
         destructive={!suspended}
         loading={busy}
         error={actionError}
@@ -227,12 +235,13 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
 }
 
 function BackLink() {
+  const { t } = useTranslation("admin")
   return (
     <Link
       href="/admin/households"
       className="inline-flex items-center gap-1.5 text-sm text-foreground/50 transition-colors hover:text-foreground"
     >
-      <ArrowLeft className="h-4 w-4" /> Lares
+      <ArrowLeft className="h-4 w-4" /> {t("householdDetail.backLink")}
     </Link>
   )
 }

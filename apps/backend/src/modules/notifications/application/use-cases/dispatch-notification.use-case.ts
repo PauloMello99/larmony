@@ -111,6 +111,8 @@ export class DispatchNotificationUseCase {
       body: content.body,
       actionUrl,
       actionLabel: content.actionLabel,
+      // Chrome do e-mail (layout/CTA default) no idioma do destinatário.
+      locale: contact.locale,
     });
   }
 

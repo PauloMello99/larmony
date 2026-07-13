@@ -1,0 +1,28 @@
+{
+  "roles": {
+    "owner": "Eigentümer",
+    "member": "Mitglied"
+  },
+  "invalid": {
+    "title": "Ungültige Einladung",
+    "description": "Dieser Einladungslink ist ungültig."
+  },
+  "unavailable": {
+    "title": "Einladung nicht verfügbar",
+    "accepted": "Diese Einladung wurde bereits angenommen.",
+    "cancelled": "Diese Einladung wurde storniert.",
+    "expired": "Diese Einladung ist abgelaufen.",
+    "goToDashboard": "Zum Dashboard"
+  },
+  "accept": {
+    "title": "Einladung zu {{householdName}}",
+    "invitedAs": "Du wurdest als <span>{{role}}</span> eingeladen.",
+    "emailMismatch": "Diese Einladung ist für <strong>{{inviteEmail}}</strong>, du bist aber als <strong>{{userEmail}}</strong> angemeldet. Melde dich mit dem richtigen Konto an, um sie anzunehmen.",
+    "acceptingAs": "Annahme als <span>{{email}}</span>.",
+    "switchAccount": "Konto wechseln",
+    "submit": "Einladung annehmen",
+    "decline": "Ablehnen",
+    "acceptError": "Die Einladung konnte nicht angenommen werden.",
+    "declineError": "Die Einladung konnte nicht abgelehnt werden."
+  }
+}

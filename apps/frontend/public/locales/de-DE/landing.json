@@ -1,0 +1,226 @@
+{
+  "nav": {
+    "links": {
+      "features": "Funktionen",
+      "product": "Produkt",
+      "pricing": "Preise",
+      "faq": "FAQ"
+    },
+    "login": "Anmelden",
+    "cta": "Kostenlos starten",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen"
+  },
+  "hero": {
+    "badge": "✦ Neu — Automatische Erinnerungen an Rechnungen",
+    "titleLine1": "Die Finanzen deines Zuhauses,",
+    "titleHighlight": "in Harmonie.",
+    "subtitle": "Transaktionen, Budgets, Ziele und Rechnungen — geteilt mit allen, die den Haushalt mit dir teilen. Exakte Cent-Beträge, null Tabellenkalkulationen.",
+    "ctaPrimary": "Kostenlos starten →",
+    "ctaSecondary": "Demo ansehen",
+    "proof": {
+      "centsLine1": "exakte Cent-Beträge,",
+      "centsLine2": "ohne Rundung",
+      "membersLine1": "Mitglieder",
+      "membersLine2": "pro Haushalt",
+      "languagesLine1": "Sprachen",
+      "languagesLine2": "u. a. Portugiesisch, Englisch"
+    }
+  },
+  "features": {
+    "kicker": "Funktionen",
+    "title": "Alles, was dein Haushalt braucht",
+    "subtitle": "Entwickelt für den Alltag von allen, die die Finanzen zu Hause organisieren — allein oder mit der Familie.",
+    "items": {
+      "transactions": {
+        "title": "Organisierte Transaktionen",
+        "description": "Kategorisiere Einnahmen und Ausgaben, teile Kosten mit den Bewohnern und behalte alles in Echtzeit im Blick."
+      },
+      "budgets": {
+        "title": "Budgets pro Kategorie",
+        "description": "Lege monatliche Limits pro Kategorie fest und sieh, wie viel bereits ausgegeben wurde, mit Warnung bei Überschreitung."
+      },
+      "goals": {
+        "title": "Sparziele",
+        "description": "Erstelle Ziele für die Reise, die Renovierung oder den Notfallfonds und verfolge den Fortschritt gemeinsam mit dem Haushalt."
+      },
+      "dashboard": {
+        "title": "Dashboard mit echten Kennzahlen",
+        "description": "Saldo des Monats, Vergleich mit dem Vormonat, fällige Rechnungen und Budgets in einem einzigen Dashboard."
+      },
+      "reminders": {
+        "title": "Rechnungserinnerungen",
+        "description": "Vergiss nie wieder eine fällige Rechnung — Benachrichtigung in der App und per E-Mail vor Fälligkeit."
+      },
+      "household": {
+        "title": "Gemacht für den Haushalt",
+        "description": "Lade die Menschen ein, mit denen du zusammenwohnst, jeder mit seiner eigenen Rolle, und organisiert die Haushaltsfinanzen gemeinsam."
+      }
+    }
+  },
+  "tour": {
+    "kicker": "Das Produkt",
+    "title": "Ein Dashboard, das die ganze Familie versteht",
+    "subtitle": "Ohne Finanzjargon. Wer gestern dem Haushalt beigetreten ist, liest das Dashboard genauso wie diejenige, die es erstellt hat.",
+    "sidebar": {
+      "overview": "Übersicht",
+      "transactions": "Transaktionen",
+      "categories": "Kategorien",
+      "budgets": "Budgets",
+      "goals": "Ziele",
+      "bills": "Rechnungen"
+    },
+    "greeting": "Guten Morgen, Paulo 👋",
+    "kpis": {
+      "income": "Einnahmen des Monats",
+      "expenses": "Ausgaben des Monats",
+      "balance": "Saldo des Monats"
+    },
+    "rows": {
+      "r1": { "label": "Gehalt — Juli", "who": "Ana", "amount": "+6.200,00 R$" },
+      "r2": { "label": "Supermarkt Extra", "who": "Paulo", "amount": "-342,10 R$" },
+      "r3": { "label": "Miete", "who": "Ana", "amount": "-1.850,00 R$" }
+    }
+  },
+  "about": {
+    "kicker": "Über Larmony",
+    "titlePrefix": "Gemacht für alle, die",
+    "titleHighlight": "die Haushaltskosten teilen",
+    "paragraph": "Die Finanzen des Haushalts zu organisieren sollte nicht von losen Tabellen und verlorenen Notizen abhängen. Larmony übernimmt die Kontrolle, damit du dich auf das Wesentliche konzentrieren kannst.",
+    "bullets": {
+      "b1": "Oberfläche, entwickelt für den finanziellen Alltag eines Haushalts",
+      "b2": "Lade die Menschen ein, mit denen du zusammenwohnst, um die Finanzen zu teilen",
+      "b3": "Sichere Daten durch Isolierung pro Haushalt und automatische Backups",
+      "b4": "Keine langfristigen Verträge — kündige, wann immer du willst"
+    },
+    "stats": {
+      "cents": "Exakte Cent-Beträge, ohne Rundung",
+      "members": "Mitglieder pro Haushalt",
+      "languages": "7 Sprachen verfügbar",
+      "rls": "Daten isoliert pro Haushalt"
+    }
+  },
+  "pricing": {
+    "kicker": "Preise",
+    "title": "Einfach und transparent",
+    "subtitle": "Keine versteckten Gebühren. Kündige, wann immer du willst.",
+    "plans": {
+      "personal": {
+        "name": "Persönlich",
+        "price": "Kostenlos",
+        "description": "Für alle, die anfangen, ihre eigenen Finanzen zu organisieren.",
+        "cta": "Kostenlos starten",
+        "features": {
+          "f1": "Unbegrenzte Transaktionen und Kategorien",
+          "f2": "1 Haushalt",
+          "f3": "Budgets und Ziele",
+          "f4": "Rechnungserinnerungen per E-Mail",
+          "f5": "Erweiterte Berichte",
+          "f6": "Mehrere Mitglieder im Haushalt"
+        }
+      },
+      "family": {
+        "name": "Familie",
+        "price": "Kostenlos",
+        "description": "Für alle, die die Haushaltskosten mit anderen teilen.",
+        "cta": "Kostenlos starten",
+        "badge": "Empfohlen",
+        "features": {
+          "f1": "Unbegrenzte Transaktionen und Kategorien",
+          "f2": "Unbegrenzte Mitglieder im Haushalt",
+          "f3": "Budgets und Ziele",
+          "f4": "Rechnungserinnerungen per E-Mail",
+          "f5": "Erweiterte Berichte",
+          "f6": "Mehrere Haushalte"
+        }
+      },
+      "soon": {
+        "name": "Demnächst",
+        "price": "Noch offen",
+        "description": "Erweiterte Funktionen für alle, die mehr Kontrolle brauchen.",
+        "cta": "Auf die Warteliste",
+        "features": {
+          "f1": "Berichtsexport",
+          "f2": "Open-Finance-Integration",
+          "f3": "Individuelle Automatisierungen",
+          "f4": "Prioritäts-Support"
+        }
+      }
+    }
+  },
+  "faq": {
+    "kicker": "FAQ",
+    "title": "Häufig gestellte Fragen",
+    "items": {
+      "q1": {
+        "question": "Wie viele Personen können an einem Haushalt teilnehmen?",
+        "answer": "So viele du möchtest. Jede Person hat einen eigenen Login und ein eigenes Passwort, und der Eigentümer des Haushalts kontrolliert, wer beitritt und wer ihn verlässt — gedacht für Paare, Familien und Wohngemeinschaften."
+      },
+      "q2": {
+        "question": "Sind meine Finanzdaten sicher?",
+        "answer": "Ja. Jeder Haushalt ist in der Datenbank isoliert — ein Mitglied eines Haushalts sieht niemals Daten eines anderen. Dein Passwort wird verschlüsselt, und wir erstellen automatische Backups."
+      },
+      "q3": {
+        "question": "Muss ich mein Bankkonto verbinden?",
+        "answer": "Nein. Larmony funktioniert mit manuellen Einträgen und automatischen Wiederholungen — du kontrollierst genau, was erfasst wird. Die Open-Finance-Integration steht auf der Roadmap."
+      },
+      "q4": {
+        "question": "Rundet Larmony Beträge?",
+        "answer": "Nie. Jeder Betrag wird in exakten Cent-Beträgen gespeichert — wenn die Rechnung 33,33 € pro Person ergab, ist genau das zu sehen. Präzision ist ein Grundprinzip des Produkts."
+      },
+      "q5": {
+        "question": "Funktioniert es in anderen Sprachen?",
+        "answer": "Ja — Larmony ist in 7 Sprachen verfügbar (Portugiesisch, Englisch, Spanisch, Chinesisch, Deutsch, Französisch und Japanisch). Jede Person wählt ihre eigene Sprache und sieht denselben Haushalt übersetzt, einschließlich Erinnerungs-E-Mails."
+      }
+    }
+  },
+  "finalCta": {
+    "titleLine1": "Bring Harmonie in",
+    "titleLine2": "die Finanzen deines Zuhauses",
+    "subtitle": "Erstelle deinen Haushalt in weniger als einer Minute. Kostenlos, ohne Kreditkarte.",
+    "cta": "Meinen Haushalt kostenlos erstellen →"
+  },
+  "footer": {
+    "description": "Die Finanzen deines Zuhauses im Griff. Transaktionen, Budgets und Ziele an einem Ort.",
+    "sections": {
+      "product": {
+        "title": "Produkt",
+        "links": {
+          "features": "Funktionen",
+          "pricing": "Preise",
+          "changelog": "Änderungsprotokoll",
+          "roadmap": "Roadmap"
+        }
+      },
+      "company": {
+        "title": "Unternehmen",
+        "links": {
+          "about": "Über uns",
+          "blog": "Blog",
+          "careers": "Karriere",
+          "press": "Presse"
+        }
+      },
+      "legal": {
+        "title": "Rechtliches",
+        "links": {
+          "terms": "Nutzungsbedingungen",
+          "privacy": "Datenschutz",
+          "cookies": "Cookies",
+          "security": "Sicherheit"
+        }
+      }
+    },
+    "copyright": "© {{year}} Larmony. Alle Rechte vorbehalten."
+  },
+  "legal": {
+    "back": "← Zurück",
+    "meta": "Letzte Aktualisierung: {{updatedAt}} · Version {{version}}",
+    "officialNotice": "Offizielles Dokument in brasilianischem Portugiesisch. Übersetzungen dienen nur zur Information.",
+    "footer": {
+      "copyright": "© {{year}} Larmony. Alle Rechte vorbehalten.",
+      "terms": "Nutzungsbedingungen",
+      "privacy": "Datenschutz"
+    }
+  }
+}

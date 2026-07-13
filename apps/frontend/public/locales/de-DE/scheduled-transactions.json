@@ -1,0 +1,89 @@
+{
+  "page": {
+    "title": "Einträge",
+    "subtitle": "Rechnungen und Einträge, die sich wiederholen — manuell buchen oder von Larmony automatisch erstellen lassen",
+    "newEntry": "Neuer Eintrag",
+    "empty": "Kein Eintrag angelegt.",
+    "createEntry": "Eintrag erstellen"
+  },
+  "form": {
+    "createTitle": "Neuer Eintrag",
+    "editTitle": "Eintrag bearbeiten",
+    "description": "Lege den Rhythmus fest und wähle, ob Larmony automatisch bucht oder du lieber manuell bestätigst.",
+    "postingModeLabel": "Automatisch buchen",
+    "postingModeAutoHint": "Larmony erstellt die Transaktion selbstständig, am Datum jeder Wiederholung.",
+    "postingModeManualHint": "Du erhältst eine Erinnerung und buchst manuell, wann immer du möchtest.",
+    "typeLabel": "Typ",
+    "typeExpense": "Ausgabe",
+    "typeIncome": "Einnahme",
+    "amountLabel": "Betrag",
+    "descriptionLabel": "Beschreibung",
+    "descriptionPlaceholder": "Z. B.: Miete, Gehalt, Internet",
+    "frequencyLabel": "Häufigkeit",
+    "intervalLabel": "Alle",
+    "startLabel": "Start",
+    "startImmutable": "{{date}} (unveränderlich)",
+    "startPlaceholder": "Datum des 1. Vorkommens",
+    "endLabel": "Ende (optional)",
+    "endPlaceholder": "Kein Ende",
+    "clear": "Leeren",
+    "categoryLabel": "Kategorie",
+    "categoryPlaceholder": "Ohne Kategorie",
+    "reminderLabel": "Erinnerung",
+    "reminderNone": "Ohne Erinnerung",
+    "reminderDaysBefore_one": "{{count}} Tag vorher",
+    "reminderDaysBefore_other": "{{count}} Tage vorher",
+    "activeLabel": "Eintrag aktiv",
+    "notesLabel": "Notizen",
+    "notesPlaceholder": "Optionale Anmerkungen",
+    "saving": "Wird gespeichert…",
+    "saveChanges": "Änderungen speichern",
+    "create": "Eintrag erstellen"
+  },
+  "list": {
+    "headerDescription": "Beschreibung",
+    "headerCadence": "Rhythmus",
+    "headerAmount": "Betrag",
+    "headerActive": "Aktiv"
+  },
+  "row": {
+    "dueToday": "Heute fällig",
+    "dueTomorrow": "Morgen fällig",
+    "dueInDays_one": "Fällig in {{count}} Tag",
+    "dueInDays_other": "Fällig in {{count}} Tagen",
+    "next": "nächste {{date}}",
+    "inactive": "Inaktiv",
+    "activateAria": "Eintrag aktivieren",
+    "deactivateAria": "Eintrag deaktivieren",
+    "launchAsTransaction": "Als Transaktion buchen"
+  },
+  "deleteDialog": {
+    "title": "Eintrag löschen",
+    "descriptionManual": "Möchtest du <span>{{description}}</span> wirklich löschen? Bereits gebuchte Transaktionen sind davon nicht betroffen.",
+    "descriptionAuto": "Möchtest du <span>{{description}}</span> wirklich löschen? Bereits erstellte Transaktionen bleiben im Verlauf erhalten (werden aber nicht mehr als automatisch markiert).",
+    "deleting": "Wird gelöscht…"
+  },
+  "frequency": {
+    "weekly": "Wöchentlich",
+    "biweekly": "Zweiwöchentlich",
+    "monthly": "Monatlich",
+    "bimonthly": "Alle zwei Monate",
+    "quarterly": "Vierteljährlich",
+    "semiannual": "Halbjährlich",
+    "yearly": "Jährlich",
+    "everyWeeks_one": "Alle {{count}} Woche",
+    "everyWeeks_other": "Alle {{count}} Wochen",
+    "everyMonths_one": "Alle {{count}} Monat",
+    "everyMonths_other": "Alle {{count}} Monate",
+    "everyYears_one": "Alle {{count}} Jahr",
+    "everyYears_other": "Alle {{count}} Jahre"
+  },
+  "validation": {
+    "amountRequired": "Bitte gib einen Betrag an",
+    "descriptionRequired": "Beschreibung ist erforderlich",
+    "descriptionMax": "Maximal 200 Zeichen",
+    "intervalMin": "Minimum 1",
+    "intervalMax": "Maximal 365",
+    "startDateRequired": "Bitte gib das Startdatum an"
+  }
+}

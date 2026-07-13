@@ -1,0 +1,226 @@
+{
+  "nav": {
+    "links": {
+      "features": "Recursos",
+      "product": "Produto",
+      "pricing": "Preços",
+      "faq": "FAQ"
+    },
+    "login": "Entrar",
+    "cta": "Começar grátis",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu"
+  },
+  "hero": {
+    "badge": "✦ Novo — Lembretes automáticos de contas",
+    "titleLine1": "As finanças da casa,",
+    "titleHighlight": "em harmonia.",
+    "subtitle": "Transações, orçamentos, metas e contas a pagar — compartilhados com quem divide o lar com você. Centavos exatos, zero planilha.",
+    "ctaPrimary": "Começar grátis →",
+    "ctaSecondary": "Ver demonstração",
+    "proof": {
+      "centsLine1": "centavos exatos,",
+      "centsLine2": "sem arredondamento",
+      "membersLine1": "membros",
+      "membersLine2": "por lar",
+      "languagesLine1": "idiomas",
+      "languagesLine2": "incl. inglês e espanhol"
+    }
+  },
+  "features": {
+    "kicker": "Recursos",
+    "title": "Tudo que o seu lar precisa",
+    "subtitle": "Projetado para o dia a dia de quem organiza as finanças de casa — sozinho ou com a família.",
+    "items": {
+      "transactions": {
+        "title": "Transações organizadas",
+        "description": "Categorize receitas e despesas, divida gastos entre quem mora na casa e acompanhe tudo em tempo real."
+      },
+      "budgets": {
+        "title": "Orçamentos por categoria",
+        "description": "Defina limites mensais por categoria e veja o quanto já foi gasto, com alerta quando estourar."
+      },
+      "goals": {
+        "title": "Metas de economia",
+        "description": "Crie metas para a viagem, a reforma ou a reserva de emergência e acompanhe o progresso junto com o lar."
+      },
+      "dashboard": {
+        "title": "Dashboard com KPIs reais",
+        "description": "Saldo do mês, comparação com o mês anterior, contas a vencer e orçamentos em um único painel."
+      },
+      "reminders": {
+        "title": "Lembretes de contas",
+        "description": "Nunca mais esqueça uma conta a pagar — notificação in-app e por e-mail antes do vencimento."
+      },
+      "household": {
+        "title": "Feito para o lar",
+        "description": "Convide quem mora com você, cada um com seu papel, e organizem as finanças domésticas juntos."
+      }
+    }
+  },
+  "tour": {
+    "kicker": "O produto",
+    "title": "Um painel que a família toda entende",
+    "subtitle": "Sem jargão financeiro. Quem entrou ontem no lar lê o painel do mesmo jeito que quem o criou.",
+    "sidebar": {
+      "overview": "Visão geral",
+      "transactions": "Transações",
+      "categories": "Categorias",
+      "budgets": "Orçamentos",
+      "goals": "Metas",
+      "bills": "Contas"
+    },
+    "greeting": "Bom dia, Paulo 👋",
+    "kpis": {
+      "income": "Receitas do mês",
+      "expenses": "Despesas do mês",
+      "balance": "Saldo do mês"
+    },
+    "rows": {
+      "r1": { "label": "Salário — Julho", "who": "Ana", "amount": "+R$ 6.200,00" },
+      "r2": { "label": "Supermercado Extra", "who": "Paulo", "amount": "-R$ 342,10" },
+      "r3": { "label": "Aluguel", "who": "Ana", "amount": "-R$ 1.850,00" }
+    }
+  },
+  "about": {
+    "kicker": "Sobre o Larmony",
+    "titlePrefix": "Feito para quem",
+    "titleHighlight": "divide as contas de casa",
+    "paragraph": "Organizar as finanças do lar não deveria depender de planilhas soltas e anotações perdidas. O Larmony cuida do controle para você focar no que realmente importa.",
+    "bullets": {
+      "b1": "Interface projetada para o dia a dia financeiro de uma casa",
+      "b2": "Convide quem mora com você para dividir as finanças",
+      "b3": "Dados seguros com isolamento por lar e backups automáticos",
+      "b4": "Sem contratos de longo prazo — cancele quando quiser"
+    },
+    "stats": {
+      "cents": "Centavos exatos, sem arredondamento",
+      "members": "Membros por lar",
+      "languages": "7 idiomas suportados",
+      "rls": "Dados isolados por lar"
+    }
+  },
+  "pricing": {
+    "kicker": "Preços",
+    "title": "Simples e transparente",
+    "subtitle": "Sem taxas escondidas. Cancele quando quiser.",
+    "plans": {
+      "personal": {
+        "name": "Pessoal",
+        "price": "Grátis",
+        "description": "Para quem está começando a organizar as próprias finanças.",
+        "cta": "Começar grátis",
+        "features": {
+          "f1": "Transações e categorias ilimitadas",
+          "f2": "1 lar",
+          "f3": "Orçamentos e metas",
+          "f4": "Lembretes de contas por e-mail",
+          "f5": "Relatórios avançados",
+          "f6": "Múltiplos membros no lar"
+        }
+      },
+      "family": {
+        "name": "Família",
+        "price": "Grátis",
+        "description": "Para quem divide as contas da casa com outras pessoas.",
+        "cta": "Começar grátis",
+        "badge": "Recomendado",
+        "features": {
+          "f1": "Transações e categorias ilimitadas",
+          "f2": "Membros ilimitados no lar",
+          "f3": "Orçamentos e metas",
+          "f4": "Lembretes de contas por e-mail",
+          "f5": "Relatórios avançados",
+          "f6": "Múltiplos lares"
+        }
+      },
+      "soon": {
+        "name": "Em breve",
+        "price": "A definir",
+        "description": "Recursos avançados para quem precisa de mais controle.",
+        "cta": "Entrar na lista de espera",
+        "features": {
+          "f1": "Exportação de relatórios",
+          "f2": "Integração com Open Finance",
+          "f3": "Automações personalizadas",
+          "f4": "Suporte prioritário"
+        }
+      }
+    }
+  },
+  "faq": {
+    "kicker": "FAQ",
+    "title": "Perguntas frequentes",
+    "items": {
+      "q1": {
+        "question": "Quantas pessoas podem participar de um lar?",
+        "answer": "Quantas você quiser. Cada pessoa tem o próprio login e senha, e o dono do lar controla quem entra e quem sai — pensado para casais, famílias e repúblicas."
+      },
+      "q2": {
+        "question": "Meus dados financeiros estão seguros?",
+        "answer": "Sim. Cada lar é isolado no banco de dados — um membro de um lar jamais enxerga dados de outro. Sua senha é criptografada e fazemos backups automáticos."
+      },
+      "q3": {
+        "question": "Preciso conectar minha conta bancária?",
+        "answer": "Não. O Larmony funciona com lançamentos manuais e recorrências automáticas — você controla exatamente o que entra. Integração com Open Finance está no roadmap."
+      },
+      "q4": {
+        "question": "O Larmony arredonda valores?",
+        "answer": "Nunca. Todo valor é armazenado em centavos exatos — se a conta deu R$ 33,33 para cada um, é isso que aparece. Precisão é um princípio do produto."
+      },
+      "q5": {
+        "question": "Funciona em outros idiomas?",
+        "answer": "Sim — o Larmony está disponível em 7 idiomas (português, inglês, espanhol, chinês, alemão, francês e japonês). Cada pessoa escolhe o próprio idioma e vê o mesmo lar traduzido, incluindo e-mails de lembrete."
+      }
+    }
+  },
+  "finalCta": {
+    "titleLine1": "Traga harmonia para",
+    "titleLine2": "as contas da sua casa",
+    "subtitle": "Crie o seu lar em menos de um minuto. Grátis, sem cartão de crédito.",
+    "cta": "Criar meu lar grátis →"
+  },
+  "footer": {
+    "description": "Controle financeiro do seu lar. Transações, orçamentos e metas em um só lugar.",
+    "sections": {
+      "product": {
+        "title": "Produto",
+        "links": {
+          "features": "Recursos",
+          "pricing": "Preços",
+          "changelog": "Changelog",
+          "roadmap": "Roadmap"
+        }
+      },
+      "company": {
+        "title": "Empresa",
+        "links": {
+          "about": "Sobre",
+          "blog": "Blog",
+          "careers": "Carreiras",
+          "press": "Imprensa"
+        }
+      },
+      "legal": {
+        "title": "Legal",
+        "links": {
+          "terms": "Termos de uso",
+          "privacy": "Privacidade",
+          "cookies": "Cookies",
+          "security": "Segurança"
+        }
+      }
+    },
+    "copyright": "© {{year}} Larmony. Todos os direitos reservados."
+  },
+  "legal": {
+    "back": "← Voltar",
+    "meta": "Última atualização: {{updatedAt}} · versão {{version}}",
+    "officialNotice": "Documento oficial em português (Brasil). Traduções são apenas informativas.",
+    "footer": {
+      "copyright": "© {{year}} Larmony. Todos os direitos reservados.",
+      "terms": "Termos de Uso",
+      "privacy": "Privacidade"
+    }
+  }
+}

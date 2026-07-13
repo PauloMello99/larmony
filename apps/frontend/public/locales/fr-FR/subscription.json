@@ -1,0 +1,53 @@
+{
+  "title": "Abonnement",
+  "description": "Plan, statut et gestion de l’abonnement de ce foyer.",
+  "planTitle": "Plan actuel",
+  "loadError": "Impossible de charger l’abonnement. Réessaie.",
+  "ownerOnly": "Seul le responsable du foyer peut gérer l’abonnement.",
+  "plan": {
+    "free": "Gratuit",
+    "premium": "Premium",
+    "custom": "Exonération"
+  },
+  "status": {
+    "active": "Actif",
+    "trialing": "Période d’essai",
+    "past_due": "Paiement en attente",
+    "canceled": "Annulé"
+  },
+  "premiumOffer": {
+    "title": "Larmony Premium — 4,90 €/mois",
+    "description": "Rapports avancés, plusieurs membres et tout ce dont ton foyer a besoin pour gérer les finances ensemble."
+  },
+  "free": {
+    "description": "Ton foyer est sur le plan Gratuit.",
+    "cta": "S’abonner au Premium",
+    "ctaPending": "Redirection…"
+  },
+  "premium": {
+    "description": "Ton foyer a le Premium actif. Profite de toutes les fonctionnalités.",
+    "pastDue": "Un paiement est en attente. Mets à jour ton moyen de paiement sur le portail pour ne pas perdre l’accès.",
+    "portalCta": "Gérer l’abonnement",
+    "portalPending": "Redirection…"
+  },
+  "trial": {
+    "title": "Période d’essai active",
+    "description": "Ton foyer a l’accès Premium pendant la période d’essai.",
+    "until": "Accès Premium complet jusqu’au",
+    "cta": "S’abonner au Premium"
+  },
+  "comp": {
+    "title": "Exonération accordée",
+    "description": "Ton foyer a un accès complet à titre gracieux — sans facturation.",
+    "reasonLabel": "Motif"
+  },
+  "banner": {
+    "success": "Abonnement confirmé ! L’accès Premium est activé dès que Stripe confirme le paiement.",
+    "cancel": "Paiement annulé. Aucune facturation n’a été effectuée."
+  },
+  "gate": {
+    "title": "Fonctionnalité Premium",
+    "description": "Les rapports avancés font partie du plan Premium. Passe au niveau supérieur pour les débloquer.",
+    "cta": "Voir les plans"
+  }
+}

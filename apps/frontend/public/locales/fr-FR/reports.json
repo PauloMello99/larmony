@@ -1,0 +1,31 @@
+{
+  "page": {
+    "title": "Rapports",
+    "description": "Vue mensuelle et annuelle de tes finances",
+    "monthly": "Mensuel",
+    "annual": "Annuel"
+  },
+  "chart": {
+    "income": "Revenu",
+    "expense": "Dépense"
+  },
+  "monthly": {
+    "prevMonth": "Mois précédent",
+    "nextMonth": "Mois suivant",
+    "seriesTitle": "Revenu × Dépense · 6 derniers mois",
+    "seriesEmpty": "Aucun mouvement au cours des 6 derniers mois.",
+    "byCategory": "Dépenses par catégorie · {{ref}}",
+    "byPerson": "Dépense par personne · {{ref}}",
+    "noExpenses": "Aucune dépense ce mois-ci.",
+    "assignPersonHint": "Pour voir qui a dépensé quoi, attribue une personne lors de la création ou de la modification de chaque transaction."
+  },
+  "annual": {
+    "prevYear": "Année précédente",
+    "nextYear": "Année suivante",
+    "totalIncome": "Revenu total",
+    "totalExpense": "Dépense totale",
+    "balance": "Solde",
+    "seriesTitle": "Revenu × Dépense · {{year}}",
+    "seriesEmpty": "Aucun mouvement en {{year}}."
+  }
+}

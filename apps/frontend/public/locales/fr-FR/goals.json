@@ -1,0 +1,59 @@
+{
+  "page": {
+    "title": "Objectifs",
+    "subtitle": "Objectifs d’épargne du foyer, avec les versements de tous",
+    "newGoal": "Nouvel objectif",
+    "empty": "Aucun objectif pour l’instant.",
+    "createGoal": "Créer un objectif"
+  },
+  "form": {
+    "editTitle": "Modifier l’objectif",
+    "createTitle": "Nouvel objectif",
+    "description": "Objectifs d’épargne du foyer — la progression vient des versements.",
+    "nameLabel": "Nom",
+    "namePlaceholder": "Ex : Voyage",
+    "targetAmountLabel": "Montant visé",
+    "colorLabel": "Couleur",
+    "targetDateLabel": "Date visée",
+    "noTargetDate": "Sans date visée",
+    "clearTargetDate": "Effacer la date visée",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Facultatif",
+    "saving": "Enregistrement…",
+    "saveChanges": "Enregistrer les modifications",
+    "create": "Créer l’objectif"
+  },
+  "card": {
+    "done": "Atteint",
+    "contributions": "Versements",
+    "contribute": "Verser",
+    "ofTarget": "sur {{value}}",
+    "progress": "{{pct}} %",
+    "progressWithDate": "{{pct}} % · jusqu’au {{date}}"
+  },
+  "contributionDialog": {
+    "title": "Versements — {{name}}",
+    "summary": "{{saved}} sur {{target}} épargnés.",
+    "amountLabel": "Montant",
+    "dateLabel": "Date",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Facultatif",
+    "submitting": "Versement…",
+    "submit": "Verser",
+    "history": "Historique",
+    "empty": "Aucun versement pour l’instant.",
+    "deleteContribution": "Supprimer le versement"
+  },
+  "deleteDialog": {
+    "title": "Supprimer l’objectif",
+    "description": "Supprimer <span>{{name}}</span> ? L’historique des versements sera également effacé — cette action est irréversible.",
+    "deleting": "Suppression…"
+  },
+  "validation": {
+    "nameRequired": "Le nom est obligatoire",
+    "nameMax": "80 caractères maximum",
+    "amountRequired": "Indique un montant",
+    "dateRequired": "Indique la date",
+    "colorInvalid": "Couleur invalide"
+  }
+}

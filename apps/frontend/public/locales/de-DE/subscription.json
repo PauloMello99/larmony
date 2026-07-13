@@ -1,0 +1,53 @@
+{
+  "title": "Abonnement",
+  "description": "Plan, Status und Verwaltung des Abonnements dieses Haushalts.",
+  "planTitle": "Aktueller Plan",
+  "loadError": "Das Abonnement konnte nicht geladen werden. Bitte versuche es erneut.",
+  "ownerOnly": "Nur der Verantwortliche des Haushalts kann das Abonnement verwalten.",
+  "plan": {
+    "free": "Kostenlos",
+    "premium": "Premium",
+    "custom": "Befreiung"
+  },
+  "status": {
+    "active": "Aktiv",
+    "trialing": "Testphase",
+    "past_due": "Zahlung ausstehend",
+    "canceled": "Gekündigt"
+  },
+  "premiumOffer": {
+    "title": "Larmony Premium — 14,90 R$/Monat",
+    "description": "Erweiterte Berichte, mehrere Mitglieder und alles, was dein Haushalt braucht, um die Finanzen gemeinsam zu kontrollieren."
+  },
+  "free": {
+    "description": "Dein Haushalt ist im kostenlosen Plan.",
+    "cta": "Premium abonnieren",
+    "ctaPending": "Weiterleitung…"
+  },
+  "premium": {
+    "description": "Dein Haushalt hat Premium aktiv. Genieße alle Funktionen.",
+    "pastDue": "Es gibt eine ausstehende Zahlung. Aktualisiere die Zahlungsmethode im Portal, um den Zugriff nicht zu verlieren.",
+    "portalCta": "Abonnement verwalten",
+    "portalPending": "Weiterleitung…"
+  },
+  "trial": {
+    "title": "Testphase aktiv",
+    "description": "Dein Haushalt hat während der Testphase Premium-Zugriff.",
+    "until": "Vollständiger Premium-Zugriff bis",
+    "cta": "Premium abonnieren"
+  },
+  "comp": {
+    "title": "Befreiung gewährt",
+    "description": "Dein Haushalt hat kostenlosen vollen Zugriff — ohne Berechnung.",
+    "reasonLabel": "Grund"
+  },
+  "banner": {
+    "success": "Abonnement bestätigt! Der Premium-Zugriff wird aktiviert, sobald Stripe die Zahlung bestätigt.",
+    "cancel": "Checkout abgebrochen. Es wurde keine Zahlung durchgeführt."
+  },
+  "gate": {
+    "title": "Premium-Funktion",
+    "description": "Erweiterte Berichte sind Teil des Premium-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
+    "cta": "Pläne ansehen"
+  }
+}

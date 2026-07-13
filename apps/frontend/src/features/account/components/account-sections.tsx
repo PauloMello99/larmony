@@ -21,6 +21,7 @@ import { useMe } from "@/features/auth"
 import { useAuth } from "@/features/auth"
 import { clearSession } from "@/features/auth/lib/session"
 import { apiRequest } from "@/infrastructure/api/client"
+import { translateApiError } from "@/shared/lib/api-error"
 import {
   Form,
   FormControl,
@@ -98,6 +99,7 @@ const MAX_AVATAR_BYTES = 5 * 1024 * 1024
 
 export function ProfileSection() {
   const { t } = useTranslation("account")
+  const { t: tCommon } = useTranslation("common")
   const { me, loading, updateMe, uploadAvatar } = useMe()
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -127,7 +129,11 @@ export function ProfileSection() {
       await updateMe({ name: values.name, email: values.email })
       setSaved(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("profile.saveError"))
+      setError(
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("profile.saveError"),
+      )
     }
   })
 
@@ -149,7 +155,9 @@ export function ProfileSection() {
       await uploadAvatar(file)
     } catch (err) {
       setAvatarError(
-        err instanceof Error ? err.message : t("profile.avatarUploadError"),
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("profile.avatarUploadError"),
       )
     } finally {
       setAvatarUploading(false)
@@ -357,7 +365,9 @@ export function LocaleSection() {
         await updateMe({ locale: l })
       })
     } catch (err) {
-      setError(err instanceof Error ? err.message : tAccount("locale.error"))
+      setError(
+        err instanceof Error ? translateApiError(err, t) : tAccount("locale.error"),
+      )
     } finally {
       setSaving(false)
     }
@@ -505,6 +515,7 @@ export function NotificationsSection() {
 
 export function DangerSection() {
   const { t } = useTranslation("account")
+  const { t: tCommon } = useTranslation("common")
   const router = useRouter()
   const { user } = useAuth()
   const [open, setOpen] = useState(false)
@@ -524,7 +535,11 @@ export function DangerSection() {
       clearSession()
       await router.replace("/auth/login")
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("danger.deleteError"))
+      setError(
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("danger.deleteError"),
+      )
       setLoading(false)
     }
   }

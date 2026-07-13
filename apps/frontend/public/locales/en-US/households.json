@@ -26,6 +26,16 @@
     "deleteTitle": "Delete home",
     "deleteDescription": "Permanently removes all data for this home."
   },
+  "membersPage": {
+    "loading": "Loading members…",
+    "title": "Members",
+    "description": "Manage who has access to this home.",
+    "invite": "Invite",
+    "inviteCreated": "Invitation created. Acceptance link (dev — copy to test):",
+    "copy": "Copy",
+    "updatePermissionsError": "Could not update the permissions.",
+    "toggleStatusError": "Could not change the member's status."
+  },
   "members": {
     "title": "Members ({{count}})",
     "pendingInvitations": "Pending invitations ({{count}})",

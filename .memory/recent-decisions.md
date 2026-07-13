@@ -33,6 +33,19 @@
 
 ## Decisões/registros recentes (sem ADR)
 
+- **2026-07-13 — Rollout de i18n para 7 idiomas + fechamento dos gaps (adendo
+  ADR-0018)**: `pt-BR`/`en-US`/`es-ES`/`zh-CN`/`de-DE`/`fr-FR`/`ja-JP` (tags BCP
+  47 completas; normalização de legado `en`→`en-US`/`es`→`es-ES` + migration
+  `0001_locale_tags`). Checker de sync de locales (`bin/scripts/
+  check-locales.mjs`) como gate no CI. Namespaces novos `landing` e `admin`
+  (eram 100% hardcoded); legais seguem pt-BR-only com nota. **E-mails do
+  backend implementados locale-aware** (nunca tinha sido feito, apesar do
+  ADR original) — catálogo `mail-messages.ts` ×7 + fix de bug independente
+  (welcome/invite carregavam copy stale do ink-ops/tatuagem). Erros de API
+  traduzidos por código no front (`api.<CODE>`, fallback verbatim) sem tocar
+  o backend. Stripe Checkout/Portal recebem `locale`. Traduções geradas pelo
+  responsável; zh-CN/ja-JP sem revisão nativa (follow-up).
+
 - **2026-07-13 — Review do RAG + eval + Qdrant compartilhado (adendo ADR-0016)**:
   primeiro harness de avaliação de retrieval (`bin/scripts/rag/eval.py` + golden
   set, roda pelo caminho de produção `hybrid_search`/`expand_parents`; baseline em

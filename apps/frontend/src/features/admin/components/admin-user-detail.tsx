@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import {
   ArrowLeft,
   ShieldCheck,
@@ -21,11 +22,14 @@ import {
   TableRow,
 } from "@/shared/components/ui/table"
 import { useMe } from "@/features/auth/hooks/use-me"
+import { translateApiError } from "@/shared/lib/api-error"
 import { useAdminUserDetail, useSetUserPlatformRole } from "../hooks/use-admin"
 import { fmtDate } from "../lib/format"
 import { ConfirmDialog } from "./confirm-dialog"
 
 export function AdminUserDetail({ id }: { id: string | undefined }) {
+  const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const { me } = useMe()
   const { user, loading, error } = useAdminUserDetail(id)
   const setPlatformRole = useSetUserPlatformRole()
@@ -43,7 +47,11 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
       await setPlatformRole(user.id, next)
       setConfirming(false)
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : "Falha ao atualizar.")
+      setActionError(
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("userDetail.updateError"),
+      )
     } finally {
       setBusy(false)
     }
@@ -62,7 +70,7 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
       <div className="space-y-4">
         <BackLink />
         <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
-          {error ?? "Usuário não encontrado."}
+          {error ?? t("userDetail.notFound")}
         </div>
       </div>
     )
@@ -82,11 +90,11 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
               {user.name}
             </h1>
             {isSuper && (
-              <Badge className="bg-primary/15 text-primary">super_admin</Badge>
+              <Badge className="bg-primary/15 text-primary">{t("userDetail.roleSuperAdmin")}</Badge>
             )}
           </div>
           <p className="mt-0.5 text-sm text-foreground/40">
-            {user.email} · desde {fmtDate(user.createdAt)}
+            {t("userDetail.emailSince", { email: user.email, date: fmtDate(user.createdAt, t) })}
           </p>
           {user.phone && (
             <p className="mt-0.5 flex items-center gap-1.5 text-sm text-foreground/40">
@@ -97,7 +105,7 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
         <Button
           variant={isSuper ? "outline" : "default"}
           disabled={isSelf}
-          title={isSelf ? "Você não pode alterar o próprio papel" : undefined}
+          title={isSelf ? t("userDetail.selfRoleTitle") : undefined}
           onClick={() => {
             setActionError(null)
             setConfirming(true)
@@ -106,11 +114,11 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
         >
           {isSuper ? (
             <>
-              <ShieldOff className="h-4 w-4" /> Rebaixar
+              <ShieldOff className="h-4 w-4" /> {t("userDetail.demote")}
             </>
           ) : (
             <>
-              <ShieldCheck className="h-4 w-4" /> Promover a super_admin
+              <ShieldCheck className="h-4 w-4" /> {t("userDetail.promoteLong")}
             </>
           )}
         </Button>
@@ -120,21 +128,21 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
       <section className="space-y-3">
         <h2 className="flex items-center gap-1.5 text-sm font-medium text-foreground">
           <Building2 className="h-4 w-4 text-primary" />
-          Lares ({user.memberships.length})
+          {t("userDetail.householdsTitle", { count: user.memberships.length })}
         </h2>
         {user.memberships.length === 0 ? (
           <p className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] px-4 py-8 text-center text-sm text-foreground/40">
-            Este usuário não pertence a nenhum lar.
+            {t("userDetail.noHouseholds")}
           </p>
         ) : (
           <div className="overflow-hidden rounded-xl border border-foreground/[0.06]">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Lar</TableHead>
-                  <TableHead>Papel</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Entrou</TableHead>
+                  <TableHead>{t("userDetail.colHousehold")}</TableHead>
+                  <TableHead>{t("userDetail.colRole")}</TableHead>
+                  <TableHead>{t("userDetail.colStatus")}</TableHead>
+                  <TableHead>{t("userDetail.colJoined")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -151,19 +159,19 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
                     </TableCell>
                     <TableCell>
                       {m.role === "owner" ? (
-                        <Badge className="bg-primary/15 text-primary">owner</Badge>
+                        <Badge className="bg-primary/15 text-primary">{t("userDetail.roleOwner")}</Badge>
                       ) : (
                         <span className="text-foreground/60">{m.role}</span>
                       )}
                     </TableCell>
                     <TableCell>
                       {m.enabled ? (
-                        <span className="text-foreground/60">ativo</span>
+                        <span className="text-foreground/60">{t("userDetail.statusActive")}</span>
                       ) : (
-                        <span className="text-red-400">inativo</span>
+                        <span className="text-red-400">{t("userDetail.statusInactive")}</span>
                       )}
                     </TableCell>
-                    <TableCell className="text-foreground/50">{fmtDate(m.joinedAt)}</TableCell>
+                    <TableCell className="text-foreground/50">{fmtDate(m.joinedAt, t)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -177,15 +185,15 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
         onOpenChange={setConfirming}
         title={
           isSuper
-            ? `Rebaixar "${user.name}" para usuário?`
-            : `Promover "${user.name}" a super_admin?`
+            ? t("userDetail.confirmDemoteTitle", { name: user.name })
+            : t("userDetail.confirmPromoteTitle", { name: user.name })
         }
         description={
           isSuper
-            ? "O usuário perde acesso ao painel da plataforma."
-            : "O usuário passa a ter poder total sobre todas as lares."
+            ? t("userDetail.confirmDemoteDescription")
+            : t("userDetail.confirmPromoteDescription")
         }
-        confirmLabel={isSuper ? "Rebaixar" : "Promover"}
+        confirmLabel={isSuper ? t("userDetail.confirmDemote") : t("userDetail.confirmPromote")}
         destructive={isSuper}
         loading={busy}
         error={actionError}
@@ -196,12 +204,13 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
 }
 
 function BackLink() {
+  const { t } = useTranslation("admin")
   return (
     <Link
       href="/admin/users"
       className="inline-flex items-center gap-1.5 text-sm text-foreground/50 transition-colors hover:text-foreground"
     >
-      <ArrowLeft className="h-4 w-4" /> Usuários
+      <ArrowLeft className="h-4 w-4" /> {t("userDetail.backLink")}
     </Link>
   )
 }
