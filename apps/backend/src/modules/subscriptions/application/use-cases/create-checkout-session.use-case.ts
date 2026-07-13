@@ -27,7 +27,11 @@ export class CreateCheckoutSessionUseCase {
     private readonly config: ConfigService,
   ) {}
 
-  async execute(householdId: string, ownerEmail: string): Promise<{ url: string }> {
+  async execute(
+    householdId: string,
+    ownerEmail: string,
+    locale?: string,
+  ): Promise<{ url: string }> {
     const subscription = await this.repo.getOrCreate(householdId);
 
     // Customer sempre pré-criado antes do checkout (ver payment-gateway.port.ts).
@@ -61,6 +65,8 @@ export class CreateCheckoutSessionUseCase {
       successUrl: `${basePath}?checkout=success`,
       cancelUrl: `${basePath}?checkout=cancel`,
       metadata: { householdId },
+      // Página hospedada no idioma ativo da UI (adendo ADR-0018).
+      locale,
     });
   }
 }

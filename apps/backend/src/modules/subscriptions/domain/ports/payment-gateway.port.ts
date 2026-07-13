@@ -19,6 +19,8 @@ export interface CreateCheckoutSessionInput {
   successUrl: string;
   cancelUrl: string;
   metadata: Record<string, string>;
+  /** Locale da UI (AppLocale) — página hospedada do Stripe no idioma do usuário. */
+  locale?: string | null;
 }
 
 export interface CreateCheckoutSessionOutput {
@@ -28,6 +30,8 @@ export interface CreateCheckoutSessionOutput {
 export interface CreatePortalSessionInput {
   customerId: string;
   returnUrl: string;
+  /** Locale da UI (AppLocale) — Billing Portal no idioma do usuário. */
+  locale?: string | null;
 }
 
 export interface CreatePortalSessionOutput {

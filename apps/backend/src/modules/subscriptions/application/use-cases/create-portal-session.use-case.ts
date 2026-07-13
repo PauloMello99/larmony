@@ -20,7 +20,7 @@ export class CreatePortalSessionUseCase {
     private readonly config: ConfigService,
   ) {}
 
-  async execute(householdId: string): Promise<{ url: string }> {
+  async execute(householdId: string, locale?: string): Promise<{ url: string }> {
     const subscription = await this.repo.getOrCreate(householdId);
     if (!subscription.stripeCustomerId) {
       throw new NoStripeCustomerException(householdId);
@@ -36,6 +36,8 @@ export class CreatePortalSessionUseCase {
     return this.gateway.createPortalSession({
       customerId: subscription.stripeCustomerId,
       returnUrl,
+      // Billing Portal no idioma ativo da UI (adendo ADR-0018).
+      locale,
     });
   }
 }
