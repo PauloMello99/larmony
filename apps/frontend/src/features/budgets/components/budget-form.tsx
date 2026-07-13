@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -32,6 +32,7 @@ import {
 import { Button } from "@/shared/components/ui/button"
 import { CurrencyInput } from "@/shared/components/ui/currency-input"
 import { useCategories } from "@/features/categories/hooks/use-categories"
+import { translateApiError } from "@/shared/lib/api-error"
 import { makeCreateBudgetSchema, type CreateBudgetFormValues } from "../schemas/budget.schemas"
 import type { Budget } from "../types"
 
@@ -65,6 +66,7 @@ export function BudgetForm({
   )
 
   const schema = useMemo(() => makeCreateBudgetSchema(t), [t])
+  const [error, setError] = useState<string | null>(null)
   const form = useForm<CreateBudgetFormValues>({
     resolver: zodResolver(schema),
     defaultValues: { categoryId: "", amountCents: 0 },
@@ -77,12 +79,20 @@ export function BudgetForm({
           ? { categoryId: budget.categoryId, amountCents: budget.limitCents }
           : { categoryId: "", amountCents: 0 },
       )
+      setError(null)
     }
   }, [open, budget, form])
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit(values)
-    onOpenChange(false)
+    setError(null)
+    try {
+      await onSubmit(values)
+      onOpenChange(false)
+    } catch (err) {
+      // Limite de orçamentos ativos do Free (D-1) chega aqui via
+      // api.BUDGET_LIMIT_REACHED.
+      setError(translateApiError(err, tCommon))
+    }
   })
 
   return (
@@ -155,6 +165,8 @@ export function BudgetForm({
                   </FormItem>
                 )}
               />
+
+              {error && <p className="text-sm text-red-400">{error}</p>}
             </SheetBody>
 
             <SheetFooter>

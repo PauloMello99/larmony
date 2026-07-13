@@ -107,4 +107,7 @@ export interface IBudgetRepository {
 
   /** Fuso IANA do lar (M12) — âncora do "mês corrente" dos orçamentos. */
   findTimezone(householdId: string): Promise<string>;
+
+  /** Séries ATIVAS (`endedFrom IS NULL`) do lar — régua do Free (D-1, P-5). */
+  countActiveSeries(householdId: string): Promise<number>;
 }

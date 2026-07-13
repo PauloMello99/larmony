@@ -210,4 +210,34 @@ describe("Goals (e2e)", () => {
     const stranger = await signUpUser(app, "goal.stranger");
     await authed(app, "get", `/households/${householdId}/goals`, stranger.accessToken).expect(403);
   });
+
+  it("limite de metas do Free (D-1, P-5): até 3 ok, a 4ª bloqueada (402), libera após upgrade", async () => {
+    // Lar isolado (Free real) — não usa o `householdId` compartilhado.
+    const solo = await signUpUser(app, "goal.limit.owner");
+    const solo1 = await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Limite Metas" })
+      .expect(201);
+    const soloHouseholdId = solo1.body.id;
+
+    for (let i = 1; i <= 3; i++) {
+      await authed(app, "post", `/households/${soloHouseholdId}/goals`, solo.accessToken)
+        .send({ name: `Meta ${i}`, targetAmountCents: 100000, color: "#06b6d4" })
+        .expect(201);
+    }
+
+    const blocked = await authed(app, "post", `/households/${soloHouseholdId}/goals`, solo.accessToken)
+      .send({ name: "Meta 4", targetAmountCents: 100000, color: "#06b6d4" })
+      .expect(402);
+    expect(blocked.body.code).toBe("GOAL_LIMIT_REACHED");
+
+    await pool.query(
+      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
+       VALUES ($1, 'custom', 'active', 'e2e limite de metas — upgrade')
+       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
+      [soloHouseholdId],
+    );
+    await authed(app, "post", `/households/${soloHouseholdId}/goals`, solo.accessToken)
+      .send({ name: "Meta 4", targetAmountCents: 100000, color: "#06b6d4" })
+      .expect(201);
+  });
 });

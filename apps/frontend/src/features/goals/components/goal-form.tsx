@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -28,6 +28,7 @@ import { Input } from "@/shared/components/ui/input"
 import { Textarea } from "@/shared/components/ui/textarea"
 import { CurrencyInput } from "@/shared/components/ui/currency-input"
 import { DatePicker } from "@/shared/components/ui/date-picker"
+import { translateApiError } from "@/shared/lib/api-error"
 import { makeGoalSchema, type GoalFormValues } from "../schemas/goal.schemas"
 import type { Goal } from "../types"
 
@@ -55,6 +56,7 @@ export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) 
   const isEditing = !!goal
 
   const goalSchema = useMemo(() => makeGoalSchema(t), [t])
+  const [error, setError] = useState<string | null>(null)
 
   const form = useForm<GoalFormValues>({
     resolver: zodResolver(goalSchema),
@@ -74,12 +76,19 @@ export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) 
             }
           : DEFAULT_VALUES,
       )
+      setError(null)
     }
   }, [open, goal, form])
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit(values)
-    onOpenChange(false)
+    setError(null)
+    try {
+      await onSubmit(values)
+      onOpenChange(false)
+    } catch (err) {
+      // Limite de metas do Free (D-1) chega aqui via api.GOAL_LIMIT_REACHED.
+      setError(translateApiError(err, tCommon))
+    }
   })
 
   return (
@@ -211,6 +220,8 @@ export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) 
                   </FormItem>
                 )}
               />
+
+              {error && <p className="text-sm text-red-400">{error}</p>}
             </SheetBody>
 
             <SheetFooter>

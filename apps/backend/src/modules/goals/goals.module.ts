@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { AuthModule } from "../auth/auth.module";
 import { UserModule } from "../user/user.module";
 import { NotificationsModule } from "../notifications/notifications.module";
+import { SubscriptionsModule } from "../subscriptions/subscriptions.module";
 import { GoalsInfrastructureModule } from "./infrastructure/goals-infrastructure.module";
 import { ListGoalsUseCase } from "./application/use-cases/list-goals.use-case";
 import { CreateGoalUseCase } from "./application/use-cases/create-goal.use-case";
@@ -13,7 +14,13 @@ import { DeleteGoalContributionUseCase } from "./application/use-cases/delete-go
 import { GoalsController } from "./interface/goals.controller";
 
 @Module({
-  imports: [AuthModule, UserModule, GoalsInfrastructureModule, NotificationsModule],
+  imports: [
+    AuthModule,
+    UserModule,
+    GoalsInfrastructureModule,
+    NotificationsModule,
+    SubscriptionsModule,
+  ],
   controllers: [GoalsController],
   providers: [
     ListGoalsUseCase,

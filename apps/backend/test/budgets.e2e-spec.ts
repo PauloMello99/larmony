@@ -231,4 +231,50 @@ describe("Budgets (e2e)", () => {
       stranger.accessToken,
     ).expect(403);
   });
+
+  it("limite de orçamentos ativos do Free (D-1, P-5): até 3 ok, o 4º bloqueado (402), libera após encerrar/upgrade", async () => {
+    // Lar isolado (Free real) — não usa o `householdId` compartilhado.
+    const solo = await signUpUser(app, "bud.limit.owner");
+    const solo1 = await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Limite Orcamentos" })
+      .expect(201);
+    const soloHouseholdId = solo1.body.id;
+
+    const cats = await authed(
+      app,
+      "get",
+      `/households/${soloHouseholdId}/categories`,
+      solo.accessToken,
+    ).expect(200);
+    const names = ["Alimentação", "Moradia", "Transporte", "Saúde"];
+    const [c1, c2, c3, c4] = names.map(
+      (n) => cats.body.find((c: { name: string }) => c.name === n).id,
+    );
+
+    for (const categoryId of [c1, c2, c3]) {
+      await authed(app, "post", `/households/${soloHouseholdId}/budgets`, solo.accessToken)
+        .send({ categoryId, amountCents: 50000 })
+        .expect(201);
+    }
+
+    const blocked = await authed(app, "post", `/households/${soloHouseholdId}/budgets`, solo.accessToken)
+      .send({ categoryId: c4, amountCents: 50000 })
+      .expect(402);
+    expect(blocked.body.code).toBe("BUDGET_LIMIT_REACHED");
+
+    // Encerrar uma série existente libera criar outra, dentro do limite.
+    const list = await authed(
+      app,
+      "get",
+      `/households/${soloHouseholdId}/budgets?month=${current.month}&year=${current.year}`,
+      solo.accessToken,
+    ).expect(200);
+    const toEnd = list.body.find((b: { categoryId: string }) => b.categoryId === c1);
+    await authed(app, "delete", `/households/${soloHouseholdId}/budgets/${toEnd.id}`, solo.accessToken).expect(
+      204,
+    );
+    await authed(app, "post", `/households/${soloHouseholdId}/budgets`, solo.accessToken)
+      .send({ categoryId: c4, amountCents: 50000 })
+      .expect(201);
+  });
 });

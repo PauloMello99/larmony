@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { AuthModule } from "../auth/auth.module";
 import { NotificationsModule } from "../notifications/notifications.module";
+import { SubscriptionsModule } from "../subscriptions/subscriptions.module";
 import { BudgetsInfrastructureModule } from "./infrastructure/budgets-infrastructure.module";
 import { ListBudgetsUseCase } from "./application/use-cases/list-budgets.use-case";
 import { CreateBudgetUseCase } from "./application/use-cases/create-budget.use-case";
@@ -10,7 +11,7 @@ import { NotifyIfBudgetExceededUseCase } from "./application/use-cases/notify-if
 import { BudgetsController } from "./interface/budgets.controller";
 
 @Module({
-  imports: [AuthModule, BudgetsInfrastructureModule, NotificationsModule],
+  imports: [AuthModule, BudgetsInfrastructureModule, NotificationsModule, SubscriptionsModule],
   controllers: [BudgetsController],
   providers: [
     ListBudgetsUseCase,
