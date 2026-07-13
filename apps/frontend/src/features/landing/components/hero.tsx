@@ -112,7 +112,7 @@ export function Hero() {
               </p>
             </div>
             <div>
-              <ProofNumber target={2} />
+              <ProofNumber target={7} />
               <p className="mt-0.5 text-xs leading-tight text-white/35 sm:text-[12.5px]">
                 {t("hero.proof.languagesLine1")}
                 <br />

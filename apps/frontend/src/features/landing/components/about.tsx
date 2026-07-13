@@ -82,7 +82,7 @@ export function About() {
             label={t("about.stats.cents")}
           />
           <StatCard value="∞" label={t("about.stats.members")} delay="lp-d1" />
-          <StatCard value="2" label={t("about.stats.languages")} delay="lp-d2" />
+          <StatCard value="7" label={t("about.stats.languages")} delay="lp-d2" />
           <StatCard value="RLS" label={t("about.stats.rls")} delay="lp-d3" />
         </div>
       </div>
