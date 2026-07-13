@@ -27,5 +27,17 @@
     "balance": "Saldo",
     "seriesTitle": "Einnahme × Ausgabe · {{year}}",
     "seriesEmpty": "Keine Bewegung in {{year}}."
+  },
+  "export": {
+    "upgradeHint": "Der Berichtsexport ist eine Family-Funktion",
+    "columns": {
+      "category": "Kategorie",
+      "amount": "Betrag",
+      "year": "Jahr",
+      "month": "Monat",
+      "income": "Einnahmen",
+      "expense": "Ausgaben",
+      "balance": "Saldo"
+    }
   }
 }

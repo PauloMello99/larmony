@@ -190,4 +190,81 @@ describe("Reports (e2e)", () => {
       stranger.accessToken,
     ).expect(403);
   });
+
+  it("GET /monthly/export retorna CSV (lar premium — capability report_export, P-6)", async () => {
+    const res = await authed(
+      app,
+      "get",
+      `/households/${householdId}/reports/monthly/export`,
+      owner.accessToken,
+    ).expect(200);
+
+    expect(res.headers["content-type"]).toContain("text/csv");
+    expect(res.headers["content-disposition"]).toContain("attachment");
+    expect(res.headers["content-disposition"]).toMatch(/relatorio-mensal-\d{4}-\d{2}\.csv/);
+    expect(res.text).toContain("Categoria,Valor (R$)");
+    expect(res.text).toContain("Alimentação");
+  });
+
+  it("GET /monthly/export respeita ?fields= (RPT-2)", async () => {
+    const res = await authed(
+      app,
+      "get",
+      `/households/${householdId}/reports/monthly/export?fields=amount`,
+      owner.accessToken,
+    ).expect(200);
+
+    expect(res.text).toContain("Valor (R$)");
+    expect(res.text).not.toContain("Categoria,");
+  });
+
+  it("GET /annual/export retorna CSV (lar premium — capability report_export, P-6)", async () => {
+    const res = await authed(
+      app,
+      "get",
+      `/households/${householdId}/reports/annual/export?year=${refYear}`,
+      owner.accessToken,
+    ).expect(200);
+
+    expect(res.headers["content-type"]).toContain("text/csv");
+    expect(res.headers["content-disposition"]).toContain(`relatorio-anual-${refYear}.csv`);
+    expect(res.text).toContain("Ano,Mês,Receitas (R$),Despesas (R$),Saldo (R$)");
+  });
+
+  it("export CSV é Family-only (D-1, P-6): bloqueado no Free (402), liberado após upgrade", async () => {
+    const solo = await signUpUser(app, "rep.export.owner");
+    const solo1 = await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Export Free" })
+      .expect(201);
+    const soloHouseholdId = solo1.body.id;
+
+    const blockedMonthly = await authed(
+      app,
+      "get",
+      `/households/${soloHouseholdId}/reports/monthly/export`,
+      solo.accessToken,
+    ).expect(402);
+    expect(blockedMonthly.body.code).toBe("PREMIUM_REQUIRED");
+
+    const blockedAnnual = await authed(
+      app,
+      "get",
+      `/households/${soloHouseholdId}/reports/annual/export`,
+      solo.accessToken,
+    ).expect(402);
+    expect(blockedAnnual.body.code).toBe("PREMIUM_REQUIRED");
+
+    await pool.query(
+      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
+       VALUES ($1, 'custom', 'active', 'e2e export CSV — upgrade')
+       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
+      [soloHouseholdId],
+    );
+    await authed(
+      app,
+      "get",
+      `/households/${soloHouseholdId}/reports/monthly/export`,
+      solo.accessToken,
+    ).expect(200);
+  });
 });

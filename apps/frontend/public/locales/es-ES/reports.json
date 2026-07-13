@@ -27,5 +27,17 @@
     "balance": "Saldo",
     "seriesTitle": "Ingresos × Gastos · {{year}}",
     "seriesEmpty": "Sin actividad en {{year}}."
+  },
+  "export": {
+    "upgradeHint": "La exportación de informes es una función Family",
+    "columns": {
+      "category": "Categoría",
+      "amount": "Valor",
+      "year": "Año",
+      "month": "Mes",
+      "income": "Ingresos",
+      "expense": "Gastos",
+      "balance": "Saldo"
+    }
   }
 }

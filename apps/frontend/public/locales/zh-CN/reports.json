@@ -27,5 +27,17 @@
     "balance": "结余",
     "seriesTitle": "收入与支出对比 · {{year}}",
     "seriesEmpty": "{{year}} 没有交易记录。"
+  },
+  "export": {
+    "upgradeHint": "报告导出是高级版功能",
+    "columns": {
+      "category": "分类",
+      "amount": "金额",
+      "year": "年份",
+      "month": "月份",
+      "income": "收入",
+      "expense": "支出",
+      "balance": "结余"
+    }
   }
 }
