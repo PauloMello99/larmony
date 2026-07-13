@@ -7,21 +7,31 @@
   },
   "settings": {
     "loading": "Cargando…",
-    "notFound": "Página de inicio no encontrada.",
+    "notFound": "Hogar no encontrado.",
     "generalTitle": "Información general",
-    "generalDescription": "Nombre de la página de inicio e identificador público.",
+    "generalDescription": "Nombre e identificador público del hogar.",
     "nameLabel": "Nombre",
     "slugLabel": "Slug",
     "membersTitle": "Miembros",
-    "membersDescription": "Gestiona quién tiene acceso a esta página de inicio.",
+    "membersDescription": "Gestiona quién tiene acceso a este hogar.",
     "invite": "Invitar",
-    "transferTitle": "Transferir página de inicio",
-    "transferDescription": "Transfiere la propiedad de esta página de inicio a otro miembro.",
-    "transferProse": "La propiedad pasa al miembro elegido. Te conviertes en miembro con acceso completo a los módulos.",
+    "transferTitle": "Transferir hogar",
+    "transferDescription": "Transfiere la propiedad de este hogar a otro miembro.",
+    "transferProse": "La titularidad pasa al miembro elegido. Te conviertes en miembro con acceso total a los módulos.",
     "dangerTitle": "Zona de peligro",
-    "dangerDescription": "Acciones irreversibles. Proceda con precaución.",
-    "deleteTitle": "Eliminar página de inicio",
-    "deleteDescription": "Elimina permanentemente todos los datos de esta página de inicio."
+    "dangerDescription": "Acciones irreversibles. Procede con precaución.",
+    "deleteTitle": "Eliminar hogar",
+    "deleteDescription": "Elimina permanentemente todos los datos de este hogar."
+  },
+  "membersPage": {
+    "loading": "Cargando miembros…",
+    "title": "Miembros",
+    "description": "Gestiona quién tiene acceso a este hogar.",
+    "invite": "Invitar",
+    "inviteCreated": "Invitación creada. Enlace de aceptación (dev — cópialo para probar):",
+    "copy": "Copiar",
+    "updatePermissionsError": "No se pudieron actualizar los permisos.",
+    "toggleStatusError": "No se pudo cambiar el estado del miembro."
   },
   "members": {
     "title": "Miembros ({{count}})",
@@ -30,11 +40,11 @@
     "emailHeader": "Correo electrónico",
     "roleHeader": "Rol",
     "you": "(tú)",
-    "invitationMeta": "{{role}} · expira el {{date}}",
+    "invitationMeta": "{{role}} · expira {{date}}",
     "actions": {
       "permissions": "Permisos",
-      "makeOwner": "Asignar propietario",
-      "makeMember": "Asignar miembro",
+      "makeOwner": "Convertir en propietario",
+      "makeMember": "Convertir en miembro",
       "enable": "Habilitar",
       "disable": "Deshabilitar",
       "remove": "Eliminar"
@@ -45,7 +55,7 @@
     "clients": "Clientes",
     "schedule": "Agenda",
     "stock": "Inventario",
-    "cashier": "Caixa"
+    "cashier": "Caja"
   },
   "roleDialog": {
     "title": "Cambiar rol",
@@ -54,53 +64,53 @@
     "saving": "Guardando…"
   },
   "permissionsDialog": {
-    "title": "Permisos de miembro",
+    "title": "Permisos del miembro",
     "description": "Elige los módulos a los que <span>{{name}}</span> puede acceder. En cada módulo, el miembro solo ve sus propios registros.",
     "saving": "Guardando…",
     "submit": "Guardar permisos"
   },
   "removeDialog": {
     "title": "Eliminar miembro",
-    "description": "¿Estás seguro de que quieres eliminar a <span>{{name}}</span> de la página principal?",
+    "description": "¿Seguro que deseas eliminar a <span>{{name}}</span> del hogar?",
     "removing": "Eliminando…",
     "submit": "Eliminar"
   },
   "transferDialog": {
     "trigger": "Transferir",
-    "title": "Transferir página de inicio",
-    "description": "Elige al miembro que se convertirá en el nuevo propietario. Te convertirás en un <span>miembro</span> con acceso completo a los módulos.",
+    "title": "Transferir hogar",
+    "description": "Elige al miembro que se convertirá en el nuevo propietario. Pasarás a tener el rol de <span>miembro</span> con acceso total a los módulos.",
     "newOwnerLabel": "Nuevo propietario",
     "selectPlaceholder": "Selecciona un miembro",
     "memberOption": "{{name}} ({{email}})",
-    "error": "No se pudo transferir la página de inicio.",
+    "error": "No se pudo transferir el hogar.",
     "submitting": "Transfiriendo…",
-    "submit": "Transferir propiedad"
+    "submit": "Transferir titularidad"
   },
   "deleteDialog": {
-    "trigger": "Eliminar casa",
-    "title": "Eliminar casa",
-    "description": "Esta acción es <span>irreversible</span>. Todos los datos de la casa se eliminarán permanentemente.",
-    "confirmLabel": "Introduce <span>{{name}}</span> para confirmar:",
+    "trigger": "Eliminar hogar",
+    "title": "Eliminar hogar",
+    "description": "Esta acción es <span>irreversible</span>. Todos los datos del hogar se eliminarán permanentemente.",
+    "confirmLabel": "Escribe <span>{{name}}</span> para confirmar:",
     "deleting": "Eliminando…",
     "submit": "Eliminar permanentemente"
   },
   "createForm": {
-    "title": "Nueva casa",
-    "description": "Crea un espacio para tu casa. Serás el propietario.",
+    "title": "Nuevo hogar",
+    "description": "Crea un espacio para tu hogar. Serás el propietario.",
     "nameLabel": "Nombre",
-    "namePlaceholder": "Ej: Casa Familiar",
+    "namePlaceholder": "Ej.: Casa de la Familia",
     "submitting": "Creando…",
-    "submit": "Crear casa"
+    "submit": "Crear hogar"
   },
   "editForm": {
-    "nameLabel": "Nombre de la casa",
-    "namePlaceholder": "Ej.: Casa familiar",
+    "nameLabel": "Nombre del hogar",
+    "namePlaceholder": "Ej.: Casa de la Familia",
     "slugLabel": "Identificador (slug)",
-    "slugHint": "Generado automáticamente; no se puede modificar.",
+    "slugHint": "Generado automáticamente — no se puede modificar.",
     "timezoneLabel": "Zona horaria",
-    "timezoneHint": "Define cuándo vencen los lanzamientos y cuándo se envían los avisos.",
+    "timezoneHint": "Define cuándo vencen los movimientos y cuándo se envían los avisos.",
     "notificationHourLabel": "Hora de los avisos",
-    "notificationHourHint": "Los recordatorios y el informe mensual salen a partir de esta hora, en la zona del hogar.",
+    "notificationHourHint": "Los recordatorios y el informe mensual se envían a partir de esta hora, en la zona horaria del hogar.",
     "saving": "Guardando…",
     "submit": "Guardar cambios"
   },
@@ -110,7 +120,7 @@
     "emailLabel": "Correo electrónico",
     "emailPlaceholder": "nombre@ejemplo.com",
     "roleLabel": "Rol",
-    "rolePlaceholder": "Seleccione un rol",
+    "rolePlaceholder": "Selecciona un rol",
     "submitting": "Enviando…",
     "submit": "Enviar invitación"
   }

@@ -1,0 +1,226 @@
+{
+  "nav": {
+    "links": {
+      "features": "Fonctionnalités",
+      "product": "Produit",
+      "pricing": "Tarifs",
+      "faq": "FAQ"
+    },
+    "login": "Se connecter",
+    "cta": "Commencer gratuitement",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu"
+  },
+  "hero": {
+    "badge": "✦ Nouveau — Rappels automatiques de factures",
+    "titleLine1": "Les finances de la maison,",
+    "titleHighlight": "en harmonie.",
+    "subtitle": "Transactions, budgets, objectifs et factures à payer — partagés avec celles et ceux qui partagent ton foyer. Des centimes exacts, zéro tableur.",
+    "ctaPrimary": "Commencer gratuitement →",
+    "ctaSecondary": "Voir la démo",
+    "proof": {
+      "centsLine1": "centimes exacts,",
+      "centsLine2": "sans arrondi",
+      "membersLine1": "membres",
+      "membersLine2": "par foyer",
+      "languagesLine1": "langues",
+      "languagesLine2": "fr, pt-BR et anglais"
+    }
+  },
+  "features": {
+    "kicker": "Fonctionnalités",
+    "title": "Tout ce dont ton foyer a besoin",
+    "subtitle": "Conçu pour le quotidien de celles et ceux qui organisent les finances de la maison — seul(e) ou en famille.",
+    "items": {
+      "transactions": {
+        "title": "Transactions organisées",
+        "description": "Catégorise revenus et dépenses, répartis les frais entre les habitants de la maison et suis tout en temps réel."
+      },
+      "budgets": {
+        "title": "Budgets par catégorie",
+        "description": "Définis des limites mensuelles par catégorie et vois combien a déjà été dépensé, avec une alerte en cas de dépassement."
+      },
+      "goals": {
+        "title": "Objectifs d’épargne",
+        "description": "Crée des objectifs pour le voyage, les travaux ou l’épargne de précaution et suis la progression avec ton foyer."
+      },
+      "dashboard": {
+        "title": "Tableau de bord avec de vrais indicateurs",
+        "description": "Solde du mois, comparaison avec le mois précédent, factures à échéance et budgets sur un seul écran."
+      },
+      "reminders": {
+        "title": "Rappels de factures",
+        "description": "Ne rate plus jamais une facture à payer — notification dans l’app et par e-mail avant l’échéance."
+      },
+      "household": {
+        "title": "Pensé pour le foyer",
+        "description": "Invite celles et ceux qui vivent avec toi, chacun avec son propre rôle, et organisez les finances domestiques ensemble."
+      }
+    }
+  },
+  "tour": {
+    "kicker": "Le produit",
+    "title": "Un tableau de bord que toute la famille comprend",
+    "subtitle": "Sans jargon financier. Celui qui vient d’arriver dans le foyer lit le tableau de bord de la même façon que celui qui l’a créé.",
+    "sidebar": {
+      "overview": "Vue d’ensemble",
+      "transactions": "Transactions",
+      "categories": "Catégories",
+      "budgets": "Budgets",
+      "goals": "Objectifs",
+      "bills": "Factures"
+    },
+    "greeting": "Bonjour, Paulo 👋",
+    "kpis": {
+      "income": "Revenus du mois",
+      "expenses": "Dépenses du mois",
+      "balance": "Solde du mois"
+    },
+    "rows": {
+      "r1": { "label": "Salaire — Juillet", "who": "Ana", "amount": "+930,00 €" },
+      "r2": { "label": "Supermarché Extra", "who": "Paulo", "amount": "-51,30 €" },
+      "r3": { "label": "Loyer", "who": "Ana", "amount": "-277,50 €" }
+    }
+  },
+  "about": {
+    "kicker": "À propos de Larmony",
+    "titlePrefix": "Fait pour celles et ceux qui",
+    "titleHighlight": "partagent les comptes de la maison",
+    "paragraph": "Organiser les finances du foyer ne devrait pas dépendre de tableurs éparpillés et de notes perdues. Larmony s’occupe du suivi pour que tu te concentres sur l’essentiel.",
+    "bullets": {
+      "b1": "Interface conçue pour le quotidien financier d’une maison",
+      "b2": "Invite celles et ceux qui vivent avec toi pour partager les finances",
+      "b3": "Données sécurisées avec isolation par foyer et sauvegardes automatiques",
+      "b4": "Pas d’engagement de longue durée — résilie quand tu veux"
+    },
+    "stats": {
+      "cents": "Centimes exacts, sans arrondi",
+      "members": "Membres par foyer",
+      "languages": "7 langues disponibles",
+      "rls": "Données isolées par foyer"
+    }
+  },
+  "pricing": {
+    "kicker": "Tarifs",
+    "title": "Simple et transparent",
+    "subtitle": "Sans frais cachés. Résilie quand tu veux.",
+    "plans": {
+      "personal": {
+        "name": "Personnel",
+        "price": "Gratuit",
+        "description": "Pour celles et ceux qui débutent dans l’organisation de leurs propres finances.",
+        "cta": "Commencer gratuitement",
+        "features": {
+          "f1": "Transactions et catégories illimitées",
+          "f2": "1 foyer",
+          "f3": "Budgets et objectifs",
+          "f4": "Rappels de factures par e-mail",
+          "f5": "Rapports avancés",
+          "f6": "Plusieurs membres dans le foyer"
+        }
+      },
+      "family": {
+        "name": "Famille",
+        "price": "Gratuit",
+        "description": "Pour celles et ceux qui partagent les comptes de la maison avec d’autres personnes.",
+        "cta": "Commencer gratuitement",
+        "badge": "Recommandé",
+        "features": {
+          "f1": "Transactions et catégories illimitées",
+          "f2": "Membres illimités dans le foyer",
+          "f3": "Budgets et objectifs",
+          "f4": "Rappels de factures par e-mail",
+          "f5": "Rapports avancés",
+          "f6": "Plusieurs foyers"
+        }
+      },
+      "soon": {
+        "name": "Bientôt",
+        "price": "À définir",
+        "description": "Fonctionnalités avancées pour celles et ceux qui ont besoin de plus de contrôle.",
+        "cta": "Rejoindre la liste d’attente",
+        "features": {
+          "f1": "Export des rapports",
+          "f2": "Intégration Open Banking",
+          "f3": "Automatisations personnalisées",
+          "f4": "Support prioritaire"
+        }
+      }
+    }
+  },
+  "faq": {
+    "kicker": "FAQ",
+    "title": "Questions fréquentes",
+    "items": {
+      "q1": {
+        "question": "Combien de personnes peuvent participer à un foyer ?",
+        "answer": "Autant que tu veux. Chaque personne a son propre identifiant et mot de passe, et le propriétaire du foyer contrôle qui entre et qui sort — pensé pour les couples, les familles et les colocations."
+      },
+      "q2": {
+        "question": "Mes données financières sont-elles en sécurité ?",
+        "answer": "Oui. Chaque foyer est isolé dans la base de données — un membre d’un foyer ne voit jamais les données d’un autre. Ton mot de passe est chiffré et nous effectuons des sauvegardes automatiques."
+      },
+      "q3": {
+        "question": "Dois-je connecter mon compte bancaire ?",
+        "answer": "Non. Larmony fonctionne avec des transactions manuelles et des récurrences automatiques — tu contrôles exactement ce qui entre. L’intégration Open Banking est sur la feuille de route."
+      },
+      "q4": {
+        "question": "Larmony arrondit-il les montants ?",
+        "answer": "Jamais. Chaque montant est stocké en centimes exacts — si le compte donne 33,33 € pour chacun, c’est exactement ce qui s’affiche. La précision est un principe du produit."
+      },
+      "q5": {
+        "question": "Fonctionne-t-il dans d'autres langues ?",
+        "answer": "Oui — Larmony est disponible en 7 langues (portugais, anglais, espagnol, chinois, allemand, français et japonais). Chaque personne choisit sa propre langue et voit le même foyer traduit, y compris les e-mails de rappel."
+      }
+    }
+  },
+  "finalCta": {
+    "titleLine1": "Mets de l’harmonie dans",
+    "titleLine2": "les comptes de ta maison",
+    "subtitle": "Crée ton foyer en moins d’une minute. Gratuit, sans carte bancaire.",
+    "cta": "Créer mon foyer gratuit →"
+  },
+  "footer": {
+    "description": "Le contrôle financier de ton foyer. Transactions, budgets et objectifs au même endroit.",
+    "sections": {
+      "product": {
+        "title": "Produit",
+        "links": {
+          "features": "Fonctionnalités",
+          "pricing": "Tarifs",
+          "changelog": "Journal des modifications",
+          "roadmap": "Feuille de route"
+        }
+      },
+      "company": {
+        "title": "Entreprise",
+        "links": {
+          "about": "À propos",
+          "blog": "Blog",
+          "careers": "Carrières",
+          "press": "Presse"
+        }
+      },
+      "legal": {
+        "title": "Mentions légales",
+        "links": {
+          "terms": "Conditions d’utilisation",
+          "privacy": "Confidentialité",
+          "cookies": "Cookies",
+          "security": "Sécurité"
+        }
+      }
+    },
+    "copyright": "© {{year}} Larmony. Tous droits réservés."
+  },
+  "legal": {
+    "back": "← Retour",
+    "meta": "Dernière mise à jour : {{updatedAt}} · version {{version}}",
+    "officialNotice": "Document officiel en portugais (Brésil). Les traductions sont fournies à titre informatif uniquement.",
+    "footer": {
+      "copyright": "© {{year}} Larmony. Tous droits réservés.",
+      "terms": "Conditions d’utilisation",
+      "privacy": "Confidentialité"
+    }
+  }
+}

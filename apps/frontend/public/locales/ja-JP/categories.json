@@ -1,0 +1,58 @@
+{
+  "page": {
+    "title": "カテゴリー",
+    "subtitle": "取引・予算・口座をカテゴリーで整理しましょう",
+    "newCategory": "新規カテゴリー",
+    "empty": "まだカテゴリーがありません。",
+    "createCategory": "カテゴリーを作成"
+  },
+  "types": {
+    "income": "収入",
+    "expense": "支出",
+    "both": "両方"
+  },
+  "form": {
+    "editTitle": "カテゴリーを編集",
+    "createTitle": "新規カテゴリー",
+    "description": "カテゴリーは取引・予算・口座を整理するために使用します。",
+    "nameLabel": "名前",
+    "namePlaceholder": "例: ペット",
+    "typeLabel": "種類",
+    "colorLabel": "色",
+    "iconLabel": "アイコン",
+    "iconPlaceholder": "選択",
+    "saving": "保存中…",
+    "saveChanges": "変更を保存",
+    "create": "カテゴリーを作成"
+  },
+  "list": {
+    "headerName": "名前",
+    "headerType": "種類",
+    "defaultSuffix": "(デフォルト)"
+  },
+  "deleteDialog": {
+    "title": "カテゴリーを削除",
+    "description": "<span>{{name}}</span>を削除してもよろしいですか?すでにこのカテゴリーが設定されている取引は未分類になります(削除はされません)。",
+    "deleting": "削除中…"
+  },
+  "icons": {
+    "banknote": "お金",
+    "briefcase": "仕事",
+    "trendingUp": "投資",
+    "utensilsCrossed": "食費",
+    "home": "住居",
+    "car": "交通",
+    "heart": "健康",
+    "bookOpen": "教育",
+    "gamepad2": "娯楽",
+    "shirt": "衣類",
+    "refreshCw": "サブスクリプション",
+    "circlePlus": "その他(収入)",
+    "circleMinus": "その他(支出)"
+  },
+  "validation": {
+    "nameRequired": "名前は必須です",
+    "nameMax": "最大60文字までです",
+    "colorInvalid": "色が無効です"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "page": {
+    "title": "Catégories",
+    "subtitle": "Organise tes transactions, budgets et comptes par catégorie",
+    "newCategory": "Nouvelle catégorie",
+    "empty": "Aucune catégorie pour l’instant.",
+    "createCategory": "Créer une catégorie"
+  },
+  "types": {
+    "income": "Revenu",
+    "expense": "Dépense",
+    "both": "Les deux"
+  },
+  "form": {
+    "editTitle": "Modifier la catégorie",
+    "createTitle": "Nouvelle catégorie",
+    "description": "Les catégories organisent tes transactions, budgets et comptes.",
+    "nameLabel": "Nom",
+    "namePlaceholder": "Ex : Animaux",
+    "typeLabel": "Type",
+    "colorLabel": "Couleur",
+    "iconLabel": "Icône",
+    "iconPlaceholder": "Choisir",
+    "saving": "Enregistrement…",
+    "saveChanges": "Enregistrer les modifications",
+    "create": "Créer la catégorie"
+  },
+  "list": {
+    "headerName": "Nom",
+    "headerType": "Type",
+    "defaultSuffix": "(par défaut)"
+  },
+  "deleteDialog": {
+    "title": "Supprimer la catégorie",
+    "description": "Es-tu sûr(e) de vouloir supprimer <span>{{name}}</span> ? Les transactions déjà enregistrées dans cette catégorie deviennent sans catégorie — aucune n’est supprimée.",
+    "deleting": "Suppression…"
+  },
+  "icons": {
+    "banknote": "Argent",
+    "briefcase": "Travail",
+    "trendingUp": "Investissements",
+    "utensilsCrossed": "Alimentation",
+    "home": "Logement",
+    "car": "Transport",
+    "heart": "Santé",
+    "bookOpen": "Éducation",
+    "gamepad2": "Loisirs",
+    "shirt": "Vêtements",
+    "refreshCw": "Abonnements",
+    "circlePlus": "Autres (entrée)",
+    "circleMinus": "Autres (sortie)"
+  },
+  "validation": {
+    "nameRequired": "Le nom est obligatoire",
+    "nameMax": "60 caractères maximum",
+    "colorInvalid": "Couleur invalide"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "nav": {
+    "title": "Mein Konto",
+    "profile": "Profil",
+    "access": "Zugang",
+    "appearance": "Design",
+    "locale": "Sprache",
+    "notifications": "Benachrichtigungen",
+    "danger": "Konto löschen"
+  },
+  "profile": {
+    "title": "Profil",
+    "description": "Verwalte deinen Namen, deine E-Mail-Adresse und dein Profilbild.",
+    "loading": "Wird geladen…",
+    "avatarAlt": "Profilbild",
+    "avatarUpload": "Foto hochladen",
+    "avatarUploading": "Wird hochgeladen…",
+    "avatarHint": "PNG, JPG, WEBP oder GIF · bis zu 5 MB.",
+    "avatarInvalidType": "Bitte wähle eine Bilddatei aus.",
+    "avatarTooLarge": "Das Bild darf höchstens 5 MB groß sein.",
+    "avatarUploadError": "Foto konnte nicht hochgeladen werden.",
+    "nameLabel": "Name",
+    "emailLabel": "E-Mail",
+    "emailHint": "Das Ändern der E-Mail-Adresse ändert auch deinen Login.",
+    "saveError": "Das Profil konnte nicht gespeichert werden.",
+    "saved": "Profil aktualisiert.",
+    "submit": "Änderungen speichern",
+    "submitting": "Wird gespeichert…"
+  },
+  "access": {
+    "title": "Zugang",
+    "description": "Verwalte dein Passwort und deine Zugangssicherheit.",
+    "changePassword": "Passwort ändern",
+    "sentMessage": "Wir haben einen Link an <strong>{{email}}</strong> gesendet. Öffne ihn, um ein neues Passwort festzulegen — die Sitzung wird über den E-Mail-Link sicher wiederhergestellt.",
+    "explanation": "Aus Sicherheitsgründen erfolgt die Passwortänderung über einen Link, der an deine E-Mail-Adresse gesendet wird. Beim Klicken auf den Link öffnet sich die Seite für ein neues Passwort mit automatisch wiederhergestellter Sitzung.",
+    "error": "Die E-Mail konnte nicht gesendet werden. Bitte versuche es erneut.",
+    "submit": "Änderungslink senden"
+  },
+  "appearance": {
+    "title": "Design",
+    "description": "Passe das Erscheinungsbild des Dashboards an.",
+    "cardTitle": "Design",
+    "cardDescription": "Wähle zwischen Hell, Dunkel oder Automatisch (folgt dem System).",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "System"
+  },
+  "locale": {
+    "description": "Wähle die Sprache der Oberfläche und der E-Mails.",
+    "loading": "Wird geladen…",
+    "error": "Die Sprache konnte nicht geändert werden."
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "description": "Wähle, wie du über jedes Ereignis benachrichtigt werden möchtest.",
+    "loading": "Wird geladen…",
+    "error": "Deine Einstellungen konnten nicht geladen werden.",
+    "columns": {
+      "event": "Ereignis",
+      "inapp": "In der App",
+      "email": "E-Mail",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "stubbedHint": "In dieser Version noch nicht verfügbar."
+    },
+    "events": {
+      "bill_reminder": "Erinnerung an Eintrag",
+      "goal_reached": "Ziel erreicht",
+      "budget_exceeded": "Budget überschritten",
+      "auto_launch": "Automatische Buchung",
+      "monthly_report": "Monatsbericht"
+    }
+  },
+  "danger": {
+    "title": "Gefahrenzone",
+    "description": "Unumkehrbare Aktionen in deinem Konto.",
+    "cardTitle": "Konto löschen",
+    "cardDescription": "Das endgültige Löschen des Kontos entfernt alle deine persönlichen Daten. Diese Aktion ist unumkehrbar.",
+    "deleteTitle": "Mein Konto löschen",
+    "deleteHint": "Du musst die Haushalte, deren Eigentümer du bist, übertragen oder löschen, bevor du dein Konto löschen kannst.",
+    "deleteButton": "Konto löschen",
+    "dialogTitle": "Mein Konto löschen",
+    "dialogDescription": "Diese Aktion ist <span>unumkehrbar</span>. Deine persönlichen Daten werden dauerhaft entfernt. Falls du noch Eigentümer eines Haushalts bist, wird die Löschung blockiert.",
+    "confirmLabel": "Gib deine E-Mail <span>{{email}}</span> zur Bestätigung ein:",
+    "deleteError": "Das Konto konnte nicht gelöscht werden.",
+    "confirmDelete": "Endgültig löschen",
+    "deleting": "Wird gelöscht…"
+  },
+  "validation": {
+    "nameRequired": "Name ist erforderlich",
+    "invalidEmail": "Ungültige E-Mail-Adresse"
+  }
+}

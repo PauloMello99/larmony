@@ -1,0 +1,58 @@
+{
+  "page": {
+    "title": "Kategorien",
+    "subtitle": "Organisiere deine Transaktionen, Budgets und Konten nach Kategorie",
+    "newCategory": "Neue Kategorie",
+    "empty": "Noch keine Kategorie.",
+    "createCategory": "Kategorie erstellen"
+  },
+  "types": {
+    "income": "Einnahme",
+    "expense": "Ausgabe",
+    "both": "Beides"
+  },
+  "form": {
+    "editTitle": "Kategorie bearbeiten",
+    "createTitle": "Neue Kategorie",
+    "description": "Kategorien organisieren deine Transaktionen, Budgets und Konten.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Z. B.: Haustiere",
+    "typeLabel": "Typ",
+    "colorLabel": "Farbe",
+    "iconLabel": "Symbol",
+    "iconPlaceholder": "Auswählen",
+    "saving": "Wird gespeichert…",
+    "saveChanges": "Änderungen speichern",
+    "create": "Kategorie erstellen"
+  },
+  "list": {
+    "headerName": "Name",
+    "headerType": "Typ",
+    "defaultSuffix": "(Standard)"
+  },
+  "deleteDialog": {
+    "title": "Kategorie löschen",
+    "description": "Möchtest du <span>{{name}}</span> wirklich löschen? Bereits erfasste Transaktionen dieser Kategorie bleiben ohne Kategorie — keine wird gelöscht.",
+    "deleting": "Wird gelöscht…"
+  },
+  "icons": {
+    "banknote": "Geld",
+    "briefcase": "Arbeit",
+    "trendingUp": "Investitionen",
+    "utensilsCrossed": "Ernährung",
+    "home": "Wohnen",
+    "car": "Transport",
+    "heart": "Gesundheit",
+    "bookOpen": "Bildung",
+    "gamepad2": "Freizeit",
+    "shirt": "Kleidung",
+    "refreshCw": "Abonnements",
+    "circlePlus": "Sonstiges (Einnahme)",
+    "circleMinus": "Sonstiges (Ausgabe)"
+  },
+  "validation": {
+    "nameRequired": "Name ist erforderlich",
+    "nameMax": "Maximal 60 Zeichen",
+    "colorInvalid": "Ungültige Farbe"
+  }
+}

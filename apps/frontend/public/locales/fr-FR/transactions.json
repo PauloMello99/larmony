@@ -1,0 +1,79 @@
+{
+  "page": {
+    "title": "Transactions",
+    "description": "Revenus et dépenses du foyer",
+    "newTransaction": "Nouvelle transaction",
+    "empty": "Aucune transaction sur cette période.",
+    "emptyCta": "Enregistrer une transaction"
+  },
+  "form": {
+    "titleCreate": "Nouvelle transaction",
+    "titleEdit": "Modifier la transaction",
+    "description": "Enregistre un revenu ou une dépense du foyer.",
+    "typeLabel": "Type",
+    "typeIncome": "Revenu",
+    "typeExpense": "Dépense",
+    "amountLabel": "Montant",
+    "amountTotalLabel": "Montant total",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Ex : Supermarché",
+    "dateLabel": "Date",
+    "categoryLabel": "Catégorie",
+    "categoryPlaceholder": "Sans catégorie",
+    "personLabel": "Personne",
+    "personPlaceholder": "Toi",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Remarques facultatives",
+    "installmentsLabel": "Payer en plusieurs fois",
+    "installmentsHint": "Répartit le montant total en plusieurs mensualités — une transaction par mensualité, toutes liées à la même série.",
+    "installmentsPreview": "{{count}}× de ~{{amount}}",
+    "splitLabel": "Répartir entre les membres",
+    "splitHint": "Répartit le montant entre les membres du foyer (à parts égales ou avec un montant spécifique pour chacun), en alimentant les rapports par personne.",
+    "submitting": "Enregistrement…",
+    "submitEdit": "Enregistrer les modifications",
+    "submitInstallments": "Créer les mensualités",
+    "submitCreate": "Créer la transaction"
+  },
+  "list": {
+    "headerDescription": "Description",
+    "headerCategory": "Catégorie",
+    "headerPerson": "Personne",
+    "headerDate": "Date",
+    "headerAmount": "Montant",
+    "installmentBadge": "{{number}}/{{total}}",
+    "badgeSplit": "Répartition",
+    "badgeRecurring": "Récurrente",
+    "noCategory": "Sans catégorie"
+  },
+  "filters": {
+    "byMonth": "Filtrer par mois",
+    "byYear": "Filtrer par année",
+    "byType": "Filtrer par type",
+    "byCategory": "Filtrer par catégorie",
+    "typeAll": "Type : tous",
+    "typeIncome": "Revenu",
+    "typeExpense": "Dépense",
+    "categoryAll": "Catégorie : toutes"
+  },
+  "split": {
+    "equal": "Répartir également",
+    "specific": "Montants spécifiques",
+    "sum": "Somme : {{sum}} / {{total}}",
+    "sumMismatch": " — doit correspondre au total",
+    "equalPreview": "{{count}}× de ~{{amount}}"
+  },
+  "deleteDialog": {
+    "title": "Supprimer la transaction",
+    "installmentDescription": "<desc>{{description}}</desc> est la mensualité {{number}}/{{total}}. Supprimer seulement cette mensualité ou toute la série ?",
+    "normalDescription": "Es-tu sûr(e) de vouloir supprimer <desc>{{description}}</desc> ? Cette action est <emphasis>irréversible</emphasis>.",
+    "deleting": "Suppression…",
+    "deleteSeries": "Supprimer toute la série",
+    "deleteInstallment": "Supprimer cette mensualité"
+  },
+  "validation": {
+    "amountRequired": "Indique un montant",
+    "descriptionRequired": "La description est obligatoire",
+    "descriptionMax": "200 caractères maximum",
+    "dateRequired": "La date est obligatoire"
+  }
+}

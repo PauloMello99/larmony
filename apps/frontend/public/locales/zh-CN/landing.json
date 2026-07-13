@@ -1,0 +1,226 @@
+{
+  "nav": {
+    "links": {
+      "features": "功能",
+      "product": "产品",
+      "pricing": "价格",
+      "faq": "常见问题"
+    },
+    "login": "登录",
+    "cta": "免费开始",
+    "openMenu": "打开菜单",
+    "closeMenu": "关闭菜单"
+  },
+  "hero": {
+    "badge": "✦ 新功能 — 自动账单提醒",
+    "titleLine1": "家庭财务，",
+    "titleHighlight": "和谐有序。",
+    "subtitle": "交易、预算、目标和待付账单——与共同生活的家人共享。精确到分，告别表格。",
+    "ctaPrimary": "免费开始 →",
+    "ctaSecondary": "观看演示",
+    "proof": {
+      "centsLine1": "精确到分，",
+      "centsLine2": "绝不四舍五入",
+      "membersLine1": "位成员",
+      "membersLine2": "每个家庭",
+      "languagesLine1": "种语言",
+      "languagesLine2": "pt-BR 与英语"
+    }
+  },
+  "features": {
+    "kicker": "功能",
+    "title": "您家庭所需的一切",
+    "subtitle": "为管理家庭财务的日常需求而设计——无论是您一个人，还是与家人一起。",
+    "items": {
+      "transactions": {
+        "title": "井然有序的交易记录",
+        "description": "对收支进行分类，与同住的家人分摊费用，实时掌握一切动态。"
+      },
+      "budgets": {
+        "title": "按分类设置预算",
+        "description": "为每个分类设置每月支出上限，实时查看已花费的金额，超支时收到提醒。"
+      },
+      "goals": {
+        "title": "储蓄目标",
+        "description": "为旅行、装修或应急储备创建目标，与家人一起追踪进度。"
+      },
+      "dashboard": {
+        "title": "呈现真实数据的控制面板",
+        "description": "本月结余、与上月的对比、即将到期的账单和预算情况，尽在一个面板中。"
+      },
+      "reminders": {
+        "title": "账单提醒",
+        "description": "再也不会忘记付款——到期前通过站内消息和邮件提醒您。"
+      },
+      "household": {
+        "title": "为家庭而生",
+        "description": "邀请与您同住的家人，各自拥有相应角色，一起管理家庭财务。"
+      }
+    }
+  },
+  "tour": {
+    "kicker": "产品",
+    "title": "全家人都看得懂的控制面板",
+    "subtitle": "没有财务术语。昨天才加入家庭的人，和创建者看到的面板一样清晰易懂。",
+    "sidebar": {
+      "overview": "总览",
+      "transactions": "交易",
+      "categories": "分类",
+      "budgets": "预算",
+      "goals": "目标",
+      "bills": "账单"
+    },
+    "greeting": "早上好，Paulo 👋",
+    "kpis": {
+      "income": "本月收入",
+      "expenses": "本月支出",
+      "balance": "本月结余"
+    },
+    "rows": {
+      "r1": { "label": "工资 — 7月", "who": "Ana", "amount": "+R$ 6,200.00" },
+      "r2": { "label": "Extra 超市", "who": "Paulo", "amount": "-R$ 342.10" },
+      "r3": { "label": "房租", "who": "Ana", "amount": "-R$ 1,850.00" }
+    }
+  },
+  "about": {
+    "kicker": "关于 Larmony",
+    "titlePrefix": "为",
+    "titleHighlight": "分摊家庭账单的人",
+    "paragraph": "整理家庭财务不应该依赖散乱的表格和零散的记录。Larmony 帮您打理好一切，让您专注于真正重要的事。",
+    "bullets": {
+      "b1": "专为家庭日常财务管理设计的界面",
+      "b2": "邀请与您同住的家人一起分摊财务",
+      "b3": "按家庭隔离的安全数据，自动备份",
+      "b4": "无长期合约——随时可以取消"
+    },
+    "stats": {
+      "cents": "精确到分，绝不四舍五入",
+      "members": "每个家庭的成员数",
+      "languages": "支持 7 种语言",
+      "rls": "按家庭隔离的数据"
+    }
+  },
+  "pricing": {
+    "kicker": "价格",
+    "title": "简单透明",
+    "subtitle": "没有隐藏费用，随时可以取消。",
+    "plans": {
+      "personal": {
+        "name": "个人版",
+        "price": "免费",
+        "description": "适合刚开始整理个人财务的您。",
+        "cta": "免费开始",
+        "features": {
+          "f1": "无限交易和分类",
+          "f2": "1 个家庭",
+          "f3": "预算和目标",
+          "f4": "邮件账单提醒",
+          "f5": "高级报告",
+          "f6": "家庭内多位成员"
+        }
+      },
+      "family": {
+        "name": "家庭版",
+        "price": "免费",
+        "description": "适合与他人共同分摊家庭账单的您。",
+        "cta": "免费开始",
+        "badge": "推荐",
+        "features": {
+          "f1": "无限交易和分类",
+          "f2": "家庭内无限成员",
+          "f3": "预算和目标",
+          "f4": "邮件账单提醒",
+          "f5": "高级报告",
+          "f6": "多个家庭"
+        }
+      },
+      "soon": {
+        "name": "即将推出",
+        "price": "待定",
+        "description": "为需要更多控制能力的您提供的高级功能。",
+        "cta": "加入等候名单",
+        "features": {
+          "f1": "报告导出",
+          "f2": "Open Finance 集成",
+          "f3": "自定义自动化",
+          "f4": "优先支持"
+        }
+      }
+    }
+  },
+  "faq": {
+    "kicker": "常见问题",
+    "title": "常见问题解答",
+    "items": {
+      "q1": {
+        "question": "一个家庭可以有多少人参与？",
+        "answer": "您想要多少人都可以。每个人都有自己的登录账号和密码，家庭所有者可以控制谁加入、谁离开——非常适合情侣、家庭和合租室友。"
+      },
+      "q2": {
+        "question": "我的财务数据安全吗？",
+        "answer": "安全。每个家庭在数据库中都是隔离的——一个家庭的成员永远无法看到另一个家庭的数据。您的密码经过加密处理，我们还会自动备份数据。"
+      },
+      "q3": {
+        "question": "我需要连接我的银行账户吗？",
+        "answer": "不需要。Larmony 通过手动记账和自动周期性记账运作——您可以精确控制记录的内容。Open Finance 集成已在路线图规划中。"
+      },
+      "q4": {
+        "question": "Larmony 会对金额四舍五入吗？",
+        "answer": "绝不会。所有金额都精确到分存储——如果分摊结果是每人 33.33 雷亚尔，显示的就是这个精确数字。精确性是产品的核心原则。"
+      },
+      "q5": {
+        "question": "支持其他语言吗？",
+        "answer": "支持——Larmony 支持 7 种语言（葡萄牙语、英语、西班牙语、中文、德语、法语和日语）。每个人都可以选择自己的语言，看到的是同一个家庭的翻译版本，包括提醒邮件。"
+      }
+    }
+  },
+  "finalCta": {
+    "titleLine1": "为您家的账单",
+    "titleLine2": "带来和谐",
+    "subtitle": "不到一分钟即可创建您的家庭。免费，无需信用卡。",
+    "cta": "免费创建我的家庭 →"
+  },
+  "footer": {
+    "description": "您家庭的财务管理。交易、预算和目标，一站集齐。",
+    "sections": {
+      "product": {
+        "title": "产品",
+        "links": {
+          "features": "功能",
+          "pricing": "价格",
+          "changelog": "更新日志",
+          "roadmap": "路线图"
+        }
+      },
+      "company": {
+        "title": "公司",
+        "links": {
+          "about": "关于我们",
+          "blog": "博客",
+          "careers": "招聘",
+          "press": "媒体报道"
+        }
+      },
+      "legal": {
+        "title": "法律信息",
+        "links": {
+          "terms": "服务条款",
+          "privacy": "隐私政策",
+          "cookies": "Cookie 政策",
+          "security": "安全"
+        }
+      }
+    },
+    "copyright": "© {{year}} Larmony。保留所有权利。"
+  },
+  "legal": {
+    "back": "← 返回",
+    "meta": "最近更新：{{updatedAt}} · 版本 {{version}}",
+    "officialNotice": "官方文档以巴西葡萄牙语为准，其他语言译文仅供参考。",
+    "footer": {
+      "copyright": "© {{year}} Larmony。保留所有权利。",
+      "terms": "服务条款",
+      "privacy": "隐私政策"
+    }
+  }
+}

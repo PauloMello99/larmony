@@ -1,0 +1,113 @@
+{
+  "app": {
+    "name": "Larmony",
+    "tagline": "Le contrôle financier de ton foyer"
+  },
+  "actions": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "confirm": "Confirmer",
+    "close": "Fermer",
+    "clear": "Effacer",
+    "all": "Tout",
+    "back": "Retour"
+  },
+  "export": {
+    "title": "Exporter en CSV",
+    "button": "Exporter",
+    "fields": "Champs du CSV",
+    "download": "Télécharger le CSV"
+  },
+  "filters": {
+    "label": "Filtres",
+    "advanced": "Filtres avancés",
+    "min": "Min",
+    "max": "Max"
+  },
+  "datePicker": {
+    "placeholder": "Sélectionne une date"
+  },
+  "phoneInput": {
+    "placeholder": "Numéro de téléphone",
+    "country": "Pays"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAll": "Tout marquer comme lu",
+    "empty": "Aucune notification."
+  },
+  "locale": {
+    "label": "Langue",
+    "pt-BR": "Portugais (Brésil)",
+    "en": "Anglais",
+    "es": "Espagnol"
+  },
+  "pagination": {
+    "range": "{{from}}–{{to}} sur {{total}}",
+    "perPage": "Par page",
+    "pageOf": "{{page}} sur {{totalPages}}",
+    "previous": "Page précédente",
+    "next": "Page suivante"
+  },
+  "api": {
+    "USER_NOT_FOUND": "Utilisateur introuvable.",
+    "INVALID_CREDENTIALS": "E-mail ou mot de passe invalide.",
+    "AUTH_TOKEN_EXPIRED": "Ta session a expiré — reconnecte-toi.",
+    "ORGANIZATION_NOT_FOUND": "Foyer introuvable.",
+    "SLUG_ALREADY_TAKEN": "Cet identifiant est déjà utilisé.",
+    "ORG_FORBIDDEN": "Tu n’as pas la permission d’effectuer cette action.",
+    "MEMBER_NOT_FOUND": "Membre introuvable.",
+    "INVITATION_NOT_FOUND": "Invitation introuvable.",
+    "INVITATION_NOT_PENDING": "Cette invitation n’est plus en attente.",
+    "INVITATION_EXPIRED": "Cette invitation a expiré.",
+    "INVITATION_EMAIL_MISMATCH": "Cette invitation a été envoyée à une autre adresse e-mail.",
+    "INVITATION_EMAIL_FAILED": "Impossible d’envoyer l’e-mail d’invitation.",
+    "MATERIAL_NOT_FOUND": "Matériel introuvable.",
+    "MATERIAL_IN_USE_BY_SERVICES": "Ce matériel est utilisé par des services et ne peut pas être supprimé.",
+    "INSUFFICIENT_STOCK": "Stock insuffisant.",
+    "CUSTOMER_NOT_FOUND": "Client introuvable.",
+    "CALENDAR_EVENT_NOT_FOUND": "Événement introuvable.",
+    "CALENDAR_EVENT_OVERLAP": "Il existe déjà un événement à cet horaire.",
+    "CALENDAR_EVENT_FORBIDDEN": "Tu n’as pas la permission de modifier cet événement.",
+    "CALENDAR_EVENT_INVALID_RANGE": "La plage de dates de l’événement est invalide.",
+    "TRANSACTION_NOT_FOUND": "Transaction introuvable.",
+    "TRANSACTION_ALREADY_REVERSED": "Cette transaction a déjà été annulée.",
+    "TRANSACTION_NOT_REVERSIBLE": "Cette transaction ne peut pas être annulée.",
+    "CASHIER_FORBIDDEN": "Tu n’as pas la permission d’effectuer cette opération de caisse.",
+    "AVATAR_UPLOAD_FAILED": "Échec de l’envoi de l’avatar — réessaie.",
+    "LAST_ACTIVE_OWNER": "Le foyer a besoin d’au moins un propriétaire actif.",
+    "SERVICE_NOT_FOUND": "Service introuvable.",
+    "CUSTOMER_DISABLED": "Ce client est désactivé.",
+    "EMPLOYEE_INACTIVE": "Cet employé est inactif.",
+    "SERVICE_ALREADY_CANCELED": "Ce service a déjà été annulé.",
+    "SERVICE_NOT_PAYABLE": "Ce service ne peut pas être payé.",
+    "SERVICE_FORBIDDEN": "Tu n’as pas la permission de modifier ce service.",
+    "PLATFORM_TARGET_NOT_FOUND": "Enregistrement introuvable.",
+    "CANNOT_CHANGE_OWN_PLATFORM_ROLE": "Tu ne peux pas modifier ton propre rôle de plateforme.",
+    "CATEGORY_NOT_FOUND": "Catégorie introuvable.",
+    "BUDGET_NOT_FOUND": "Budget introuvable.",
+    "BUDGET_ALREADY_EXISTS": "Il existe déjà un budget pour cette catégorie ce mois-ci.",
+    "BUDGET_PERIOD_NOT_EDITABLE": "Ce budget appartient à une période close et ne peut pas être modifié.",
+    "GOAL_NOT_FOUND": "Objectif introuvable.",
+    "GOAL_CONTRIBUTION_NOT_FOUND": "Versement de l’objectif introuvable.",
+    "TRANSACTION_SPLIT_INVALID": "La répartition de la transaction est invalide — vérifie les montants.",
+    "INSTALLMENT_GROUP_NOT_FOUND": "Groupe de mensualités introuvable.",
+    "SCHEDULED_ENTRY_NOT_FOUND": "Transaction programmée introuvable.",
+    "SCHEDULED_ENTRY_START_DATE_IN_PAST": "La date de début ne peut pas être dans le passé en mode automatique.",
+    "SCHEDULED_ENTRY_INVALID_DATE_RANGE": "La date de fin ne peut pas être antérieure à la date de début.",
+    "SCHEDULED_ENTRY_NOT_MANUAL": "Cette transaction programmée n’est pas en mode manuel.",
+    "NO_STRIPE_CUSTOMER": "Le foyer n’a pas encore d’abonnement — abonne-toi avant de gérer.",
+    "STRIPE_NOT_CONFIGURED": "Paiements indisponibles pour le moment — réessaie plus tard.",
+    "PLAN_NOT_AVAILABLE": "Le plan n’est pas encore disponible — réessaie dans un instant.",
+    "WEBHOOK_SIGNATURE_INVALID": "Impossible de valider la requête de paiement.",
+    "PREMIUM_REQUIRED": "Cette fonctionnalité nécessite un plan premium.",
+    "INVALID_DISCOUNT": "Remise invalide — vérifie les paramètres.",
+    "SUBSCRIPTION_NOT_STRIPE_LINKED": "Le foyer n’a pas d’abonnement Stripe actif.",
+    "TRIAL_NOT_ALLOWED": "L’essai n’est pas disponible pour le plan actuel du foyer.",
+    "NETWORK": "Échec réseau — vérifie ta connexion et réessaie.",
+    "UNEXPECTED": "Une erreur inattendue s’est produite. Réessaie."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "roles": {
+    "owner": "所有者",
+    "member": "成员"
+  },
+  "invalid": {
+    "title": "邀请无效",
+    "description": "此邀请链接无效。"
+  },
+  "unavailable": {
+    "title": "邀请不可用",
+    "accepted": "该邀请已被接受。",
+    "cancelled": "该邀请已被取消。",
+    "expired": "该邀请已过期。",
+    "goToDashboard": "前往控制台"
+  },
+  "accept": {
+    "title": "加入 {{householdName}} 的邀请",
+    "invitedAs": "您被邀请加入，角色为 <span>{{role}}</span>。",
+    "emailMismatch": "此邀请是发给 <strong>{{inviteEmail}}</strong> 的，但您当前登录的是 <strong>{{userEmail}}</strong>。请使用正确的账户登录以接受邀请。",
+    "acceptingAs": "正以 <span>{{email}}</span> 的身份接受邀请。",
+    "switchAccount": "切换账户",
+    "submit": "接受邀请",
+    "decline": "拒绝",
+    "acceptError": "接受邀请失败。",
+    "declineError": "拒绝邀请失败。"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "page": {
+    "title": "报告",
+    "description": "您财务状况的月度和年度视图",
+    "monthly": "月度",
+    "annual": "年度"
+  },
+  "chart": {
+    "income": "收入",
+    "expense": "支出"
+  },
+  "monthly": {
+    "prevMonth": "上个月",
+    "nextMonth": "下个月",
+    "seriesTitle": "收入与支出对比 · 近 6 个月",
+    "seriesEmpty": "近 6 个月没有交易记录。",
+    "byCategory": "按分类的支出 · {{ref}}",
+    "byPerson": "按人的支出 · {{ref}}",
+    "noExpenses": "本月没有支出记录。",
+    "assignPersonHint": "要查看谁花了什么，请在创建或编辑每笔交易时指定经手人。"
+  },
+  "annual": {
+    "prevYear": "上一年",
+    "nextYear": "下一年",
+    "totalIncome": "总收入",
+    "totalExpense": "总支出",
+    "balance": "结余",
+    "seriesTitle": "收入与支出对比 · {{year}}",
+    "seriesEmpty": "{{year}} 没有交易记录。"
+  }
+}

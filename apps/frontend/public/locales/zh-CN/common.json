@@ -1,0 +1,113 @@
+{
+  "app": {
+    "name": "Larmony",
+    "tagline": "您家庭的财务管理"
+  },
+  "actions": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "create": "创建",
+    "confirm": "确认",
+    "close": "关闭",
+    "clear": "清除",
+    "all": "全部",
+    "back": "返回"
+  },
+  "export": {
+    "title": "导出 CSV",
+    "button": "导出",
+    "fields": "CSV 字段",
+    "download": "下载 CSV"
+  },
+  "filters": {
+    "label": "筛选",
+    "advanced": "高级筛选",
+    "min": "最小",
+    "max": "最大"
+  },
+  "datePicker": {
+    "placeholder": "选择日期"
+  },
+  "phoneInput": {
+    "placeholder": "电话号码",
+    "country": "国家/地区"
+  },
+  "notifications": {
+    "title": "通知",
+    "markAll": "全部标记为已读",
+    "empty": "暂无通知。"
+  },
+  "locale": {
+    "label": "语言",
+    "pt-BR": "Português (Brasil)",
+    "en": "English",
+    "es": "Español"
+  },
+  "pagination": {
+    "range": "{{from}}–{{to}} / 共 {{total}} 条",
+    "perPage": "每页数量",
+    "pageOf": "第 {{page}} 页，共 {{totalPages}} 页",
+    "previous": "上一页",
+    "next": "下一页"
+  },
+  "api": {
+    "USER_NOT_FOUND": "未找到用户。",
+    "INVALID_CREDENTIALS": "邮箱或密码不正确。",
+    "AUTH_TOKEN_EXPIRED": "您的登录已过期——请重新登录。",
+    "ORGANIZATION_NOT_FOUND": "未找到该家庭。",
+    "SLUG_ALREADY_TAKEN": "该标识符已被使用。",
+    "ORG_FORBIDDEN": "您没有权限执行此操作。",
+    "MEMBER_NOT_FOUND": "未找到该成员。",
+    "INVITATION_NOT_FOUND": "未找到该邀请。",
+    "INVITATION_NOT_PENDING": "该邀请已不再处于待处理状态。",
+    "INVITATION_EXPIRED": "该邀请已过期。",
+    "INVITATION_EMAIL_MISMATCH": "该邀请发送给了另一个邮箱。",
+    "INVITATION_EMAIL_FAILED": "邀请邮件发送失败。",
+    "MATERIAL_NOT_FOUND": "未找到该物料。",
+    "MATERIAL_IN_USE_BY_SERVICES": "该物料正被服务使用，无法删除。",
+    "INSUFFICIENT_STOCK": "库存不足。",
+    "CUSTOMER_NOT_FOUND": "未找到该客户。",
+    "CALENDAR_EVENT_NOT_FOUND": "未找到该事件。",
+    "CALENDAR_EVENT_OVERLAP": "该时段已存在其他事件。",
+    "CALENDAR_EVENT_FORBIDDEN": "您没有权限修改该事件。",
+    "CALENDAR_EVENT_INVALID_RANGE": "事件的日期范围无效。",
+    "TRANSACTION_NOT_FOUND": "未找到该交易。",
+    "TRANSACTION_ALREADY_REVERSED": "该交易已被冲正。",
+    "TRANSACTION_NOT_REVERSIBLE": "该交易无法冲正。",
+    "CASHIER_FORBIDDEN": "您没有权限执行此收银操作。",
+    "AVATAR_UPLOAD_FAILED": "头像上传失败——请重试。",
+    "LAST_ACTIVE_OWNER": "家庭至少需要保留一位在职所有者。",
+    "SERVICE_NOT_FOUND": "未找到该服务。",
+    "CUSTOMER_DISABLED": "该客户已被停用。",
+    "EMPLOYEE_INACTIVE": "该员工已处于非活动状态。",
+    "SERVICE_ALREADY_CANCELED": "该服务已被取消。",
+    "SERVICE_NOT_PAYABLE": "该服务无法支付。",
+    "SERVICE_FORBIDDEN": "您没有权限修改该服务。",
+    "PLATFORM_TARGET_NOT_FOUND": "未找到该记录。",
+    "CANNOT_CHANGE_OWN_PLATFORM_ROLE": "您不能修改自己的平台角色。",
+    "CATEGORY_NOT_FOUND": "未找到该分类。",
+    "BUDGET_NOT_FOUND": "未找到该预算。",
+    "BUDGET_ALREADY_EXISTS": "本月该分类已存在预算。",
+    "BUDGET_PERIOD_NOT_EDITABLE": "该预算所属周期已结束，无法编辑。",
+    "GOAL_NOT_FOUND": "未找到该目标。",
+    "GOAL_CONTRIBUTION_NOT_FOUND": "未找到该目标存款记录。",
+    "TRANSACTION_SPLIT_INVALID": "交易分摊无效——请检查金额。",
+    "INSTALLMENT_GROUP_NOT_FOUND": "未找到该分期组。",
+    "SCHEDULED_ENTRY_NOT_FOUND": "未找到该计划收支。",
+    "SCHEDULED_ENTRY_START_DATE_IN_PAST": "自动模式下开始日期不能是过去的日期。",
+    "SCHEDULED_ENTRY_INVALID_DATE_RANGE": "结束日期不能早于开始日期。",
+    "SCHEDULED_ENTRY_NOT_MANUAL": "该计划收支不处于手动模式。",
+    "NO_STRIPE_CUSTOMER": "该家庭尚未订阅——请先订阅再进行管理。",
+    "STRIPE_NOT_CONFIGURED": "支付功能暂时不可用——请稍后重试。",
+    "PLAN_NOT_AVAILABLE": "该套餐暂不可用——请稍后重试。",
+    "WEBHOOK_SIGNATURE_INVALID": "无法验证支付请求。",
+    "PREMIUM_REQUIRED": "此功能需要高级版套餐。",
+    "INVALID_DISCOUNT": "折扣无效——请检查参数。",
+    "SUBSCRIPTION_NOT_STRIPE_LINKED": "该家庭没有有效的 Stripe 订阅。",
+    "TRIAL_NOT_ALLOWED": "该家庭当前套餐不支持试用。",
+    "NETWORK": "网络故障——请检查您的网络连接并重试。",
+    "UNEXPECTED": "发生了意外错误。请重试。"
+  }
+}

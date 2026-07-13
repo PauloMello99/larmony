@@ -96,7 +96,7 @@
     "stats": {
       "cents": "Centavos exatos, sem arredondamento",
       "members": "Membros por lar",
-      "languages": "Idiomas: português e inglês",
+      "languages": "7 idiomas suportados",
       "rls": "Dados isolados por lar"
     }
   },
@@ -169,8 +169,8 @@
         "answer": "Nunca. Todo valor é armazenado em centavos exatos — se a conta deu R$ 33,33 para cada um, é isso que aparece. Precisão é um princípio do produto."
       },
       "q5": {
-        "question": "Funciona em inglês?",
-        "answer": "Sim — cada pessoa escolhe o próprio idioma (português ou inglês) e vê o mesmo lar traduzido, incluindo e-mails de lembrete."
+        "question": "Funciona em outros idiomas?",
+        "answer": "Sim — o Larmony está disponível em 7 idiomas (português, inglês, espanhol, chinês, alemão, francês e japonês). Cada pessoa escolhe o próprio idioma e vê o mesmo lar traduzido, incluindo e-mails de lembrete."
       }
     }
   },

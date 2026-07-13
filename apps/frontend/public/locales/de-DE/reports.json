@@ -1,0 +1,31 @@
+{
+  "page": {
+    "title": "Berichte",
+    "description": "Monatliche und jährliche Übersicht deiner Finanzen",
+    "monthly": "Monatlich",
+    "annual": "Jährlich"
+  },
+  "chart": {
+    "income": "Einnahme",
+    "expense": "Ausgabe"
+  },
+  "monthly": {
+    "prevMonth": "Vorheriger Monat",
+    "nextMonth": "Nächster Monat",
+    "seriesTitle": "Einnahme × Ausgabe · letzte 6 Monate",
+    "seriesEmpty": "Keine Bewegung in den letzten 6 Monaten.",
+    "byCategory": "Ausgaben nach Kategorie · {{ref}}",
+    "byPerson": "Ausgaben nach Person · {{ref}}",
+    "noExpenses": "Keine Ausgabe in diesem Monat.",
+    "assignPersonHint": "Um zu sehen, wer was ausgegeben hat, weise beim Erstellen oder Bearbeiten jeder Transaktion eine Person zu."
+  },
+  "annual": {
+    "prevYear": "Vorheriges Jahr",
+    "nextYear": "Nächstes Jahr",
+    "totalIncome": "Gesamteinnahmen",
+    "totalExpense": "Gesamtausgaben",
+    "balance": "Saldo",
+    "seriesTitle": "Einnahme × Ausgabe · {{year}}",
+    "seriesEmpty": "Keine Bewegung in {{year}}."
+  }
+}

@@ -52,18 +52,18 @@
     "signOut": "Cerrar sesión"
   },
   "switcher": {
-    "label": "Lares",
-    "viewAll": "Ver todos los lares"
+    "label": "Hogares",
+    "viewAll": "Ver todos los hogares"
   },
   "roles": {
     "owner": "Propietario",
     "member": "Miembro"
   },
   "chrome": {
-    "openMenu": "Abrir menu",
-    "closeMenu": "Cerrar menu",
-    "expandMenu": "Expandir menu",
-    "collapseMenu": "Recolher menu"
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "expandMenu": "Expandir menú",
+    "collapseMenu": "Colapsar menú"
   },
   "householdsList": {
     "title": "Hogares",
@@ -71,7 +71,7 @@
     "new": "Nuevo hogar",
     "create": "Crear hogar",
     "empty": "No hay hogares aún.",
-    "welcomeTitle": "Bienvenido(a) a Larmony!",
+    "welcomeTitle": "¡Bienvenido(a) a Larmony!",
     "welcomeHint": "Vamos crear el primer hogar para organizar las finanzas de su casa."
   },
   "adminBanner": {
