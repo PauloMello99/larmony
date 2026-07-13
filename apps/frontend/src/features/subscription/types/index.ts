@@ -6,9 +6,19 @@ export type SubscriptionStatus = "active" | "trialing" | "past_due" | "canceled"
 export type ResolvedPlan = "free" | "premium" | "custom"
 export type EntitlementSource = "stripe" | "comp" | "trial" | "free"
 
-/** Capabilities hoje expostas pelo backend (D-1 em aberto — só uma por ora). */
+/** Capabilities expostas pelo backend (D-1 resolvido — ver adendo ADR-0026). */
 export interface Capabilities {
   advanced_reports: boolean
+  report_export: boolean
+  custom_categories: boolean
+}
+
+/** Limites de contagem do plano (régua do Free, D-1). `Infinity` = sem limite. */
+export interface PlanLimits {
+  maxHouseholdsOwned: number
+  maxMembersPerHousehold: number
+  maxActiveGoals: number
+  maxActiveBudgets: number
 }
 
 export interface ResolvedEntitlements {
@@ -16,6 +26,7 @@ export interface ResolvedEntitlements {
   status: SubscriptionStatus
   source: EntitlementSource
   capabilities: Capabilities
+  limits: PlanLimits
 }
 
 export interface SubscriptionWithEntitlements {
