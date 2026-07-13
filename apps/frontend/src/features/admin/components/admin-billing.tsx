@@ -8,6 +8,7 @@ import { Badge } from "@/shared/components/ui/badge"
 import { Input } from "@/shared/components/ui/input"
 import { DatePicker } from "@/shared/components/ui/date-picker"
 import { useSubscription } from "@/features/subscription"
+import { translateApiError } from "@/shared/lib/api-error"
 import { useAdminHouseholds, useAdminBilling } from "../hooks/use-admin"
 import { useDebouncedValue } from "../lib/use-debounced-value"
 import { ConfirmDialog } from "./confirm-dialog"
@@ -176,6 +177,7 @@ function TrialPanel({
   trialEndsAt: string | null
 }) {
   const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const { grantTrial, revokeTrial } = useAdminBilling()
   const [months, setMonths] = React.useState("")
   const [confirmRevoke, setConfirmRevoke] = React.useState(false)
@@ -192,7 +194,11 @@ function TrialPanel({
       await grantTrial.mutateAsync({ householdId, months: n })
       setMonths("")
     } catch (e) {
-      setErr(e instanceof Error ? e.message : t("billing.grantTrialError"))
+      setErr(
+        e instanceof Error
+          ? translateApiError(e, tCommon)
+          : t("billing.grantTrialError"),
+      )
     }
   }
 
@@ -253,7 +259,11 @@ function TrialPanel({
         confirmLabel={t("billing.revoke")}
         destructive
         loading={revokeTrial.isPending}
-        error={revokeTrial.error instanceof Error ? revokeTrial.error.message : null}
+        error={
+          revokeTrial.error instanceof Error
+            ? translateApiError(revokeTrial.error, tCommon)
+            : null
+        }
         onConfirm={() =>
           revokeTrial.mutate(
             { householdId },
@@ -275,6 +285,7 @@ function CompPanel({
   reason: string | null
 }) {
   const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const { grantComp, revokeComp } = useAdminBilling()
   const [newReason, setNewReason] = React.useState("")
   const [expiresAt, setExpiresAt] = React.useState<string>("")
@@ -296,7 +307,11 @@ function CompPanel({
       setNewReason("")
       setExpiresAt("")
     } catch (e) {
-      setErr(e instanceof Error ? e.message : t("billing.grantCompError"))
+      setErr(
+        e instanceof Error
+          ? translateApiError(e, tCommon)
+          : t("billing.grantCompError"),
+      )
     }
   }
 
@@ -366,7 +381,11 @@ function CompPanel({
         confirmLabel={t("billing.revoke")}
         destructive
         loading={revokeComp.isPending}
-        error={revokeComp.error instanceof Error ? revokeComp.error.message : null}
+        error={
+          revokeComp.error instanceof Error
+            ? translateApiError(revokeComp.error, tCommon)
+            : null
+        }
         onConfirm={() =>
           revokeComp.mutate(
             { householdId },
@@ -391,6 +410,7 @@ function DiscountPanel({
   hasDiscount: boolean
 }) {
   const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const { applyDiscount, removeDiscount } = useAdminBilling()
   const [mode, setMode] = React.useState<DiscountMode>("percent")
   const [percent, setPercent] = React.useState("")
@@ -414,7 +434,11 @@ function DiscountPanel({
       setAmountReais("")
       setMonths("")
     } catch (e) {
-      setErr(e instanceof Error ? e.message : t("billing.applyDiscountError"))
+      setErr(
+        e instanceof Error
+          ? translateApiError(e, tCommon)
+          : t("billing.applyDiscountError"),
+      )
     }
   }
 

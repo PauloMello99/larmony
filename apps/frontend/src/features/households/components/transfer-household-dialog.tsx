@@ -21,6 +21,7 @@ import {
 } from "@/shared/components/ui/select"
 import { Button } from "@/shared/components/ui/button"
 import { Label } from "@/shared/components/ui/label"
+import { translateApiError } from "@/shared/lib/api-error"
 import type { Member } from "../types"
 
 interface TransferHouseholdDialogProps {
@@ -35,6 +36,7 @@ export function TransferHouseholdDialog({
   onConfirm,
 }: TransferHouseholdDialogProps) {
   const { t } = useTranslation("households")
+  const { t: tCommon } = useTranslation("common")
   const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<string>("")
   const [loading, setLoading] = useState(false)
@@ -57,7 +59,9 @@ export function TransferHouseholdDialog({
       setSelected("")
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : t("transferDialog.error"),
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("transferDialog.error"),
       )
     } finally {
       setLoading(false)

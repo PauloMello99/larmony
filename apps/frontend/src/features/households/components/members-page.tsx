@@ -6,6 +6,7 @@ import { UserPlus, Loader2, AlertCircle } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { useAuth } from "@/features/auth/hooks/use-auth"
 import { useCurrentHousehold } from "@/features/dashboard"
+import { translateApiError } from "@/shared/lib/api-error"
 import { useMembers } from "../hooks/use-members"
 import { MemberList } from "./member-list"
 import { InviteMemberForm } from "./invite-member-form"
@@ -14,6 +15,7 @@ import type { HouseholdRole } from "../types"
 
 export function MembersPage() {
   const { t } = useTranslation("households")
+  const { t: tCommon } = useTranslation("common")
   const { household, householdId } = useCurrentHousehold()
   const isOwner = household.role === "owner"
   const [inviteOpen, setInviteOpen] = useState(false)
@@ -42,7 +44,7 @@ export function MembersPage() {
     } catch (err) {
       alert(
         err instanceof Error
-          ? err.message
+          ? translateApiError(err, tCommon)
           : t("membersPage.updatePermissionsError"),
       )
     }
@@ -58,7 +60,7 @@ export function MembersPage() {
     } catch (err) {
       alert(
         err instanceof Error
-          ? err.message
+          ? translateApiError(err, tCommon)
           : t("membersPage.toggleStatusError"),
       )
     }

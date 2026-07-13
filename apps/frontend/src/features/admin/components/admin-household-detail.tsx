@@ -23,12 +23,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/components/ui/table"
+import { translateApiError } from "@/shared/lib/api-error"
 import { useAdminHouseholdDetail, useSetHouseholdSuspended } from "../hooks/use-admin"
 import { fmtDate } from "../lib/format"
 import { ConfirmDialog } from "./confirm-dialog"
 
 export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
   const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const { household, loading, error } = useAdminHouseholdDetail(id)
   const setSuspended = useSetHouseholdSuspended()
 
@@ -44,7 +46,11 @@ export function AdminHouseholdDetail({ id }: { id: string | undefined }) {
       await setSuspended(household.id, household.suspendedAt === null)
       setConfirming(false)
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : t("householdDetail.updateError"))
+      setActionError(
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("householdDetail.updateError"),
+      )
     } finally {
       setBusy(false)
     }

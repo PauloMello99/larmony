@@ -1,11 +1,14 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { apiRequest } from "@/infrastructure/api/client"
 import { queryKeys } from "@/infrastructure/query/query-keys"
+import { translateApiError } from "@/shared/lib/api-error"
 import type { Member, Invitation, InviteResult, HouseholdRole } from "../types"
 
 export function useMembers(householdId: string) {
+  const { t } = useTranslation("common")
   const queryClient = useQueryClient()
 
   // ── Queries ────────────────────────────────────────────────────────────────
@@ -131,7 +134,7 @@ export function useMembers(householdId: string) {
     members: membersQuery.data ?? [],
     invitations: invitationsQuery.data ?? [],
     loading: membersQuery.isLoading,
-    error: membersQuery.error instanceof Error ? membersQuery.error.message : null,
+    error: membersQuery.error instanceof Error ? translateApiError(membersQuery.error, t) : null,
     refetch: () =>
       Promise.all([membersQuery.refetch(), invitationsQuery.refetch()]),
     inviteMember,

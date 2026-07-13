@@ -22,12 +22,14 @@ import {
   TableRow,
 } from "@/shared/components/ui/table"
 import { useMe } from "@/features/auth/hooks/use-me"
+import { translateApiError } from "@/shared/lib/api-error"
 import { useAdminUserDetail, useSetUserPlatformRole } from "../hooks/use-admin"
 import { fmtDate } from "../lib/format"
 import { ConfirmDialog } from "./confirm-dialog"
 
 export function AdminUserDetail({ id }: { id: string | undefined }) {
   const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const { me } = useMe()
   const { user, loading, error } = useAdminUserDetail(id)
   const setPlatformRole = useSetUserPlatformRole()
@@ -45,7 +47,11 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
       await setPlatformRole(user.id, next)
       setConfirming(false)
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : t("userDetail.updateError"))
+      setActionError(
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("userDetail.updateError"),
+      )
     } finally {
       setBusy(false)
     }

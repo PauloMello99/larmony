@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/shared/components/ui/table"
 import { useMe } from "@/features/auth/hooks/use-me"
+import { translateApiError } from "@/shared/lib/api-error"
 import { useAdminUsers } from "../hooks/use-admin"
 import { fmtDate } from "../lib/format"
 import { useDebouncedValue } from "../lib/use-debounced-value"
@@ -31,6 +32,7 @@ const ROLE_TABS: { value: UserRoleFilter; labelKey: string }[] = [
 
 export function AdminUsers() {
   const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const router = useRouter()
   const { me } = useMe()
   const { users, loading, error, refetch, setPlatformRole } = useAdminUsers()
@@ -83,7 +85,9 @@ export function AdminUsers() {
       setTarget(null)
     } catch (err) {
       setActionError(
-        err instanceof Error ? err.message : t("users.updateError"),
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("users.updateError"),
       )
     } finally {
       setBusy(false)

@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/components/ui/table"
+import { translateApiError } from "@/shared/lib/api-error"
 import { useAdminHouseholds } from "../hooks/use-admin"
 import { fmtDate } from "../lib/format"
 import { useDebouncedValue } from "../lib/use-debounced-value"
@@ -30,6 +31,7 @@ const STATUS_TABS: { value: HouseholdStatusFilter; labelKey: string }[] = [
 
 export function AdminHouseholds() {
   const { t } = useTranslation("admin")
+  const { t: tCommon } = useTranslation("common")
   const router = useRouter()
   const { households, loading, error, refetch, setSuspended } = useAdminHouseholds()
 
@@ -84,7 +86,9 @@ export function AdminHouseholds() {
       setTarget(null)
     } catch (err) {
       setActionError(
-        err instanceof Error ? err.message : t("households.updateError"),
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("households.updateError"),
       )
     } finally {
       setBusy(false)

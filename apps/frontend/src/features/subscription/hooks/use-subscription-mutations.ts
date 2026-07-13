@@ -1,7 +1,9 @@
 "use client"
 
 import { useMutation } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { apiRequest } from "@/infrastructure/api/client"
+import { translateApiError } from "@/shared/lib/api-error"
 import { readLocaleCookie } from "@/shared/lib/locale"
 import type { StripeRedirect } from "../types"
 
@@ -13,6 +15,7 @@ import type { StripeRedirect } from "../types"
  * a página hospedada do Stripe abre no idioma da UI (adendo ADR-0018).
  */
 export function useSubscriptionMutations(householdId: string) {
+  const { t } = useTranslation("common")
   const checkout = useMutation({
     mutationFn: () =>
       apiRequest<StripeRedirect>(
@@ -38,9 +41,10 @@ export function useSubscriptionMutations(householdId: string) {
   return {
     startCheckout: checkout.mutate,
     checkoutPending: checkout.isPending,
-    checkoutError: checkout.error instanceof Error ? checkout.error.message : null,
+    checkoutError:
+      checkout.error instanceof Error ? translateApiError(checkout.error, t) : null,
     openPortal: portal.mutate,
     portalPending: portal.isPending,
-    portalError: portal.error instanceof Error ? portal.error.message : null,
+    portalError: portal.error instanceof Error ? translateApiError(portal.error, t) : null,
   }
 }
