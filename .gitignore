@@ -44,7 +44,6 @@ packages/*/src/*.js.map
 packages/*/src/*.ts.map
 
 # RAG / Memory
-docker-compose.rag.yml
 .rag/
 .memory/sessions/
 
@@ -57,3 +56,6 @@ apps/frontend/test-results/
 apps/frontend/playwright-report/
 # Dumps de banco (PII) - nunca versionar (docs/backup-restore.md)
 backups/
+
+# RAG eval output (regenerable)
+bin/scripts/rag/eval/results.json

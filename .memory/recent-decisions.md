@@ -33,6 +33,22 @@
 
 ## Decisões/registros recentes (sem ADR)
 
+- **2026-07-13 — Review do RAG + eval + Qdrant compartilhado (adendo ADR-0016)**:
+  primeiro harness de avaliação de retrieval (`bin/scripts/rag/eval.py` + golden
+  set, roda pelo caminho de produção `hybrid_search`/`expand_parents`; baseline em
+  `bin/scripts/rag/EVAL.md`). Baseline n=30: híbrido RRF hit@5 **1.00**, hit@3 0.97,
+  MRR 0.736; ganho do híbrido concentrado em termo/símbolo/código. **Nenhum
+  parâmetro alterado** (evidência): top_k=5 satura o recall, `MIN_SCORE=0.35`
+  irrelevante, RRF > DBSF, chunks 400/60 sem sinal de problema. **Reranking avaliado
+  e não adotado** (recall saturado → só reordena; MRR gap dentro do ruído; gatilho:
+  hit@5 < ~0.9 ou precisão top-1). **Infra**: `docker-compose.rag.yml` virou **1
+  Qdrant compartilhado** (`name: rag`, `rag-qdrant`, volume nomeado `rag-storage`,
+  pin v1.18.1 + healthcheck) — 1 coleção por projeto (Larmony: `larmony_memory`);
+  arquivo agora versionado (saiu do `.gitignore`). Hooks consolidados no
+  `settings.json` (SessionStart sobe Qdrant + 1 reindex canônico; novo Stop), fim do
+  double-reindex; `settings.local.json` podado (allowlist limpa). Dead code removido
+  (`_SNIPPET_CHARS`), constantes internas documentadas no README.
+
 - **2026-07-13 — Fase pre-production entregue (P-1..P-6)**: LGPD (páginas
   legais reais `pages/legal/*` — controlador "Larmony" + suporte@larmony.me;
   consentimento obrigatório no signup com `terms_accepted_at`/`terms_version`
