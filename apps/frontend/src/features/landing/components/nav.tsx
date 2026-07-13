@@ -67,6 +67,12 @@ export function Nav() {
         {/* Right: locale + CTA + hamburger */}
         <div className="flex items-center gap-2">
           <LocaleSwitcher className="text-white/70 hover:text-white" />
+          <Link
+            href="/auth/login"
+            className="hidden rounded-full px-4 py-2 text-sm text-white/70 transition-colors hover:bg-white/[0.06] hover:text-white sm:block"
+          >
+            {t("nav.login")}
+          </Link>
           <Button
             size="sm"
             asChild
