@@ -46,11 +46,8 @@ describe("PlanCatalogService.reconcile", () => {
         stripePriceId: "price_existing",
       }),
     );
-    // Catálogo com 2 planos (free espelhado, hardening): ambos sincronizam.
-    expect(repo.upsert).toHaveBeenCalledWith(
-      expect.objectContaining({ key: "free_monthly" }),
-    );
-    expect(repo.upsert).toHaveBeenCalledTimes(2);
+    // Catálogo com 1 plano vendável (premium/Family); Free não é produto no Stripe.
+    expect(repo.upsert).toHaveBeenCalledTimes(1);
   });
 
   it("cria Product + Price no Stripe quando o lookup_key não existe ainda", async () => {
@@ -67,13 +64,9 @@ describe("PlanCatalogService.reconcile", () => {
     expect(gateway.createPrice).toHaveBeenCalledWith(
       expect.objectContaining({ productId: "prod_new", lookupKey: "premium_monthly" }),
     );
-    // Free espelhado: Product "free" + Price R$ 0 também são criados.
-    expect(gateway.ensureProduct).toHaveBeenCalledWith(
-      expect.objectContaining({ id: "free" }),
-    );
-    expect(gateway.createPrice).toHaveBeenCalledWith(
-      expect.objectContaining({ unitAmountCents: 0, lookupKey: "free_monthly" }),
-    );
+    // Só o plano vendável é criado — Free não é produto no Stripe.
+    expect(gateway.ensureProduct).toHaveBeenCalledTimes(1);
+    expect(gateway.createPrice).toHaveBeenCalledTimes(1);
     expect(repo.upsert).toHaveBeenCalledWith(
       expect.objectContaining({
         key: "premium_monthly",

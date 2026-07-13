@@ -16,23 +16,17 @@ export interface PlanDefinition {
  * referência em `billing_plans`. Adicionar um plano novo = adicionar uma
  * entrada aqui.
  */
+// O Free NÃO é um produto no Stripe: é o estado padrão de um lar sem assinatura
+// paga (subscription.type = "free"), resolvido inteiramente pelos entitlements —
+// não passa por checkout. Só planos vendáveis entram no catálogo.
+// `productKey`/`key` seguem "premium" (identificadores internos estáveis; os
+// entitlements mapeiam por status da subscription, não pelo produto); o nome
+// exibido no Stripe/checkout/recibos é "Larmony Family".
 export const PLAN_CATALOG: PlanDefinition[] = [
-  {
-    // Espelho do plano gratuito (hardening, cenário 1): existe como
-    // Product+Price R$ 0 no Stripe para o catálogo ficar completo no
-    // dashboard, mas lar Free NÃO passa por checkout nem vira subscription
-    // (decisão do responsável — espelho de catálogo apenas).
-    key: "free_monthly",
-    productKey: "free",
-    productName: "Larmony Grátis",
-    amountCents: 0,
-    currency: "brl",
-    interval: "month",
-  },
   {
     key: "premium_monthly",
     productKey: "premium",
-    productName: "Larmony Premium",
+    productName: "Larmony Family",
     amountCents: 1490,
     currency: "brl",
     interval: "month",
