@@ -177,10 +177,10 @@
         "description": "Para organizar las finanzas de casa sin pagar nada.",
         "cta": "Empezar gratis",
         "features": {
-          "f1": "Transacciones y categorías ilimitadas",
-          "f2": "Presupuestos y metas",
+          "f1": "Transacciones ilimitadas con las categorías predeterminadas",
+          "f2": "Presupuestos y metas (hasta 3 de cada uno)",
           "f3": "Recordatorios de facturas por correo",
-          "f4": "Múltiples miembros y hogares",
+          "f4": "1 hogar, tú + 1 miembro",
           "f5": "Panel e informe mensual"
         }
       },
@@ -193,9 +193,12 @@
         "cta": "Suscribirse a Family",
         "features": {
           "f1": "Todo lo del plan Free",
-          "f2": "Informes avanzados — anual y comparativos",
-          "f3": "Nuevas funciones premium a medida que se lanzan",
-          "f4": "Apoya el desarrollo de Larmony"
+          "f2": "Miembros y hogares ilimitados",
+          "f3": "Categorías personalizadas ilimitadas",
+          "f4": "Informes avanzados — anual y comparativos",
+          "f5": "Exportación de informes en CSV",
+          "f6": "Nuevas funciones premium a medida que se lanzan",
+          "f7": "Apoya el desarrollo de Larmony"
         }
       },
       "pro": {
@@ -224,7 +227,7 @@
       },
       "q2": {
         "question": "¿Qué incluye el plan Family?",
-        "answer": "Hoy, los informes avanzados (vista anual y comparativos). Y, a medida que se lanzan nuevas funciones premium, se incluyen en Family sin coste adicional. Sin permanencia."
+        "answer": "Miembros y hogares ilimitados, categorías personalizadas, informes avanzados (vista anual y comparativos) y exportación de informes en CSV. Y, a medida que se lanzan nuevas funciones premium, se incluyen en Family sin coste adicional. Sin permanencia."
       },
       "q3": {
         "question": "¿Puedo cancelar cuando quiera?",

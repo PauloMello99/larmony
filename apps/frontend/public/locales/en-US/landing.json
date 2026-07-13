@@ -177,10 +177,10 @@
         "description": "To organize your household finances without paying a thing.",
         "cta": "Get started free",
         "features": {
-          "f1": "Unlimited transactions and categories",
-          "f2": "Budgets and goals",
+          "f1": "Unlimited transactions with the default categories",
+          "f2": "Budgets and goals (up to 3 each)",
           "f3": "Bill reminders by email",
-          "f4": "Multiple members and homes",
+          "f4": "1 home, you + 1 member",
           "f5": "Dashboard and monthly report"
         }
       },
@@ -193,9 +193,12 @@
         "cta": "Subscribe to Family",
         "features": {
           "f1": "Everything in the Free plan",
-          "f2": "Advanced reports — annual and comparative",
-          "f3": "New premium features as they launch",
-          "f4": "Support the development of Larmony"
+          "f2": "Unlimited members and homes",
+          "f3": "Unlimited custom categories",
+          "f4": "Advanced reports — annual and comparative",
+          "f5": "CSV report export",
+          "f6": "New premium features as they launch",
+          "f7": "Support the development of Larmony"
         }
       },
       "pro": {
@@ -224,7 +227,7 @@
       },
       "q2": {
         "question": "What comes with the Family plan?",
-        "answer": "Today, the advanced reports (annual view and comparisons). And as new premium features launch, they're included in Family at no extra cost. No lock-in."
+        "answer": "Unlimited members and homes, custom categories, advanced reports (annual view and comparisons), and CSV report export. And as new premium features launch, they're included in Family at no extra cost. No lock-in."
       },
       "q3": {
         "question": "Can I cancel anytime?",

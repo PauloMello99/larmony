@@ -177,10 +177,10 @@
         "description": "Um die Finanzen des Zuhauses zu organisieren, ohne etwas zu zahlen.",
         "cta": "Kostenlos starten",
         "features": {
-          "f1": "Unbegrenzte Transaktionen und Kategorien",
-          "f2": "Budgets und Ziele",
+          "f1": "Unbegrenzte Transaktionen mit den Standardkategorien",
+          "f2": "Budgets und Ziele (je bis zu 3)",
           "f3": "Rechnungserinnerungen per E-Mail",
-          "f4": "Mehrere Mitglieder und Haushalte",
+          "f4": "1 Haushalt, du + 1 Mitglied",
           "f5": "Dashboard und Monatsbericht"
         }
       },
@@ -193,9 +193,12 @@
         "cta": "Family abonnieren",
         "features": {
           "f1": "Alles aus dem Free-Plan",
-          "f2": "Erweiterte Berichte — jährlich und im Vergleich",
-          "f3": "Neue Premium-Funktionen, sobald sie erscheinen",
-          "f4": "Unterstütze die Entwicklung von Larmony"
+          "f2": "Unbegrenzte Mitglieder und Haushalte",
+          "f3": "Unbegrenzte individuelle Kategorien",
+          "f4": "Erweiterte Berichte — jährlich und im Vergleich",
+          "f5": "CSV-Berichtsexport",
+          "f6": "Neue Premium-Funktionen, sobald sie erscheinen",
+          "f7": "Unterstütze die Entwicklung von Larmony"
         }
       },
       "pro": {
@@ -224,7 +227,7 @@
       },
       "q2": {
         "question": "Was ist im Family-Plan enthalten?",
-        "answer": "Aktuell die erweiterten Berichte (jährliche Übersicht und Vergleiche). Und sobald neue Premium-Funktionen erscheinen, gehören sie ohne Aufpreis zu Family. Ohne Bindung."
+        "answer": "Unbegrenzte Mitglieder und Haushalte, individuelle Kategorien, erweiterte Berichte (jährliche Übersicht und Vergleiche) sowie CSV-Berichtsexport. Und sobald neue Premium-Funktionen erscheinen, gehören sie ohne Aufpreis zu Family. Ohne Bindung."
       },
       "q3": {
         "question": "Kann ich jederzeit kündigen?",

@@ -29,7 +29,7 @@ const PLANS: Plan[] = [
     href: "/auth/signup",
     highlighted: true,
     badge: true,
-    features: ["f1", "f2", "f3", "f4"],
+    features: ["f1", "f2", "f3", "f4", "f5", "f6", "f7"],
   },
   {
     key: "pro",
