@@ -101,6 +101,55 @@ async function down(steps: number): Promise<void> {
   await pool.end();
 }
 
+/**
+ * Re-baseline (squash, fase pre-production): marca as migrations do journal
+ * atual como APLICADAS sem executar o SQL — para bancos que já continham o
+ * schema via cadeia antiga (staging, devs locais). Limpa as rows antigas de
+ * `drizzle.__drizzle_migrations` e insere uma row por entrada do journal
+ * (hash + created_at = `when`). Bancos NOVOS não usam isto: o `up` roda o
+ * baseline normalmente. NUNCA rodar num banco que ainda não tem o schema.
+ */
+async function baseline(): Promise<void> {
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const entries = readJournal().sort((a, b) => a.idx - b.idx);
+
+  // Sanidade: só re-baselina um banco que JÁ tem o schema da aplicação.
+  const { rowCount } = await pool.query(
+    `SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'users'`,
+  );
+  if (!rowCount) {
+    await pool.end();
+    throw new Error(
+      "✗  Banco sem o schema da aplicação (public.users não existe). " +
+        "Num banco novo use `up` — `baseline` é só para bancos já migrados pela cadeia antiga.",
+    );
+  }
+
+  await pool.query("BEGIN");
+  try {
+    await pool.query(`CREATE SCHEMA IF NOT EXISTS ${DRIZZLE_SCHEMA}`);
+    await pool.query(
+      `CREATE TABLE IF NOT EXISTS ${DRIZZLE_SCHEMA}.${DRIZZLE_TABLE} (id SERIAL PRIMARY KEY, hash text NOT NULL, created_at bigint)`,
+    );
+    await pool.query(`DELETE FROM ${DRIZZLE_SCHEMA}.${DRIZZLE_TABLE}`);
+    for (const entry of entries) {
+      const hash = computeMigrationHash(entry.tag);
+      await pool.query(
+        `INSERT INTO ${DRIZZLE_SCHEMA}.${DRIZZLE_TABLE} (hash, created_at) VALUES ($1, $2)`,
+        [hash, entry.when],
+      );
+      console.log(`✓  Baseline marcado: ${entry.tag}`);
+    }
+    await pool.query("COMMIT");
+  } catch (err) {
+    await pool.query("ROLLBACK");
+    throw err;
+  }
+
+  console.log("✓  Re-baseline concluído (nenhum SQL de schema executado).");
+  await pool.end();
+}
+
 async function status(): Promise<void> {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -151,12 +200,17 @@ async function main(): Promise<void> {
     case "status":
       await status();
       break;
+    case "baseline":
+      await baseline();
+      break;
     default:
       console.error(
-        "Usage: migrator.ts <up | down [steps] | status>\n\n" +
+        "Usage: migrator.ts <up | down [steps] | status | baseline>\n\n" +
           "  up            Apply all pending migrations\n" +
           "  down [n]      Roll back the last n migrations (default: 1)\n" +
-          "  status        Show applied/pending state of all migrations\n",
+          "  status        Show applied/pending state of all migrations\n" +
+          "  baseline      Mark journal migrations as applied WITHOUT running\n" +
+          "                them (re-baseline after a squash; existing DBs only)\n",
       );
       process.exit(1);
   }
