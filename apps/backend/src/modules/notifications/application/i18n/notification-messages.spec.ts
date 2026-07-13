@@ -1,10 +1,18 @@
 import { renderNotification, type NotificationParams } from "./notification-messages";
 import type { NotificationLocale } from "./notification-locale";
 
-const LOCALES: NotificationLocale[] = ["pt-BR", "en", "es"];
+const LOCALES: NotificationLocale[] = [
+  "pt-BR",
+  "en-US",
+  "es-ES",
+  "zh-CN",
+  "de-DE",
+  "fr-FR",
+  "ja-JP",
+];
 
 describe("renderNotification", () => {
-  it("renderiza os 5 tipos em todos os locales sem lançar, com title/body não-vazios", () => {
+  it("renderiza os 5 tipos em todos os 7 locales sem lançar, com title/body não-vazios", () => {
     const samples: NotificationParams[] = [
       { type: "goal_reached", goalName: "Viagem", savedCents: 500000, targetCents: 500000 },
       { type: "budget_exceeded", categoryName: "Lazer", spentCents: 29033, limitCents: 25000 },
@@ -36,9 +44,24 @@ describe("renderNotification", () => {
       savedCents: 500000,
       targetCents: 500000,
     };
-    expect(renderNotification(params, "de-DE").title).toContain("atingida");
+    expect(renderNotification(params, "xx-XX").title).toContain("atingida");
     expect(renderNotification(params, null).title).toContain("atingida");
     expect(renderNotification(params, undefined).title).toContain("atingida");
+  });
+
+  it("normaliza tags legadas e por idioma-base (rows antigas de users.locale)", () => {
+    const params: NotificationParams = {
+      type: "goal_reached",
+      goalName: "Viagem",
+      savedCents: 500000,
+      targetCents: 500000,
+    };
+    // Tags legadas pré-7-idiomas.
+    expect(renderNotification(params, "en").title).toContain("reached");
+    expect(renderNotification(params, "es").title).toContain("alcanzada");
+    // Match por idioma-base (variante regional não listada).
+    expect(renderNotification(params, "de-AT").title).toContain("erreicht");
+    expect(renderNotification(params, "fr").title).toContain("atteint");
   });
 
   it("usa o idioma certo por locale (goal_reached)", () => {
@@ -49,8 +72,12 @@ describe("renderNotification", () => {
       targetCents: 500000,
     };
     expect(renderNotification(params, "pt-BR").title).toContain("atingida");
-    expect(renderNotification(params, "en").title).toContain("reached");
-    expect(renderNotification(params, "es").title).toContain("alcanzada");
+    expect(renderNotification(params, "en-US").title).toContain("reached");
+    expect(renderNotification(params, "es-ES").title).toContain("alcanzada");
+    expect(renderNotification(params, "zh-CN").title).toContain("达成");
+    expect(renderNotification(params, "de-DE").title).toContain("erreicht");
+    expect(renderNotification(params, "fr-FR").title).toContain("atteint");
+    expect(renderNotification(params, "ja-JP").title).toContain("達成");
     // O nome da meta é interpolado igual em qualquer locale.
     for (const locale of LOCALES) {
       expect(renderNotification(params, locale).title).toContain("Viagem");
@@ -77,13 +104,23 @@ describe("renderNotification", () => {
     expect(renderNotification({ ...base, daysUntil: 1 }, "pt-BR").title).not.toContain("1 dias");
     expect(renderNotification({ ...base, daysUntil: 3 }, "pt-BR").title).toContain("3 dias");
 
-    expect(renderNotification({ ...base, daysUntil: 0 }, "en").title).toContain("due today");
-    expect(renderNotification({ ...base, daysUntil: 1 }, "en").title).toContain("1 day");
-    expect(renderNotification({ ...base, daysUntil: 1 }, "en").title).not.toContain("1 days");
-    expect(renderNotification({ ...base, daysUntil: 3 }, "en").title).toContain("3 days");
+    expect(renderNotification({ ...base, daysUntil: 0 }, "en-US").title).toContain("due today");
+    expect(renderNotification({ ...base, daysUntil: 1 }, "en-US").title).toContain("1 day");
+    expect(renderNotification({ ...base, daysUntil: 1 }, "en-US").title).not.toContain("1 days");
+    expect(renderNotification({ ...base, daysUntil: 3 }, "en-US").title).toContain("3 days");
 
-    expect(renderNotification({ ...base, daysUntil: 0 }, "es").title).toContain("vence hoy");
-    expect(renderNotification({ ...base, daysUntil: 3 }, "es").title).toContain("3 días");
+    expect(renderNotification({ ...base, daysUntil: 0 }, "es-ES").title).toContain("vence hoy");
+    expect(renderNotification({ ...base, daysUntil: 3 }, "es-ES").title).toContain("3 días");
+
+    expect(renderNotification({ ...base, daysUntil: 0 }, "de-DE").title).toContain("heute fällig");
+    expect(renderNotification({ ...base, daysUntil: 1 }, "de-DE").title).toContain("1 Tag fällig");
+    expect(renderNotification({ ...base, daysUntil: 3 }, "de-DE").title).toContain("3 Tagen");
+
+    // zh/ja não têm plural gramatical — só o dia interpolado.
+    expect(renderNotification({ ...base, daysUntil: 0 }, "zh-CN").title).toContain("今天到期");
+    expect(renderNotification({ ...base, daysUntil: 3 }, "zh-CN").title).toContain("3 天");
+    expect(renderNotification({ ...base, daysUntil: 0 }, "ja-JP").title).toContain("本日");
+    expect(renderNotification({ ...base, daysUntil: 3 }, "ja-JP").title).toContain("3日");
   });
 
   it("bill_reminder traz actionLabel localizado", () => {
@@ -95,8 +132,9 @@ describe("renderNotification", () => {
       dueDay: 9,
     };
     expect(renderNotification(base, "pt-BR").actionLabel).toBe("Ver lançamentos");
-    expect(renderNotification(base, "en").actionLabel).toBe("View entries");
-    expect(renderNotification(base, "es").actionLabel).toBe("Ver lanzamientos");
+    expect(renderNotification(base, "en-US").actionLabel).toBe("View entries");
+    expect(renderNotification(base, "es-ES").actionLabel).toBe("Ver lanzamientos");
+    expect(renderNotification(base, "ja-JP").actionLabel).toBe("記帳を見る");
   });
 
   it("monthly_report usa nome do mês localizado (não numérico)", () => {
@@ -109,8 +147,13 @@ describe("renderNotification", () => {
       balanceCents: 1032156,
     };
     expect(renderNotification(params, "pt-BR").title).toContain("Julho");
-    expect(renderNotification(params, "en").title).toContain("July");
-    expect(renderNotification(params, "es").title).toContain("Julio");
+    expect(renderNotification(params, "en-US").title).toContain("July");
+    expect(renderNotification(params, "es-ES").title).toContain("Julio");
+    expect(renderNotification(params, "de-DE").title).toContain("Juli");
+    expect(renderNotification(params, "fr-FR").title).toContain("Juillet");
+    // CJK: mês numérico com sufixo 月 (Intl month:"long" → "7月").
+    expect(renderNotification(params, "zh-CN").title).toContain("月");
+    expect(renderNotification(params, "ja-JP").title).toContain("月");
     // Ano presente, mês numérico "7/" ausente.
     expect(renderNotification(params, "pt-BR").title).toContain("2026");
     expect(renderNotification(params, "pt-BR").title).not.toContain("7/2026");

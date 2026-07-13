@@ -46,5 +46,5 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
   )
 }
 
-// i18n (ADR-0018): pt-BR default + en; strings novas SEMPRE via useTranslation.
+// i18n (ADR-0018 + adendo 7 idiomas): pt-BR default; strings novas SEMPRE via useTranslation.
 export default appWithTranslation(App)

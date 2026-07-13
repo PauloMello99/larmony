@@ -115,7 +115,7 @@ describe("Notifications preferences + dispatch (e2e)", () => {
   it("renderiza a notificação in-app no locale do destinatário (en)", async () => {
     // Novo usuário + novo lar, com o perfil em inglês.
     const enUser = await signUpUser(app, "notif.en");
-    await authed(app, "patch", "/auth/me", enUser.accessToken).send({ locale: "en" }).expect(200);
+    await authed(app, "patch", "/auth/me", enUser.accessToken).send({ locale: "en-US" }).expect(200);
 
     const enHousehold = await authed(app, "post", "/households", enUser.accessToken)
       .send({ name: "E2E Home Notifications EN" })

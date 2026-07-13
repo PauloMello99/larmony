@@ -113,12 +113,5 @@
     "rolePlaceholder": "Seleccione un rol",
     "submitting": "Enviando…",
     "submit": "Enviar invitación"
-  },
-  "subscription": {
-    "title": "Suscripción",
-    "description": "Plan, historial de facturación y gestión de la suscripción para esta vivienda.",
-    "managementTitle": "Gestión de la suscripción",
-    "comingSoon": "Próximamente",
-    "managementDescription": "Aquí puedes ver tu historial de facturación, cambiar de plan, actualizar tu método de pago y cancelar tu suscripción para esta vivienda."
   }
 }

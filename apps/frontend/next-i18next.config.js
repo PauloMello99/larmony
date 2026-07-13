@@ -1,5 +1,6 @@
 /**
- * i18n do Larmony (ADR-0018): pt-BR (default) + en + es.
+ * i18n do Larmony (ADR-0018 + adendo): pt-BR (default), en-US, es-ES, zh-CN,
+ * de-DE, fr-FR, ja-JP.
  * Locale do usuário persiste em users.locale (PATCH /auth/me) + cookie NEXT_LOCALE.
  * Namespaces por feature; "common" é o compartilhado.
  *
@@ -17,7 +18,7 @@
 const config = {
   i18n: {
     defaultLocale: "pt-BR",
-    locales: ["pt-BR", "en", "es"],
+    locales: ["pt-BR", "en-US", "es-ES", "zh-CN", "de-DE", "fr-FR", "ja-JP"],
   },
   defaultNS: "common",
   localePath: "./public/locales",

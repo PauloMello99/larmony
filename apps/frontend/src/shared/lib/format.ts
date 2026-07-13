@@ -7,7 +7,7 @@
  * rota (sem prefixo `/en/`, `/es/`), então `router.locale` nunca é definido.
  */
 import { useTranslation } from "react-i18next"
-import { ptBR, enUS, es } from "date-fns/locale"
+import { ptBR, enUS, es, zhCN, de, fr, ja } from "date-fns/locale"
 import type { Locale } from "date-fns"
 import { normalizeLocale, type AppLocale } from "./locale"
 
@@ -20,8 +20,12 @@ export function useActiveLocale(): AppLocale {
 /** Mapa AppLocale → locale do date-fns (para format/formatDistanceToNow etc.). */
 const DATE_FNS_LOCALES: Record<AppLocale, Locale> = {
   "pt-BR": ptBR,
-  en: enUS,
-  es,
+  "en-US": enUS,
+  "es-ES": es,
+  "zh-CN": zhCN,
+  "de-DE": de,
+  "fr-FR": fr,
+  "ja-JP": ja,
 }
 
 export function getDateFnsLocale(locale: AppLocale): Locale {
