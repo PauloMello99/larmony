@@ -1,6 +1,8 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
+import type { TFunction } from "i18next"
 import { ChevronLeft, ChevronRight, Shield } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Badge } from "@/shared/components/ui/badge"
@@ -23,8 +25,8 @@ import {
 import { useAdminAuditLogs } from "../hooks/use-admin"
 import type { AuditAction, AuditLogFilters } from "../types"
 
-function fmtDateTime(iso: string): string {
-  return new Date(iso).toLocaleString("pt-BR", {
+function fmtDateTime(iso: string, t: TFunction): string {
+  return new Date(iso).toLocaleString(t("format.dateLocale"), {
     day: "2-digit",
     month: "2-digit",
     year: "2-digit",
@@ -33,13 +35,13 @@ function fmtDateTime(iso: string): string {
   })
 }
 
-const ACTION_LABELS: Record<AuditAction, string> = {
-  create: "Criação",
-  update: "Atualização",
-  delete: "Remoção",
-  invite_sent: "Convite enviado",
-  invite_accepted: "Convite aceito",
-  subscription_changed: "Assinatura",
+const ACTION_LABEL_KEYS: Record<AuditAction, string> = {
+  create: "auditLogs.actionCreate",
+  update: "auditLogs.actionUpdate",
+  delete: "auditLogs.actionDelete",
+  invite_sent: "auditLogs.actionInviteSent",
+  invite_accepted: "auditLogs.actionInviteAccepted",
+  subscription_changed: "auditLogs.actionSubscriptionChanged",
 }
 
 const ACTION_VARIANTS: Record<
@@ -66,6 +68,7 @@ const ACTION_OPTIONS: AuditAction[] = [
 const PAGE_SIZE = 50
 
 export function AdminAuditLogs() {
+  const { t } = useTranslation("admin")
   const [filters, setFilters] = React.useState<AuditLogFilters>({
     page: 1,
     limit: PAGE_SIZE,
@@ -107,9 +110,9 @@ export function AdminAuditLogs() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-lg font-semibold">Auditoria</h1>
+        <h1 className="text-lg font-semibold">{t("auditLogs.title")}</h1>
         <p className="mt-0.5 text-sm text-foreground/50">
-          Log de ações críticas na plataforma — quem fez o quê e quando.
+          {t("auditLogs.subtitle")}
         </p>
       </div>
 
@@ -117,13 +120,13 @@ export function AdminAuditLogs() {
       <div className="flex flex-wrap items-center gap-2">
         <Select onValueChange={handleAction} defaultValue="all">
           <SelectTrigger className="h-8 w-48 text-sm">
-            <SelectValue placeholder="Todas as ações" />
+            <SelectValue placeholder={t("auditLogs.allActions")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas as ações</SelectItem>
+            <SelectItem value="all">{t("auditLogs.allActions")}</SelectItem>
             {ACTION_OPTIONS.map((a) => (
               <SelectItem key={a} value={a}>
-                {ACTION_LABELS[a]}
+                {t(ACTION_LABEL_KEYS[a])}
               </SelectItem>
             ))}
           </SelectContent>
@@ -132,13 +135,13 @@ export function AdminAuditLogs() {
         <div className="flex gap-1">
           <Input
             className="h-8 w-44 text-sm"
-            placeholder="Tipo (ex: user, household)"
+            placeholder={t("auditLogs.entityTypePlaceholder")}
             value={entityType}
             onChange={handleEntityType}
             onKeyDown={handleKeyDown}
           />
           <Button variant="outline" size="sm" className="h-8" onClick={applyEntityType}>
-            Filtrar
+            {t("auditLogs.filter")}
           </Button>
         </div>
       </div>
@@ -149,12 +152,12 @@ export function AdminAuditLogs() {
 
       {loading ? (
         <div className="flex items-center justify-center py-16 text-sm text-foreground/40">
-          Carregando...
+          {t("auditLogs.loading")}
         </div>
       ) : !result || result.data.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-2 py-16 text-foreground/40">
           <Shield className="h-8 w-8" />
-          <p className="text-sm">Nenhum registro de auditoria encontrado.</p>
+          <p className="text-sm">{t("auditLogs.empty")}</p>
         </div>
       ) : (
         <>
@@ -162,12 +165,12 @@ export function AdminAuditLogs() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="whitespace-nowrap">Data/Hora</TableHead>
-                  <TableHead>Ator</TableHead>
-                  <TableHead>Household</TableHead>
-                  <TableHead>Ação</TableHead>
-                  <TableHead>Entidade</TableHead>
-                  <TableHead className="text-right">Metadados</TableHead>
+                  <TableHead className="whitespace-nowrap">{t("auditLogs.colDateTime")}</TableHead>
+                  <TableHead>{t("auditLogs.colActor")}</TableHead>
+                  <TableHead>{t("auditLogs.colHousehold")}</TableHead>
+                  <TableHead>{t("auditLogs.colAction")}</TableHead>
+                  <TableHead>{t("auditLogs.colEntity")}</TableHead>
+                  <TableHead className="text-right">{t("auditLogs.colMetadata")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -180,7 +183,7 @@ export function AdminAuditLogs() {
                       }
                     >
                       <TableCell className="whitespace-nowrap text-xs text-foreground/60">
-                        {fmtDateTime(row.createdAt)}
+                        {fmtDateTime(row.createdAt, t)}
                       </TableCell>
                       <TableCell>
                         {row.actor ? (
@@ -193,7 +196,7 @@ export function AdminAuditLogs() {
                             </p>
                           </div>
                         ) : (
-                          <span className="text-xs text-foreground/40">sistema</span>
+                          <span className="text-xs text-foreground/40">{t("auditLogs.system")}</span>
                         )}
                       </TableCell>
                       <TableCell>
@@ -205,7 +208,7 @@ export function AdminAuditLogs() {
                       </TableCell>
                       <TableCell>
                         <Badge variant={ACTION_VARIANTS[row.action]} className="text-xs">
-                          {ACTION_LABELS[row.action]}
+                          {t(ACTION_LABEL_KEYS[row.action])}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-sm">
@@ -214,7 +217,7 @@ export function AdminAuditLogs() {
                       <TableCell className="text-right">
                         {row.metadata && Object.keys(row.metadata).length > 0 ? (
                           <span className="text-xs text-foreground/40 underline decoration-dotted">
-                            {expandedId === row.id ? "fechar" : "ver"}
+                            {expandedId === row.id ? t("auditLogs.metadataClose") : t("auditLogs.metadataView")}
                           </span>
                         ) : (
                           <span className="text-xs text-foreground/20">—</span>
@@ -242,7 +245,10 @@ export function AdminAuditLogs() {
           {/* Paginação */}
           <div className="flex items-center justify-between text-sm text-foreground/50">
             <span>
-              {result.total} registro{result.total !== 1 ? "s" : ""}
+              {t(
+                result.total !== 1 ? "auditLogs.recordsOther" : "auditLogs.recordsOne",
+                { count: result.total },
+              )}
             </span>
             <div className="flex items-center gap-2">
               <Button

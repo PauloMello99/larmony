@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/router"
+import { useTranslation } from "react-i18next"
 import { RefreshCw, Ban, RotateCcw, Search, Building2 } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Badge } from "@/shared/components/ui/badge"
@@ -21,13 +22,14 @@ import { ConfirmDialog } from "./confirm-dialog"
 import { SortHead } from "./sort-head"
 import type { AdminHousehold, HouseholdSortKey, HouseholdStatusFilter, SortDir } from "../types"
 
-const STATUS_TABS: { value: HouseholdStatusFilter; label: string }[] = [
-  { value: "all", label: "Todas" },
-  { value: "active", label: "Ativas" },
-  { value: "suspended", label: "Suspensas" },
+const STATUS_TABS: { value: HouseholdStatusFilter; labelKey: string }[] = [
+  { value: "all", labelKey: "households.tabAll" },
+  { value: "active", labelKey: "households.tabActive" },
+  { value: "suspended", labelKey: "households.tabSuspended" },
 ]
 
 export function AdminHouseholds() {
+  const { t } = useTranslation("admin")
   const router = useRouter()
   const { households, loading, error, refetch, setSuspended } = useAdminHouseholds()
 
@@ -82,7 +84,7 @@ export function AdminHouseholds() {
       setTarget(null)
     } catch (err) {
       setActionError(
-        err instanceof Error ? err.message : "Não foi possível atualizar.",
+        err instanceof Error ? err.message : t("households.updateError"),
       )
     } finally {
       setBusy(false)
@@ -93,9 +95,9 @@ export function AdminHouseholds() {
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-foreground">Lares</h1>
+          <h1 className="text-xl font-semibold text-foreground">{t("households.title")}</h1>
           <p className="mt-0.5 text-sm text-foreground/40">
-            {households.length} na plataforma · {rows.length} exibidas
+            {t("households.countSummary", { total: households.length, shown: rows.length })}
           </p>
         </div>
         <Button
@@ -103,7 +105,7 @@ export function AdminHouseholds() {
           size="icon"
           onClick={() => void refetch()}
           disabled={loading}
-          title="Atualizar"
+          title={t("households.refresh")}
         >
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
         </Button>
@@ -122,7 +124,7 @@ export function AdminHouseholds() {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar por nome, slug ou dono…"
+            placeholder={t("households.searchPlaceholder")}
             className="pl-9"
           />
         </div>
@@ -138,7 +140,7 @@ export function AdminHouseholds() {
                   : "text-foreground/50 hover:text-foreground"
               }`}
             >
-              {tab.label}
+              {t(tab.labelKey)}
             </button>
           ))}
         </div>
@@ -148,11 +150,11 @@ export function AdminHouseholds() {
         <Table>
           <TableHeader>
             <TableRow>
-              <SortHead label="Lar" active={sortKey === "name"} dir={sortDir} onClick={() => toggleSort("name")} />
-              <TableHead>Dono</TableHead>
-              <SortHead label="Membros" active={sortKey === "memberCount"} dir={sortDir} onClick={() => toggleSort("memberCount")} align="right" />
-              <SortHead label="Criada" active={sortKey === "createdAt"} dir={sortDir} onClick={() => toggleSort("createdAt")} />
-              <TableHead className="text-right">Ações</TableHead>
+              <SortHead label={t("households.colHousehold")} active={sortKey === "name"} dir={sortDir} onClick={() => toggleSort("name")} />
+              <TableHead>{t("households.colOwner")}</TableHead>
+              <SortHead label={t("households.colMembers")} active={sortKey === "memberCount"} dir={sortDir} onClick={() => toggleSort("memberCount")} align="right" />
+              <SortHead label={t("households.colCreated")} active={sortKey === "createdAt"} dir={sortDir} onClick={() => toggleSort("createdAt")} />
+              <TableHead className="text-right">{t("households.colActions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -169,7 +171,7 @@ export function AdminHouseholds() {
                       <span className="font-medium text-foreground">{o.name}</span>
                       {suspended && (
                         <Badge variant="destructive" className="bg-red-500/15 text-red-400">
-                          Suspensa
+                          {t("households.suspendedBadge")}
                         </Badge>
                       )}
                     </div>
@@ -182,7 +184,7 @@ export function AdminHouseholds() {
                     {o.memberCount}
                   </TableCell>
                   <TableCell className="text-foreground/50">
-                    {fmtDate(o.createdAt)}
+                    {fmtDate(o.createdAt, t)}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button
@@ -198,12 +200,12 @@ export function AdminHouseholds() {
                       {suspended ? (
                         <>
                           <RotateCcw className="h-4 w-4" />
-                          <span className="hidden sm:inline">Reativar</span>
+                          <span className="hidden sm:inline">{t("households.reactivate")}</span>
                         </>
                       ) : (
                         <>
                           <Ban className="h-4 w-4" />
-                          <span className="hidden sm:inline">Suspender</span>
+                          <span className="hidden sm:inline">{t("households.suspend")}</span>
                         </>
                       )}
                     </Button>
@@ -219,8 +221,8 @@ export function AdminHouseholds() {
             <Building2 className="h-6 w-6 text-foreground/20" />
             <p className="text-sm text-foreground/50">
               {households.length === 0
-                ? "Nenhum lar ainda."
-                : "Nenhum lar corresponde à busca."}
+                ? t("households.emptyNone")
+                : t("households.emptyNoMatch")}
             </p>
           </div>
         )}
@@ -238,15 +240,15 @@ export function AdminHouseholds() {
         onOpenChange={(o) => !o && setTarget(null)}
         title={
           target?.suspendedAt
-            ? `Reativar "${target.name}"?`
-            : `Suspender "${target?.name}"?`
+            ? t("households.confirmReactivateTitle", { name: target.name })
+            : t("households.confirmSuspendTitle", { name: target?.name })
         }
         description={
           target?.suspendedAt
-            ? "A lar volta a ter acesso à plataforma."
-            : "Os membros perdem acesso até a reativação."
+            ? t("households.confirmReactivateDescription")
+            : t("households.confirmSuspendDescription")
         }
-        confirmLabel={target?.suspendedAt ? "Reativar" : "Suspender"}
+        confirmLabel={target?.suspendedAt ? t("households.reactivate") : t("households.suspend")}
         destructive={!target?.suspendedAt}
         loading={busy}
         error={actionError}
