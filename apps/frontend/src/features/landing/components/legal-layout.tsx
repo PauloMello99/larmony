@@ -1,11 +1,13 @@
 import * as React from "react"
 import Link from "next/link"
 import Head from "next/head"
+import { useTranslation } from "react-i18next"
 import { LogoMark } from "@/shared/components/brand/logo-mark"
 
 /**
- * Layout das páginas legais (Termos/Privacidade). Conteúdo hardcoded pt-BR —
- * mesma decisão da landing (i18n dos docs legais fica p/ o rollout de i18n).
+ * Layout das páginas legais (Termos/Privacidade). A PROSA legal permanece
+ * hardcoded em pt-BR (documento oficial); apenas o chrome do layout (voltar,
+ * meta, rodapé) e o aviso de tradução usam o namespace `landing`.
  */
 export function LegalLayout({
   title,
@@ -18,6 +20,8 @@ export function LegalLayout({
   version: string
   children: React.ReactNode
 }) {
+  const { t } = useTranslation("landing")
+
   return (
     <div className="min-h-screen bg-[#0d0d0f] text-white/80">
       <Head>
@@ -36,7 +40,7 @@ export function LegalLayout({
             </span>
           </Link>
           <Link href="/" className="text-sm text-white/50 hover:text-white">
-            ← Voltar
+            {t("legal.back")}
           </Link>
         </div>
       </header>
@@ -44,8 +48,11 @@ export function LegalLayout({
       <main className="mx-auto max-w-3xl px-4 pb-20 pt-10 sm:px-6">
         <h1 className="text-2xl font-bold text-white sm:text-3xl">{title}</h1>
         <p className="mt-2 text-sm text-white/40">
-          Última atualização: {updatedAt} · versão {version}
+          {t("legal.meta", { updatedAt, version })}
         </p>
+        {/* A prosa legal é sempre pt-BR — o aviso, esse sim traduzido, deixa
+            claro que traduções do chrome são apenas informativas. */}
+        <p className="mt-2 text-sm text-white/40">{t("legal.officialNotice")}</p>
 
         <div className="legal-content mt-8 space-y-8 text-[15px] leading-relaxed">
           {children}
@@ -53,13 +60,13 @@ export function LegalLayout({
       </main>
 
       <footer className="border-t border-white/[0.07] py-8 text-center text-[12.5px] text-white/35">
-        © {new Date().getFullYear()} Larmony. Todos os direitos reservados. ·{" "}
+        {t("legal.footer.copyright", { year: new Date().getFullYear() })} ·{" "}
         <Link href="/legal/termos-de-uso" className="hover:text-white">
-          Termos de Uso
+          {t("legal.footer.terms")}
         </Link>{" "}
         ·{" "}
         <Link href="/legal/privacidade" className="hover:text-white">
-          Privacidade
+          {t("legal.footer.privacy")}
         </Link>
       </footer>
     </div>

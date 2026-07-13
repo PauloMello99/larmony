@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import {
   AsYouType,
   getCountries,
@@ -52,9 +53,10 @@ export function PhoneInput({
   value = "",
   onChange,
   id,
-  placeholder = "Número de telefone",
+  placeholder,
   className,
 }: PhoneInputProps) {
+  const { t } = useTranslation("common")
   const [country, setCountry] = React.useState<CountryCode>(() => {
     if (value) {
       try {
@@ -112,7 +114,7 @@ export function PhoneInput({
           emit(display, next)
         }}
       >
-        <SelectTrigger className="w-[104px] shrink-0" aria-label="País">
+        <SelectTrigger className="w-[104px] shrink-0" aria-label={t("phoneInput.country")}>
           <SelectValue>
             <span className="flex items-center gap-1.5">
               <span className="text-base leading-none">{flagEmoji(country)}</span>
@@ -139,7 +141,7 @@ export function PhoneInput({
         type="tel"
         inputMode="tel"
         autoComplete="off"
-        placeholder={placeholder}
+        placeholder={placeholder ?? t("phoneInput.placeholder")}
         value={display}
         onChange={(e) => emit(e.target.value, country)}
       />

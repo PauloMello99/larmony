@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { LocaleSwitcher } from "@/shared/components/locale-switcher"
@@ -9,13 +10,14 @@ import { LogoMark } from "@/shared/components/brand/logo-mark"
 import { cn } from "@/shared/lib/utils"
 
 const NAV_LINKS = [
-  { label: "Recursos", href: "#recursos" },
-  { label: "Produto", href: "#tour" },
-  { label: "Preços", href: "#precos" },
-  { label: "FAQ", href: "#faq" },
+  { labelKey: "nav.links.features", href: "#recursos" },
+  { labelKey: "nav.links.product", href: "#tour" },
+  { labelKey: "nav.links.pricing", href: "#precos" },
+  { labelKey: "nav.links.faq", href: "#faq" },
 ]
 
 export function Nav() {
+  const { t } = useTranslation("landing")
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [scrolled, setScrolled] = React.useState(false)
 
@@ -56,7 +58,7 @@ export function Nav() {
                 href={link.href}
                 className="rounded-full px-3.5 py-2 text-sm text-white/60 transition-colors hover:bg-white/[0.06] hover:text-white"
               >
-                {link.label}
+                {t(link.labelKey)}
               </Link>
             </li>
           ))}
@@ -70,14 +72,14 @@ export function Nav() {
             asChild
             className="hidden rounded-full bg-primary px-5 text-primary-foreground hover:bg-primary/90 sm:flex"
           >
-            <Link href="/auth/signup">Começar grátis</Link>
+            <Link href="/auth/signup">{t("nav.cta")}</Link>
           </Button>
 
           {/* Hamburger — mobile only */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
             className="flex h-9 w-9 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/[0.06] hover:text-white md:hidden"
-            aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
+            aria-label={mobileOpen ? t("nav.closeMenu") : t("nav.openMenu")}
             aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -96,7 +98,7 @@ export function Nav() {
                 onClick={closeMenu}
                 className="rounded-xl px-4 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/[0.06] hover:text-white"
               >
-                {link.label}
+                {t(link.labelKey)}
               </Link>
             ))}
           </nav>
@@ -107,14 +109,14 @@ export function Nav() {
               className="w-full rounded-full bg-transparent text-white/70"
               onClick={closeMenu}
             >
-              <Link href="/auth/login">Entrar</Link>
+              <Link href="/auth/login">{t("nav.login")}</Link>
             </Button>
             <Button
               asChild
               className="w-full rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={closeMenu}
             >
-              <Link href="/auth/signup">Começar grátis</Link>
+              <Link href="/auth/signup">{t("nav.cta")}</Link>
             </Button>
           </div>
         </div>

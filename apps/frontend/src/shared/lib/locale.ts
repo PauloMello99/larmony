@@ -74,6 +74,19 @@ export function normalizeLocale(locale: string | undefined | null): AppLocale {
 }
 
 /**
+ * Lê o locale do cookie `NEXT_LOCALE` no browser (default no SSR/ausente).
+ * Usado pelo padrão de dicionário estático (404/_error/ErrorBoundary), onde o
+ * next-i18next não está disponível — mesma rationale de `LOCALE_LABELS`.
+ */
+export function readLocaleCookie(): AppLocale {
+  if (typeof document === "undefined") return DEFAULT_LOCALE
+  const entry = document.cookie
+    .split("; ")
+    .find((c) => c.startsWith(`${LOCALE_COOKIE}=`))
+  return normalizeLocale(entry ? decodeURIComponent(entry.split("=")[1] ?? "") : undefined)
+}
+
+/**
  * Persiste o locale no cookie `NEXT_LOCALE` (1 ano, path raiz). O Next.js passa a
  * honrar esse idioma na detecção de locale — sobrevive a reload e navegação.
  */

@@ -1,15 +1,16 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { Check } from "lucide-react"
 import { Reveal } from "./reveal"
 import { useCountUp } from "../lib/use-count-up"
 
 const BULLETS = [
-  "Interface projetada para o dia a dia financeiro de uma casa",
-  "Convide quem mora com você para dividir as finanças",
-  "Dados seguros com isolamento por lar e backups automáticos",
-  "Sem contratos de longo prazo — cancele quando quiser",
+  "about.bullets.b1",
+  "about.bullets.b2",
+  "about.bullets.b3",
+  "about.bullets.b4",
 ]
 
 function StatCard({
@@ -44,22 +45,22 @@ function PercentStat() {
 }
 
 export function About() {
+  const { t } = useTranslation("landing")
+
   return (
     <section id="sobre" className="py-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-4 sm:px-6 lg:grid-cols-2">
         {/* Left: text */}
         <Reveal>
           <span className="text-[12.5px] font-bold uppercase tracking-[0.12em] text-primary">
-            Sobre o Larmony
+            {t("about.kicker")}
           </span>
           <h2 className="mt-3 text-[28px] font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-[42px]">
-            Feito para quem{" "}
-            <span className="text-primary">divide as contas de casa</span>
+            {t("about.titlePrefix")}{" "}
+            <span className="text-primary">{t("about.titleHighlight")}</span>
           </h2>
           <p className="mt-5 text-[15.5px] leading-relaxed text-white/55">
-            Organizar as finanças do lar não deveria depender de planilhas soltas
-            e anotações perdidas. O Larmony cuida do controle para você focar no
-            que realmente importa.
+            {t("about.paragraph")}
           </p>
 
           <ul className="mt-7 space-y-3.5">
@@ -68,7 +69,7 @@ export function About() {
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/15">
                   <Check className="h-3 w-3 text-primary" />
                 </span>
-                <span className="text-[14.5px] text-white/55">{bullet}</span>
+                <span className="text-[14.5px] text-white/55">{t(bullet)}</span>
               </li>
             ))}
           </ul>
@@ -78,11 +79,11 @@ export function About() {
         <div className="grid grid-cols-2 gap-4">
           <StatCard
             value={<PercentStat />}
-            label="Centavos exatos, sem arredondamento"
+            label={t("about.stats.cents")}
           />
-          <StatCard value="∞" label="Membros por lar" delay="lp-d1" />
-          <StatCard value="2" label="Idiomas: português e inglês" delay="lp-d2" />
-          <StatCard value="RLS" label="Dados isolados por lar" delay="lp-d3" />
+          <StatCard value="∞" label={t("about.stats.members")} delay="lp-d1" />
+          <StatCard value="2" label={t("about.stats.languages")} delay="lp-d2" />
+          <StatCard value="RLS" label={t("about.stats.rls")} delay="lp-d3" />
         </div>
       </div>
     </section>

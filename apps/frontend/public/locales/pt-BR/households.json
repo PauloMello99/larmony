@@ -26,6 +26,16 @@
     "deleteTitle": "Excluir lar",
     "deleteDescription": "Remove permanentemente todos os dados deste lar."
   },
+  "membersPage": {
+    "loading": "Carregando membros…",
+    "title": "Membros",
+    "description": "Gerencie quem tem acesso a esta lar.",
+    "invite": "Convidar",
+    "inviteCreated": "Convite criado. Link de aceite (dev — copie para testar):",
+    "copy": "Copiar",
+    "updatePermissionsError": "Não foi possível atualizar as permissões.",
+    "toggleStatusError": "Não foi possível alterar o status do membro."
+  },
   "members": {
     "title": "Membros ({{count}})",
     "pendingInvitations": "Convites pendentes ({{count}})",

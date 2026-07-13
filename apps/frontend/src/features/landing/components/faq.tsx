@@ -1,47 +1,29 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { Plus } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { SectionHeading } from "./section-heading"
 import { Reveal } from "./reveal"
 
-const FAQ_ITEMS = [
-  {
-    q: "Quantas pessoas podem participar de um lar?",
-    a: "Quantas você quiser. Cada pessoa tem o próprio login e senha, e o dono do lar controla quem entra e quem sai — pensado para casais, famílias e repúblicas.",
-  },
-  {
-    q: "Meus dados financeiros estão seguros?",
-    a: "Sim. Cada lar é isolado no banco de dados — um membro de um lar jamais enxerga dados de outro. Sua senha é criptografada e fazemos backups automáticos.",
-  },
-  {
-    q: "Preciso conectar minha conta bancária?",
-    a: "Não. O Larmony funciona com lançamentos manuais e recorrências automáticas — você controla exatamente o que entra. Integração com Open Finance está no roadmap.",
-  },
-  {
-    q: "O Larmony arredonda valores?",
-    a: "Nunca. Todo valor é armazenado em centavos exatos — se a conta deu R$ 33,33 para cada um, é isso que aparece. Precisão é um princípio do produto.",
-  },
-  {
-    q: "Funciona em inglês?",
-    a: "Sim — cada pessoa escolhe o próprio idioma (português ou inglês) e vê o mesmo lar traduzido, incluindo e-mails de lembrete.",
-  },
-]
+// Sufixos das chaves em `faq.items.<qN>` (indexadas p/ o checker de sync de locales).
+const FAQ_ITEMS = ["q1", "q2", "q3", "q4", "q5"]
 
 export function Faq() {
+  const { t } = useTranslation("landing")
   const [open, setOpen] = React.useState(0)
 
   return (
     <section id="faq" className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <SectionHeading kicker="FAQ" title="Perguntas frequentes" />
+        <SectionHeading kicker={t("faq.kicker")} title={t("faq.title")} />
 
         <Reveal className="mx-auto max-w-3xl">
           {FAQ_ITEMS.map((item, i) => {
             const isOpen = open === i
             return (
-              <div key={item.q} className="border-b border-white/[0.07]">
+              <div key={item} className="border-b border-white/[0.07]">
                 <button
                   type="button"
                   onClick={() => setOpen(isOpen ? -1 : i)}
@@ -51,7 +33,7 @@ export function Faq() {
                     isOpen ? "text-primary" : "text-white hover:text-primary",
                   )}
                 >
-                  {item.q}
+                  {t(`faq.items.${item}.question`)}
                   <Plus
                     className={cn(
                       "h-5 w-5 shrink-0 transition-transform duration-300",
@@ -69,7 +51,7 @@ export function Faq() {
                 >
                   <div className="overflow-hidden">
                     <p className="pb-5 text-[14.5px] leading-relaxed text-white/55">
-                      {item.a}
+                      {t(`faq.items.${item}.answer`)}
                     </p>
                   </div>
                 </div>

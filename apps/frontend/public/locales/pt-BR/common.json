@@ -30,6 +30,10 @@
   "datePicker": {
     "placeholder": "Selecione uma data"
   },
+  "phoneInput": {
+    "placeholder": "Número de telefone",
+    "country": "País"
+  },
   "notifications": {
     "title": "Notificações",
     "markAll": "Marcar todas",

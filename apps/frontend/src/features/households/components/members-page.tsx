@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { UserPlus, Loader2, AlertCircle } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { useAuth } from "@/features/auth/hooks/use-auth"
@@ -12,6 +13,7 @@ import type { InviteFormValues } from "../schemas/household.schemas"
 import type { HouseholdRole } from "../types"
 
 export function MembersPage() {
+  const { t } = useTranslation("households")
   const { household, householdId } = useCurrentHousehold()
   const isOwner = household.role === "owner"
   const [inviteOpen, setInviteOpen] = useState(false)
@@ -41,7 +43,7 @@ export function MembersPage() {
       alert(
         err instanceof Error
           ? err.message
-          : "Não foi possível atualizar as permissões.",
+          : t("membersPage.updatePermissionsError"),
       )
     }
   }
@@ -57,7 +59,7 @@ export function MembersPage() {
       alert(
         err instanceof Error
           ? err.message
-          : "Não foi possível alterar o status do membro.",
+          : t("membersPage.toggleStatusError"),
       )
     }
   }
@@ -71,7 +73,7 @@ export function MembersPage() {
     return (
       <div className="flex items-center justify-center py-16 text-foreground/40">
         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-        Carregando membros…
+        {t("membersPage.loading")}
       </div>
     )
   }
@@ -89,8 +91,8 @@ export function MembersPage() {
     <div className="mx-auto max-w-3xl grid gap-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl font-semibold">Membros</h2>
-          <p className="text-sm text-foreground/50">Gerencie quem tem acesso a esta lar.</p>
+          <h2 className="text-xl font-semibold">{t("membersPage.title")}</h2>
+          <p className="text-sm text-foreground/50">{t("membersPage.description")}</p>
         </div>
         {isOwner && (
           <Button
@@ -99,7 +101,7 @@ export function MembersPage() {
             onClick={() => setInviteOpen(true)}
           >
             <UserPlus className="mr-2 h-4 w-4" />
-            Convidar
+            {t("membersPage.invite")}
           </Button>
         )}
       </div>
@@ -107,7 +109,7 @@ export function MembersPage() {
       {lastInviteUrl && (
         <div className="flex flex-col gap-2 rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm">
           <span className="text-foreground/70">
-            Convite criado. Link de aceite (dev — copie para testar):
+            {t("membersPage.inviteCreated")}
           </span>
           <div className="flex items-center gap-2">
             <input
@@ -121,7 +123,7 @@ export function MembersPage() {
               variant="outline"
               onClick={() => void navigator.clipboard?.writeText(lastInviteUrl)}
             >
-              Copiar
+              {t("membersPage.copy")}
             </Button>
           </div>
         </div>

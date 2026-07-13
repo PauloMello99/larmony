@@ -1,5 +1,6 @@
 import * as React from "react"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import { Check, X } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { cn } from "@/shared/lib/utils"
@@ -7,65 +8,55 @@ import { SectionHeading } from "./section-heading"
 import { Reveal } from "./reveal"
 
 interface PlanFeature {
-  label: string
+  /** Sufixo da chave em `pricing.plans.<plan>.features.<fN>`. */
+  key: string
   included: boolean
 }
 
 interface Plan {
-  name: string
-  price: string
-  description: string
+  /** Sufixo da chave em `pricing.plans.<key>`. */
+  key: string
   features: PlanFeature[]
-  cta: string
   href: string
   highlighted?: boolean
-  badge?: string
+  badge?: boolean
 }
 
 const PLANS: Plan[] = [
   {
-    name: "Pessoal",
-    price: "Grátis",
-    description: "Para quem está começando a organizar as próprias finanças.",
-    cta: "Começar grátis",
+    key: "personal",
     href: "/auth/signup",
     features: [
-      { label: "Transações e categorias ilimitadas", included: true },
-      { label: "1 lar", included: true },
-      { label: "Orçamentos e metas", included: true },
-      { label: "Lembretes de contas por e-mail", included: true },
-      { label: "Relatórios avançados", included: false },
-      { label: "Múltiplos membros no lar", included: false },
+      { key: "f1", included: true },
+      { key: "f2", included: true },
+      { key: "f3", included: true },
+      { key: "f4", included: true },
+      { key: "f5", included: false },
+      { key: "f6", included: false },
     ],
   },
   {
-    name: "Família",
-    price: "Grátis",
-    description: "Para quem divide as contas da casa com outras pessoas.",
-    cta: "Começar grátis",
+    key: "family",
     href: "/auth/signup",
     highlighted: true,
-    badge: "Recomendado",
+    badge: true,
     features: [
-      { label: "Transações e categorias ilimitadas", included: true },
-      { label: "Membros ilimitados no lar", included: true },
-      { label: "Orçamentos e metas", included: true },
-      { label: "Lembretes de contas por e-mail", included: true },
-      { label: "Relatórios avançados", included: true },
-      { label: "Múltiplos lares", included: true },
+      { key: "f1", included: true },
+      { key: "f2", included: true },
+      { key: "f3", included: true },
+      { key: "f4", included: true },
+      { key: "f5", included: true },
+      { key: "f6", included: true },
     ],
   },
   {
-    name: "Em breve",
-    price: "A definir",
-    description: "Recursos avançados para quem precisa de mais controle.",
-    cta: "Entrar na lista de espera",
+    key: "soon",
     href: "mailto:contato@larmony.me",
     features: [
-      { label: "Exportação de relatórios", included: true },
-      { label: "Integração com Open Finance", included: true },
-      { label: "Automações personalizadas", included: true },
-      { label: "Suporte prioritário", included: true },
+      { key: "f1", included: true },
+      { key: "f2", included: true },
+      { key: "f3", included: true },
+      { key: "f4", included: true },
     ],
   },
 ]
@@ -73,19 +64,21 @@ const PLANS: Plan[] = [
 const DELAYS = ["", "lp-d1", "lp-d2"]
 
 export function Pricing() {
+  const { t } = useTranslation("landing")
+
   return (
     <section id="precos" className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHeading
-          kicker="Preços"
-          title="Simples e transparente"
-          subtitle="Sem taxas escondidas. Cancele quando quiser."
+          kicker={t("pricing.kicker")}
+          title={t("pricing.title")}
+          subtitle={t("pricing.subtitle")}
         />
 
         <div className="grid grid-cols-1 items-start gap-5 md:grid-cols-3">
           {PLANS.map((plan, i) => (
             <Reveal
-              key={plan.name}
+              key={plan.key}
               delay={DELAYS[i % 3]}
               className={cn(
                 "relative flex flex-col rounded-3xl border p-8 transition-transform duration-300 hover:-translate-y-1.5",
@@ -96,25 +89,25 @@ export function Pricing() {
             >
               {plan.badge && (
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3.5 py-1 text-[11.5px] font-bold text-primary-foreground">
-                  {plan.badge}
+                  {t(`pricing.plans.${plan.key}.badge`)}
                 </span>
               )}
 
               <div className="mb-6">
                 <p className="text-sm font-semibold text-white/55">
-                  {plan.name}
+                  {t(`pricing.plans.${plan.key}.name`)}
                 </p>
                 <div className="mt-2 text-[34px] font-extrabold tracking-tight text-white">
-                  {plan.price}
+                  {t(`pricing.plans.${plan.key}.price`)}
                 </div>
                 <p className="mt-2 text-[13.5px] leading-snug text-white/55">
-                  {plan.description}
+                  {t(`pricing.plans.${plan.key}.description`)}
                 </p>
               </div>
 
               <ul className="mb-7 flex-1 space-y-2.5">
                 {plan.features.map((feature) => (
-                  <li key={feature.label} className="flex items-center gap-2.5">
+                  <li key={feature.key} className="flex items-center gap-2.5">
                     {feature.included ? (
                       <Check className="h-4 w-4 shrink-0 text-success" />
                     ) : (
@@ -126,7 +119,7 @@ export function Pricing() {
                         feature.included ? "text-white/70" : "text-white/25",
                       )}
                     >
-                      {feature.label}
+                      {t(`pricing.plans.${plan.key}.features.${feature.key}`)}
                     </span>
                   </li>
                 ))}
@@ -141,7 +134,7 @@ export function Pricing() {
                     : "border border-white/15 bg-transparent text-white hover:bg-white/5",
                 )}
               >
-                <Link href={plan.href}>{plan.cta}</Link>
+                <Link href={plan.href}>{t(`pricing.plans.${plan.key}.cta`)}</Link>
               </Button>
             </Reveal>
           ))}
