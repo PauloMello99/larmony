@@ -52,7 +52,7 @@ export async function signUpUser(
   const password = "SenhaForteE2e123!";
   const res = await request(app.getHttpServer())
     .post("/auth/sign-up")
-    .send({ name: `E2E ${prefix}`, email, password })
+    .send({ name: `E2E ${prefix}`, email, password, termsAccepted: true })
     .expect(201);
 
   const accessToken: string =

@@ -78,6 +78,13 @@
       "when": 1783241797160,
       "tag": "0010_billing_plan_catalog",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1783241797161,
+      "tag": "0011_terms_consent",
+      "breakpoints": true
     }
   ]
 }

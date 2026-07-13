@@ -11,6 +11,7 @@ import {
   USER_REPOSITORY,
 } from "../../user/domain/user.repository.interface";
 import { AuditService } from "../../audit/audit.service";
+import { TERMS_VERSION } from "../terms-version";
 
 @Injectable()
 export class SignUpUseCase {
@@ -42,6 +43,8 @@ export class SignUpUseCase {
         authId: session.user.id,
         email: session.user.email,
         name,
+        // Aceite validado no DTO (@Equals(true)); aqui gravamos a versão (LGPD).
+        termsVersion: TERMS_VERSION,
       });
       createdUserId = created.id;
     } catch (err) {
@@ -54,7 +57,7 @@ export class SignUpUseCase {
       action: "create",
       entityType: "user",
       entityId: createdUserId,
-      metadata: { name, email },
+      metadata: { name, email, termsVersion: TERMS_VERSION },
     });
 
     // E-mail de boas-vindas: best-effort — nunca quebra/bloqueia o cadastro.

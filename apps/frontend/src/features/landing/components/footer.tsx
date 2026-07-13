@@ -16,10 +16,10 @@ const FOOTER_LINKS = {
     { label: "Imprensa", href: "#" },
   ],
   Legal: [
-    { label: "Termos de uso", href: "#" },
-    { label: "Privacidade", href: "#" },
-    { label: "Cookies", href: "#" },
-    { label: "Segurança", href: "#" },
+    { label: "Termos de uso", href: "/legal/termos-de-uso" },
+    { label: "Privacidade", href: "/legal/privacidade" },
+    { label: "Cookies", href: "/legal/privacidade#cookies" },
+    { label: "Segurança", href: "/legal/privacidade#seguranca" },
   ],
 }
 

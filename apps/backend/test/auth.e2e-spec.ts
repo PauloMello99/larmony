@@ -24,8 +24,27 @@ describe("Auth (e2e)", () => {
 
     await request(app.getHttpServer())
       .post("/auth/sign-up")
-      .send({ name: "Dup", email: user.email, password: user.password })
+      .send({ name: "Dup", email: user.email, password: user.password, termsAccepted: true })
       .expect((res) => expect(res.status).toBeGreaterThanOrEqual(400));
+  });
+
+  it("sign-up sem aceite dos termos → 400 (LGPD); com aceite grava versão+timestamp", async () => {
+    await request(app.getHttpServer())
+      .post("/auth/sign-up")
+      .send({
+        name: "Sem Aceite",
+        email: `sem.aceite.${Date.now()}@e2e.larmony.local`,
+        password: "SenhaForteE2e123!",
+      })
+      .expect(400);
+
+    const user = await signUpUser(app, "auth.terms"); // helper envia termsAccepted: true
+    const row = await pool.query(
+      `SELECT terms_accepted_at, terms_version FROM public.users WHERE email = $1`,
+      [user.email],
+    );
+    expect(row.rows[0].terms_accepted_at).not.toBeNull();
+    expect(row.rows[0].terms_version).toBeTruthy();
   });
 
   it("sign-in autentica com credenciais corretas e rejeita senha errada", async () => {
