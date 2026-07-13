@@ -83,3 +83,15 @@ disparos acontecerem no dia e na hora certos. ADR-0022 já prometia migrar a
 - Hora preferida para eventos event-driven (meta atingida, orçamento estourado)
   e para a geração do auto-launch — disparam na hora.
 - Offsets fixos — sempre IANA.
+
+## Adendo (2026-07-13) — Campo de timezone visível na criação (reverte a Decisão 4/Consequências)
+
+A Decisão original tornava o fuso **auto-detectado sem campo visível** na
+criação do lar (só editável depois em Configurações). A pedido do responsável,
+essa parte foi revertida: `create-household-form.tsx` agora expõe o mesmo
+`Select` sobre `IANA_TIMEZONES` já usado em Configurações, pré-preenchido com
+`browserTimeZone()` — o usuário confere/ajusta o fuso já na criação, em vez de
+descobrir depois que o valor auto-detectado estava errado (ex.: VPN, relógio de
+SO mal configurado). **Nada mais muda**: mecanismo de auto-detecção, validação
+IANA estrita, e o fato de o fuso ser por-lar (não por-usuário) permanecem como
+decididos acima.
