@@ -13,7 +13,11 @@ import { GrantCompUseCase } from "./application/use-cases/grant-comp.use-case";
 import { RevokeCompUseCase } from "./application/use-cases/revoke-comp.use-case";
 import { ApplyDiscountUseCase } from "./application/use-cases/apply-discount.use-case";
 import { RemoveDiscountUseCase } from "./application/use-cases/remove-discount.use-case";
+import { ExpireSubscriptionsUseCase } from "./application/use-cases/expire-subscriptions.use-case";
+import { GrantTrialUseCase } from "./application/use-cases/grant-trial.use-case";
+import { RevokeTrialUseCase } from "./application/use-cases/revoke-trial.use-case";
 import { BillingReconciliationJob } from "./application/jobs/billing-reconciliation.job";
+import { BillingExpirySweepJob } from "./application/jobs/billing-expiry-sweep.job";
 import { SubscriptionsController } from "./interface/subscriptions.controller";
 import { StripeWebhookController } from "./interface/stripe-webhook.controller";
 import { AdminSubscriptionController } from "./interface/admin-subscription.controller";
@@ -41,8 +45,12 @@ import { HouseholdEntitlementGuard } from "./interface/guards/household-entitlem
     RevokeCompUseCase,
     ApplyDiscountUseCase,
     RemoveDiscountUseCase,
-    // Registrado no tick do internal-cron via @CronJobName (DiscoveryService).
+    ExpireSubscriptionsUseCase,
+    GrantTrialUseCase,
+    RevokeTrialUseCase,
+    // Registrados no tick do internal-cron via @CronJobName (DiscoveryService).
     BillingReconciliationJob,
+    BillingExpirySweepJob,
   ],
   // Exportados para gatear rotas de outros módulos por entitlement (B-4, mesmo
   // padrão de bridge cross-módulo do DispatchNotificationUseCase, ADR-0023):

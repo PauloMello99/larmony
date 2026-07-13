@@ -13,6 +13,7 @@ interface SubscriptionRow {
   status: string;
   compReason: string | null;
   compExpiresAt: Date | null;
+  trialEndsAt: Date | null;
   stripeCouponId: string | null;
   discountPercent: number | null;
   createdAt: Date;
@@ -30,6 +31,7 @@ export class SubscriptionMapper {
       status: row.status as SubscriptionStatus,
       compReason: row.compReason,
       compExpiresAt: row.compExpiresAt,
+      trialEndsAt: row.trialEndsAt,
       stripeCouponId: row.stripeCouponId,
       discountPercent: row.discountPercent,
       createdAt: row.createdAt,

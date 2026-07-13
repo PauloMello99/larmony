@@ -65,10 +65,24 @@ export function SubscriptionPage() {
             />
           )}
 
-          {entitlements.plan === "premium" && (
+          {/* Trial administrativo (local, sem Stripe): sem portal — não há
+              customer; o CTA é assinar de verdade antes do fim do teste. */}
+          {entitlements.plan === "premium" && entitlements.source === "trial" && (
+            <TrialPanel
+              t={t}
+              isOwner={isOwner}
+              trialEndsAt={subscription?.trialEndsAt ?? null}
+              pending={checkoutPending}
+              error={checkoutError}
+              onCheckout={() => startCheckout()}
+            />
+          )}
+
+          {entitlements.plan === "premium" && entitlements.source !== "trial" && (
             <PremiumPanel
               t={t}
               isOwner={isOwner}
+              showPortal={entitlements.source === "stripe"}
               pastDue={entitlements.status === "past_due"}
               pending={portalPending}
               error={portalError}
@@ -127,6 +141,7 @@ function FreePanel({
 function PremiumPanel({
   t,
   isOwner,
+  showPortal,
   pastDue,
   pending,
   error,
@@ -134,6 +149,8 @@ function PremiumPanel({
 }: {
   t: (k: string) => string
   isOwner: boolean
+  /** Portal só faz sentido com assinatura Stripe real (source === "stripe"). */
+  showPortal: boolean
   pastDue: boolean
   pending: boolean
   error: string | null
@@ -150,7 +167,7 @@ function PremiumPanel({
           <Banner tone="neutral">{t("premium.pastDue")}</Banner>
         </div>
       )}
-      {isOwner ? (
+      {isOwner && showPortal ? (
         <>
           <Button
             variant="outline"
@@ -159,6 +176,49 @@ function PremiumPanel({
             disabled={pending}
           >
             {pending ? t("premium.portalPending") : t("premium.portalCta")}
+          </Button>
+          {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
+        </>
+      ) : !isOwner ? (
+        <p className="mt-4 text-sm text-foreground/40">{t("ownerOnly")}</p>
+      ) : null}
+    </div>
+  )
+}
+
+function TrialPanel({
+  t,
+  isOwner,
+  trialEndsAt,
+  pending,
+  error,
+  onCheckout,
+}: {
+  t: (k: string) => string
+  isOwner: boolean
+  trialEndsAt: string | null
+  pending: boolean
+  error: string | null
+  onCheckout: () => void
+}) {
+  const until = trialEndsAt
+    ? new Date(trialEndsAt).toLocaleDateString()
+    : null
+  return (
+    <div className="mt-4">
+      <div className="flex items-start gap-2">
+        <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-orange-400" />
+        <div>
+          <p className="text-sm font-medium">{t("trial.title")}</p>
+          <p className="mt-0.5 text-sm text-foreground/50">
+            {until ? `${t("trial.until")} ${until}.` : t("trial.description")}
+          </p>
+        </div>
+      </div>
+      {isOwner ? (
+        <>
+          <Button className="mt-4" onClick={onCheckout} disabled={pending}>
+            {pending ? t("free.ctaPending") : t("trial.cta")}
           </Button>
           {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
         </>

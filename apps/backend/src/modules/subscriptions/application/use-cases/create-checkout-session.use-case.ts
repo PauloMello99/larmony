@@ -46,8 +46,14 @@ export class CreateCheckoutSessionUseCase {
     const plan = await this.billingPlanRepo.findByKey(DEFAULT_PLAN_KEY);
     if (!plan?.stripePriceId) throw new PlanNotAvailableException(DEFAULT_PLAN_KEY);
 
+    // Rota real do frontend é /households/:slug/... (não /dashboard nem UUID)
+    // — corrigido após a bateria de integração real (webhook local) pegar o
+    // retorno do checkout caindo em 404.
     const frontendUrl = this.config.getOrThrow<string>("FRONTEND_URL");
-    const basePath = `${frontendUrl}/dashboard/households/${householdId}/settings/subscription`;
+    const slug = await this.repo.findHouseholdSlug(householdId);
+    const basePath = slug
+      ? `${frontendUrl}/households/${slug}/settings/subscription`
+      : `${frontendUrl}/households`;
 
     return this.gateway.createCheckoutSession({
       customerId,

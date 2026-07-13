@@ -29,6 +29,10 @@ function make() {
     revokeComp: jest.fn().mockResolvedValue(undefined),
     setDiscountCache: jest.fn().mockResolvedValue(undefined),
     clearDiscountCache: jest.fn().mockResolvedValue(undefined),
+    findExpired: jest.fn().mockResolvedValue([]),
+    expireTrial: jest.fn().mockResolvedValue(undefined),
+    grantTrial: jest.fn().mockResolvedValue(undefined),
+    findHouseholdSlug: jest.fn().mockResolvedValue("slug-teste"),
   };
   const billingPlans: jest.Mocked<IBillingPlanRepository> = {
     findByKey: jest.fn(),

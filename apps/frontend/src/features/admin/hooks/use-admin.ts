@@ -206,7 +206,24 @@ export function useAdminBilling() {
     onSuccess: (_d, v) => invalidate(v.householdId),
   })
 
-  return { grantComp, revokeComp, applyDiscount, removeDiscount }
+  const grantTrial = useMutation({
+    mutationFn: (v: { householdId: string; months: number }) =>
+      apiRequest<void>(`/admin/households/${v.householdId}/subscription/trial`, {
+        method: "POST",
+        body: JSON.stringify({ months: v.months }),
+      }),
+    onSuccess: (_d, v) => invalidate(v.householdId),
+  })
+
+  const revokeTrial = useMutation({
+    mutationFn: (v: { householdId: string }) =>
+      apiRequest<void>(`/admin/households/${v.householdId}/subscription/trial`, {
+        method: "DELETE",
+      }),
+    onSuccess: (_d, v) => invalidate(v.householdId),
+  })
+
+  return { grantComp, revokeComp, applyDiscount, removeDiscount, grantTrial, revokeTrial }
 }
 
 export function useAdminUsers() {

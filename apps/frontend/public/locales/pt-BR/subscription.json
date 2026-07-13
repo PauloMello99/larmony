@@ -30,6 +30,12 @@
     "portalCta": "Gerenciar assinatura",
     "portalPending": "Redirecionando…"
   },
+  "trial": {
+    "title": "Período de teste ativo",
+    "description": "Sua lar tem acesso Premium durante o período de teste.",
+    "until": "Acesso Premium completo até",
+    "cta": "Assinar o Premium"
+  },
   "comp": {
     "title": "Isenção concedida",
     "description": "Sua lar tem acesso completo por cortesia — sem cobrança.",

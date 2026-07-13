@@ -11,7 +11,7 @@ import {
 } from "../domain/entitlements";
 
 export type { ResolvedPlan } from "../domain/entitlements";
-export type EntitlementSource = "stripe" | "comp" | "free";
+export type EntitlementSource = "stripe" | "comp" | "trial" | "free";
 
 export interface ResolvedEntitlements {
   plan: ResolvedPlan;
@@ -45,11 +45,16 @@ export class EntitlementsService {
           ? "custom"
           : "premium";
 
+    // Trial vem ANTES do check de stripeSubscriptionId: o id de uma sub
+    // cancelada fica gravado para registro (B-3) e classificaria errado um
+    // lar em trial como source=stripe (pego pela bateria do hardening).
     const source: EntitlementSource = subscription.compReason
       ? "comp"
-      : subscription.stripeSubscriptionId
-        ? "stripe"
-        : "free";
+      : subscription.type === "trial"
+        ? "trial"
+        : subscription.stripeSubscriptionId
+          ? "stripe"
+          : "free";
 
     return {
       plan,
