@@ -99,6 +99,8 @@
     "description": "Crea un espacio para tu hogar. Serás el propietario.",
     "nameLabel": "Nombre",
     "namePlaceholder": "Ej.: Casa de la Familia",
+    "timezoneLabel": "Zona horaria",
+    "timezoneHint": "Define cuándo vencen los movimientos y cuándo se envían los avisos. Detectada automáticamente — ajústala si es necesario.",
     "limitReached": "Ya tienes un hogar en el plan Free. Ve a Configuración > Suscripción de un hogar existente para mejorar el plan y crear otro.",
     "submitting": "Creando…",
     "submit": "Crear hogar"

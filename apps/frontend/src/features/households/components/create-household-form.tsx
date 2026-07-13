@@ -25,7 +25,14 @@ import {
 } from "@/shared/components/ui/form";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { browserTimeZone } from "@/shared/lib/timezones";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/ui/select";
+import { browserTimeZone, IANA_TIMEZONES } from "@/shared/lib/timezones";
 import { ApiError } from "@/infrastructure/api/client";
 import { translateApiError } from "@/shared/lib/api-error";
 import {
@@ -51,8 +58,9 @@ export function CreateHouseholdForm({
   const [error, setError] = useState<string | null>(null);
   const form = useForm<CreateHouseholdFormValues>({
     resolver: zodResolver(schema),
-    // Fuso do lar (M12) capturado do navegador do criador — editável depois em
-    // Configurações do lar. Sem campo visível na criação.
+    // Fuso do lar (M12) pré-preenchido do navegador do criador — visível e
+    // editável já na criação (adendo ADR-0024); segue editável depois em
+    // Configurações do lar.
     defaultValues: { name: "", timezone: browserTimeZone() },
   });
 
@@ -119,6 +127,34 @@ export function CreateHouseholdForm({
                   )}
                 />
               </div>
+
+              <FormField
+                control={form.control}
+                name="timezone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("createForm.timezoneLabel")}</FormLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="max-h-72">
+                        {IANA_TIMEZONES.map((tz) => (
+                          <SelectItem key={tz} value={tz}>
+                            {tz.replace(/_/g, " ")}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-foreground/30">
+                      {t("createForm.timezoneHint")}
+                    </p>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               {limitReached && (
                 <div className="flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/[0.06] p-4">
