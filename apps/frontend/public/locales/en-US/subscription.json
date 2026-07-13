@@ -49,6 +49,8 @@
     "title": "Premium feature",
     "description": "Advanced reports are part of the Premium plan. Upgrade to unlock.",
     "descriptionCategories": "Custom categories are part of the Premium plan. Upgrade to unlock.",
+    "descriptionGoals": "You've reached the goal limit of the Free plan. Upgrade to create unlimited goals.",
+    "descriptionBudgets": "You've reached the active budget limit of the Free plan. Upgrade to create unlimited budgets.",
     "cta": "See plans"
   }
 }

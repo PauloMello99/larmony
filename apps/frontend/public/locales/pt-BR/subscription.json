@@ -49,6 +49,8 @@
     "title": "Recurso Premium",
     "description": "Relatórios avançados fazem parte do plano Premium. Faça o upgrade para desbloquear.",
     "descriptionCategories": "Categorias personalizadas fazem parte do plano Premium. Faça o upgrade para desbloquear.",
+    "descriptionGoals": "Você atingiu o limite de metas do plano Grátis. Faça o upgrade para criar metas ilimitadas.",
+    "descriptionBudgets": "Você atingiu o limite de orçamentos ativos do plano Grátis. Faça o upgrade para criar orçamentos ilimitados.",
     "cta": "Ver planos"
   }
 }

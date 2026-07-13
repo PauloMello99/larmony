@@ -49,6 +49,8 @@
     "title": "Fonctionnalité Premium",
     "description": "Les rapports avancés font partie du plan Premium. Passe au niveau supérieur pour les débloquer.",
     "descriptionCategories": "Les catégories personnalisées font partie du plan Premium. Passe au niveau supérieur pour les débloquer.",
+    "descriptionGoals": "Tu as atteint la limite d’objectifs du plan Free. Passe au niveau supérieur pour créer des objectifs illimités.",
+    "descriptionBudgets": "Tu as atteint la limite de budgets actifs du plan Free. Passe au niveau supérieur pour créer des budgets illimités.",
     "cta": "Voir les plans"
   }
 }

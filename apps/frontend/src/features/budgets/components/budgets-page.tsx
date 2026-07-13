@@ -6,6 +6,7 @@ import { PiggyBank, PlusCircle } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
+import { useEntitlements } from "@/features/subscription"
 import { useBudgets } from "../hooks/use-budgets"
 import { useBudgetMutations } from "../hooks/use-budget-mutations"
 import { BudgetForm } from "./budget-form"
@@ -39,6 +40,8 @@ export function BudgetsPage() {
   const [period, setPeriod] = useState<BudgetFilters>(currentPeriod)
   const { budgets, loading } = useBudgets(householdId, period)
   const { createBudget, updateBudget, deleteBudget } = useBudgetMutations(householdId)
+  const { limits } = useEntitlements(householdId)
+  const atBudgetLimit = budgets.length >= limits.maxActiveBudgets
 
   const isEditable = isEditablePeriod(period, currentPeriod())
   const isFuture = isFuturePeriod(period, currentPeriod())
@@ -131,6 +134,7 @@ export function BudgetsPage() {
         householdId={householdId}
         budget={editing}
         budgetedCategoryIds={budgets.map((b) => b.categoryId)}
+        atLimit={atBudgetLimit}
         onSubmit={handleSubmit}
       />
 

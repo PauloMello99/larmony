@@ -49,6 +49,8 @@
     "title": "高级版功能",
     "description": "高级报告属于高级版套餐。请升级以解锁。",
     "descriptionCategories": "自定义分类属于高级版套餐。请升级以解锁。",
+    "descriptionGoals": "您已达到免费版的目标数量上限。请升级以创建无限数量的目标。",
+    "descriptionBudgets": "您已达到免费版的有效预算数量上限。请升级以创建无限数量的预算。",
     "cta": "查看套餐"
   }
 }

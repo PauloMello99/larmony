@@ -49,6 +49,8 @@
     "title": "Función Premium",
     "description": "Los informes avanzados forman parte del plan Premium. Actualiza tu plan para desbloquearlos.",
     "descriptionCategories": "Las categorías personalizadas forman parte del plan Premium. Actualiza tu plan para desbloquearlas.",
+    "descriptionGoals": "Alcanzaste el límite de metas del plan Gratis. Actualiza tu plan para crear metas ilimitadas.",
+    "descriptionBudgets": "Alcanzaste el límite de presupuestos activos del plan Gratis. Actualiza tu plan para crear presupuestos ilimitados.",
     "cta": "Ver planes"
   }
 }

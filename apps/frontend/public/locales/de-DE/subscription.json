@@ -49,6 +49,8 @@
     "title": "Premium-Funktion",
     "description": "Erweiterte Berichte sind Teil des Premium-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
     "descriptionCategories": "Individuelle Kategorien sind Teil des Premium-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
+    "descriptionGoals": "Du hast das Ziel-Limit des Free-Plans erreicht. Führe ein Upgrade durch, um unbegrenzt Ziele zu erstellen.",
+    "descriptionBudgets": "Du hast das Limit aktiver Budgets des Free-Plans erreicht. Führe ein Upgrade durch, um unbegrenzt Budgets zu erstellen.",
     "cta": "Pläne ansehen"
   }
 }

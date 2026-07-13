@@ -32,6 +32,7 @@ import {
 import { Button } from "@/shared/components/ui/button"
 import { CurrencyInput } from "@/shared/components/ui/currency-input"
 import { useCategories } from "@/features/categories/hooks/use-categories"
+import { PremiumGate } from "@/features/subscription"
 import { translateApiError } from "@/shared/lib/api-error"
 import { makeCreateBudgetSchema, type CreateBudgetFormValues } from "../schemas/budget.schemas"
 import type { Budget } from "../types"
@@ -43,6 +44,8 @@ interface BudgetFormProps {
   budget?: Budget | null
   /** Categorias já orçadas neste período — excluídas do Select ao criar. */
   budgetedCategoryIds: string[]
+  /** Lar já atingiu o limite de orçamentos ativos do Free (D-1) — bloqueia só a criação. */
+  atLimit?: boolean
   onSubmit: (values: CreateBudgetFormValues) => Promise<void>
 }
 
@@ -52,11 +55,13 @@ export function BudgetForm({
   householdId,
   budget,
   budgetedCategoryIds,
+  atLimit,
   onSubmit,
 }: BudgetFormProps) {
   const { t } = useTranslation("budgets")
   const { t: tCommon } = useTranslation("common")
   const isEditing = !!budget
+  const blocked = !isEditing && !!atLimit
   const { categories } = useCategories(householdId)
 
   // Orçamento soma só despesas → categorias income não fazem sentido.
@@ -94,6 +99,28 @@ export function BudgetForm({
       setError(translateApiError(err, tCommon))
     }
   })
+
+  if (blocked) {
+    return (
+      <Sheet open={open} onOpenChange={onOpenChange}>
+        <SheetContent side="right" className="gap-0 sm:max-w-md">
+          <SheetHeader>
+            <SheetTitle>{t("form.createTitle")}</SheetTitle>
+          </SheetHeader>
+          <SheetBody className="py-6">
+            <PremiumGate descriptionKey="gate.descriptionBudgets" />
+          </SheetBody>
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button variant="outline" className="w-full sm:w-auto">
+                {tCommon("actions.cancel")}
+              </Button>
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    )
+  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
