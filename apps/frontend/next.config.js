@@ -1,5 +1,9 @@
 import process from "node:process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { withBetterStack } from "@logtail/next";
+
+const monorepoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
 /**
  * i18n (ADR-0018): locale NÃO influencia a rota — sem prefixo `/en/`, `/es/`
@@ -48,6 +52,12 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   devIndicators: false,
+  // Standalone (P-5): o build traça só os arquivos/deps realmente usados e
+  // gera .next/standalone/server.js — a imagem Docker deixa de carregar o
+  // node_modules de produção inteiro (~2GB → centenas de MB). Em monorepo
+  // pnpm o tracing precisa da raiz do workspace.
+  output: "standalone",
+  outputFileTracingRoot: monorepoRoot,
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
