@@ -107,6 +107,8 @@
     "INVALID_DISCOUNT": "Invalid discount — please check the parameters.",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "The home doesn't have an active Stripe subscription.",
     "TRIAL_NOT_ALLOWED": "The trial isn't available for the home's current plan.",
+    "HOUSEHOLD_LIMIT_REACHED": "You've reached the Free plan's home limit. Upgrade an existing home to create another.",
+    "MEMBER_LIMIT_REACHED": "This home has reached the Free plan's member limit. Upgrade to invite more people.",
     "NETWORK": "Network error — check your connection and try again.",
     "UNEXPECTED": "An unexpected error occurred. Please try again."
   }

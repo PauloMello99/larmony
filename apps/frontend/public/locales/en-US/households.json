@@ -102,6 +102,7 @@
     "description": "Create a space for your home. You will be the owner.",
     "nameLabel": "Name",
     "namePlaceholder": "e.g., Family Home",
+    "limitReached": "You already have a home on the Free plan. Go to Settings > Subscription for an existing home to upgrade and create another.",
     "submitting": "Creating…",
     "submit": "Create home"
   },

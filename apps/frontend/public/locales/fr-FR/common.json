@@ -107,6 +107,8 @@
     "INVALID_DISCOUNT": "Remise invalide — vérifie les paramètres.",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "Le foyer n’a pas d’abonnement Stripe actif.",
     "TRIAL_NOT_ALLOWED": "L’essai n’est pas disponible pour le plan actuel du foyer.",
+    "HOUSEHOLD_LIMIT_REACHED": "Tu as atteint la limite de foyers du plan Free. Mets à niveau un foyer existant pour en créer un autre.",
+    "MEMBER_LIMIT_REACHED": "Ce foyer a atteint la limite de membres du plan Free. Mets à niveau pour inviter plus de monde.",
     "NETWORK": "Échec réseau — vérifie ta connexion et réessaie.",
     "UNEXPECTED": "Une erreur inattendue s’est produite. Réessaie."
   }

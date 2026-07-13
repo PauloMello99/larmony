@@ -107,6 +107,8 @@
     "INVALID_DISCOUNT": "折扣无效——请检查参数。",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "该家庭没有有效的 Stripe 订阅。",
     "TRIAL_NOT_ALLOWED": "该家庭当前套餐不支持试用。",
+    "HOUSEHOLD_LIMIT_REACHED": "您已达到 Free 套餐的家庭数量上限。请升级现有家庭以创建新的家庭。",
+    "MEMBER_LIMIT_REACHED": "该家庭已达到 Free 套餐的成员数量上限。请升级以邀请更多成员。",
     "NETWORK": "网络故障——请检查您的网络连接并重试。",
     "UNEXPECTED": "发生了意外错误。请重试。"
   }

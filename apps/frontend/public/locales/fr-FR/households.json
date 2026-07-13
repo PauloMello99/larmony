@@ -102,6 +102,7 @@
     "description": "Crée un espace pour ton foyer. Tu en seras le propriétaire.",
     "nameLabel": "Nom",
     "namePlaceholder": "Ex : Maison de la famille",
+    "limitReached": "Tu as déjà un foyer sur le plan Free. Va dans Paramètres > Abonnement d'un foyer existant pour le mettre à niveau et en créer un autre.",
     "submitting": "Création…",
     "submit": "Créer le foyer"
   },

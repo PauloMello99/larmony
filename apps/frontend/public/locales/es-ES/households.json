@@ -99,6 +99,7 @@
     "description": "Crea un espacio para tu hogar. Serás el propietario.",
     "nameLabel": "Nombre",
     "namePlaceholder": "Ej.: Casa de la Familia",
+    "limitReached": "Ya tienes un hogar en el plan Free. Ve a Configuración > Suscripción de un hogar existente para mejorar el plan y crear otro.",
     "submitting": "Creando…",
     "submit": "Crear hogar"
   },

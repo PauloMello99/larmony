@@ -102,6 +102,7 @@
     "description": "Crie um espaço para o seu lar. Você será o proprietário.",
     "nameLabel": "Nome",
     "namePlaceholder": "Ex: Casa da Família",
+    "limitReached": "Você já tem um lar no plano Free. Acesse Configurações > Assinatura de um lar existente para fazer upgrade e criar outro.",
     "submitting": "Criando…",
     "submit": "Criar lar"
   },
