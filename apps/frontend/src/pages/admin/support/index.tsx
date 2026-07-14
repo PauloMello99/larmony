@@ -2,16 +2,16 @@ import { makeI18nProps } from "@/shared/lib/i18n"
 import type { ReactElement } from "react"
 import type { NextPageWithLayout } from "@/pages/_app"
 import { AuthGuard } from "@/features/auth/components/auth-guard"
-import { AdminLayout, AdminBilling } from "@/features/admin"
+import { AdminLayout, AdminSupportInbox } from "@/features/admin"
 
-const AdminBillingPage: NextPageWithLayout = () => <AdminBilling />
+const AdminSupportIndexPage: NextPageWithLayout = () => <AdminSupportInbox />
 
-AdminBillingPage.getLayout = (page: ReactElement) => (
+AdminSupportIndexPage.getLayout = (page: ReactElement) => (
   <AuthGuard>
     <AdminLayout>{page}</AdminLayout>
   </AuthGuard>
 )
 
-export default AdminBillingPage
+export default AdminSupportIndexPage
 
 export const getServerSideProps = makeI18nProps(["common", "dashboard", "admin"])

@@ -16,16 +16,27 @@ import { CurrentUser } from "../../auth/decorators/current-user.decorator";
 import { AuthUser } from "../../auth/application/ports/auth-provider.interface";
 import { GetPlatformStatsUseCase } from "../application/use-cases/get-platform-stats.use-case";
 import { GetPlatformGrowthUseCase } from "../application/use-cases/get-platform-growth.use-case";
+import { GetBillingStatsUseCase } from "../application/use-cases/get-billing-stats.use-case";
+import { GetBillingGrowthUseCase } from "../application/use-cases/get-billing-growth.use-case";
 import { ListPlatformHouseholdsUseCase } from "../application/use-cases/list-platform-households.use-case";
 import { ListPlatformUsersUseCase } from "../application/use-cases/list-platform-users.use-case";
 import { GetHouseholdDetailUseCase } from "../application/use-cases/get-household-detail.use-case";
 import { GetUserDetailUseCase } from "../application/use-cases/get-user-detail.use-case";
+import { ListHouseholdTransactionsUseCase } from "../application/use-cases/list-household-transactions.use-case";
+import { ListHouseholdCategoriesUseCase } from "../application/use-cases/list-household-categories.use-case";
+import { ListHouseholdBudgetsUseCase } from "../application/use-cases/list-household-budgets.use-case";
+import { ListHouseholdGoalsUseCase } from "../application/use-cases/list-household-goals.use-case";
+import { ListHouseholdScheduledEntriesUseCase } from "../application/use-cases/list-household-scheduled-entries.use-case";
+import { ListHouseholdNotificationsUseCase } from "../application/use-cases/list-household-notifications.use-case";
 import { SetHouseholdSuspendedUseCase } from "../application/use-cases/set-household-suspended.use-case";
-import { SetUserPlatformRoleUseCase } from "../application/use-cases/set-user-platform-role.use-case";
 import { ListAuditLogsUseCase } from "../../audit/application/use-cases/list-audit-logs.use-case";
 import { SetSuspendedDto } from "./dto/set-suspended.dto";
-import { SetPlatformRoleDto } from "./dto/set-platform-role.dto";
 import { AuditLogsQueryDto } from "./dto/audit-logs-query.dto";
+import { ListHouseholdsQueryDto } from "./dto/list-households-query.dto";
+import { ListUsersQueryDto } from "./dto/list-users-query.dto";
+import { PageQueryDto } from "./dto/page-query.dto";
+import { ListHouseholdTransactionsQueryDto } from "./dto/list-household-transactions-query.dto";
+import { ListHouseholdNotificationsQueryDto } from "./dto/list-household-notifications-query.dto";
 
 /**
  * Painel da plataforma (PLAT-1). Rotas NÃO household-scoped, restritas ao super_admin
@@ -37,12 +48,19 @@ export class AdminController {
   constructor(
     private readonly getStats: GetPlatformStatsUseCase,
     private readonly getGrowth: GetPlatformGrowthUseCase,
+    private readonly getBillingStats: GetBillingStatsUseCase,
+    private readonly getBillingGrowth: GetBillingGrowthUseCase,
     private readonly listHouseholds: ListPlatformHouseholdsUseCase,
     private readonly listUsers: ListPlatformUsersUseCase,
     private readonly getHouseholdDetail: GetHouseholdDetailUseCase,
     private readonly getUserDetail: GetUserDetailUseCase,
+    private readonly listHouseholdTransactions: ListHouseholdTransactionsUseCase,
+    private readonly listHouseholdCategories: ListHouseholdCategoriesUseCase,
+    private readonly listHouseholdBudgets: ListHouseholdBudgetsUseCase,
+    private readonly listHouseholdGoals: ListHouseholdGoalsUseCase,
+    private readonly listHouseholdScheduledEntries: ListHouseholdScheduledEntriesUseCase,
+    private readonly listHouseholdNotifications: ListHouseholdNotificationsUseCase,
     private readonly setHouseholdSuspended: SetHouseholdSuspendedUseCase,
-    private readonly setUserPlatformRole: SetUserPlatformRoleUseCase,
     private readonly listAuditLogs: ListAuditLogsUseCase,
   ) {}
 
@@ -56,9 +74,19 @@ export class AdminController {
     return this.getGrowth.execute();
   }
 
+  @Get("stats/billing")
+  billingStats() {
+    return this.getBillingStats.execute();
+  }
+
+  @Get("stats/billing/growth")
+  billingGrowth() {
+    return this.getBillingGrowth.execute();
+  }
+
   @Get("households")
-  households() {
-    return this.listHouseholds.execute();
+  households(@Query() query: ListHouseholdsQueryDto) {
+    return this.listHouseholds.execute(query);
   }
 
   @Get("households/:id")
@@ -66,9 +94,59 @@ export class AdminController {
     return this.getHouseholdDetail.execute(id);
   }
 
+  // ── Abas de drill-down (read-only, para investigação/suporte) ─────────────
+
+  @Get("households/:id/transactions")
+  householdTransactions(
+    @Param("id", ParseUUIDPipe) id: string,
+    @Query() query: ListHouseholdTransactionsQueryDto,
+  ) {
+    return this.listHouseholdTransactions.execute(id, query);
+  }
+
+  @Get("households/:id/categories")
+  householdCategories(
+    @Param("id", ParseUUIDPipe) id: string,
+    @Query() query: PageQueryDto,
+  ) {
+    return this.listHouseholdCategories.execute(id, query);
+  }
+
+  @Get("households/:id/budgets")
+  householdBudgets(
+    @Param("id", ParseUUIDPipe) id: string,
+    @Query() query: PageQueryDto,
+  ) {
+    return this.listHouseholdBudgets.execute(id, query);
+  }
+
+  @Get("households/:id/goals")
+  householdGoals(
+    @Param("id", ParseUUIDPipe) id: string,
+    @Query() query: PageQueryDto,
+  ) {
+    return this.listHouseholdGoals.execute(id, query);
+  }
+
+  @Get("households/:id/scheduled-entries")
+  householdScheduledEntries(
+    @Param("id", ParseUUIDPipe) id: string,
+    @Query() query: PageQueryDto,
+  ) {
+    return this.listHouseholdScheduledEntries.execute(id, query);
+  }
+
+  @Get("households/:id/notifications")
+  householdNotifications(
+    @Param("id", ParseUUIDPipe) id: string,
+    @Query() query: ListHouseholdNotificationsQueryDto,
+  ) {
+    return this.listHouseholdNotifications.execute(id, query);
+  }
+
   @Get("users")
-  users() {
-    return this.listUsers.execute();
+  users(@Query() query: ListUsersQueryDto) {
+    return this.listUsers.execute(query);
   }
 
   @Get("users/:id")
@@ -88,16 +166,15 @@ export class AdminController {
     @Body() dto: SetSuspendedDto,
     @CurrentUser() user: AuthUser,
   ) {
-    await this.setHouseholdSuspended.execute(id, dto.suspended, user.id);
+    await this.setHouseholdSuspended.execute(
+      id,
+      dto.suspended,
+      user.id,
+      dto.cancelStripeSubscription ?? false,
+    );
   }
 
-  @Patch("users/:id/platform-role")
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async platformRole(
-    @Param("id", ParseUUIDPipe) id: string,
-    @Body() dto: SetPlatformRoleDto,
-    @CurrentUser() user: AuthUser,
-  ) {
-    await this.setUserPlatformRole.execute(id, dto.role, user.id);
-  }
+  // Promote/demote de super_admin NÃO tem rota de propósito (M15): operação
+  // DB-only via runbook (docs/runbooks/super-admin-promotion.md) — sem
+  // superfície de sistema para escalar privilégio de plataforma.
 }

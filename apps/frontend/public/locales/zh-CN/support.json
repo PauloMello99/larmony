@@ -1,0 +1,47 @@
+{
+  "format": {
+    "dateLocale": "zh-CN"
+  },
+  "list": {
+    "title": "支持",
+    "subtitle": "你的求助、疑问和建议工单。",
+    "newTicket": "新建工单",
+    "loading": "加载中…",
+    "empty": "还没有工单",
+    "emptyDescription": "如果需要帮助、有疑问或建议，请提交一个工单。"
+  },
+  "newTicket": {
+    "title": "新建工单",
+    "subtitle": "告诉我们你需要什么——我们的团队会在这里回复。",
+    "categoryLabel": "分类",
+    "subjectLabel": "主题",
+    "subjectPlaceholder": "用几个字概括一下",
+    "bodyLabel": "内容",
+    "bodyPlaceholder": "详细描述一下...",
+    "submit": "提交工单",
+    "submitting": "正在提交…",
+    "genericError": "无法提交工单，请重试。"
+  },
+  "category": {
+    "problem": "问题",
+    "question": "疑问",
+    "suggestion": "建议",
+    "billing": "账单"
+  },
+  "status": {
+    "open": "待处理",
+    "answered": "已回复",
+    "closed": "已关闭"
+  },
+  "thread": {
+    "title": "工单",
+    "back": "返回工单列表",
+    "loading": "加载中…",
+    "genericError": "无法发送回复，请重试。",
+    "supportAuthor": "客服",
+    "closedNotice": "此工单已关闭。如需更多帮助，请提交新工单。",
+    "replyPlaceholder": "写下你的回复...",
+    "replySubmit": "回复",
+    "replySubmitting": "发送中…"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "format": {
+    "dateLocale": "es-ES"
+  },
+  "list": {
+    "title": "Soporte",
+    "subtitle": "Tus tickets de ayuda, dudas y sugerencias.",
+    "newTicket": "Nuevo ticket",
+    "loading": "Cargando…",
+    "empty": "Aún no hay tickets",
+    "emptyDescription": "Abre un ticket si necesitas ayuda, tienes una duda o una sugerencia."
+  },
+  "newTicket": {
+    "title": "Nuevo ticket",
+    "subtitle": "Cuéntanos qué necesitas — nuestro equipo responde aquí mismo.",
+    "categoryLabel": "Categoría",
+    "subjectLabel": "Asunto",
+    "subjectPlaceholder": "Resume en pocas palabras",
+    "bodyLabel": "Mensaje",
+    "bodyPlaceholder": "Describe con detalle...",
+    "submit": "Abrir ticket",
+    "submitting": "Abriendo…",
+    "genericError": "No se pudo abrir el ticket. Inténtalo de nuevo."
+  },
+  "category": {
+    "problem": "Problema",
+    "question": "Duda",
+    "suggestion": "Sugerencia",
+    "billing": "Facturación"
+  },
+  "status": {
+    "open": "Abierto",
+    "answered": "Respondido",
+    "closed": "Cerrado"
+  },
+  "thread": {
+    "title": "Ticket",
+    "back": "Volver a los tickets",
+    "loading": "Cargando…",
+    "genericError": "No se pudo enviar la respuesta. Inténtalo de nuevo.",
+    "supportAuthor": "Soporte",
+    "closedNotice": "Este ticket está cerrado. Abre uno nuevo si necesitas más ayuda.",
+    "replyPlaceholder": "Escribe tu respuesta...",
+    "replySubmit": "Responder",
+    "replySubmitting": "Enviando…"
+  }
+}

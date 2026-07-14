@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/router"
 import { useTranslation } from "react-i18next"
-import { Settings, LogOut, ChevronDown, ShieldCheck, Languages } from "lucide-react"
+import { Settings, LogOut, ChevronDown, ShieldCheck, Languages, LifeBuoy } from "lucide-react"
 import { useAuth } from "@/features/auth/hooks/use-auth"
 import { useMe } from "@/features/auth/hooks/use-me"
 import { Button } from "@/shared/components/ui/button"
@@ -89,6 +89,10 @@ export function UserMenu() {
             </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
         </DropdownMenuSub>
+        <DropdownMenuItem onClick={() => void router.push("/support")}>
+          <LifeBuoy className="h-4 w-4" />
+          {t("userMenu.support")}
+        </DropdownMenuItem>
         {isSuperAdmin && (
           <DropdownMenuItem onClick={() => void router.push("/admin")}>
             <ShieldCheck className="h-4 w-4" />

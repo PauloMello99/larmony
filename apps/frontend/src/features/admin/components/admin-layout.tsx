@@ -4,17 +4,20 @@ import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useTranslation } from "react-i18next"
-import { LayoutDashboard, Building2, Users, CreditCard, Shield, ArrowLeft, Loader2, ShieldCheck } from "lucide-react"
+import { LayoutDashboard, Building2, Users, Shield, ArrowLeft, Loader2, ShieldCheck, LifeBuoy } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { useMe } from "@/features/auth/hooks/use-me"
 import { UserMenu } from "@/features/dashboard/components/user-menu"
 import { AppBackground } from "@/shared/components/app-background"
+import { useAdminSupportTickets } from "../hooks/use-admin"
 
+// Billing saiu do nav (M15): admin é centrado em LARES — a gestão de
+// assinatura vive na aba Assinatura do detalhe de cada lar.
 const NAV = [
   { href: "/admin", labelKey: "layout.navOverview", icon: LayoutDashboard },
   { href: "/admin/households", labelKey: "layout.navHouseholds", icon: Building2 },
   { href: "/admin/users", labelKey: "layout.navUsers", icon: Users },
-  { href: "/admin/billing", labelKey: "layout.navBilling", icon: CreditCard },
+  { href: "/admin/support", labelKey: "layout.navSupport", icon: LifeBuoy },
   { href: "/admin/audit-logs", labelKey: "layout.navAuditLogs", icon: Shield },
 ]
 
@@ -26,8 +29,9 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation("admin")
   const router = useRouter()
   const { me, loading } = useMe()
-
   const isSuperAdmin = me?.platformRole === "super_admin"
+  const { page: openTickets } = useAdminSupportTickets({ status: "open", limit: 1 }, isSuperAdmin)
+  const openTicketsCount = openTickets?.total ?? 0
 
   React.useEffect(() => {
     if (!loading && me && !isSuperAdmin) {
@@ -103,6 +107,11 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                   )}
                 />
                 {t(item.labelKey)}
+                {item.href === "/admin/support" && openTicketsCount > 0 && (
+                  <span className="ml-auto flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-white">
+                    {openTicketsCount > 9 ? "9+" : openTicketsCount}
+                  </span>
+                )}
               </Link>
             )
           })}

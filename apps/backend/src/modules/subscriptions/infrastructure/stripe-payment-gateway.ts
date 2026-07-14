@@ -19,6 +19,7 @@ import type {
   BillingInterval,
   NormalizedSubscription,
   NormalizedPrice,
+  NormalizedInvoice,
   StripeWebhookEvent,
 } from "../domain/ports/payment-gateway.port";
 import { StripeNotConfiguredException } from "../domain/exceptions/stripe-not-configured.exception";
@@ -210,10 +211,16 @@ export class StripePaymentGateway implements IPaymentGateway {
     await client.subscriptions.deleteDiscount(subscriptionId);
   }
 
-  async cancelSubscription(subscriptionId: string): Promise<void> {
+  async cancelSubscription(
+    subscriptionId: string,
+    options?: { prorate?: boolean; invoiceNow?: boolean },
+  ): Promise<void> {
     const client = this.requireClient();
     try {
-      await client.subscriptions.cancel(subscriptionId);
+      await client.subscriptions.cancel(subscriptionId, {
+        prorate: options?.prorate,
+        invoice_now: options?.invoiceNow,
+      });
     } catch (err) {
       // Idempotente: sub que já não existe/já foi cancelada no Stripe não é
       // erro para quem pediu o cancelamento (pego pela bateria do hardening —
@@ -261,6 +268,21 @@ function normalizeSubscription(sub: Stripe.Subscription): NormalizedSubscription
   };
 }
 
+function normalizeInvoice(invoice: Stripe.Invoice, event: Stripe.Event): NormalizedInvoice {
+  const customer = invoice.customer;
+  return {
+    id: invoice.id ?? "",
+    customerId: typeof customer === "string" ? customer : (customer?.id ?? null),
+    // paid usa o valor efetivamente pago; payment_failed usa o valor que a
+    // tentativa buscou cobrar (amount_paid fica 0 numa falha).
+    amountCents: invoice.status === "paid" ? invoice.amount_paid : invoice.amount_due,
+    currency: invoice.currency,
+    // event.created (unix seconds) — sempre presente, ao contrário de campos
+    // opcionais do invoice como status_transitions.paid_at.
+    occurredAt: new Date(event.created * 1000),
+  };
+}
+
 function normalizePrice(price: Stripe.Price): NormalizedPrice {
   return {
     id: price.id,
@@ -300,6 +322,9 @@ function normalizeEvent(event: Stripe.Event): StripeWebhookEvent {
     case "price.updated":
     case "price.deleted":
       return { ...base, price: normalizePrice(event.data.object) };
+    case "invoice.paid":
+    case "invoice.payment_failed":
+      return { ...base, invoice: normalizeInvoice(event.data.object, event) };
     default:
       return base;
   }

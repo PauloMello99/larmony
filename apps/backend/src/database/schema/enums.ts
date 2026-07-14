@@ -34,6 +34,11 @@ export const billingIntervalEnum = pgEnum("billing_interval", [
   "annual",
 ]);
 
+export const billingInvoiceEventTypeEnum = pgEnum("billing_invoice_event_type", [
+  "paid",
+  "payment_failed",
+]);
+
 export const transactionTypeEnum = pgEnum("transaction_type", [
   "income",
   "expense",
@@ -72,6 +77,21 @@ export const notificationTypeEnum = pgEnum("notification_type", [
   "auto_launch",
   "budget_exceeded",
   "monthly_report",
+  "support_ticket_created",
+  "support_reply",
+]);
+
+export const supportTicketStatusEnum = pgEnum("support_ticket_status", [
+  "open",
+  "answered",
+  "closed",
+]);
+
+export const supportTicketCategoryEnum = pgEnum("support_ticket_category", [
+  "problem",
+  "question",
+  "suggestion",
+  "billing",
 ]);
 
 // Canais configuráveis pelo usuário (M11). In-app NÃO entra aqui — é sempre

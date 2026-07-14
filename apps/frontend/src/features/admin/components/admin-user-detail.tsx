@@ -3,15 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
-import {
-  ArrowLeft,
-  ShieldCheck,
-  ShieldOff,
-  Building2,
-  Phone,
-  Loader2,
-} from "lucide-react"
-import { Button } from "@/shared/components/ui/button"
+import { ArrowLeft, Building2, Phone, Loader2, Activity } from "lucide-react"
 import { Badge } from "@/shared/components/ui/badge"
 import {
   Table,
@@ -21,41 +13,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/components/ui/table"
-import { useMe } from "@/features/auth/hooks/use-me"
-import { translateApiError } from "@/shared/lib/api-error"
-import { useAdminUserDetail, useSetUserPlatformRole } from "../hooks/use-admin"
+import { useAdminAuditLogs, useAdminUserDetail } from "../hooks/use-admin"
 import { fmtDate } from "../lib/format"
-import { ConfirmDialog } from "./confirm-dialog"
+import { Pager } from "./pager"
 
+/**
+ * Detalhe do usuário: memberships + atividade (audit-logs por ator). Sem
+ * botão de promote/demote — role de plataforma é DB-only (M15,
+ * docs/super-admin-promotion.md).
+ */
 export function AdminUserDetail({ id }: { id: string | undefined }) {
   const { t } = useTranslation("admin")
-  const { t: tCommon } = useTranslation("common")
-  const { me } = useMe()
   const { user, loading, error } = useAdminUserDetail(id)
-  const setPlatformRole = useSetUserPlatformRole()
-
-  const [confirming, setConfirming] = React.useState(false)
-  const [busy, setBusy] = React.useState(false)
-  const [actionError, setActionError] = React.useState<string | null>(null)
-
-  async function confirmToggle() {
-    if (!user) return
-    const next = user.platformRole === "super_admin" ? "user" : "super_admin"
-    setBusy(true)
-    setActionError(null)
-    try {
-      await setPlatformRole(user.id, next)
-      setConfirming(false)
-    } catch (err) {
-      setActionError(
-        err instanceof Error
-          ? translateApiError(err, tCommon)
-          : t("userDetail.updateError"),
-      )
-    } finally {
-      setBusy(false)
-    }
-  }
 
   if (loading) {
     return (
@@ -77,51 +46,28 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
   }
 
   const isSuper = user.platformRole === "super_admin"
-  const isSelf = me?.id === user.id
 
   return (
     <div className="space-y-6">
       <BackLink />
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <h1 className="truncate text-xl font-semibold text-foreground">
-              {user.name}
-            </h1>
-            {isSuper && (
-              <Badge className="bg-primary/15 text-primary">{t("userDetail.roleSuperAdmin")}</Badge>
-            )}
-          </div>
-          <p className="mt-0.5 text-sm text-foreground/40">
-            {t("userDetail.emailSince", { email: user.email, date: fmtDate(user.createdAt, t) })}
-          </p>
-          {user.phone && (
-            <p className="mt-0.5 flex items-center gap-1.5 text-sm text-foreground/40">
-              <Phone className="h-3.5 w-3.5" /> {user.phone}
-            </p>
+      <div className="min-w-0">
+        <div className="flex items-center gap-2">
+          <h1 className="truncate text-xl font-semibold text-foreground">
+            {user.name}
+          </h1>
+          {isSuper && (
+            <Badge className="bg-primary/15 text-primary">{t("userDetail.roleSuperAdmin")}</Badge>
           )}
         </div>
-        <Button
-          variant={isSuper ? "outline" : "default"}
-          disabled={isSelf}
-          title={isSelf ? t("userDetail.selfRoleTitle") : undefined}
-          onClick={() => {
-            setActionError(null)
-            setConfirming(true)
-          }}
-          className="shrink-0"
-        >
-          {isSuper ? (
-            <>
-              <ShieldOff className="h-4 w-4" /> {t("userDetail.demote")}
-            </>
-          ) : (
-            <>
-              <ShieldCheck className="h-4 w-4" /> {t("userDetail.promoteLong")}
-            </>
-          )}
-        </Button>
+        <p className="mt-0.5 text-sm text-foreground/40">
+          {t("userDetail.emailSince", { email: user.email, date: fmtDate(user.createdAt, t) })}
+        </p>
+        {user.phone && (
+          <p className="mt-0.5 flex items-center gap-1.5 text-sm text-foreground/40">
+            <Phone className="h-3.5 w-3.5" /> {user.phone}
+          </p>
+        )}
       </div>
 
       {/* Memberships */}
@@ -180,26 +126,76 @@ export function AdminUserDetail({ id }: { id: string | undefined }) {
         )}
       </section>
 
-      <ConfirmDialog
-        open={confirming}
-        onOpenChange={setConfirming}
-        title={
-          isSuper
-            ? t("userDetail.confirmDemoteTitle", { name: user.name })
-            : t("userDetail.confirmPromoteTitle", { name: user.name })
-        }
-        description={
-          isSuper
-            ? t("userDetail.confirmDemoteDescription")
-            : t("userDetail.confirmPromoteDescription")
-        }
-        confirmLabel={isSuper ? t("userDetail.confirmDemote") : t("userDetail.confirmPromote")}
-        destructive={isSuper}
-        loading={busy}
-        error={actionError}
-        onConfirm={() => void confirmToggle()}
-      />
+      {/* Atividade — audit-logs por ator (filtro já suportado pelo backend) */}
+      <UserActivity userId={user.id} />
     </div>
+  )
+}
+
+function UserActivity({ userId }: { userId: string }) {
+  const { t } = useTranslation("admin")
+  const [page, setPage] = React.useState(1)
+  const { page: result, loading } = useAdminAuditLogs({ actorId: userId, page, limit: 20 })
+
+  return (
+    <section className="space-y-3">
+      <h2 className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+        <Activity className="h-4 w-4 text-primary" />
+        {t("userDetail.activityTitle")}
+      </h2>
+      {loading ? (
+        <div className="h-24 animate-pulse rounded-xl bg-foreground/[0.02]" />
+      ) : (result?.data.length ?? 0) === 0 ? (
+        <p className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] px-4 py-8 text-center text-sm text-foreground/40">
+          {t("userDetail.activityEmpty")}
+        </p>
+      ) : (
+        <div className="space-y-3">
+          <div className="overflow-hidden rounded-xl border border-foreground/[0.06]">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t("auditLogs.colDateTime")}</TableHead>
+                  <TableHead>{t("auditLogs.colAction")}</TableHead>
+                  <TableHead>{t("auditLogs.colEntity")}</TableHead>
+                  <TableHead>{t("auditLogs.colHousehold")}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {result?.data.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell className="whitespace-nowrap text-xs text-foreground/60">
+                      {fmtDate(row.createdAt, t)}
+                    </TableCell>
+                    <TableCell>
+                      <Badge className="bg-foreground/[0.08] text-xs text-foreground/60">
+                        {row.action}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-mono text-xs text-foreground/60">{row.entityType}</span>
+                    </TableCell>
+                    <TableCell>
+                      {row.household ? (
+                        <Link
+                          href={`/admin/households/${row.household.id}`}
+                          className="text-sm text-foreground/70 hover:text-primary"
+                        >
+                          {row.household.name}
+                        </Link>
+                      ) : (
+                        <span className="text-xs text-foreground/30">—</span>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          {result && <Pager page={result.page} pages={result.pages} onChange={setPage} />}
+        </div>
+      )}
+    </section>
   )
 }
 

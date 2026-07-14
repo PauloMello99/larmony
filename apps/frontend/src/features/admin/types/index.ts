@@ -8,6 +8,16 @@ export interface PlatformStats {
   totalMemberships: number
 }
 
+/** Envelope de paginação das listas do admin (mesmo shape do audit-logs). */
+export interface AdminPage<T> {
+  data: T[]
+  total: number
+  page: number
+  pages: number
+}
+
+export type SubscriptionPlanType = "free" | "trial" | "standard" | "custom"
+
 export interface AdminHousehold {
   id: string
   name: string
@@ -15,7 +25,29 @@ export interface AdminHousehold {
   suspendedAt: string | null
   memberCount: number
   ownerName: string | null
+  ownerEmail: string | null
+  /** Plano efetivo (lar sem linha de subscription = "free"). */
+  plan: SubscriptionPlanType
+  subscriptionStatus: string | null
   createdAt: string
+}
+
+/** Filtros server-side da lista de lares. */
+export interface AdminHouseholdFilters {
+  page?: number
+  limit?: number
+  q?: string
+  plan?: SubscriptionPlanType
+  suspended?: boolean
+  sortBy?: "createdAt" | "name" | "memberCount"
+  sortDir?: "asc" | "desc"
+}
+
+/** Lar a que um usuário pertence (chips na lista de usuários). */
+export interface AdminUserHouseholdChip {
+  id: string
+  name: string
+  role: string
 }
 
 export interface AdminUser {
@@ -24,7 +56,18 @@ export interface AdminUser {
   email: string
   platformRole: PlatformRole
   householdCount: number
+  households: AdminUserHouseholdChip[]
   createdAt: string
+}
+
+/** Filtros server-side da lista de usuários. */
+export interface AdminUserFilters {
+  page?: number
+  limit?: number
+  q?: string
+  platformRole?: PlatformRole
+  sortBy?: "createdAt" | "name" | "householdCount"
+  sortDir?: "asc" | "desc"
 }
 
 /** Ponto da série de crescimento (novos por mês). */
@@ -32,6 +75,31 @@ export interface GrowthPoint {
   month: string
   newHouseholds: number
   newUsers: number
+}
+
+/**
+ * KPIs de billing (M15 PR2). `approxMrrCents` normaliza intervalo (monthly=1x,
+ * semiannual=/6, annual=/12) e desconto — aproximado, não reflete cupom de
+ * valor fixo. `revenueCents30d`/`failedPayments30d` já vêm do espelho real de
+ * invoices (não são aproximados).
+ */
+export interface BillingStats {
+  payingActive: number
+  trialing: number
+  pastDue: number
+  comp: number
+  free: number
+  canceled: number
+  approxMrrCents: number
+  planDistribution: { plan: string; count: number }[]
+  revenueCents30d: number
+  failedPayments30d: number
+}
+
+export interface BillingGrowthPoint {
+  month: string
+  newSubscriptions: number
+  canceledSubscriptions: number
 }
 
 export interface AdminHouseholdMember {
@@ -51,17 +119,109 @@ export interface AdminHouseholdInvitation {
   expiresAt: string
 }
 
+/** Resumo da assinatura no drill-down (cache local; fonte = Stripe). */
+export interface AdminHouseholdSubscription {
+  type: SubscriptionPlanType
+  status: string
+  billingInterval: string | null
+  priceCents: number | null
+  currentPeriodEnd: string | null
+  trialEndsAt: string | null
+  discountPercent: number | null
+  compReason: string | null
+  compExpiresAt: string | null
+  stripeCustomerId: string | null
+  stripeSubscriptionId: string | null
+}
+
 export interface AdminHouseholdDetail {
   id: string
   name: string
   slug: string
   suspendedAt: string | null
-  stockCheckIntervalDays: number | null
+  timezone: string
+  notificationHour: number
   createdAt: string
   owner: { id: string; name: string; email: string } | null
   memberCount: number
   members: AdminHouseholdMember[]
   pendingInvitations: AdminHouseholdInvitation[]
+  /** Null = lar nunca tocou billing (nem linha lazy) — efetivamente Free. */
+  subscription: AdminHouseholdSubscription | null
+}
+
+// ── Abas de drill-down (read-only) ──────────────────────────────────────────
+
+export interface AdminTransactionRow {
+  id: string
+  description: string
+  type: string
+  amountCents: number
+  date: string
+  categoryName: string | null
+  categoryColor: string | null
+  createdByName: string | null
+  personName: string | null
+  installmentNumber: number | null
+  installmentCount: number | null
+  isScheduled: boolean
+  createdAt: string
+}
+
+export interface AdminCategoryRow {
+  id: string
+  name: string
+  type: string
+  color: string
+  icon: string | null
+  isDefault: boolean
+  createdAt: string
+}
+
+export interface AdminBudgetRow {
+  id: string
+  categoryName: string
+  categoryColor: string
+  currentAmountCents: number | null
+  endedFrom: string | null
+  createdAt: string
+}
+
+export interface AdminGoalRow {
+  id: string
+  name: string
+  targetAmountCents: number
+  currentAmountCents: number
+  targetDate: string | null
+  color: string
+  createdAt: string
+}
+
+export interface AdminScheduledEntryRow {
+  id: string
+  description: string
+  type: string
+  amountCents: number
+  postingMode: string
+  frequency: string
+  interval: number
+  startDate: string
+  endDate: string | null
+  nextRunDate: string | null
+  isActive: boolean
+  categoryName: string | null
+  createdAt: string
+}
+
+export interface AdminNotificationRow {
+  id: string
+  userId: string
+  userName: string | null
+  type: string
+  title: string
+  body: string
+  readAt: string | null
+  createdAt: string
 }
 
 export interface AdminUserMembership {
@@ -120,9 +280,48 @@ export interface AuditLogPage {
   pages: number
 }
 
-/** Filtros/ordenação client-side das tabelas. */
-export type HouseholdStatusFilter = "all" | "active" | "suspended"
-export type UserRoleFilter = "all" | "super_admin" | "user"
-export type HouseholdSortKey = "name" | "createdAt" | "memberCount"
-export type UserSortKey = "name" | "createdAt" | "householdCount"
-export type SortDir = "asc" | "desc"
+// ─── Suporte (M15 PR3) ──────────────────────────────────────────────────────
+export type AdminSupportTicketStatus = "open" | "answered" | "closed"
+export type AdminSupportTicketCategory = "problem" | "question" | "suggestion" | "billing"
+
+/** Linha na inbox do admin — enriquecida com quem abriu o chamado. */
+export interface AdminSupportTicketRow {
+  id: string
+  category: AdminSupportTicketCategory
+  status: AdminSupportTicketStatus
+  subject: string
+  createdAt: string
+  updatedAt: string
+  authorName: string
+  authorEmail: string
+  householdName: string | null
+}
+
+export interface AdminSupportTicketMessage {
+  id: string
+  authorUserId: string
+  authorName: string
+  isAdmin: boolean
+  body: string
+  createdAt: string
+}
+
+export interface AdminSupportTicketDetail {
+  id: string
+  userId: string
+  householdId: string | null
+  category: AdminSupportTicketCategory
+  status: AdminSupportTicketStatus
+  subject: string
+  createdAt: string
+  updatedAt: string
+  messages: AdminSupportTicketMessage[]
+}
+
+export interface AdminSupportTicketFilters {
+  page?: number
+  limit?: number
+  status?: AdminSupportTicketStatus
+  category?: AdminSupportTicketCategory
+}
+

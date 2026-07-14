@@ -15,6 +15,20 @@
       "when": 1784090000000,
       "tag": "0001_locale_tags",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784176000000,
+      "tag": "0002_billing_invoice_events",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1784262400000,
+      "tag": "0003_support_tickets",
+      "breakpoints": true
     }
   ]
 }

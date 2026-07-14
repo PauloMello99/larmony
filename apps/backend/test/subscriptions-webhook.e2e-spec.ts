@@ -62,7 +62,22 @@ describe("Subscriptions webhook (e2e)", () => {
   }
 
   function subEvent(type: string, object: unknown, id = uniqueEventId()) {
-    return { id, type, data: { object } };
+    // `created` (unix seconds) é usado pelo normalizeInvoice como occurredAt —
+    // ausente nos demais testes deste arquivo (não precisam dele), presente
+    // aqui por completude do shape real de um Stripe.Event.
+    return { id, type, created: Math.floor(Date.now() / 1000), data: { object } };
+  }
+
+  function invoiceObject(overrides: Record<string, unknown> = {}) {
+    return {
+      id: "in_e2e_1",
+      customer: customerId,
+      status: "paid",
+      amount_paid: 1490,
+      amount_due: 1490,
+      currency: "brl",
+      ...overrides,
+    };
   }
 
   beforeAll(async () => {
@@ -85,6 +100,10 @@ describe("Subscriptions webhook (e2e)", () => {
   });
 
   afterAll(async () => {
+    // billing_invoice_events do teste do customer desconhecido fica com
+    // household_id NULL (por design) — não é limpo pelo DELETE de households
+    // abaixo, então limpa por stripe_invoice_id explicitamente.
+    await pool.query(`DELETE FROM public.billing_invoice_events WHERE stripe_invoice_id LIKE 'in_e2e_%'`);
     await pool.query(`DELETE FROM public.households WHERE name LIKE 'E2E %'`);
     await cleanupByEmailPattern(pool);
     await pool.end();
@@ -185,5 +204,82 @@ describe("Subscriptions webhook (e2e)", () => {
     );
     expect(after.rows[0].name).toBe("Larmony Premium (renamed)");
     expect(after.rows[0].active).toBe(false);
+  });
+
+  describe("invoice.paid / invoice.payment_failed → espelho mínimo (M15 PR2)", () => {
+    it("invoice.paid → grava o espelho com o lar resolvido pelo customer", async () => {
+      await postWebhook(subEvent("invoice.paid", invoiceObject({ id: "in_e2e_paid_1" }))).expect(
+        200,
+      );
+
+      const row = await pool.query(
+        `SELECT household_id, type, amount_cents, currency FROM public.billing_invoice_events WHERE stripe_invoice_id = $1`,
+        ["in_e2e_paid_1"],
+      );
+      expect(row.rows[0]).toMatchObject({
+        household_id: householdId,
+        type: "paid",
+        amount_cents: 1490,
+        currency: "brl",
+      });
+    });
+
+    it("reentrega do MESMO invoice (event.id diferente) → idempotente por (stripe_invoice_id, type), não duplica", async () => {
+      // Mesmo invoice id do teste anterior, evento novo (id diferente) — cenário
+      // real de retry do Stripe reenviando o mesmo invoice.paid.
+      await postWebhook(subEvent("invoice.paid", invoiceObject({ id: "in_e2e_paid_1" }))).expect(
+        200,
+      );
+
+      const count = await pool.query(
+        `SELECT count(*)::int AS n FROM public.billing_invoice_events WHERE stripe_invoice_id = $1 AND type = 'paid'`,
+        ["in_e2e_paid_1"],
+      );
+      expect(count.rows[0].n).toBe(1);
+    });
+
+    it("invoice.payment_failed → grava type=payment_failed com amount_due", async () => {
+      await postWebhook(
+        subEvent(
+          "invoice.payment_failed",
+          invoiceObject({ id: "in_e2e_failed_1", status: "open", amount_paid: 0, amount_due: 1490 }),
+        ),
+      ).expect(200);
+
+      const row = await pool.query(
+        `SELECT type, amount_cents FROM public.billing_invoice_events WHERE stripe_invoice_id = $1`,
+        ["in_e2e_failed_1"],
+      );
+      expect(row.rows[0]).toMatchObject({ type: "payment_failed", amount_cents: 1490 });
+    });
+
+    it("mesmo invoice, tipos diferentes (paid depois de payment_failed) → 2 linhas, não colide", async () => {
+      await postWebhook(
+        subEvent("invoice.paid", invoiceObject({ id: "in_e2e_failed_1", status: "paid" })),
+      ).expect(200);
+
+      const rows = await pool.query(
+        `SELECT type FROM public.billing_invoice_events WHERE stripe_invoice_id = $1 ORDER BY type`,
+        ["in_e2e_failed_1"],
+      );
+      expect(rows.rows.map((r: { type: string }) => r.type)).toEqual(["paid", "payment_failed"]);
+    });
+
+    it("customer sem lar correspondente → 200, grava o espelho com household_id NULL (não descarta o evento)", async () => {
+      await postWebhook(
+        subEvent(
+          "invoice.paid",
+          invoiceObject({ id: "in_e2e_unknown_customer", customer: "cus_e2e_never_registered" }),
+        ),
+      ).expect(200);
+
+      // A linha é gravada mesmo sem household (household_id NULL) — o evento
+      // não é descartado, só fica sem lar correlacionado.
+      const row = await pool.query(
+        `SELECT household_id FROM public.billing_invoice_events WHERE stripe_invoice_id = $1`,
+        ["in_e2e_unknown_customer"],
+      );
+      expect(row.rows[0].household_id).toBeNull();
+    });
   });
 });

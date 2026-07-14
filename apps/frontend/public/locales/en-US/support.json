@@ -1,0 +1,47 @@
+{
+  "format": {
+    "dateLocale": "en-US"
+  },
+  "list": {
+    "title": "Support",
+    "subtitle": "Your help requests, questions and suggestions.",
+    "newTicket": "New ticket",
+    "loading": "Loading…",
+    "empty": "No tickets yet",
+    "emptyDescription": "Open a ticket if you need help, have a question or a suggestion."
+  },
+  "newTicket": {
+    "title": "New ticket",
+    "subtitle": "Tell us what you need — our team replies right here.",
+    "categoryLabel": "Category",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "Summarize in a few words",
+    "bodyLabel": "Message",
+    "bodyPlaceholder": "Describe in detail...",
+    "submit": "Open ticket",
+    "submitting": "Opening…",
+    "genericError": "Couldn't open the ticket. Please try again."
+  },
+  "category": {
+    "problem": "Problem",
+    "question": "Question",
+    "suggestion": "Suggestion",
+    "billing": "Billing"
+  },
+  "status": {
+    "open": "Open",
+    "answered": "Answered",
+    "closed": "Closed"
+  },
+  "thread": {
+    "title": "Ticket",
+    "back": "Back to tickets",
+    "loading": "Loading…",
+    "genericError": "Couldn't send the reply. Please try again.",
+    "supportAuthor": "Support",
+    "closedNotice": "This ticket is closed. Open a new ticket if you need more help.",
+    "replyPlaceholder": "Write your reply...",
+    "replySubmit": "Reply",
+    "replySubmitting": "Sending…"
+  }
+}

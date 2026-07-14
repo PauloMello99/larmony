@@ -48,6 +48,7 @@
   "userMenu": {
     "account": "Mein Konto",
     "language": "Sprache",
+    "support": "Hilfe & Support",
     "platformPanel": "Plattform-Dashboard",
     "signOut": "Abmelden"
   },

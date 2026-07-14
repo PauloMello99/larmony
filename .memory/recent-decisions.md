@@ -30,8 +30,49 @@
 | ADR-0024 | Assertividade dos disparos: timezone + hora por lar (M12) | 2026-07-11 | Aceito |
 | ADR-0025 | M13 Open Finance desacoplado do lançamento + gatilho de ativação | 2026-07-11 | Aceito |
 | ADR-0026 | Billing (Stripe) + Entitlements + comp/desconto administrativo (M14) | 2026-07-12 | Aceito |
+| ADR-0027 | Sessão em localStorage vs cookie httpOnly (hardening pré-produção) | 2026-07-13 | Aceito |
+| ADR-0028 | Redesign do super admin: centrado em lares, suspensão segura, role DB-only (M15) | 2026-07-14 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
+
+- **2026-07-14 — M15 CONCLUÍDO — PR 2 (KPIs de billing) + PR 3 (canal de
+  suporte), ADR-0028**: fecha o redesign do super admin nas 3 fatias
+  planejadas. **PR 2**: `GET /admin/stats/billing` com contadores locais
+  (pagantes/trial/pagamento pendente/isenções) + MRR aproximado (normaliza
+  intervalo + desconto); espelho mínimo de `invoice.paid`/
+  `invoice.payment_failed` em `billing_invoice_events` (sem dado de
+  cartão/line items, idempotente em 2 camadas — event.id do webhook +
+  `unique(stripe_invoice_id, type)`) alimentando `revenueCents30d`/
+  `failedPayments30d` reais (não mais aproximados); deep-links pro Stripe
+  (customer+subscription) na aba Assinatura e no overview. **Staging/prod
+  precisam do `enabled_events` do webhook Stripe atualizado manualmente**
+  para os 2 tipos novos (não é automático). **PR 3**: canal de suporte
+  in-app (`support_tickets`/`support_ticket_messages`, migration 0003, sem
+  RLS — mesmo padrão de `notifications`); usuário abre/lista/responde os
+  próprios chamados (reply reabre um ticket `answered`→`open`); admin vê
+  todos, responde (`answered` + notificação `support_reply` ao autor) e
+  fecha/reabre; fechado bloqueia nova resposta com 409 dos dois lados.
+  Criar um ticket notifica todos os `super_admin` in-app+e-mail via
+  `DispatchNotificationUseCase` (2 eventos novos no dispatcher:
+  `support_ticket_created`/`support_reply`, catálogo ×7 locales). Nav do
+  admin ganhou item "Suporte" com badge do total de chamados abertos.
+  **Bug pego no smoke test e corrigido**: `PATCH .../status` sem
+  `@HttpCode(NO_CONTENT)` devolvia 200 com corpo vazio — o client do
+  frontend só trata corpo vazio no 204, `res.json()` quebrava com
+  "Unexpected end of JSON input" ao fechar um chamado pela UI. 166 e2e /
+  124 unit verdes ao final da PR3 (up de 156/115 no início do M15 PR2).
+
+- **2026-07-14 — M15 PR 1: core do redesign do admin (ADR-0028)**: admin
+  centrado em lares (listas server-side com filtro por e-mail do dono/plano,
+  página de billing extinta → painel na aba Assinatura do detalhe), drill-down
+  em 6 abas (settings/membros/assinatura/finanças/atividade/notificações,
+  read-only paginado), suspensão de lar pago agora cancela no Stripe com
+  crédito proporcional antes (409 como rede de segurança), promote/demote de
+  super_admin removido do sistema (DB-only, runbook
+  `docs/super-admin-promotion.md`), primeiro e2e do AdminController (28 casos
+  — a ausência dele escondia um 500 real: coluna fantasma
+  `stock_check_interval_days` do ink-ops no detail). PRs 2 (KPIs billing) e 3
+  (canal de suporte) na sequência do M15.
 
 - **2026-07-13 — Overhaul da landing page (billing real + UX)**: pricing passou
   a refletir o catálogo real — **Free** (grátis, o que hoje não é gated),

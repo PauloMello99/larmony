@@ -86,7 +86,7 @@
     "SERVICE_NOT_PAYABLE": "Ce service ne peut pas être payé.",
     "SERVICE_FORBIDDEN": "Tu n’as pas la permission de modifier ce service.",
     "PLATFORM_TARGET_NOT_FOUND": "Enregistrement introuvable.",
-    "CANNOT_CHANGE_OWN_PLATFORM_ROLE": "Tu ne peux pas modifier ton propre rôle de plateforme.",
+    "HOUSEHOLD_HAS_ACTIVE_SUBSCRIPTION": "Ce foyer a un abonnement actif — annulez-le avant de suspendre.",
     "CATEGORY_NOT_FOUND": "Catégorie introuvable.",
     "BUDGET_NOT_FOUND": "Budget introuvable.",
     "BUDGET_ALREADY_EXISTS": "Il existe déjà un budget pour cette catégorie ce mois-ci.",
