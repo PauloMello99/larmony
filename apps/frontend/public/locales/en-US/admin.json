@@ -3,6 +3,7 @@
     "navOverview": "Overview",
     "navHouseholds": "Homes",
     "navUsers": "Users",
+    "navSupport": "Support",
     "navAuditLogs": "Audit log",
     "accessRestricted": "Access restricted to super_admin.",
     "platformSuffix": "· Platform",
@@ -257,5 +258,41 @@
     "metadataView": "view",
     "recordsOne": "{{count}} record",
     "recordsOther": "{{count}} records"
+  },
+  "supportInbox": {
+    "title": "Support",
+    "subtitle": "Tickets opened by platform users.",
+    "tabAll": "All",
+    "tabOpen": "Open",
+    "tabAnswered": "Answered",
+    "tabClosed": "Closed",
+    "loading": "Loading…",
+    "empty": "No tickets in this view.",
+    "colSubject": "Subject",
+    "colAuthor": "User",
+    "colCategory": "Category",
+    "colStatus": "Status",
+    "colUpdated": "Updated",
+    "category": {
+      "problem": "Problem",
+      "question": "Question",
+      "suggestion": "Suggestion",
+      "billing": "Billing"
+    },
+    "status": {
+      "open": "Open",
+      "answered": "Answered",
+      "closed": "Closed"
+    },
+    "detail": {
+      "back": "Back to inbox",
+      "close": "Close ticket",
+      "reopen": "Reopen ticket",
+      "closedNotice": "This ticket is closed.",
+      "replyPlaceholder": "Write the reply to the user...",
+      "replySubmit": "Reply",
+      "replySubmitting": "Sending…",
+      "genericError": "Couldn't complete the action. Please try again."
+    }
   }
 }

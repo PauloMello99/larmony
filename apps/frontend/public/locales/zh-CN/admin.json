@@ -3,6 +3,7 @@
     "navOverview": "总览",
     "navHouseholds": "家庭",
     "navUsers": "用户",
+    "navSupport": "支持",
     "navAuditLogs": "审计日志",
     "accessRestricted": "仅限 super_admin 访问。",
     "platformSuffix": "· 平台",
@@ -257,5 +258,41 @@
     "metadataView": "查看",
     "recordsOne": "{{count}} 条记录",
     "recordsOther": "{{count}} 条记录"
+  },
+  "supportInbox": {
+    "title": "支持",
+    "subtitle": "平台用户提交的工单。",
+    "tabAll": "全部",
+    "tabOpen": "待处理",
+    "tabAnswered": "已回复",
+    "tabClosed": "已关闭",
+    "loading": "加载中…",
+    "empty": "此视图下没有工单。",
+    "colSubject": "主题",
+    "colAuthor": "用户",
+    "colCategory": "分类",
+    "colStatus": "状态",
+    "colUpdated": "更新时间",
+    "category": {
+      "problem": "问题",
+      "question": "疑问",
+      "suggestion": "建议",
+      "billing": "账单"
+    },
+    "status": {
+      "open": "待处理",
+      "answered": "已回复",
+      "closed": "已关闭"
+    },
+    "detail": {
+      "back": "返回收件箱",
+      "close": "关闭工单",
+      "reopen": "重新打开工单",
+      "closedNotice": "此工单已关闭。",
+      "replyPlaceholder": "写下给用户的回复...",
+      "replySubmit": "回复",
+      "replySubmitting": "发送中…",
+      "genericError": "无法完成操作，请重试。"
+    }
   }
 }

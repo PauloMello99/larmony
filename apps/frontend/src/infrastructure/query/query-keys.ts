@@ -108,5 +108,15 @@ export const queryKeys = {
     userDetail: (id: string) => ["admin", "users", "detail", id] as const,
     auditLogs: (filters?: Record<string, unknown>) =>
       ["admin", "audit-logs", filters ?? {}] as const,
+    supportTickets: (filters?: Record<string, unknown>) =>
+      ["admin", "support-tickets", filters ?? {}] as const,
+    supportTicketDetail: (id: string) => ["admin", "support-tickets", "detail", id] as const,
+  },
+
+  // ─── Suporte in-app (M15 PR3) ───────────────────────────────────────────────
+  support: {
+    all: ["support"] as const,
+    list: (filters?: Record<string, unknown>) => ["support", "list", filters ?? {}] as const,
+    detail: (id: string) => ["support", "detail", id] as const,
   },
 } as const

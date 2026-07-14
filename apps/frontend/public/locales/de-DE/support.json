@@ -1,0 +1,47 @@
+{
+  "format": {
+    "dateLocale": "de-DE"
+  },
+  "list": {
+    "title": "Support",
+    "subtitle": "Ihre Support-Anfragen, Fragen und Vorschläge.",
+    "newTicket": "Neues Ticket",
+    "loading": "Wird geladen…",
+    "empty": "Noch keine Tickets",
+    "emptyDescription": "Eröffnen Sie ein Ticket, wenn Sie Hilfe brauchen, eine Frage oder einen Vorschlag haben."
+  },
+  "newTicket": {
+    "title": "Neues Ticket",
+    "subtitle": "Sagen Sie uns, was Sie brauchen — unser Team antwortet direkt hier.",
+    "categoryLabel": "Kategorie",
+    "subjectLabel": "Betreff",
+    "subjectPlaceholder": "Fassen Sie es in wenigen Worten zusammen",
+    "bodyLabel": "Nachricht",
+    "bodyPlaceholder": "Beschreiben Sie es im Detail...",
+    "submit": "Ticket eröffnen",
+    "submitting": "Wird eröffnet…",
+    "genericError": "Das Ticket konnte nicht eröffnet werden. Bitte versuchen Sie es erneut."
+  },
+  "category": {
+    "problem": "Problem",
+    "question": "Frage",
+    "suggestion": "Vorschlag",
+    "billing": "Abrechnung"
+  },
+  "status": {
+    "open": "Offen",
+    "answered": "Beantwortet",
+    "closed": "Geschlossen"
+  },
+  "thread": {
+    "title": "Ticket",
+    "back": "Zurück zu den Tickets",
+    "loading": "Wird geladen…",
+    "genericError": "Die Antwort konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+    "supportAuthor": "Support",
+    "closedNotice": "Dieses Ticket ist geschlossen. Eröffnen Sie ein neues Ticket, wenn Sie weitere Hilfe benötigen.",
+    "replyPlaceholder": "Schreiben Sie Ihre Antwort...",
+    "replySubmit": "Antworten",
+    "replySubmitting": "Wird gesendet…"
+  }
+}

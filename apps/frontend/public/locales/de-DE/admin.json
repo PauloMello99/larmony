@@ -3,6 +3,7 @@
     "navOverview": "Übersicht",
     "navHouseholds": "Haushalte",
     "navUsers": "Benutzer",
+    "navSupport": "Support",
     "navAuditLogs": "Audit-Protokoll",
     "accessRestricted": "Zugriff nur für super_admin.",
     "platformSuffix": "· Plattform",
@@ -257,5 +258,41 @@
     "metadataView": "ansehen",
     "recordsOne": "{{count}} Eintrag",
     "recordsOther": "{{count}} Einträge"
+  },
+  "supportInbox": {
+    "title": "Support",
+    "subtitle": "Von Nutzern der Plattform eröffnete Tickets.",
+    "tabAll": "Alle",
+    "tabOpen": "Offen",
+    "tabAnswered": "Beantwortet",
+    "tabClosed": "Geschlossen",
+    "loading": "Wird geladen…",
+    "empty": "Keine Tickets in dieser Ansicht.",
+    "colSubject": "Betreff",
+    "colAuthor": "Nutzer",
+    "colCategory": "Kategorie",
+    "colStatus": "Status",
+    "colUpdated": "Aktualisiert",
+    "category": {
+      "problem": "Problem",
+      "question": "Frage",
+      "suggestion": "Vorschlag",
+      "billing": "Abrechnung"
+    },
+    "status": {
+      "open": "Offen",
+      "answered": "Beantwortet",
+      "closed": "Geschlossen"
+    },
+    "detail": {
+      "back": "Zurück zur Inbox",
+      "close": "Ticket schließen",
+      "reopen": "Ticket wieder öffnen",
+      "closedNotice": "Dieses Ticket ist geschlossen.",
+      "replyPlaceholder": "Antwort an den Nutzer schreiben...",
+      "replySubmit": "Antworten",
+      "replySubmitting": "Wird gesendet…",
+      "genericError": "Aktion konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut."
+    }
   }
 }

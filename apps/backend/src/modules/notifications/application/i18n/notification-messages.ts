@@ -24,7 +24,9 @@ export type NotificationParams =
       expenseCents: number;
       balanceCents: number;
     }
-  | { type: "bill_reminder"; description: string; amountCents: number; daysUntil: number; dueDay: number };
+  | { type: "bill_reminder"; description: string; amountCents: number; daysUntil: number; dueDay: number }
+  | { type: "support_ticket_created"; ticketId: string; subject: string; authorName: string }
+  | { type: "support_reply"; ticketId: string; subject: string };
 
 export interface RenderedNotification {
   title: string;
@@ -66,6 +68,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
         actionLabel: "Ver lançamentos",
       };
     },
+    support_ticket_created: (p) => ({
+      title: `Novo chamado de suporte: "${p.subject}"`,
+      body: `${p.authorName} abriu um chamado de suporte.`,
+      actionLabel: "Ver chamado",
+    }),
+    support_reply: (p) => ({
+      title: `Resposta no seu chamado "${p.subject}"`,
+      body: "O suporte respondeu o seu chamado.",
+      actionLabel: "Ver resposta",
+    }),
   },
   "en-US": {
     goal_reached: (p, f) => ({
@@ -93,6 +105,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
         actionLabel: "View entries",
       };
     },
+    support_ticket_created: (p) => ({
+      title: `New support ticket: "${p.subject}"`,
+      body: `${p.authorName} opened a support ticket.`,
+      actionLabel: "View ticket",
+    }),
+    support_reply: (p) => ({
+      title: `Reply on your ticket "${p.subject}"`,
+      body: "Support has replied to your ticket.",
+      actionLabel: "View reply",
+    }),
   },
   "es-ES": {
     goal_reached: (p, f) => ({
@@ -120,6 +142,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
         actionLabel: "Ver lanzamientos",
       };
     },
+    support_ticket_created: (p) => ({
+      title: `Nuevo ticket de soporte: "${p.subject}"`,
+      body: `${p.authorName} abrió un ticket de soporte.`,
+      actionLabel: "Ver ticket",
+    }),
+    support_reply: (p) => ({
+      title: `Respuesta en tu ticket "${p.subject}"`,
+      body: "El soporte respondió tu ticket.",
+      actionLabel: "Ver respuesta",
+    }),
   },
   "zh-CN": {
     goal_reached: (p, f) => ({
@@ -146,6 +178,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
         actionLabel: "查看账目",
       };
     },
+    support_ticket_created: (p) => ({
+      title: `新支持工单："${p.subject}"`,
+      body: `${p.authorName} 提交了一个支持工单。`,
+      actionLabel: "查看工单",
+    }),
+    support_reply: (p) => ({
+      title: `你的工单"${p.subject}"收到了回复`,
+      body: "客服已回复你的工单。",
+      actionLabel: "查看回复",
+    }),
   },
   "de-DE": {
     goal_reached: (p, f) => ({
@@ -175,6 +217,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
         actionLabel: "Buchungen ansehen",
       };
     },
+    support_ticket_created: (p) => ({
+      title: `Neues Support-Ticket: "${p.subject}"`,
+      body: `${p.authorName} hat ein Support-Ticket eröffnet.`,
+      actionLabel: "Ticket ansehen",
+    }),
+    support_reply: (p) => ({
+      title: `Antwort auf Ihr Ticket "${p.subject}"`,
+      body: "Der Support hat auf Ihr Ticket geantwortet.",
+      actionLabel: "Antwort ansehen",
+    }),
   },
   "fr-FR": {
     goal_reached: (p, f) => ({
@@ -202,6 +254,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
         actionLabel: "Voir les écritures",
       };
     },
+    support_ticket_created: (p) => ({
+      title: `Nouveau ticket de support : « ${p.subject} »`,
+      body: `${p.authorName} a ouvert un ticket de support.`,
+      actionLabel: "Voir le ticket",
+    }),
+    support_reply: (p) => ({
+      title: `Réponse à votre ticket « ${p.subject} »`,
+      body: "Le support a répondu à votre ticket.",
+      actionLabel: "Voir la réponse",
+    }),
   },
   "ja-JP": {
     goal_reached: (p, f) => ({
@@ -228,6 +290,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
         actionLabel: "記帳を見る",
       };
     },
+    support_ticket_created: (p) => ({
+      title: `新しいサポートチケット：「${p.subject}」`,
+      body: `${p.authorName} さんがサポートチケットを開きました。`,
+      actionLabel: "チケットを見る",
+    }),
+    support_reply: (p) => ({
+      title: `チケット「${p.subject}」に返信がありました`,
+      body: "サポートがあなたのチケットに返信しました。",
+      actionLabel: "返信を見る",
+    }),
   },
 };
 

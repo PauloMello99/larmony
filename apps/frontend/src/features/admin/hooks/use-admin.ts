@@ -15,6 +15,9 @@ import type {
   AdminNotificationRow,
   AdminPage,
   AdminScheduledEntryRow,
+  AdminSupportTicketDetail,
+  AdminSupportTicketFilters,
+  AdminSupportTicketRow,
   AdminTransactionRow,
   AdminUser,
   AdminUserDetail,
@@ -352,4 +355,76 @@ export function useAdminUsers(filters?: AdminUserFilters) {
     error: error instanceof Error ? translateApiError(error, t) : null,
     refetch,
   }
+}
+
+/** Inbox de suporte do admin (M15 PR3) — filtro por status/categoria, paginado. */
+export function useAdminSupportTickets(filters?: AdminSupportTicketFilters, enabled = true) {
+  const { t } = useTranslation("common")
+
+  const params = new URLSearchParams()
+  if (filters?.page) params.set("page", String(filters.page))
+  if (filters?.limit) params.set("limit", String(filters.limit))
+  if (filters?.status) params.set("status", filters.status)
+  if (filters?.category) params.set("category", filters.category)
+  const qs = params.toString()
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: queryKeys.admin.supportTickets(filters as Record<string, unknown>),
+    queryFn: () =>
+      apiRequest<AdminPage<AdminSupportTicketRow>>(`/admin/support/tickets${qs ? `?${qs}` : ""}`),
+    enabled,
+  })
+
+  return {
+    page: data ?? null,
+    loading: isLoading,
+    error: error instanceof Error ? translateApiError(error, t) : null,
+    refetch,
+  }
+}
+
+export function useAdminSupportTicket(id: string | undefined) {
+  const { t } = useTranslation("common")
+  const { data, isLoading, error } = useQuery({
+    queryKey: queryKeys.admin.supportTicketDetail(id ?? ""),
+    queryFn: () => apiRequest<AdminSupportTicketDetail>(`/admin/support/tickets/${id}`),
+    enabled: !!id,
+  })
+  return {
+    ticket: data ?? null,
+    loading: isLoading,
+    error: error instanceof Error ? translateApiError(error, t) : null,
+  }
+}
+
+export function useReplyAsAdmin(ticketId: string) {
+  const queryClient = useQueryClient()
+  const mutation = useMutation({
+    mutationFn: (body: string) =>
+      apiRequest<void>(`/admin/support/tickets/${ticketId}/messages`, {
+        method: "POST",
+        body: JSON.stringify({ body }),
+      }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.supportTicketDetail(ticketId) })
+      void queryClient.invalidateQueries({ queryKey: ["admin", "support-tickets"] })
+    },
+  })
+  return mutation
+}
+
+export function useSetSupportTicketStatus(ticketId: string) {
+  const queryClient = useQueryClient()
+  const mutation = useMutation({
+    mutationFn: (status: "open" | "answered" | "closed") =>
+      apiRequest<void>(`/admin/support/tickets/${ticketId}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({ status }),
+      }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.supportTicketDetail(ticketId) })
+      void queryClient.invalidateQueries({ queryKey: ["admin", "support-tickets"] })
+    },
+  })
+  return mutation
 }

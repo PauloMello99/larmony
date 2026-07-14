@@ -3,6 +3,7 @@
     "navOverview": "Vue d’ensemble",
     "navHouseholds": "Foyers",
     "navUsers": "Utilisateurs",
+    "navSupport": "Support",
     "navAuditLogs": "Audit",
     "accessRestricted": "Accès réservé au super_admin.",
     "platformSuffix": "· Plateforme",
@@ -257,5 +258,41 @@
     "metadataView": "voir",
     "recordsOne": "{{count}} enregistrement",
     "recordsOther": "{{count}} enregistrements"
+  },
+  "supportInbox": {
+    "title": "Support",
+    "subtitle": "Tickets ouverts par les utilisateurs de la plateforme.",
+    "tabAll": "Tous",
+    "tabOpen": "Ouverts",
+    "tabAnswered": "Répondus",
+    "tabClosed": "Fermés",
+    "loading": "Chargement…",
+    "empty": "Aucun ticket dans cette vue.",
+    "colSubject": "Sujet",
+    "colAuthor": "Utilisateur",
+    "colCategory": "Catégorie",
+    "colStatus": "Statut",
+    "colUpdated": "Mis à jour",
+    "category": {
+      "problem": "Problème",
+      "question": "Question",
+      "suggestion": "Suggestion",
+      "billing": "Facturation"
+    },
+    "status": {
+      "open": "Ouvert",
+      "answered": "Répondu",
+      "closed": "Fermé"
+    },
+    "detail": {
+      "back": "Retour à la boîte de réception",
+      "close": "Fermer le ticket",
+      "reopen": "Rouvrir le ticket",
+      "closedNotice": "Ce ticket est fermé.",
+      "replyPlaceholder": "Écrivez la réponse à l'utilisateur...",
+      "replySubmit": "Répondre",
+      "replySubmitting": "Envoi…",
+      "genericError": "Impossible de terminer l'action. Veuillez réessayer."
+    }
   }
 }

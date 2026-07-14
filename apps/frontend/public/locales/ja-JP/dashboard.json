@@ -48,6 +48,7 @@
   "userMenu": {
     "account": "アカウント設定",
     "language": "言語",
+    "support": "ヘルプとサポート",
     "platformPanel": "プラットフォームダッシュボード",
     "signOut": "ログアウト"
   },

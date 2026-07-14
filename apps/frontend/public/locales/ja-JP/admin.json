@@ -3,6 +3,7 @@
     "navOverview": "概要",
     "navHouseholds": "世帯",
     "navUsers": "ユーザー",
+    "navSupport": "サポート",
     "navAuditLogs": "監査ログ",
     "accessRestricted": "super_adminのみアクセス可能です。",
     "platformSuffix": "・プラットフォーム",
@@ -257,5 +258,41 @@
     "metadataView": "表示",
     "recordsOne": "{{count}}件の記録",
     "recordsOther": "{{count}}件の記録"
+  },
+  "supportInbox": {
+    "title": "サポート",
+    "subtitle": "プラットフォームのユーザーが作成したチケット。",
+    "tabAll": "すべて",
+    "tabOpen": "未対応",
+    "tabAnswered": "返信済み",
+    "tabClosed": "クローズ済み",
+    "loading": "読み込み中…",
+    "empty": "このビューにはチケットがありません。",
+    "colSubject": "件名",
+    "colAuthor": "ユーザー",
+    "colCategory": "カテゴリー",
+    "colStatus": "ステータス",
+    "colUpdated": "更新日時",
+    "category": {
+      "problem": "不具合",
+      "question": "質問",
+      "suggestion": "ご意見",
+      "billing": "請求"
+    },
+    "status": {
+      "open": "未対応",
+      "answered": "返信済み",
+      "closed": "クローズ済み"
+    },
+    "detail": {
+      "back": "受信箱に戻る",
+      "close": "チケットをクローズ",
+      "reopen": "チケットを再オープン",
+      "closedNotice": "このチケットはクローズされています。",
+      "replyPlaceholder": "ユーザーへの返信を入力...",
+      "replySubmit": "返信する",
+      "replySubmitting": "送信中…",
+      "genericError": "操作を完了できませんでした。もう一度お試しください。"
+    }
   }
 }

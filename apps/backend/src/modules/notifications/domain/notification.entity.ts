@@ -6,7 +6,9 @@ export type NotificationType =
   | "goal_reached"
   | "auto_launch"
   | "budget_exceeded"
-  | "monthly_report";
+  | "monthly_report"
+  | "support_ticket_created"
+  | "support_reply";
 
 export interface NotificationProps {
   id: string;
