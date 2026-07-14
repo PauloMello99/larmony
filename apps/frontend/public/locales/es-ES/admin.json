@@ -30,7 +30,18 @@
     "statusTitle": "Hogares por estado",
     "statusActive": "Activos",
     "statusSuspended": "Suspendidos",
-    "statusEmpty": "Aún no hay hogares."
+    "statusEmpty": "Aún no hay hogares.",
+    "statPayingActive": "Pagando",
+    "statTrialing": "En trial",
+    "statPastDue": "Pago pendiente",
+    "statComp": "Exenciones",
+    "statApproxMrr": "MRR (aprox.)",
+    "planDistributionTitle": "Hogares por plan",
+    "planDistributionEmpty": "Ningún hogar con suscripción todavía.",
+    "billingGrowthTitle": "Suscripciones · nuevas vs canceladas (12 meses, aprox.)",
+    "billingGrowthEmpty": "Sin movimiento de suscripciones en los últimos 12 meses.",
+    "billingSeriesNew": "Nuevas",
+    "billingSeriesCanceled": "Canceladas"
   },
   "users": {
     "title": "Usuarios",

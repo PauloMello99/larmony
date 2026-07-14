@@ -30,7 +30,18 @@
     "statusTitle": "Lares por status",
     "statusActive": "Ativas",
     "statusSuspended": "Suspensas",
-    "statusEmpty": "Nenhum lar ainda."
+    "statusEmpty": "Nenhum lar ainda.",
+    "statPayingActive": "Pagantes",
+    "statTrialing": "Em trial",
+    "statPastDue": "Pagamento pendente",
+    "statComp": "Isenções",
+    "statApproxMrr": "MRR (aprox.)",
+    "planDistributionTitle": "Lares por plano",
+    "planDistributionEmpty": "Nenhum lar com assinatura ainda.",
+    "billingGrowthTitle": "Assinaturas · novas x canceladas (12 meses, aprox.)",
+    "billingGrowthEmpty": "Sem movimentação de assinaturas nos últimos 12 meses.",
+    "billingSeriesNew": "Novas",
+    "billingSeriesCanceled": "Canceladas"
   },
   "users": {
     "title": "Usuários",

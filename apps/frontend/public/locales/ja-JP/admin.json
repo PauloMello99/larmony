@@ -30,7 +30,18 @@
     "statusTitle": "ステータス別の世帯数",
     "statusActive": "有効",
     "statusSuspended": "停止中",
-    "statusEmpty": "まだ世帯がありません。"
+    "statusEmpty": "まだ世帯がありません。",
+    "statPayingActive": "支払い中",
+    "statTrialing": "トライアル中",
+    "statPastDue": "支払い遅延",
+    "statComp": "免除",
+    "statApproxMrr": "MRR（概算）",
+    "planDistributionTitle": "プラン別の世帯数",
+    "planDistributionEmpty": "サブスクリプションのある世帯はまだありません。",
+    "billingGrowthTitle": "サブスクリプション・新規 対 解約（過去12か月、概算）",
+    "billingGrowthEmpty": "過去12か月のサブスクリプション変動はありません。",
+    "billingSeriesNew": "新規",
+    "billingSeriesCanceled": "解約"
   },
   "users": {
     "title": "ユーザー",

@@ -21,6 +21,8 @@ import type {
   AdminUserFilters,
   AuditLogFilters,
   AuditLogPage,
+  BillingGrowthPoint,
+  BillingStats,
   GrowthPoint,
   PlatformStats,
 } from "../types"
@@ -50,6 +52,32 @@ export function useAdminGrowth() {
   const { data = [], isLoading, error } = useQuery({
     queryKey: queryKeys.admin.growth(),
     queryFn: () => apiRequest<GrowthPoint[]>("/admin/stats/growth"),
+  })
+  return {
+    series: data,
+    loading: isLoading,
+    error: error instanceof Error ? translateApiError(error, t) : null,
+  }
+}
+
+export function useAdminBillingStats() {
+  const { t } = useTranslation("common")
+  const { data, isLoading, error } = useQuery({
+    queryKey: queryKeys.admin.billingStats(),
+    queryFn: () => apiRequest<BillingStats>("/admin/stats/billing"),
+  })
+  return {
+    stats: data ?? null,
+    loading: isLoading,
+    error: error instanceof Error ? translateApiError(error, t) : null,
+  }
+}
+
+export function useAdminBillingGrowth() {
+  const { t } = useTranslation("common")
+  const { data = [], isLoading, error } = useQuery({
+    queryKey: queryKeys.admin.billingGrowth(),
+    queryFn: () => apiRequest<BillingGrowthPoint[]>("/admin/stats/billing/growth"),
   })
   return {
     series: data,

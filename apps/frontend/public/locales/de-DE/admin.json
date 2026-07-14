@@ -30,7 +30,18 @@
     "statusTitle": "Haushalte nach Status",
     "statusActive": "Aktiv",
     "statusSuspended": "Gesperrt",
-    "statusEmpty": "Noch keine Haushalte."
+    "statusEmpty": "Noch keine Haushalte.",
+    "statPayingActive": "Zahlend",
+    "statTrialing": "Im Trial",
+    "statPastDue": "Zahlung überfällig",
+    "statComp": "Befreiungen",
+    "statApproxMrr": "MRR (ca.)",
+    "planDistributionTitle": "Haushalte nach Plan",
+    "planDistributionEmpty": "Noch kein Haushalt mit Abo.",
+    "billingGrowthTitle": "Abos · neu vs. gekündigt (12 Monate, ca.)",
+    "billingGrowthEmpty": "Keine Abo-Aktivität in den letzten 12 Monaten.",
+    "billingSeriesNew": "Neu",
+    "billingSeriesCanceled": "Gekündigt"
   },
   "users": {
     "title": "Benutzer",

@@ -30,7 +30,18 @@
     "statusTitle": "Homes by status",
     "statusActive": "Active",
     "statusSuspended": "Suspended",
-    "statusEmpty": "No homes yet."
+    "statusEmpty": "No homes yet.",
+    "statPayingActive": "Paying",
+    "statTrialing": "Trialing",
+    "statPastDue": "Past due",
+    "statComp": "Comps",
+    "statApproxMrr": "MRR (approx.)",
+    "planDistributionTitle": "Households by plan",
+    "planDistributionEmpty": "No household with a subscription yet.",
+    "billingGrowthTitle": "Subscriptions · new vs canceled (12 months, approx.)",
+    "billingGrowthEmpty": "No subscription activity in the last 12 months.",
+    "billingSeriesNew": "New",
+    "billingSeriesCanceled": "Canceled"
   },
   "users": {
     "title": "Users",

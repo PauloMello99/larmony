@@ -20,6 +20,33 @@ export interface PlatformStats {
 }
 
 /**
+ * KPIs de billing (M15 PR2). `approxMrrCents` é aproximado — normaliza
+ * `price_cents` pelo intervalo (monthly=1x, semiannual=/6, annual=/12) e
+ * aplica `discount_percent` quando presente; não reflete cupons de valor fixo
+ * nem parcelas em atraso. `newSubscriptions`/`canceledSubscriptions` no
+ * `BillingGrowthPoint` vêm da tabela de estado (`created_at`/`updated_at`),
+ * não de um event log — aproximado até o espelho de invoices (PR2 commit 2)
+ * alimentar `revenueCents`/`failedPayments` com dados reais.
+ */
+export interface BillingStats {
+  payingActive: number;
+  trialing: number;
+  pastDue: number;
+  comp: number;
+  free: number;
+  canceled: number;
+  approxMrrCents: number;
+  planDistribution: { plan: string; count: number }[];
+}
+
+export interface BillingGrowthPoint {
+  /** Mês no formato "YYYY-MM". */
+  month: string;
+  newSubscriptions: number;
+  canceledSubscriptions: number;
+}
+
+/**
  * Filtro da lista de lares. `q` cobre nome/slug do lar e e-mail do dono num
  * input só; `plan` trata lar sem linha de subscription como "free".
  */
@@ -255,6 +282,9 @@ export interface IAdminRepository {
   getStats(): Promise<PlatformStats>;
   /** Novos households/users por mês nos últimos 12 meses (meses vazios incluídos). */
   getGrowthSeries(): Promise<GrowthPoint[]>;
+  getBillingStats(): Promise<BillingStats>;
+  /** Novas/canceladas por mês nos últimos 12 meses (aproximado — ver BillingGrowthPoint). */
+  getBillingGrowthSeries(): Promise<BillingGrowthPoint[]>;
   listHouseholds(filter: ListHouseholdsFilter): Promise<Page<AdminHouseholdRow>>;
   listUsers(filter: ListUsersFilter): Promise<Page<AdminUserRow>>;
   /** Detalhe de uma household (membros + convites + assinatura). Null se não existe. */

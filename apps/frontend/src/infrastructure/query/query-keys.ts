@@ -97,6 +97,8 @@ export const queryKeys = {
     all: ["admin"] as const,
     stats: () => ["admin", "stats"] as const,
     growth: () => ["admin", "stats", "growth"] as const,
+    billingStats: () => ["admin", "stats", "billing"] as const,
+    billingGrowth: () => ["admin", "stats", "billing", "growth"] as const,
     households: (filters?: Record<string, unknown>) =>
       ["admin", "households", filters ?? {}] as const,
     householdDetail: (id: string) => ["admin", "households", "detail", id] as const,

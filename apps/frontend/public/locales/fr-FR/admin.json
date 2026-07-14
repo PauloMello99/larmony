@@ -30,7 +30,18 @@
     "statusTitle": "Foyers par statut",
     "statusActive": "Actifs",
     "statusSuspended": "Suspendus",
-    "statusEmpty": "Aucun foyer pour l’instant."
+    "statusEmpty": "Aucun foyer pour l’instant.",
+    "statPayingActive": "Payants",
+    "statTrialing": "En essai",
+    "statPastDue": "Paiement en retard",
+    "statComp": "Exonérations",
+    "statApproxMrr": "MRR (approx.)",
+    "planDistributionTitle": "Foyers par plan",
+    "planDistributionEmpty": "Aucun foyer avec abonnement pour l'instant.",
+    "billingGrowthTitle": "Abonnements · nouveaux vs annulés (12 mois, approx.)",
+    "billingGrowthEmpty": "Aucune activité d'abonnement ces 12 derniers mois.",
+    "billingSeriesNew": "Nouveaux",
+    "billingSeriesCanceled": "Annulés"
   },
   "users": {
     "title": "Utilisateurs",

@@ -5,6 +5,8 @@ import { ADMIN_REPOSITORY } from "./domain/admin.repository.interface";
 import { DrizzleAdminRepository } from "./infrastructure/drizzle-admin.repository";
 import { GetPlatformStatsUseCase } from "./application/use-cases/get-platform-stats.use-case";
 import { GetPlatformGrowthUseCase } from "./application/use-cases/get-platform-growth.use-case";
+import { GetBillingStatsUseCase } from "./application/use-cases/get-billing-stats.use-case";
+import { GetBillingGrowthUseCase } from "./application/use-cases/get-billing-growth.use-case";
 import { ListPlatformHouseholdsUseCase } from "./application/use-cases/list-platform-households.use-case";
 import { ListPlatformUsersUseCase } from "./application/use-cases/list-platform-users.use-case";
 import { GetHouseholdDetailUseCase } from "./application/use-cases/get-household-detail.use-case";
@@ -28,6 +30,8 @@ import { AdminController } from "./interface/admin.controller";
     { provide: ADMIN_REPOSITORY, useClass: DrizzleAdminRepository },
     GetPlatformStatsUseCase,
     GetPlatformGrowthUseCase,
+    GetBillingStatsUseCase,
+    GetBillingGrowthUseCase,
     ListPlatformHouseholdsUseCase,
     ListPlatformUsersUseCase,
     GetHouseholdDetailUseCase,
