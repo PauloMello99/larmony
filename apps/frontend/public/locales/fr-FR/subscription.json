@@ -35,7 +35,6 @@
   "trial": {
     "title": "Période d’essai active",
     "description": "Ce foyer a accès au plan Complet pendant la période d’essai.",
-    "until": "Accès complet jusqu’au",
     "cta": "S’abonner maintenant"
   },
   "comp": {

@@ -30,9 +30,10 @@ export interface SubscriptionWithEntitlements {
   stripeSubscriptionId: string | null
   type: SubscriptionPlanType
   status: SubscriptionStatus
+  /** Tier resolvido do Price no sync Stripe (M16) — null se sem plano pago. */
+  tier: "essencial" | "completo" | null
   compReason: string | null
   compExpiresAt: string | null
-  trialEndsAt: string | null
   stripeCouponId: string | null
   discountPercent: number | null
   createdAt: string

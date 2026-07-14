@@ -19,6 +19,7 @@ function make() {
     applyCouponToSubscription: jest.fn(),
     removeSubscriptionDiscount: jest.fn(),
     cancelSubscription: jest.fn(),
+    listInvoices: jest.fn(),
   };
   const subscriptions: jest.Mocked<ISubscriptionRepository> = {
     getOrCreate: jest.fn(),
@@ -31,9 +32,8 @@ function make() {
     setDiscountCache: jest.fn().mockResolvedValue(undefined),
     clearDiscountCache: jest.fn().mockResolvedValue(undefined),
     findExpired: jest.fn().mockResolvedValue([]),
-    expireTrial: jest.fn().mockResolvedValue(undefined),
-    grantTrial: jest.fn().mockResolvedValue(undefined),
     findHouseholdSlug: jest.fn().mockResolvedValue("slug-teste"),
+    markTrialConsumed: jest.fn().mockResolvedValue(undefined),
   };
   const billingPlans: jest.Mocked<IBillingPlanRepository> = {
     findByKey: jest.fn(),

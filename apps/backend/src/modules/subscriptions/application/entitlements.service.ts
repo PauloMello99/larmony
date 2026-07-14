@@ -29,12 +29,13 @@ export interface ResolvedEntitlements {
  *
  * Resolução (ver plano M16):
  * - `type=custom` (comp) ⇒ `completo` (isenção admin nunca é rebaixada).
- * - `type=standard` + `status=trialing` ⇒ `completo` (trial dá tudo).
+ * - `type=standard` + `status=trialing` ⇒ `completo` (trial self-serve via
+ *   Stripe dá acesso Completo, independente do plano escolhido no checkout).
  * - `type=standard` + `status=active|past_due` ⇒ `tier` do preço (fallback
  *   `completo` se, por algum motivo legado, o tier não estiver setado — nunca
  *   restringe um pagante a menos do que contratou).
- * - `type=trial` (trial local legado, em remoção) ⇒ `completo`.
- * - resto (`free`, ou `standard/canceled`) ⇒ `locked` (somente-leitura).
+ * - resto (`free`, `standard/canceled`, ou `trial` legado do admin local
+ *   removido no PR4) ⇒ `locked` (somente-leitura).
  */
 @Injectable()
 export class EntitlementsService {
@@ -52,9 +53,6 @@ export class EntitlementsService {
     if (sub.type === "custom") {
       plan = "completo";
       source = "comp";
-    } else if (sub.type === "trial") {
-      plan = "completo";
-      source = "trial";
     } else if (
       sub.type === "standard" &&
       (sub.status === "active" || sub.status === "trialing" || sub.status === "past_due")

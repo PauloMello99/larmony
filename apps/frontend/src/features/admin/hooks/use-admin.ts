@@ -311,24 +311,37 @@ export function useAdminBilling() {
     onSuccess: (_d, v) => invalidate(v.householdId),
   })
 
-  const grantTrial = useMutation({
-    mutationFn: (v: { householdId: string; months: number }) =>
-      apiRequest<void>(`/admin/households/${v.householdId}/subscription/trial`, {
-        method: "POST",
-        body: JSON.stringify({ months: v.months }),
-      }),
-    onSuccess: (_d, v) => invalidate(v.householdId),
+  return { grantComp, revokeComp, applyDiscount, removeDiscount }
+}
+
+/** Faturas do lar (M16 PR4) — os meses já pagos, direto do Stripe. */
+export interface AdminInvoice {
+  id: string
+  number: string | null
+  amountCents: number
+  currency: string
+  status: string
+  createdAt: string
+  hostedInvoiceUrl: string | null
+  invoicePdfUrl: string | null
+}
+
+export function useAdminInvoices(householdId: string) {
+  const { t } = useTranslation("common")
+  const query = useQuery({
+    queryKey: queryKeys.admin.householdTab(householdId, "subscription-invoices"),
+    queryFn: () =>
+      apiRequest<{ invoices: AdminInvoice[] }>(
+        `/admin/households/${householdId}/subscription/invoices`,
+      ),
+    enabled: !!householdId,
   })
 
-  const revokeTrial = useMutation({
-    mutationFn: (v: { householdId: string }) =>
-      apiRequest<void>(`/admin/households/${v.householdId}/subscription/trial`, {
-        method: "DELETE",
-      }),
-    onSuccess: (_d, v) => invalidate(v.householdId),
-  })
-
-  return { grantComp, revokeComp, applyDiscount, removeDiscount, grantTrial, revokeTrial }
+  return {
+    invoices: query.data?.invoices ?? [],
+    loading: query.isLoading,
+    error: query.error instanceof Error ? translateApiError(query.error, t) : null,
+  }
 }
 
 /** Lista de usuários server-side. Sem mutation de role: promote/demote é DB-only (M15). */

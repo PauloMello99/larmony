@@ -35,7 +35,6 @@
   "trial": {
     "title": "Trial period active",
     "description": "This household has Complete plan access during the trial period.",
-    "until": "Full access until",
     "cta": "Subscribe now"
   },
   "comp": {
