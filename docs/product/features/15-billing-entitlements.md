@@ -4,6 +4,15 @@
 > C1 do plano de coordenação do ciclo de lançamento). Mesmo contrato das specs
 > M10–M13: escopo + regras aqui; briefs de execução (B-1..B-7) no backlog.
 
+> **Superseded parcialmente (2026-07-14, M16, ADR-0029)**: o modelo freemium
+> descrito abaixo (Free + Family R$ 14,90) foi substituído por pago-only com
+> 2 tiers (Essencial R$ 9,90 + Completo R$ 19,90) e trial self-serve de 30
+> dias — não há mais tier gratuito. As menções a "capabilities do Free"
+> abaixo (§Fora de escopo, §B-4) e a régua de preço em "Por que isso importa"
+> são históricas do kickoff do M14; ver `.memory/adr/0029-subscription-paid-
+> only-2-tiers.md` e `.memory/domain-rules.md` §Essencial/Completo/locked
+> para o modelo vigente.
+
 ## Papel
 
 Vocês são o time de engenharia do **Larmony**. A missão deste milestone é
