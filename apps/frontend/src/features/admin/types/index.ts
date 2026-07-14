@@ -280,3 +280,48 @@ export interface AuditLogPage {
   pages: number
 }
 
+// ─── Suporte (M15 PR3) ──────────────────────────────────────────────────────
+export type AdminSupportTicketStatus = "open" | "answered" | "closed"
+export type AdminSupportTicketCategory = "problem" | "question" | "suggestion" | "billing"
+
+/** Linha na inbox do admin — enriquecida com quem abriu o chamado. */
+export interface AdminSupportTicketRow {
+  id: string
+  category: AdminSupportTicketCategory
+  status: AdminSupportTicketStatus
+  subject: string
+  createdAt: string
+  updatedAt: string
+  authorName: string
+  authorEmail: string
+  householdName: string | null
+}
+
+export interface AdminSupportTicketMessage {
+  id: string
+  authorUserId: string
+  authorName: string
+  isAdmin: boolean
+  body: string
+  createdAt: string
+}
+
+export interface AdminSupportTicketDetail {
+  id: string
+  userId: string
+  householdId: string | null
+  category: AdminSupportTicketCategory
+  status: AdminSupportTicketStatus
+  subject: string
+  createdAt: string
+  updatedAt: string
+  messages: AdminSupportTicketMessage[]
+}
+
+export interface AdminSupportTicketFilters {
+  page?: number
+  limit?: number
+  status?: AdminSupportTicketStatus
+  category?: AdminSupportTicketCategory
+}
+

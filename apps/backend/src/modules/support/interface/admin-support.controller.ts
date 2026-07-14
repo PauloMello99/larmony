@@ -1,4 +1,16 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
 import { AuthGuard } from "../../auth/guards/auth.guard";
 import { PlatformAdminGuard } from "../../auth/guards/platform-admin.guard";
 import { CurrentUser } from "../../auth/decorators/current-user.decorator";
@@ -45,6 +57,7 @@ export class AdminSupportController {
   }
 
   @Patch(":id/status")
+  @HttpCode(HttpStatus.NO_CONTENT)
   async changeStatus(
     @Param("id", ParseUUIDPipe) id: string,
     @Body() dto: SetSupportTicketStatusDto,

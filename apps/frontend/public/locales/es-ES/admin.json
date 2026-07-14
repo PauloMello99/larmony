@@ -3,6 +3,7 @@
     "navOverview": "Resumen",
     "navHouseholds": "Hogares",
     "navUsers": "Usuarios",
+    "navSupport": "Soporte",
     "navAuditLogs": "Auditoría",
     "accessRestricted": "Acceso restringido a super_admin.",
     "platformSuffix": "· Plataforma",
@@ -257,5 +258,41 @@
     "metadataView": "ver",
     "recordsOne": "{{count}} registro",
     "recordsOther": "{{count}} registros"
+  },
+  "supportInbox": {
+    "title": "Soporte",
+    "subtitle": "Tickets abiertos por los usuarios de la plataforma.",
+    "tabAll": "Todos",
+    "tabOpen": "Abiertos",
+    "tabAnswered": "Respondidos",
+    "tabClosed": "Cerrados",
+    "loading": "Cargando…",
+    "empty": "No hay tickets en esta vista.",
+    "colSubject": "Asunto",
+    "colAuthor": "Usuario",
+    "colCategory": "Categoría",
+    "colStatus": "Estado",
+    "colUpdated": "Actualizado",
+    "category": {
+      "problem": "Problema",
+      "question": "Duda",
+      "suggestion": "Sugerencia",
+      "billing": "Facturación"
+    },
+    "status": {
+      "open": "Abierto",
+      "answered": "Respondido",
+      "closed": "Cerrado"
+    },
+    "detail": {
+      "back": "Volver a la bandeja",
+      "close": "Cerrar ticket",
+      "reopen": "Reabrir ticket",
+      "closedNotice": "Este ticket está cerrado.",
+      "replyPlaceholder": "Escribe la respuesta al usuario...",
+      "replySubmit": "Responder",
+      "replySubmitting": "Enviando…",
+      "genericError": "No se pudo completar la acción. Inténtalo de nuevo."
+    }
   }
 }

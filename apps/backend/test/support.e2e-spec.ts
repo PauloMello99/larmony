@@ -136,7 +136,7 @@ describe("Support tickets (e2e)", () => {
     it("admin fecha o ticket via PATCH status", async () => {
       await authed(app, "patch", `/admin/support/tickets/${ticketId}/status`, superAdmin.accessToken)
         .send({ status: "closed" })
-        .expect(200);
+        .expect(204);
 
       const detail = await authed(
         app,
