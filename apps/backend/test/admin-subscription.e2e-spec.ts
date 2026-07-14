@@ -75,7 +75,7 @@ describe("Admin subscription comp/discount (e2e)", () => {
     expect(got.body.type).toBe("custom");
     expect(got.body.status).toBe("active");
     expect(got.body.compReason).toBe("parceria estratégica");
-    expect(got.body.entitlements.plan).toBe("custom");
+    expect(got.body.entitlements.plan).toBe("completo");
     expect(got.body.entitlements.source).toBe("comp");
     expect(got.body.entitlements.capabilities.advanced_reports).toBe(true);
   });
@@ -153,7 +153,7 @@ describe("Admin subscription comp/discount (e2e)", () => {
       expect(got.body.type).toBe("trial");
       expect(got.body.status).toBe("trialing");
       expect(got.body.trialEndsAt).not.toBeNull();
-      expect(got.body.entitlements.plan).toBe("premium");
+      expect(got.body.entitlements.plan).toBe("completo");
       expect(got.body.entitlements.source).toBe("trial");
       expect(got.body.entitlements.capabilities.advanced_reports).toBe(true);
     });
@@ -186,7 +186,7 @@ describe("Admin subscription comp/discount (e2e)", () => {
       ).expect(200);
       expect(got.body.type).toBe("free");
       expect(got.body.trialEndsAt).toBeNull();
-      expect(got.body.entitlements.source).toBe("free");
+      expect(got.body.entitlements.source).toBe("locked");
     });
 
     it("revogar trial de lar que não está em trial → 422", async () => {

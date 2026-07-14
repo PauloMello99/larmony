@@ -72,6 +72,40 @@ export function authed(
 }
 
 /**
+ * Ativa a assinatura de um lar de teste (M16): sem isso o lar nasce `locked`
+ * (sem assinatura) e o `ActiveSubscriptionGuard` bloqueia toda escrita com 402.
+ * Usa `type='custom'` (comp) — resolve para o tier **completo** sem depender do
+ * Stripe, liberando todas as features nos e2e de funcionalidade. Faz upsert
+ * porque a linha de subscription é criada lazy (pode não existir ainda).
+ * Passe `tier: "essencial"` para simular explicitamente o plano de entrada.
+ */
+export async function activateHousehold(
+  pool: Pool,
+  householdId: string,
+  tier: "essencial" | "completo" = "completo",
+): Promise<void> {
+  if (tier === "completo") {
+    await pool.query(
+      `INSERT INTO public.subscriptions (household_id, type, status, tier, comp_reason)
+       VALUES ($1, 'custom', 'active', 'completo', 'e2e-active')
+       ON CONFLICT (household_id) DO UPDATE
+         SET type = 'custom', status = 'active', tier = 'completo', comp_reason = 'e2e-active'`,
+      [householdId],
+    );
+    return;
+  }
+  // Essencial: assinatura paga standard/active no tier de entrada (sem features Completo).
+  await pool.query(
+    `INSERT INTO public.subscriptions (household_id, type, status, tier, stripe_subscription_id, comp_reason)
+     VALUES ($1, 'standard', 'active', 'essencial', $2, NULL)
+     ON CONFLICT (household_id) DO UPDATE
+       SET type = 'standard', status = 'active', tier = 'essencial',
+           stripe_subscription_id = EXCLUDED.stripe_subscription_id, comp_reason = NULL`,
+    [householdId, `sub_e2e_ess_${householdId.slice(0, 8)}`],
+  );
+}
+
+/**
  * Remove os usuários de e2e criados (auth + public via DELETE /auth/me exige
  * token; aqui limpamos via SQL admin + admin API do GoTrue não é necessária —
  * o e-mail único evita colisão; a limpeza é best-effort do public.users, e o

@@ -1,81 +1,58 @@
 /**
- * Modelo de entitlements (ADR-0026 §7, entrega B-4; régua final do D-1
- * resolvida no adendo — ver ADR-0026). Fonte única do mapa plano →
- * capabilities/limits usado pelo `EntitlementsService` e pelo gate por rota
- * (`@RequireCapability` + `HouseholdEntitlementGuard`) ou por contagem
- * (use-cases de criação injetam `EntitlementsService` diretamente).
+ * Modelo de entitlements (M16 — overhaul pago-only, supersede a régua D-1 do
+ * ADR-0026). Fonte única do mapa plano → capabilities usado pelo
+ * `EntitlementsService` e pelos gates por rota:
+ * - `@RequireCapability` + `HouseholdEntitlementGuard` → features Completo-only.
+ * - `ActiveSubscriptionGuard` → bloqueia escrita quando o plano é `locked`.
  *
- * `ResolvedPlan` colapsa os 4 valores do enum `subscription_type`
- * (`free|trial|standard|custom`) nos 3 planos que importam para gating:
- * `free`, `premium` (trial/standard) e `custom` (isenção/comp — recebe o mesmo
- * que premium, ADR-0026 §2).
+ * `ResolvedPlan` (M16):
+ * - `locked`   — sem assinatura ativa (nunca assinou / trial expirado /
+ *                cancelado): somente-leitura, nenhuma capability.
+ * - `essencial`— plano pago de núcleo: escreve o núcleo, sem features avançadas.
+ * - `completo` — plano pago completo (também trial e comp): todas as features.
  *
- * Adicionar uma nova capability booleana = 1 entrada em `CAPABILITIES` + a
- * coluna correspondente no mapa. Limites numéricos (contagem) vivem em
- * `PLAN_LIMITS`, separados das capabilities booleanas.
+ * Não há mais limites de contagem (régua do Free): assinatura paga = ilimitado;
+ * a diferenciação entre tiers é puramente por capability.
  */
-export type ResolvedPlan = "free" | "premium" | "custom";
+export type ResolvedPlan = "locked" | "essencial" | "completo";
 
 export const CAPABILITIES = [
+  "budgets",
+  "scheduled_entries",
   "advanced_reports",
   "report_export",
   "custom_categories",
 ] as const;
 export type Capability = (typeof CAPABILITIES)[number];
 
-/** premium e custom (comp) recebem tudo; free é o subset limitado. */
+/** Completo recebe tudo; Essencial e locked não têm nenhuma capability avançada. */
 export const PLAN_CAPABILITIES: Record<
   ResolvedPlan,
   Record<Capability, boolean>
 > = {
-  free: { advanced_reports: false, report_export: false, custom_categories: false },
-  premium: { advanced_reports: true, report_export: true, custom_categories: true },
-  custom: { advanced_reports: true, report_export: true, custom_categories: true },
+  locked: {
+    budgets: false,
+    scheduled_entries: false,
+    advanced_reports: false,
+    report_export: false,
+    custom_categories: false,
+  },
+  essencial: {
+    budgets: false,
+    scheduled_entries: false,
+    advanced_reports: false,
+    report_export: false,
+    custom_categories: false,
+  },
+  completo: {
+    budgets: true,
+    scheduled_entries: true,
+    advanced_reports: true,
+    report_export: true,
+    custom_categories: true,
+  },
 };
 
 export function capabilitiesFor(plan: ResolvedPlan): Record<Capability, boolean> {
   return PLAN_CAPABILITIES[plan];
-}
-
-/**
- * Limites de contagem por plano (régua do Free, D-1). `Infinity` = sem limite
- * prático (premium/custom). Os use-cases de criação (household/goal/budget) e
- * de convite (member) checam a contagem atual contra estes tetos antes de
- * criar — não se encaixam no gate booleano por rota porque dependem de contar
- * registros existentes, não só do plano do lar.
- */
-export interface PlanLimits {
-  /** Lares que o usuário pode ser OWNER simultaneamente (billing é por lar). */
-  maxHouseholdsOwned: number;
-  /** Membros por lar, incluindo o dono. */
-  maxMembersPerHousehold: number;
-  /** Metas simultâneas no lar (sem conceito de "concluída" hoje — é o total). */
-  maxActiveGoals: number;
-  /** Séries de orçamento com `endedFrom IS NULL` (abertas) no lar. */
-  maxActiveBudgets: number;
-}
-
-export const PLAN_LIMITS: Record<ResolvedPlan, PlanLimits> = {
-  free: {
-    maxHouseholdsOwned: 1,
-    maxMembersPerHousehold: 2,
-    maxActiveGoals: 3,
-    maxActiveBudgets: 3,
-  },
-  premium: {
-    maxHouseholdsOwned: Infinity,
-    maxMembersPerHousehold: Infinity,
-    maxActiveGoals: Infinity,
-    maxActiveBudgets: Infinity,
-  },
-  custom: {
-    maxHouseholdsOwned: Infinity,
-    maxMembersPerHousehold: Infinity,
-    maxActiveGoals: Infinity,
-    maxActiveBudgets: Infinity,
-  },
-};
-
-export function limitsFor(plan: ResolvedPlan): PlanLimits {
-  return PLAN_LIMITS[plan];
 }

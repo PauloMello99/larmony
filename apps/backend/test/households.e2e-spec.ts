@@ -133,30 +133,19 @@ describe("Households (e2e)", () => {
     expect(categories.rows[0].n).toBe(0);
   });
 
-  it("limite de lares do Free (D-1, P-2): 1º lar ok, 2º bloqueado (402), libera após upgrade", async () => {
-    // Usuário isolado — não usa o `owner` compartilhado (já tem comp p/ outros
-    // testes deste arquivo; o gate testado aqui é o do plano Free real).
-    const solo = await signUpUser(app, "hh.limit");
-
-    const first = await authed(app, "post", "/households", solo.accessToken)
-      .send({ name: "E2E Lar Limite 1" })
-      .expect(201);
-
-    const blocked = await authed(app, "post", "/households", solo.accessToken)
-      .send({ name: "E2E Lar Limite 2" })
-      .expect(402);
-    expect(blocked.body.code).toBe("HOUSEHOLD_LIMIT_REACHED");
-
-    // Upgrade do 1º lar (comp) libera a criação do 2º.
-    await pool.query(
-      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
-       VALUES ($1, 'custom', 'active', 'e2e limite de lares — upgrade')
-       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
-      [first.body.id],
-    );
+  it("M16: criar lares é ilimitado (billing é por lar) — sem régua de contagem", async () => {
+    // Sem o antigo limite do Free: um usuário pode criar vários lares; cada um
+    // nasce sem assinatura (locked) e passa pelo seu próprio trial/checkout.
+    const solo = await signUpUser(app, "hh.multi");
 
     await authed(app, "post", "/households", solo.accessToken)
-      .send({ name: "E2E Lar Limite 2" })
+      .send({ name: "E2E Lar Multi 1" })
+      .expect(201);
+    await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Multi 2" })
+      .expect(201);
+    await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Multi 3" })
       .expect(201);
   });
 });

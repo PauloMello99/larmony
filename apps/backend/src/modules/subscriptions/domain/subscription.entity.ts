@@ -1,5 +1,7 @@
 export type SubscriptionPlan = "free" | "trial" | "standard" | "custom";
 export type SubscriptionStatus = "active" | "trialing" | "past_due" | "canceled";
+/** Tier do plano pago (M16). Null = sem plano pago ativo. */
+export type SubscriptionTier = "essencial" | "completo";
 
 export interface SubscriptionEntityProps {
   id: string;
@@ -8,6 +10,10 @@ export interface SubscriptionEntityProps {
   stripeSubscriptionId: string | null;
   type: SubscriptionPlan;
   status: SubscriptionStatus;
+  /** Tier do plano pago (M16) — resolvido do Price no sync; null se não pago. */
+  tier: SubscriptionTier | null;
+  /** true após o 1º trial self-serve do lar (M16) — bloqueia trial repetido. */
+  trialConsumed: boolean;
   compReason: string | null;
   compExpiresAt: Date | null;
   /** Fim do trial administrativo local (H-3) — aplicado pelo billing-expiry-sweep. */
@@ -28,6 +34,8 @@ export class SubscriptionEntity {
   readonly stripeSubscriptionId: string | null;
   readonly type: SubscriptionPlan;
   readonly status: SubscriptionStatus;
+  readonly tier: SubscriptionTier | null;
+  readonly trialConsumed: boolean;
   readonly compReason: string | null;
   readonly compExpiresAt: Date | null;
   readonly trialEndsAt: Date | null;
@@ -43,6 +51,8 @@ export class SubscriptionEntity {
     this.stripeSubscriptionId = props.stripeSubscriptionId;
     this.type = props.type;
     this.status = props.status;
+    this.tier = props.tier;
+    this.trialConsumed = props.trialConsumed;
     this.compReason = props.compReason;
     this.compExpiresAt = props.compExpiresAt;
     this.trialEndsAt = props.trialEndsAt;

@@ -3,6 +3,7 @@ import { AuthModule } from "../auth/auth.module";
 import { UserModule } from "../user/user.module";
 import { TransactionsModule } from "../transactions/transactions.module";
 import { NotificationsModule } from "../notifications/notifications.module";
+import { SubscriptionsModule } from "../subscriptions/subscriptions.module";
 import { ScheduledTransactionsInfrastructureModule } from "./infrastructure/scheduled-transactions-infrastructure.module";
 import { ListScheduledEntriesUseCase } from "./application/use-cases/list-scheduled-entries.use-case";
 import { CreateScheduledEntryUseCase } from "./application/use-cases/create-scheduled-entry.use-case";
@@ -22,6 +23,7 @@ import { ScheduledTransactionsController } from "./interface/scheduled-transacti
     TransactionsModule,
     ScheduledTransactionsInfrastructureModule,
     NotificationsModule,
+    SubscriptionsModule,
   ],
   controllers: [ScheduledTransactionsController],
   providers: [

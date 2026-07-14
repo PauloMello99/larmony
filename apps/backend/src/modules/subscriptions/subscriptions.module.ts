@@ -22,6 +22,7 @@ import { SubscriptionsController } from "./interface/subscriptions.controller";
 import { StripeWebhookController } from "./interface/stripe-webhook.controller";
 import { AdminSubscriptionController } from "./interface/admin-subscription.controller";
 import { HouseholdEntitlementGuard } from "./interface/guards/household-entitlement.guard";
+import { ActiveSubscriptionGuard } from "./interface/guards/active-subscription.guard";
 
 @Module({
   // UserInfrastructureModule: GrantCompUseCase resolve o users.id do ator
@@ -38,6 +39,7 @@ import { HouseholdEntitlementGuard } from "./interface/guards/household-entitlem
     CreatePortalSessionUseCase,
     EntitlementsService,
     HouseholdEntitlementGuard,
+    ActiveSubscriptionGuard,
     PlanCatalogService,
     HandleStripeWebhookUseCase,
     ReconcileSubscriptionsUseCase,
@@ -55,6 +57,6 @@ import { HouseholdEntitlementGuard } from "./interface/guards/household-entitlem
   // Exportados para gatear rotas de outros módulos por entitlement (B-4, mesmo
   // padrão de bridge cross-módulo do DispatchNotificationUseCase, ADR-0023):
   // o consumidor importa SubscriptionsModule e usa @UseGuards(HouseholdEntitlementGuard).
-  exports: [EntitlementsService, HouseholdEntitlementGuard],
+  exports: [EntitlementsService, HouseholdEntitlementGuard, ActiveSubscriptionGuard],
 })
 export class SubscriptionsModule {}
