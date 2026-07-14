@@ -86,7 +86,7 @@
     "SERVICE_NOT_PAYABLE": "Este serviço não pode ser pago.",
     "SERVICE_FORBIDDEN": "Você não tem permissão para alterar este serviço.",
     "PLATFORM_TARGET_NOT_FOUND": "Registro não encontrado.",
-    "CANNOT_CHANGE_OWN_PLATFORM_ROLE": "Você não pode alterar o seu próprio papel de plataforma.",
+    "HOUSEHOLD_HAS_ACTIVE_SUBSCRIPTION": "Este lar tem uma assinatura ativa — cancele-a para poder suspender.",
     "CATEGORY_NOT_FOUND": "Categoria não encontrada.",
     "BUDGET_NOT_FOUND": "Orçamento não encontrado.",
     "BUDGET_ALREADY_EXISTS": "Já existe um orçamento para esta categoria neste mês.",

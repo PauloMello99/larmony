@@ -6,16 +6,31 @@ import { apiRequest } from "@/infrastructure/api/client"
 import { queryKeys } from "@/infrastructure/query/query-keys"
 import { translateApiError } from "@/shared/lib/api-error"
 import type {
+  AdminBudgetRow,
+  AdminCategoryRow,
+  AdminGoalRow,
   AdminHousehold,
   AdminHouseholdDetail,
+  AdminHouseholdFilters,
+  AdminNotificationRow,
+  AdminPage,
+  AdminScheduledEntryRow,
+  AdminTransactionRow,
   AdminUser,
   AdminUserDetail,
+  AdminUserFilters,
   AuditLogFilters,
   AuditLogPage,
   GrowthPoint,
-  PlatformRole,
   PlatformStats,
 } from "../types"
+
+/** Args da suspensão — o flag cancela a sub Stripe viva antes (política M15). */
+interface SuspendArgs {
+  id: string
+  suspended: boolean
+  cancelStripeSubscription?: boolean
+}
 
 export function useAdminStats() {
   const { t } = useTranslation("common")
@@ -57,6 +72,59 @@ export function useAdminHouseholdDetail(id: string | undefined) {
   }
 }
 
+/** Base das abas paginadas do drill-down (GET /admin/households/:id/<tab>). */
+function useAdminHouseholdTab<T>(
+  id: string | undefined,
+  tab: string,
+  params: Record<string, string | number | undefined> = {},
+) {
+  const { t } = useTranslation("common")
+  const search = new URLSearchParams()
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined && v !== "") search.set(k, String(v))
+  }
+  const qs = search.toString()
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: queryKeys.admin.householdTab(id ?? "", tab, params),
+    queryFn: () =>
+      apiRequest<AdminPage<T>>(`/admin/households/${id}/${tab}${qs ? `?${qs}` : ""}`),
+    enabled: !!id,
+  })
+  return {
+    page: data ?? null,
+    loading: isLoading,
+    error: error instanceof Error ? translateApiError(error, t) : null,
+  }
+}
+
+export function useAdminHouseholdTransactions(
+  id: string | undefined,
+  params: { page?: number; type?: "income" | "expense" } = {},
+) {
+  return useAdminHouseholdTab<AdminTransactionRow>(id, "transactions", params)
+}
+
+export function useAdminHouseholdCategories(id: string | undefined, page = 1) {
+  return useAdminHouseholdTab<AdminCategoryRow>(id, "categories", { page, limit: 50 })
+}
+
+export function useAdminHouseholdBudgets(id: string | undefined, page = 1) {
+  return useAdminHouseholdTab<AdminBudgetRow>(id, "budgets", { page })
+}
+
+export function useAdminHouseholdGoals(id: string | undefined, page = 1) {
+  return useAdminHouseholdTab<AdminGoalRow>(id, "goals", { page })
+}
+
+export function useAdminHouseholdScheduledEntries(id: string | undefined, page = 1) {
+  return useAdminHouseholdTab<AdminScheduledEntryRow>(id, "scheduled-entries", { page })
+}
+
+export function useAdminHouseholdNotifications(id: string | undefined, page = 1) {
+  return useAdminHouseholdTab<AdminNotificationRow>(id, "notifications", { page })
+}
+
 export function useAdminUserDetail(id: string | undefined) {
   const { t } = useTranslation("common")
   const { data, isLoading, error } = useQuery({
@@ -75,31 +143,17 @@ export function useAdminUserDetail(id: string | undefined) {
 export function useSetHouseholdSuspended() {
   const queryClient = useQueryClient()
   const mutation = useMutation({
-    mutationFn: ({ id, suspended }: { id: string; suspended: boolean }) =>
+    mutationFn: ({ id, suspended, cancelStripeSubscription }: SuspendArgs) =>
       apiRequest<void>(`/admin/households/${id}/suspend`, {
         method: "PATCH",
-        body: JSON.stringify({ suspended }),
+        body: JSON.stringify({ suspended, cancelStripeSubscription }),
       }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.admin.all })
     },
   })
-  return (id: string, suspended: boolean) => mutation.mutateAsync({ id, suspended })
-}
-
-export function useSetUserPlatformRole() {
-  const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: ({ id, role }: { id: string; role: PlatformRole }) =>
-      apiRequest<void>(`/admin/users/${id}/platform-role`, {
-        method: "PATCH",
-        body: JSON.stringify({ role }),
-      }),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.all })
-    },
-  })
-  return (id: string, role: PlatformRole) => mutation.mutateAsync({ id, role })
+  return (id: string, suspended: boolean, cancelStripeSubscription?: boolean) =>
+    mutation.mutateAsync({ id, suspended, cancelStripeSubscription })
 }
 
 export function useAdminAuditLogs(filters?: AuditLogFilters) {
@@ -126,20 +180,32 @@ export function useAdminAuditLogs(filters?: AuditLogFilters) {
   }
 }
 
-export function useAdminHouseholds() {
+/** Lista de lares server-side: filtros/paginação/sort viajam na query string. */
+export function useAdminHouseholds(filters?: AdminHouseholdFilters) {
   const { t } = useTranslation("common")
   const queryClient = useQueryClient()
 
-  const { data = [], isLoading, error, refetch } = useQuery({
-    queryKey: queryKeys.admin.households(),
-    queryFn: () => apiRequest<AdminHousehold[]>("/admin/households"),
+  const params = new URLSearchParams()
+  if (filters?.page) params.set("page", String(filters.page))
+  if (filters?.limit) params.set("limit", String(filters.limit))
+  if (filters?.q) params.set("q", filters.q)
+  if (filters?.plan) params.set("plan", filters.plan)
+  if (filters?.suspended !== undefined) params.set("suspended", String(filters.suspended))
+  if (filters?.sortBy) params.set("sortBy", filters.sortBy)
+  if (filters?.sortDir) params.set("sortDir", filters.sortDir)
+  const qs = params.toString()
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: queryKeys.admin.households(filters as Record<string, unknown>),
+    queryFn: () =>
+      apiRequest<AdminPage<AdminHousehold>>(`/admin/households${qs ? `?${qs}` : ""}`),
   })
 
   const suspendMutation = useMutation({
-    mutationFn: ({ id, suspended }: { id: string; suspended: boolean }) =>
+    mutationFn: ({ id, suspended, cancelStripeSubscription }: SuspendArgs) =>
       apiRequest<void>(`/admin/households/${id}/suspend`, {
         method: "PATCH",
-        body: JSON.stringify({ suspended }),
+        body: JSON.stringify({ suspended, cancelStripeSubscription }),
       }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.admin.all })
@@ -147,12 +213,12 @@ export function useAdminHouseholds() {
   })
 
   return {
-    households: data,
+    page: data ?? null,
     loading: isLoading,
     error: error instanceof Error ? translateApiError(error, t) : null,
     refetch,
-    setSuspended: (id: string, suspended: boolean) =>
-      suspendMutation.mutateAsync({ id, suspended }),
+    setSuspended: (id: string, suspended: boolean, cancelStripeSubscription?: boolean) =>
+      suspendMutation.mutateAsync({ id, suspended, cancelStripeSubscription }),
   }
 }
 
@@ -234,32 +300,28 @@ export function useAdminBilling() {
   return { grantComp, revokeComp, applyDiscount, removeDiscount, grantTrial, revokeTrial }
 }
 
-export function useAdminUsers() {
+/** Lista de usuários server-side. Sem mutation de role: promote/demote é DB-only (M15). */
+export function useAdminUsers(filters?: AdminUserFilters) {
   const { t } = useTranslation("common")
-  const queryClient = useQueryClient()
 
-  const { data = [], isLoading, error, refetch } = useQuery({
-    queryKey: queryKeys.admin.users(),
-    queryFn: () => apiRequest<AdminUser[]>("/admin/users"),
-  })
+  const params = new URLSearchParams()
+  if (filters?.page) params.set("page", String(filters.page))
+  if (filters?.limit) params.set("limit", String(filters.limit))
+  if (filters?.q) params.set("q", filters.q)
+  if (filters?.platformRole) params.set("platformRole", filters.platformRole)
+  if (filters?.sortBy) params.set("sortBy", filters.sortBy)
+  if (filters?.sortDir) params.set("sortDir", filters.sortDir)
+  const qs = params.toString()
 
-  const roleMutation = useMutation({
-    mutationFn: ({ id, role }: { id: string; role: PlatformRole }) =>
-      apiRequest<void>(`/admin/users/${id}/platform-role`, {
-        method: "PATCH",
-        body: JSON.stringify({ role }),
-      }),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.all })
-    },
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: queryKeys.admin.users(filters as Record<string, unknown>),
+    queryFn: () => apiRequest<AdminPage<AdminUser>>(`/admin/users${qs ? `?${qs}` : ""}`),
   })
 
   return {
-    users: data,
+    page: data ?? null,
     loading: isLoading,
     error: error instanceof Error ? translateApiError(error, t) : null,
     refetch,
-    setPlatformRole: (id: string, role: PlatformRole) =>
-      roleMutation.mutateAsync({ id, role }),
   }
 }

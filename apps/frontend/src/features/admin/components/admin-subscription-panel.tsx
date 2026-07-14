@@ -2,104 +2,22 @@
 
 import * as React from "react"
 import { useTranslation } from "react-i18next"
-import { Search, Building2, Gift, Percent, ShieldCheck, Clock } from "lucide-react"
+import { Gift, Percent, ShieldCheck, Clock, ExternalLink } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Badge } from "@/shared/components/ui/badge"
 import { Input } from "@/shared/components/ui/input"
 import { DatePicker } from "@/shared/components/ui/date-picker"
 import { useSubscription } from "@/features/subscription"
 import { translateApiError } from "@/shared/lib/api-error"
-import { useAdminHouseholds, useAdminBilling } from "../hooks/use-admin"
-import { useDebouncedValue } from "../lib/use-debounced-value"
+import { useAdminBilling } from "../hooks/use-admin"
 import { ConfirmDialog } from "./confirm-dialog"
-import type { AdminHousehold } from "../types"
 
-export function AdminBilling() {
-  const { t } = useTranslation("admin")
-  const { households, loading } = useAdminHouseholds()
-  const [query, setQuery] = React.useState("")
-  const debounced = useDebouncedValue(query)
-  const [selected, setSelected] = React.useState<AdminHousehold | null>(null)
-
-  const rows = React.useMemo(() => {
-    const q = debounced.trim().toLowerCase()
-    if (!q) return households.slice(0, 8)
-    return households
-      .filter(
-        (o) =>
-          o.name.toLowerCase().includes(q) ||
-          o.slug.toLowerCase().includes(q) ||
-          (o.ownerName ?? "").toLowerCase().includes(q),
-      )
-      .slice(0, 8)
-  }, [households, debounced])
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-semibold text-foreground">
-          {t("billing.title")}
-        </h1>
-        <p className="mt-0.5 text-sm text-foreground/40">
-          {t("billing.subtitle")}
-        </p>
-      </div>
-
-      {/* Busca de lar */}
-      <div className="relative">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/30" />
-        <Input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={t("billing.searchPlaceholder")}
-          className="pl-9"
-        />
-      </div>
-
-      <div className="overflow-hidden rounded-xl border border-foreground/[0.06]">
-        {loading && (
-          <div className="space-y-px">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="h-12 animate-pulse bg-foreground/[0.02]" />
-            ))}
-          </div>
-        )}
-        {!loading && rows.length === 0 && (
-          <div className="flex flex-col items-center gap-2 px-4 py-10 text-center">
-            <Building2 className="h-6 w-6 text-foreground/20" />
-            <p className="text-sm text-foreground/50">{t("billing.emptyNoMatch")}</p>
-          </div>
-        )}
-        {rows.map((o) => (
-          <button
-            key={o.id}
-            type="button"
-            onClick={() => setSelected(o)}
-            className={`flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-foreground/[0.03] ${
-              selected?.id === o.id ? "bg-foreground/[0.05]" : ""
-            }`}
-          >
-            <div>
-              <span className="font-medium text-foreground">{o.name}</span>
-              <span className="ml-2 text-xs text-foreground/40">/{o.slug}</span>
-            </div>
-            <span className="text-sm text-foreground/50">{o.ownerName ?? "—"}</span>
-          </button>
-        ))}
-      </div>
-
-      {selected && (
-        <HouseholdBillingPanel
-          key={selected.id}
-          householdId={selected.id}
-          householdName={selected.name}
-        />
-      )}
-    </div>
-  )
-}
-
-function HouseholdBillingPanel({
+/**
+ * Painel de gestão da assinatura de UM lar (comp/trial/desconto, B-7).
+ * Extraído da antiga página /admin/billing (M15): agora vive na aba
+ * Assinatura do detalhe do lar — o lar já está selecionado pelo contexto.
+ */
+export function AdminSubscriptionPanel({
   householdId,
   householdName,
 }: {
@@ -140,6 +58,18 @@ function HouseholdBillingPanel({
           <Badge className="bg-emerald-400/10 text-emerald-400">
             -{subscription.discountPercent}%
           </Badge>
+        )}
+        {/* Deep-links: detalhe fino (faturas, payments, refund manual) fica no Stripe. */}
+        {subscription.stripeCustomerId && (
+          <a
+            href={`https://dashboard.stripe.com/customers/${subscription.stripeCustomerId}`}
+            target="_blank"
+            rel="noreferrer"
+            className="ml-auto inline-flex items-center gap-1 text-xs text-foreground/40 hover:text-foreground"
+          >
+            <ExternalLink className="h-3 w-3" />
+            {t("billing.openInStripe")}
+          </a>
         )}
       </div>
 

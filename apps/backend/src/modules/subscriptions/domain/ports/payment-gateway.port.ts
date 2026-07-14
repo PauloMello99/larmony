@@ -173,6 +173,14 @@ export interface IPaymentGateway {
   ): Promise<void>;
   /** Remove o desconto ativo da assinatura. */
   removeSubscriptionDiscount(subscriptionId: string): Promise<void>;
-  /** Cancela a assinatura no Stripe (usado ao conceder comp sobre uma sub ativa). */
-  cancelSubscription(subscriptionId: string): Promise<void>;
+  /**
+   * Cancela a assinatura no Stripe (comp sobre sub ativa; suspensão de lar pago).
+   * `prorate` credita o tempo não usado na conta do cliente e `invoiceNow`
+   * fecha a fatura final na hora — reembolso em DINHEIRO, quando couber, é
+   * manual no dashboard do Stripe (1 clique no payment), não automatizado.
+   */
+  cancelSubscription(
+    subscriptionId: string,
+    options?: { prorate?: boolean; invoiceNow?: boolean },
+  ): Promise<void>;
 }

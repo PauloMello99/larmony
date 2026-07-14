@@ -3,7 +3,8 @@
 import * as React from "react"
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import { TableHead } from "@/shared/components/ui/table"
-import type { SortDir } from "../types"
+
+type SortDir = "asc" | "desc"
 
 /** Cabeçalho de coluna clicável com indicador de ordenação (aria-sort). */
 export function SortHead({

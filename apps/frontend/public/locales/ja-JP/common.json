@@ -86,7 +86,7 @@
     "SERVICE_NOT_PAYABLE": "このサービスは支払いできません。",
     "SERVICE_FORBIDDEN": "このサービスを変更する権限がありません。",
     "PLATFORM_TARGET_NOT_FOUND": "レコードが見つかりません。",
-    "CANNOT_CHANGE_OWN_PLATFORM_ROLE": "自分自身のプラットフォーム上の役割は変更できません。",
+    "HOUSEHOLD_HAS_ACTIVE_SUBSCRIPTION": "この世帯には有効なサブスクリプションがあります。停止する前に解約してください。",
     "CATEGORY_NOT_FOUND": "カテゴリーが見つかりません。",
     "BUDGET_NOT_FOUND": "予算が見つかりません。",
     "BUDGET_ALREADY_EXISTS": "この月・このカテゴリーの予算はすでに存在します。",

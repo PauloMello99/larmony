@@ -4,17 +4,18 @@ import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useTranslation } from "react-i18next"
-import { LayoutDashboard, Building2, Users, CreditCard, Shield, ArrowLeft, Loader2, ShieldCheck } from "lucide-react"
+import { LayoutDashboard, Building2, Users, Shield, ArrowLeft, Loader2, ShieldCheck } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { useMe } from "@/features/auth/hooks/use-me"
 import { UserMenu } from "@/features/dashboard/components/user-menu"
 import { AppBackground } from "@/shared/components/app-background"
 
+// Billing saiu do nav (M15): admin é centrado em LARES — a gestão de
+// assinatura vive na aba Assinatura do detalhe de cada lar.
 const NAV = [
   { href: "/admin", labelKey: "layout.navOverview", icon: LayoutDashboard },
   { href: "/admin/households", labelKey: "layout.navHouseholds", icon: Building2 },
   { href: "/admin/users", labelKey: "layout.navUsers", icon: Users },
-  { href: "/admin/billing", labelKey: "layout.navBilling", icon: CreditCard },
   { href: "/admin/audit-logs", labelKey: "layout.navAuditLogs", icon: Shield },
 ]
 

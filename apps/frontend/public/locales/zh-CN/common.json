@@ -86,7 +86,7 @@
     "SERVICE_NOT_PAYABLE": "该服务无法支付。",
     "SERVICE_FORBIDDEN": "您没有权限修改该服务。",
     "PLATFORM_TARGET_NOT_FOUND": "未找到该记录。",
-    "CANNOT_CHANGE_OWN_PLATFORM_ROLE": "您不能修改自己的平台角色。",
+    "HOUSEHOLD_HAS_ACTIVE_SUBSCRIPTION": "该家庭有有效订阅——请先取消订阅再暂停。",
     "CATEGORY_NOT_FOUND": "未找到该分类。",
     "BUDGET_NOT_FOUND": "未找到该预算。",
     "BUDGET_ALREADY_EXISTS": "本月该分类已存在预算。",
