@@ -105,6 +105,9 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
         stripeSubscriptionId: data.stripeSubscriptionId,
         status: data.status,
         type,
+        // Tier do plano pago (M16). Status sem acesso (canceled → type free)
+        // zera o tier; senão grava o resolvido do lookup_key.
+        tier: type === "free" ? null : data.tier,
         currentPeriodStart: data.currentPeriodStart,
         currentPeriodEnd: data.currentPeriodEnd,
         priceCents: data.priceCents,
@@ -121,6 +124,9 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
       .set({
         type: "custom",
         status: "active",
+        // Comp resolve para completo pelo type, não pelo tier — tier fica null
+        // (não há plano pago pactuado).
+        tier: null,
         priceCents: 0,
         // A sub Stripe (se havia) é cancelada pelo use-case antes; aqui só
         // desvinculamos — o stripeCustomerId é preservado (permite reverter).
@@ -140,6 +146,7 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
       .set({
         type: "free",
         status: "active",
+        tier: null,
         priceCents: 0,
         compReason: null,
         compGrantedBy: null,
@@ -180,6 +187,7 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
       .set({
         type: "trial",
         status: "trialing",
+        tier: null,
         priceCents: 0,
         trialEndsAt: endsAt,
         // Trial exige lar free — qualquer sub id remanescente é de uma sub já
@@ -235,6 +243,7 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
       .set({
         type: "free",
         status: "active",
+        tier: null,
         priceCents: 0,
         trialEndsAt: null,
         updatedAt: new Date(),

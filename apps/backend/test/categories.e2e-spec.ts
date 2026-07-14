@@ -1,6 +1,14 @@
 import { INestApplication } from "@nestjs/common";
 import { Pool } from "pg";
-import { adminPool, authed, cleanupByEmailPattern, createTestApp, signUpUser, TestUser } from "./helpers";
+import {
+  activateHousehold,
+  adminPool,
+  authed,
+  cleanupByEmailPattern,
+  createTestApp,
+  signUpUser,
+  TestUser,
+} from "./helpers";
 
 describe("Categories (e2e)", () => {
   let app: INestApplication;
@@ -125,13 +133,15 @@ describe("Categories (e2e)", () => {
       .expect(403);
   });
 
-  it("categoria personalizada é Family-only (P-4, D-1): bloqueada no Free, liberada após upgrade", async () => {
-    // Lar isolado (Free real) — não usa o `householdId` compartilhado (tem comp).
+  it("categoria personalizada é Completo-only (M16): Essencial recebe 402 PREMIUM_REQUIRED, liberada no Completo", async () => {
+    // Lar Essencial isolado (assinatura ativa, mas tier de entrada — sem a
+    // capability custom_categories). Não usa o householdId compartilhado (comp).
     const solo = await signUpUser(app, "cat.limit.owner");
     const solo1 = await authed(app, "post", "/households", solo.accessToken)
-      .send({ name: "E2E Lar Categoria Free" })
+      .send({ name: "E2E Lar Categoria Essencial" })
       .expect(201);
     const soloHouseholdId = solo1.body.id;
+    await activateHousehold(pool, soloHouseholdId, "essencial");
 
     const blocked = await authed(
       app,
@@ -143,12 +153,8 @@ describe("Categories (e2e)", () => {
       .expect(402);
     expect(blocked.body.code).toBe("PREMIUM_REQUIRED");
 
-    await pool.query(
-      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
-       VALUES ($1, 'custom', 'active', 'e2e categoria personalizada — upgrade')
-       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
-      [soloHouseholdId],
-    );
+    // Upgrade para Completo → cria categoria personalizada.
+    await activateHousehold(pool, soloHouseholdId, "completo");
     await authed(app, "post", `/households/${soloHouseholdId}/categories`, solo.accessToken)
       .send({ name: "Pets", type: "expense", color: "#a855f7", icon: "PawPrint" })
       .expect(201);

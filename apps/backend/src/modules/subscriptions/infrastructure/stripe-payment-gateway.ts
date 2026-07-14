@@ -263,6 +263,7 @@ function normalizeSubscription(sub: Stripe.Subscription): NormalizedSubscription
     currentPeriodEnd: item ? unixToDate(item.current_period_end) : null,
     priceCents: item?.price?.unit_amount ?? null,
     interval: normalizeInterval(item?.price?.recurring?.interval),
+    priceLookupKey: item?.price?.lookup_key ?? null,
     cancelAtPeriodEnd: sub.cancel_at_period_end,
     canceledAt: unixToDate(sub.canceled_at),
   };

@@ -100,6 +100,8 @@ export interface NormalizedSubscription {
   currentPeriodEnd: Date | null;
   priceCents: number | null;
   interval: BillingInterval | null;
+  /** `lookup_key` do Price da assinatura — resolve o tier (M16). Null se ausente. */
+  priceLookupKey: string | null;
   cancelAtPeriodEnd: boolean;
   canceledAt: Date | null;
 }

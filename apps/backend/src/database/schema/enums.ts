@@ -34,6 +34,13 @@ export const billingIntervalEnum = pgEnum("billing_interval", [
   "annual",
 ]);
 
+// Tier do plano pago (M16) — Essencial (núcleo) vs Completo (+avançado).
+// Null na coluna = sem plano pago ativo (locked/comp resolve por type/status).
+export const subscriptionTierEnum = pgEnum("subscription_tier", [
+  "essencial",
+  "completo",
+]);
+
 export const billingInvoiceEventTypeEnum = pgEnum("billing_invoice_event_type", [
   "paid",
   "payment_failed",

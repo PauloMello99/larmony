@@ -1,6 +1,14 @@
 import { INestApplication } from "@nestjs/common";
 import { Pool } from "pg";
-import { adminPool, authed, cleanupByEmailPattern, createTestApp, signUpUser, TestUser } from "./helpers";
+import {
+  activateHousehold,
+  adminPool,
+  authed,
+  cleanupByEmailPattern,
+  createTestApp,
+  signUpUser,
+  TestUser,
+} from "./helpers";
 
 /** Mês/ano (1-12/YYYY) do mês corrente do processo de teste — mesma âncora do backend. */
 function currentPeriod(): { month: number; year: number } {
@@ -37,6 +45,8 @@ describe("Budgets (e2e)", () => {
       .send({ name: "E2E Lar Orcamentos" })
       .expect(201);
     householdId = created.body.id;
+    // M16: orçamentos são Completo — ativa o lar como Completo (comp) para o CRUD.
+    await activateHousehold(pool, householdId, "completo");
 
     const categories = await authed(
       app,
@@ -232,13 +242,14 @@ describe("Budgets (e2e)", () => {
     ).expect(403);
   });
 
-  it("limite de orçamentos ativos do Free (D-1, P-5): até 3 ok, o 4º bloqueado (402), libera após encerrar/upgrade", async () => {
-    // Lar isolado (Free real) — não usa o `householdId` compartilhado.
-    const solo = await signUpUser(app, "bud.limit.owner");
+  it("M16: orçamentos são Completo-only — Essencial recebe 402 PREMIUM_REQUIRED (até no GET); Completo cria ilimitado", async () => {
+    // Lar Essencial isolado: não tem a capability `budgets`.
+    const solo = await signUpUser(app, "bud.tier.owner");
     const solo1 = await authed(app, "post", "/households", solo.accessToken)
-      .send({ name: "E2E Lar Limite Orcamentos" })
+      .send({ name: "E2E Lar Tier Orcamentos" })
       .expect(201);
     const soloHouseholdId = solo1.body.id;
+    await activateHousehold(pool, soloHouseholdId, "essencial");
 
     const cats = await authed(
       app,
@@ -246,35 +257,29 @@ describe("Budgets (e2e)", () => {
       `/households/${soloHouseholdId}/categories`,
       solo.accessToken,
     ).expect(200);
-    const names = ["Alimentação", "Moradia", "Transporte", "Saúde"];
-    const [c1, c2, c3, c4] = names.map(
-      (n) => cats.body.find((c: { name: string }) => c.name === n).id,
-    );
+    const c1 = cats.body.find((c: { name: string }) => c.name === "Alimentação").id;
 
-    for (const categoryId of [c1, c2, c3]) {
+    // Essencial não enxerga orçamentos — a rota inteira é gateada (inclusive GET).
+    const blockedGet = await authed(
+      app,
+      "get",
+      `/households/${soloHouseholdId}/budgets`,
+      solo.accessToken,
+    ).expect(402);
+    expect(blockedGet.body.code).toBe("PREMIUM_REQUIRED");
+
+    const blocked = await authed(app, "post", `/households/${soloHouseholdId}/budgets`, solo.accessToken)
+      .send({ categoryId: c1, amountCents: 50000 })
+      .expect(402);
+    expect(blocked.body.code).toBe("PREMIUM_REQUIRED");
+
+    // Vira Completo → cria à vontade (sem régua de contagem).
+    await activateHousehold(pool, soloHouseholdId, "completo");
+    for (const name of ["Alimentação", "Moradia", "Transporte", "Saúde"]) {
+      const categoryId = cats.body.find((c: { name: string }) => c.name === name).id;
       await authed(app, "post", `/households/${soloHouseholdId}/budgets`, solo.accessToken)
         .send({ categoryId, amountCents: 50000 })
         .expect(201);
     }
-
-    const blocked = await authed(app, "post", `/households/${soloHouseholdId}/budgets`, solo.accessToken)
-      .send({ categoryId: c4, amountCents: 50000 })
-      .expect(402);
-    expect(blocked.body.code).toBe("BUDGET_LIMIT_REACHED");
-
-    // Encerrar uma série existente libera criar outra, dentro do limite.
-    const list = await authed(
-      app,
-      "get",
-      `/households/${soloHouseholdId}/budgets?month=${current.month}&year=${current.year}`,
-      solo.accessToken,
-    ).expect(200);
-    const toEnd = list.body.find((b: { categoryId: string }) => b.categoryId === c1);
-    await authed(app, "delete", `/households/${soloHouseholdId}/budgets/${toEnd.id}`, solo.accessToken).expect(
-      204,
-    );
-    await authed(app, "post", `/households/${soloHouseholdId}/budgets`, solo.accessToken)
-      .send({ categoryId: c4, amountCents: 50000 })
-      .expect(201);
   });
 });

@@ -14,6 +14,8 @@ import {
 } from "@nestjs/common";
 import { AuthGuard } from "../../auth/guards/auth.guard";
 import { HouseholdMembershipGuard } from "../../auth/guards/household-membership.guard";
+import { HouseholdEntitlementGuard } from "../../subscriptions/interface/guards/household-entitlement.guard";
+import { RequireCapability } from "../../subscriptions/interface/decorators/require-capability.decorator";
 import { CurrentUser } from "../../auth/decorators/current-user.decorator";
 import type { AuthUser } from "../../auth/application/ports/auth-provider.interface";
 import { ListBudgetsUseCase } from "../application/use-cases/list-budgets.use-case";
@@ -24,8 +26,12 @@ import { CreateBudgetDto } from "./dto/create-budget.dto";
 import { UpdateBudgetDto } from "./dto/update-budget.dto";
 import { ListBudgetsQueryDto } from "./dto/list-budgets-query.dto";
 
+// Orçamentos são uma feature Completo (M16): o gate de capability a nível de
+// classe bloqueia Essencial e locked em TODAS as rotas (inclusive GET) com 402
+// PREMIUM_REQUIRED — Essencial não enxerga orçamentos.
 @Controller("households/:householdId/budgets")
-@UseGuards(AuthGuard, HouseholdMembershipGuard)
+@RequireCapability("budgets")
+@UseGuards(AuthGuard, HouseholdMembershipGuard, HouseholdEntitlementGuard)
 export class BudgetsController {
   constructor(
     private readonly listBudgets: ListBudgetsUseCase,

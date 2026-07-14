@@ -2,6 +2,7 @@ import {
   SubscriptionEntity,
   type SubscriptionPlan,
   type SubscriptionStatus,
+  type SubscriptionTier,
 } from "../../domain/subscription.entity";
 
 interface SubscriptionRow {
@@ -11,6 +12,8 @@ interface SubscriptionRow {
   stripeSubscriptionId: string | null;
   type: string;
   status: string;
+  tier: string | null;
+  trialConsumed: boolean;
   compReason: string | null;
   compExpiresAt: Date | null;
   trialEndsAt: Date | null;
@@ -29,6 +32,8 @@ export class SubscriptionMapper {
       stripeSubscriptionId: row.stripeSubscriptionId,
       type: row.type as SubscriptionPlan,
       status: row.status as SubscriptionStatus,
+      tier: (row.tier as SubscriptionTier | null) ?? null,
+      trialConsumed: row.trialConsumed,
       compReason: row.compReason,
       compExpiresAt: row.compExpiresAt,
       trialEndsAt: row.trialEndsAt,

@@ -5,12 +5,14 @@ import {
   timestamp,
   integer,
   smallint,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import {
   subscriptionTypeEnum,
   subscriptionStatusEnum,
   billingIntervalEnum,
+  subscriptionTierEnum,
 } from "./enums";
 import { households } from "./households";
 import { users } from "./users";
@@ -27,6 +29,12 @@ export const subscriptions = pgTable("subscriptions", {
   stripeSubscriptionId: text("stripe_subscription_id").unique(),
   type: subscriptionTypeEnum("type").notNull().default("free"),
   status: subscriptionStatusEnum("status").notNull().default("active"),
+  // Tier do plano pago (M16). Null quando não há plano pago (locked/comp);
+  // resolvido a partir do lookup_key do Price no sync com o Stripe.
+  tier: subscriptionTierEnum("tier"),
+  // 1 trial por lar (M16): setado true ao iniciar o trial no checkout; impede
+  // um 2º trial self-serve no mesmo lar.
+  trialConsumed: boolean("trial_consumed").notNull().default(false),
   billingInterval: billingIntervalEnum("billing_interval"),
   priceCents: integer("price_cents"),
   trialEndsAt: timestamp("trial_ends_at", { withTimezone: true }),

@@ -1,6 +1,14 @@
 import { INestApplication } from "@nestjs/common";
 import { Pool } from "pg";
-import { adminPool, authed, cleanupByEmailPattern, createTestApp, signUpUser, TestUser } from "./helpers";
+import {
+  activateHousehold,
+  adminPool,
+  authed,
+  cleanupByEmailPattern,
+  createTestApp,
+  signUpUser,
+  TestUser,
+} from "./helpers";
 
 describe("Goals (e2e)", () => {
   let app: INestApplication;
@@ -18,6 +26,8 @@ describe("Goals (e2e)", () => {
       .send({ name: "E2E Lar Metas" })
       .expect(201);
     householdId = created.body.id;
+    // M16: lar novo nasce locked; ativa a assinatura para as escritas passarem.
+    await activateHousehold(pool, householdId);
   });
 
   afterAll(async () => {
@@ -211,33 +221,34 @@ describe("Goals (e2e)", () => {
     await authed(app, "get", `/households/${householdId}/goals`, stranger.accessToken).expect(403);
   });
 
-  it("limite de metas do Free (D-1, P-5): até 3 ok, a 4ª bloqueada (402), libera após upgrade", async () => {
-    // Lar isolado (Free real) — não usa o `householdId` compartilhado.
+  it("M16: lar sem assinatura (locked) bloqueia criar meta (402 SUBSCRIPTION_REQUIRED); ativa e libera; metas ilimitadas", async () => {
+    // Lar isolado que nasce locked (sem assinatura).
     const solo = await signUpUser(app, "goal.limit.owner");
     const solo1 = await authed(app, "post", "/households", solo.accessToken)
-      .send({ name: "E2E Lar Limite Metas" })
+      .send({ name: "E2E Lar Locked Metas" })
       .expect(201);
     const soloHouseholdId = solo1.body.id;
 
-    for (let i = 1; i <= 3; i++) {
+    const blocked = await authed(app, "post", `/households/${soloHouseholdId}/goals`, solo.accessToken)
+      .send({ name: "Meta 1", targetAmountCents: 100000, color: "#06b6d4" })
+      .expect(402);
+    expect(blocked.body.code).toBe("SUBSCRIPTION_REQUIRED");
+
+    // Ativa (comp = completo) e agora cria à vontade — sem régua de contagem.
+    await activateHousehold(pool, soloHouseholdId);
+    for (let i = 1; i <= 5; i++) {
       await authed(app, "post", `/households/${soloHouseholdId}/goals`, solo.accessToken)
         .send({ name: `Meta ${i}`, targetAmountCents: 100000, color: "#06b6d4" })
         .expect(201);
     }
+  });
 
-    const blocked = await authed(app, "post", `/households/${soloHouseholdId}/goals`, solo.accessToken)
-      .send({ name: "Meta 4", targetAmountCents: 100000, color: "#06b6d4" })
-      .expect(402);
-    expect(blocked.body.code).toBe("GOAL_LIMIT_REACHED");
-
-    await pool.query(
-      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
-       VALUES ($1, 'custom', 'active', 'e2e limite de metas — upgrade')
-       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
-      [soloHouseholdId],
-    );
-    await authed(app, "post", `/households/${soloHouseholdId}/goals`, solo.accessToken)
-      .send({ name: "Meta 4", targetAmountCents: 100000, color: "#06b6d4" })
+  it("GET num lar locked continua livre (somente-leitura)", async () => {
+    const solo = await signUpUser(app, "goal.readonly.owner");
+    const created = await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Readonly Metas" })
       .expect(201);
+    // Sem ativar: GET passa (leitura livre), POST seria 402.
+    await authed(app, "get", `/households/${created.body.id}/goals`, solo.accessToken).expect(200);
   });
 });

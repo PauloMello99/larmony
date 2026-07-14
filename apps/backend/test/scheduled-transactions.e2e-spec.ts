@@ -1,7 +1,15 @@
 import { INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { Pool } from "pg";
-import { adminPool, authed, cleanupByEmailPattern, createTestApp, signUpUser, TestUser } from "./helpers";
+import {
+  activateHousehold,
+  adminPool,
+  authed,
+  cleanupByEmailPattern,
+  createTestApp,
+  signUpUser,
+  TestUser,
+} from "./helpers";
 
 /**
  * ISO (yyyy-MM-dd) deslocado `days` a partir de hoje, em data LOCAL — espelha
@@ -88,6 +96,8 @@ describe("ScheduledTransactions (e2e)", () => {
       .send({ name: "E2E Lar Lancamentos" })
       .expect(201);
     householdId = created.body.id;
+    // M16: lançamentos programados são Completo — ativa o lar como Completo.
+    await activateHousehold(pool, householdId, "completo");
 
     // M12: o job de lembrete só dispara a partir de households.notification_hour
     // no fuso do lar. Fixamos UTC + hora 0 para o gate ficar sempre aberto e o

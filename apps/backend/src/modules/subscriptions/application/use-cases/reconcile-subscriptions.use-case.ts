@@ -45,6 +45,7 @@ export class ReconcileSubscriptionsUseCase {
           stripeSubscriptionId,
           status: "canceled",
           type: "free",
+          tier: null,
           currentPeriodStart: null,
           currentPeriodEnd: null,
           priceCents: null,
