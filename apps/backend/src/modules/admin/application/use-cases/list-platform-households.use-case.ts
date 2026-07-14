@@ -3,6 +3,8 @@ import {
   AdminHouseholdRow,
   ADMIN_REPOSITORY,
   IAdminRepository,
+  ListHouseholdsFilter,
+  Page,
 } from "../../domain/admin.repository.interface";
 
 @Injectable()
@@ -11,7 +13,7 @@ export class ListPlatformHouseholdsUseCase {
     @Inject(ADMIN_REPOSITORY) private readonly adminRepo: IAdminRepository,
   ) {}
 
-  execute(): Promise<AdminHouseholdRow[]> {
-    return this.adminRepo.listHouseholds();
+  execute(filter: ListHouseholdsFilter): Promise<Page<AdminHouseholdRow>> {
+    return this.adminRepo.listHouseholds(filter);
   }
 }

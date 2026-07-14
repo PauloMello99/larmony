@@ -2,6 +2,14 @@ export const ADMIN_REPOSITORY = Symbol("ADMIN_REPOSITORY");
 
 export type PlatformRole = "super_admin" | "user";
 
+/** Envelope de paginação das listas do painel (mesmo shape do AuditLogsPage). */
+export interface Page<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pages: number;
+}
+
 /** KPIs globais da plataforma (super_admin). */
 export interface PlatformStats {
   totalHouseholds: number;
@@ -9,6 +17,21 @@ export interface PlatformStats {
   totalUsers: number;
   superAdmins: number;
   totalMemberships: number;
+}
+
+/**
+ * Filtro da lista de lares. `q` cobre nome/slug do lar e e-mail do dono num
+ * input só; `plan` trata lar sem linha de subscription como "free".
+ */
+export interface ListHouseholdsFilter {
+  page?: number;
+  limit?: number;
+  q?: string;
+  plan?: "free" | "trial" | "standard" | "custom";
+  status?: "active" | "trialing" | "past_due" | "canceled";
+  suspended?: boolean;
+  sortBy?: "createdAt" | "name" | "memberCount";
+  sortDir?: "asc" | "desc";
 }
 
 /** Linha de lar no painel da plataforma. */
@@ -19,7 +42,28 @@ export interface AdminHouseholdRow {
   suspendedAt: Date | null;
   memberCount: number;
   ownerName: string | null;
+  ownerEmail: string | null;
+  /** Plano efetivo (lar sem subscription = "free"). */
+  plan: "free" | "trial" | "standard" | "custom";
+  subscriptionStatus: string | null;
   createdAt: Date;
+}
+
+/** Filtro da lista de usuários. */
+export interface ListUsersFilter {
+  page?: number;
+  limit?: number;
+  q?: string;
+  platformRole?: PlatformRole;
+  sortBy?: "createdAt" | "name" | "householdCount";
+  sortDir?: "asc" | "desc";
+}
+
+/** Lar a que um usuário pertence, na linha da lista de usuários. */
+export interface AdminUserHouseholdChip {
+  id: string;
+  name: string;
+  role: string;
 }
 
 /** Linha de usuário no painel da plataforma. */
@@ -29,6 +73,7 @@ export interface AdminUserRow {
   email: string;
   platformRole: PlatformRole;
   householdCount: number;
+  households: AdminUserHouseholdChip[];
   createdAt: Date;
 }
 
@@ -99,8 +144,8 @@ export interface IAdminRepository {
   getStats(): Promise<PlatformStats>;
   /** Novos households/users por mês nos últimos 12 meses (meses vazios incluídos). */
   getGrowthSeries(): Promise<GrowthPoint[]>;
-  listHouseholds(): Promise<AdminHouseholdRow[]>;
-  listUsers(): Promise<AdminUserRow[]>;
+  listHouseholds(filter: ListHouseholdsFilter): Promise<Page<AdminHouseholdRow>>;
+  listUsers(filter: ListUsersFilter): Promise<Page<AdminUserRow>>;
   /** Detalhe de uma household (membros + convites). Null se não existe. */
   getHouseholdDetail(householdId: string): Promise<AdminHouseholdDetail | null>;
   /** Detalhe de um usuário (memberships). Null se não existe. */

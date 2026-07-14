@@ -26,6 +26,8 @@ import { ListAuditLogsUseCase } from "../../audit/application/use-cases/list-aud
 import { SetSuspendedDto } from "./dto/set-suspended.dto";
 import { SetPlatformRoleDto } from "./dto/set-platform-role.dto";
 import { AuditLogsQueryDto } from "./dto/audit-logs-query.dto";
+import { ListHouseholdsQueryDto } from "./dto/list-households-query.dto";
+import { ListUsersQueryDto } from "./dto/list-users-query.dto";
 
 /**
  * Painel da plataforma (PLAT-1). Rotas NÃO household-scoped, restritas ao super_admin
@@ -57,8 +59,8 @@ export class AdminController {
   }
 
   @Get("households")
-  households() {
-    return this.listHouseholds.execute();
+  households(@Query() query: ListHouseholdsQueryDto) {
+    return this.listHouseholds.execute(query);
   }
 
   @Get("households/:id")
@@ -67,8 +69,8 @@ export class AdminController {
   }
 
   @Get("users")
-  users() {
-    return this.listUsers.execute();
+  users(@Query() query: ListUsersQueryDto) {
+    return this.listUsers.execute(query);
   }
 
   @Get("users/:id")

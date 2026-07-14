@@ -9,12 +9,23 @@ import {
   AdminHouseholdDetail,
   AdminHouseholdRow,
   AdminUserDetail,
+  AdminUserHouseholdChip,
   AdminUserRow,
   GrowthPoint,
   IAdminRepository,
+  ListHouseholdsFilter,
+  ListUsersFilter,
+  Page,
   PlatformRole,
   PlatformStats,
 } from "../domain/admin.repository.interface";
+
+/** Normaliza page/limit com os mesmos defaults/tetos do painel (20, máx 100). */
+function pageParams(filter: { page?: number; limit?: number }) {
+  const page = Math.max(1, filter.page ?? 1);
+  const limit = Math.min(100, Math.max(1, filter.limit ?? 20));
+  return { page, limit, offset: (page - 1) * limit };
+}
 
 /**
  * Repositório de leitura/gestão da plataforma (PLAT-1). Usa a conexão
@@ -81,7 +92,36 @@ export class DrizzleAdminRepository implements IAdminRepository {
     }));
   }
 
-  async listHouseholds(): Promise<AdminHouseholdRow[]> {
+  async listHouseholds(filter: ListHouseholdsFilter): Promise<Page<AdminHouseholdRow>> {
+    const { page, limit, offset } = pageParams(filter);
+
+    // WHERE dinâmico com fragments parametrizados (nunca interpolação crua).
+    const conditions = [sql`true`];
+    if (filter.q) {
+      const pattern = `%${filter.q}%`;
+      conditions.push(
+        sql`(o.name ILIKE ${pattern} OR o.slug ILIKE ${pattern} OR owner.email ILIKE ${pattern})`,
+      );
+    }
+    // Lar sem linha de subscription é "free" por definição (getOrCreate é lazy).
+    if (filter.plan) conditions.push(sql`COALESCE(s.type::text, 'free') = ${filter.plan}`);
+    if (filter.status) conditions.push(sql`s.status::text = ${filter.status}`);
+    if (filter.suspended !== undefined) {
+      conditions.push(
+        filter.suspended ? sql`o.suspended_at IS NOT NULL` : sql`o.suspended_at IS NULL`,
+      );
+    }
+    const where = sql.join(conditions, sql` AND `);
+
+    // ORDER BY de mapa fixo (o DTO já valida os valores; sql.raw é seguro aqui).
+    const sortColumn = {
+      createdAt: "o.created_at",
+      name: "o.name",
+      memberCount: "member_count",
+    }[filter.sortBy ?? "createdAt"];
+    const sortDir = filter.sortDir === "asc" ? sql.raw("ASC") : sql.raw("DESC");
+    const orderBy = sql`${sql.raw(sortColumn)} ${sortDir}`;
+
     const { rows } = await this.db.execute<{
       id: string;
       name: string;
@@ -90,32 +130,73 @@ export class DrizzleAdminRepository implements IAdminRepository {
       created_at: string;
       member_count: number;
       owner_name: string | null;
+      owner_email: string | null;
+      plan: AdminHouseholdRow["plan"];
+      subscription_status: string | null;
+      total_count: number;
     }>(sql`
       SELECT o.id, o.name, o.slug, o.suspended_at, o.created_at,
-        COUNT(DISTINCT m.id)::int AS member_count,
-        (
-          SELECT u.name FROM household_memberships om
-          JOIN users u ON u.id = om.user_id
-          WHERE om.household_id = o.id AND om.role = 'owner'
-          ORDER BY om.joined_at ASC LIMIT 1
-        ) AS owner_name
+        (SELECT COUNT(*) FROM household_memberships m WHERE m.household_id = o.id)::int AS member_count,
+        owner.name AS owner_name,
+        owner.email AS owner_email,
+        COALESCE(s.type::text, 'free') AS plan,
+        s.status::text AS subscription_status,
+        COUNT(*) OVER()::int AS total_count
       FROM households o
-      LEFT JOIN household_memberships m ON m.household_id = o.id
-      GROUP BY o.id
-      ORDER BY o.created_at DESC
+      LEFT JOIN subscriptions s ON s.household_id = o.id
+      LEFT JOIN LATERAL (
+        SELECT u.name, u.email
+        FROM household_memberships om
+        JOIN users u ON u.id = om.user_id
+        WHERE om.household_id = o.id AND om.role = 'owner'
+        ORDER BY om.joined_at ASC LIMIT 1
+      ) owner ON true
+      WHERE ${where}
+      ORDER BY ${orderBy}
+      LIMIT ${limit} OFFSET ${offset}
     `);
-    return rows.map((r) => ({
-      id: r.id,
-      name: r.name,
-      slug: r.slug,
-      suspendedAt: r.suspended_at ? new Date(r.suspended_at) : null,
-      memberCount: Number(r.member_count),
-      ownerName: r.owner_name,
-      createdAt: new Date(r.created_at),
-    }));
+
+    const total = Number(rows[0]?.total_count ?? 0);
+    return {
+      data: rows.map((r) => ({
+        id: r.id,
+        name: r.name,
+        slug: r.slug,
+        suspendedAt: r.suspended_at ? new Date(r.suspended_at) : null,
+        memberCount: Number(r.member_count),
+        ownerName: r.owner_name,
+        ownerEmail: r.owner_email,
+        plan: r.plan,
+        subscriptionStatus: r.subscription_status,
+        createdAt: new Date(r.created_at),
+      })),
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+    };
   }
 
-  async listUsers(): Promise<AdminUserRow[]> {
+  async listUsers(filter: ListUsersFilter): Promise<Page<AdminUserRow>> {
+    const { page, limit, offset } = pageParams(filter);
+
+    const conditions = [sql`true`];
+    if (filter.q) {
+      const pattern = `%${filter.q}%`;
+      conditions.push(sql`(u.name ILIKE ${pattern} OR u.email ILIKE ${pattern})`);
+    }
+    if (filter.platformRole) {
+      conditions.push(sql`u.platform_role = ${filter.platformRole}`);
+    }
+    const where = sql.join(conditions, sql` AND `);
+
+    const sortColumn = {
+      createdAt: "u.created_at",
+      name: "u.name",
+      householdCount: "org_count",
+    }[filter.sortBy ?? "createdAt"];
+    const sortDir = filter.sortDir === "asc" ? sql.raw("ASC") : sql.raw("DESC");
+    const orderBy = sql`${sql.raw(sortColumn)} ${sortDir}`;
+
     const { rows } = await this.db.execute<{
       id: string;
       name: string;
@@ -123,22 +204,43 @@ export class DrizzleAdminRepository implements IAdminRepository {
       platform_role: PlatformRole;
       created_at: string;
       org_count: number;
+      households: AdminUserHouseholdChip[];
+      total_count: number;
     }>(sql`
       SELECT u.id, u.name, u.email, u.platform_role, u.created_at,
-        COUNT(m.id)::int AS org_count
+        COUNT(m.id)::int AS org_count,
+        COALESCE(
+          json_agg(
+            json_build_object('id', h.id, 'name', h.name, 'role', m.role)
+            ORDER BY m.joined_at ASC
+          ) FILTER (WHERE h.id IS NOT NULL),
+          '[]'::json
+        ) AS households,
+        COUNT(*) OVER()::int AS total_count
       FROM users u
       LEFT JOIN household_memberships m ON m.user_id = u.id
+      LEFT JOIN households h ON h.id = m.household_id
+      WHERE ${where}
       GROUP BY u.id
-      ORDER BY u.created_at DESC
+      ORDER BY ${orderBy}
+      LIMIT ${limit} OFFSET ${offset}
     `);
-    return rows.map((r) => ({
-      id: r.id,
-      name: r.name,
-      email: r.email,
-      platformRole: r.platform_role,
-      householdCount: Number(r.org_count),
-      createdAt: new Date(r.created_at),
-    }));
+
+    const total = Number(rows[0]?.total_count ?? 0);
+    return {
+      data: rows.map((r) => ({
+        id: r.id,
+        name: r.name,
+        email: r.email,
+        platformRole: r.platform_role,
+        householdCount: Number(r.org_count),
+        households: r.households,
+        createdAt: new Date(r.created_at),
+      })),
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+    };
   }
 
   async getHouseholdDetail(householdId: string): Promise<AdminHouseholdDetail | null> {
