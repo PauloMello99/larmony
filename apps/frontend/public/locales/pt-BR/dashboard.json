@@ -48,6 +48,7 @@
   "userMenu": {
     "account": "Minha Conta",
     "language": "Idioma",
+    "support": "Ajuda e suporte",
     "platformPanel": "Painel da plataforma",
     "signOut": "Sair"
   },

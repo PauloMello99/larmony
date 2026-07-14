@@ -48,6 +48,7 @@
   "userMenu": {
     "account": "Mon compte",
     "language": "Langue",
+    "support": "Aide et support",
     "platformPanel": "Tableau de bord de la plateforme",
     "signOut": "Se déconnecter"
   },

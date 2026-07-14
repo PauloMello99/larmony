@@ -48,6 +48,7 @@
   "userMenu": {
     "account": "My Account",
     "language": "Language",
+    "support": "Help & support",
     "platformPanel": "Platform panel",
     "signOut": "Sign out"
   },
