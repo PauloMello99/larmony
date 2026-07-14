@@ -179,13 +179,15 @@ describe("Subscriptions webhook (e2e)", () => {
   });
 
   it("product.updated / price.updated → espelham no catálogo billing_plans", async () => {
+    // M16: catálogo tem 4 planos (Essencial/Completo × mensal/anual); usa o
+    // mensal do Completo como representante do teste (mesmo mecanismo de sync).
     const plan = await pool.query(
-      `SELECT stripe_product_id, stripe_price_id FROM public.billing_plans WHERE key = 'premium_monthly'`,
+      `SELECT stripe_product_id, stripe_price_id FROM public.billing_plans WHERE key = 'completo_monthly'`,
     );
     const { stripe_product_id, stripe_price_id } = plan.rows[0];
 
     await postWebhook(
-      subEvent("product.updated", { id: stripe_product_id, name: "Larmony Premium (renamed)", active: true }),
+      subEvent("product.updated", { id: stripe_product_id, name: "Larmony Completo (renamed)", active: true }),
     ).expect(200);
 
     await postWebhook(
@@ -193,16 +195,16 @@ describe("Subscriptions webhook (e2e)", () => {
         id: stripe_price_id,
         product: stripe_product_id,
         active: false,
-        unit_amount: 1490,
+        unit_amount: 1990,
         currency: "brl",
         recurring: { interval: "month" },
       }),
     ).expect(200);
 
     const after = await pool.query(
-      `SELECT name, active FROM public.billing_plans WHERE key = 'premium_monthly'`,
+      `SELECT name, active FROM public.billing_plans WHERE key = 'completo_monthly'`,
     );
-    expect(after.rows[0].name).toBe("Larmony Premium (renamed)");
+    expect(after.rows[0].name).toBe("Larmony Completo (renamed)");
     expect(after.rows[0].active).toBe(false);
   });
 
