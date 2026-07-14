@@ -105,18 +105,129 @@ export interface AdminHouseholdInvitation {
   expiresAt: Date;
 }
 
+/** Resumo da assinatura no drill-down do lar (cache local; fonte = Stripe). */
+export interface AdminHouseholdSubscription {
+  type: "free" | "trial" | "standard" | "custom";
+  status: string;
+  billingInterval: string | null;
+  priceCents: number | null;
+  currentPeriodEnd: Date | null;
+  trialEndsAt: Date | null;
+  discountPercent: number | null;
+  compReason: string | null;
+  compExpiresAt: Date | null;
+  stripeCustomerId: string | null;
+  stripeSubscriptionId: string | null;
+}
+
 /** Detalhe de uma lar (drill-down). */
 export interface AdminHouseholdDetail {
   id: string;
   name: string;
   slug: string;
   suspendedAt: Date | null;
-  stockCheckIntervalDays: number | null;
+  timezone: string;
+  notificationHour: number;
   createdAt: Date;
   owner: { id: string; name: string; email: string } | null;
   memberCount: number;
   members: AdminHouseholdMember[];
   pendingInvitations: AdminHouseholdInvitation[];
+  /** Null = lar nunca tocou billing (nem linha lazy) — efetivamente Free. */
+  subscription: AdminHouseholdSubscription | null;
+}
+
+/** Paginação simples das abas de drill-down. */
+export interface PageFilter {
+  page?: number;
+  limit?: number;
+}
+
+/** Transação na aba Finanças do drill-down (read-only, para investigação). */
+export interface AdminTransactionRow {
+  id: string;
+  description: string;
+  type: string;
+  amountCents: number;
+  date: string;
+  categoryName: string | null;
+  categoryColor: string | null;
+  createdByName: string | null;
+  personName: string | null;
+  installmentNumber: number | null;
+  installmentCount: number | null;
+  /** Gerada por lançamento programado (engine), não criada à mão. */
+  isScheduled: boolean;
+  createdAt: Date;
+}
+
+export interface ListHouseholdTransactionsFilter extends PageFilter {
+  from?: string;
+  to?: string;
+  type?: "income" | "expense";
+}
+
+export interface AdminCategoryRow {
+  id: string;
+  name: string;
+  type: string;
+  color: string;
+  icon: string | null;
+  isDefault: boolean;
+  createdAt: Date;
+}
+
+/** Série de orçamento com o limite vigente (versão de maior effective_from <= hoje). */
+export interface AdminBudgetRow {
+  id: string;
+  categoryName: string;
+  categoryColor: string;
+  currentAmountCents: number | null;
+  endedFrom: string | null;
+  createdAt: Date;
+}
+
+export interface AdminGoalRow {
+  id: string;
+  name: string;
+  targetAmountCents: number;
+  /** Derivado: SUM das contribuições. */
+  currentAmountCents: number;
+  targetDate: string | null;
+  color: string;
+  createdAt: Date;
+}
+
+export interface AdminScheduledEntryRow {
+  id: string;
+  description: string;
+  type: string;
+  amountCents: number;
+  postingMode: string;
+  frequency: string;
+  interval: number;
+  startDate: string;
+  endDate: string | null;
+  nextRunDate: string | null;
+  isActive: boolean;
+  categoryName: string | null;
+  createdAt: Date;
+}
+
+/** Notificação entregue a um membro do lar (aba Notificações). */
+export interface AdminNotificationRow {
+  id: string;
+  userId: string;
+  userName: string | null;
+  type: string;
+  title: string;
+  body: string;
+  readAt: Date | null;
+  createdAt: Date;
+}
+
+export interface ListHouseholdNotificationsFilter extends PageFilter {
+  type?: string;
 }
 
 /** Membership de um usuário no detalhe (drill-down). */
@@ -146,8 +257,25 @@ export interface IAdminRepository {
   getGrowthSeries(): Promise<GrowthPoint[]>;
   listHouseholds(filter: ListHouseholdsFilter): Promise<Page<AdminHouseholdRow>>;
   listUsers(filter: ListUsersFilter): Promise<Page<AdminUserRow>>;
-  /** Detalhe de uma household (membros + convites). Null se não existe. */
+  /** Detalhe de uma household (membros + convites + assinatura). Null se não existe. */
   getHouseholdDetail(householdId: string): Promise<AdminHouseholdDetail | null>;
+  /** Existência barata para o 404 das abas de drill-down. */
+  householdExists(householdId: string): Promise<boolean>;
+  listHouseholdTransactions(
+    householdId: string,
+    filter: ListHouseholdTransactionsFilter,
+  ): Promise<Page<AdminTransactionRow>>;
+  listHouseholdCategories(householdId: string, filter: PageFilter): Promise<Page<AdminCategoryRow>>;
+  listHouseholdBudgets(householdId: string, filter: PageFilter): Promise<Page<AdminBudgetRow>>;
+  listHouseholdGoals(householdId: string, filter: PageFilter): Promise<Page<AdminGoalRow>>;
+  listHouseholdScheduledEntries(
+    householdId: string,
+    filter: PageFilter,
+  ): Promise<Page<AdminScheduledEntryRow>>;
+  listHouseholdNotifications(
+    householdId: string,
+    filter: ListHouseholdNotificationsFilter,
+  ): Promise<Page<AdminNotificationRow>>;
   /** Detalhe de um usuário (memberships). Null se não existe. */
   getUserDetail(userId: string): Promise<AdminUserDetail | null>;
   /** Marca/desmarca a household como suspensa. Retorna false se a household não existe. */

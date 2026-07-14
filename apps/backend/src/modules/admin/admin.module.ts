@@ -8,6 +8,12 @@ import { ListPlatformHouseholdsUseCase } from "./application/use-cases/list-plat
 import { ListPlatformUsersUseCase } from "./application/use-cases/list-platform-users.use-case";
 import { GetHouseholdDetailUseCase } from "./application/use-cases/get-household-detail.use-case";
 import { GetUserDetailUseCase } from "./application/use-cases/get-user-detail.use-case";
+import { ListHouseholdTransactionsUseCase } from "./application/use-cases/list-household-transactions.use-case";
+import { ListHouseholdCategoriesUseCase } from "./application/use-cases/list-household-categories.use-case";
+import { ListHouseholdBudgetsUseCase } from "./application/use-cases/list-household-budgets.use-case";
+import { ListHouseholdGoalsUseCase } from "./application/use-cases/list-household-goals.use-case";
+import { ListHouseholdScheduledEntriesUseCase } from "./application/use-cases/list-household-scheduled-entries.use-case";
+import { ListHouseholdNotificationsUseCase } from "./application/use-cases/list-household-notifications.use-case";
 import { SetHouseholdSuspendedUseCase } from "./application/use-cases/set-household-suspended.use-case";
 import { SetUserPlatformRoleUseCase } from "./application/use-cases/set-user-platform-role.use-case";
 import { ListAuditLogsUseCase } from "../audit/application/use-cases/list-audit-logs.use-case";
@@ -24,6 +30,12 @@ import { AdminController } from "./interface/admin.controller";
     ListPlatformUsersUseCase,
     GetHouseholdDetailUseCase,
     GetUserDetailUseCase,
+    ListHouseholdTransactionsUseCase,
+    ListHouseholdCategoriesUseCase,
+    ListHouseholdBudgetsUseCase,
+    ListHouseholdGoalsUseCase,
+    ListHouseholdScheduledEntriesUseCase,
+    ListHouseholdNotificationsUseCase,
     SetHouseholdSuspendedUseCase,
     SetUserPlatformRoleUseCase,
     ListAuditLogsUseCase,
