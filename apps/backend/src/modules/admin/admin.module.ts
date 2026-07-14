@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { AuthModule } from "../auth/auth.module";
+import { SubscriptionsInfrastructureModule } from "../subscriptions/infrastructure/subscriptions-infrastructure.module";
 import { ADMIN_REPOSITORY } from "./domain/admin.repository.interface";
 import { DrizzleAdminRepository } from "./infrastructure/drizzle-admin.repository";
 import { GetPlatformStatsUseCase } from "./application/use-cases/get-platform-stats.use-case";
@@ -20,7 +21,9 @@ import { ListAuditLogsUseCase } from "../audit/application/use-cases/list-audit-
 import { AdminController } from "./interface/admin.controller";
 
 @Module({
-  imports: [AuthModule],
+  // SubscriptionsInfrastructureModule: PAYMENT_GATEWAY p/ a política de
+  // suspensão (cancelar sub Stripe viva antes de suspender lar pago).
+  imports: [AuthModule, SubscriptionsInfrastructureModule],
   controllers: [AdminController],
   providers: [
     { provide: ADMIN_REPOSITORY, useClass: DrizzleAdminRepository },

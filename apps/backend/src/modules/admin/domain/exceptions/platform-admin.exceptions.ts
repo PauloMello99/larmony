@@ -17,3 +17,19 @@ export class CannotChangeOwnPlatformRoleException extends DomainException {
     super("You cannot change your own platform role");
   }
 }
+
+/**
+ * Suspender um lar com assinatura Stripe VIVA sem cancelá-la manteria a
+ * cobrança com o acesso bloqueado (inaceitável — CDC). O 409 é a rede de
+ * segurança: o admin precisa pedir explicitamente o cancelamento junto
+ * (`cancelStripeSubscription: true`).
+ */
+export class HouseholdHasActiveSubscriptionException extends DomainException {
+  readonly code = "HOUSEHOLD_HAS_ACTIVE_SUBSCRIPTION";
+
+  constructor() {
+    super(
+      "Household has an active Stripe subscription — cancel it (cancelStripeSubscription: true) to suspend",
+    );
+  }
+}

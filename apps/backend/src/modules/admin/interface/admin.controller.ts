@@ -155,7 +155,12 @@ export class AdminController {
     @Body() dto: SetSuspendedDto,
     @CurrentUser() user: AuthUser,
   ) {
-    await this.setHouseholdSuspended.execute(id, dto.suspended, user.id);
+    await this.setHouseholdSuspended.execute(
+      id,
+      dto.suspended,
+      user.id,
+      dto.cancelStripeSubscription ?? false,
+    );
   }
 
   @Patch("users/:id/platform-role")

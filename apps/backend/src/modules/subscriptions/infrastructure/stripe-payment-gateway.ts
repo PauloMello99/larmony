@@ -210,10 +210,16 @@ export class StripePaymentGateway implements IPaymentGateway {
     await client.subscriptions.deleteDiscount(subscriptionId);
   }
 
-  async cancelSubscription(subscriptionId: string): Promise<void> {
+  async cancelSubscription(
+    subscriptionId: string,
+    options?: { prorate?: boolean; invoiceNow?: boolean },
+  ): Promise<void> {
     const client = this.requireClient();
     try {
-      await client.subscriptions.cancel(subscriptionId);
+      await client.subscriptions.cancel(subscriptionId, {
+        prorate: options?.prorate,
+        invoice_now: options?.invoiceNow,
+      });
     } catch (err) {
       // Idempotente: sub que já não existe/já foi cancelada no Stripe não é
       // erro para quem pediu o cancelamento (pego pela bateria do hardening —

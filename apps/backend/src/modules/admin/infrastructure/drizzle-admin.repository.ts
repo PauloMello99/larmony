@@ -737,6 +737,36 @@ export class DrizzleAdminRepository implements IAdminRepository {
     return rows.length > 0;
   }
 
+  async getHouseholdBillingState(
+    householdId: string,
+  ): Promise<{ stripeSubscriptionId: string | null; type: string; status: string } | null> {
+    const { rows } = await this.db.execute<{
+      stripe_subscription_id: string | null;
+      type: string;
+      status: string;
+    }>(sql`
+      SELECT stripe_subscription_id, type::text AS type, status::text AS status
+      FROM subscriptions
+      WHERE household_id = ${householdId}
+      LIMIT 1
+    `);
+    const r = rows[0];
+    if (!r) return null;
+    return {
+      stripeSubscriptionId: r.stripe_subscription_id,
+      type: r.type,
+      status: r.status,
+    };
+  }
+
+  async markSubscriptionCanceled(householdId: string): Promise<void> {
+    await this.db.execute(sql`
+      UPDATE subscriptions
+      SET type = 'free', status = 'canceled', canceled_at = now(), updated_at = now()
+      WHERE household_id = ${householdId}
+    `);
+  }
+
   async setUserPlatformRole(
     userId: string,
     role: PlatformRole,

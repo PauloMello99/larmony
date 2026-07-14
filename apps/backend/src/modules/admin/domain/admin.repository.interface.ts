@@ -280,6 +280,15 @@ export interface IAdminRepository {
   getUserDetail(userId: string): Promise<AdminUserDetail | null>;
   /** Marca/desmarca a household como suspensa. Retorna false se a household não existe. */
   setHouseholdSuspended(householdId: string, suspended: boolean): Promise<boolean>;
+  /** Estado de billing do lar p/ a política de suspensão. Null = sem linha de subscription. */
+  getHouseholdBillingState(
+    householdId: string,
+  ): Promise<{ stripeSubscriptionId: string | null; type: string; status: string } | null>;
+  /**
+   * Espelha localmente o cancelamento feito no Stripe pela suspensão (o webhook
+   * `customer.subscription.deleted` segue idempotente por cima).
+   */
+  markSubscriptionCanceled(householdId: string): Promise<void>;
   /** Define o platform_role de um usuário. Retorna false se o usuário não existe. */
   setUserPlatformRole(userId: string, role: PlatformRole): Promise<boolean>;
   /** Usuário pelo id da app (para checagens de auto-rebaixamento). */
