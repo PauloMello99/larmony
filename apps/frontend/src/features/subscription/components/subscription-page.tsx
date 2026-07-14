@@ -80,7 +80,6 @@ export function SubscriptionPage() {
             <TrialPanel
               t={t}
               isOwner={isOwner}
-              trialEndsAt={subscription?.trialEndsAt ?? null}
               pending={checkoutPending}
               error={checkoutError}
               onCheckout={(planKey) => startCheckout(planKey)}
@@ -286,28 +285,23 @@ function ActivePanel({
 function TrialPanel({
   t,
   isOwner,
-  trialEndsAt,
   pending,
   error,
   onCheckout,
 }: {
   t: (k: string, o?: Record<string, unknown>) => string
   isOwner: boolean
-  trialEndsAt: string | null
   pending: boolean
   error: string | null
   onCheckout: (planKey: string) => void
 }) {
-  const until = trialEndsAt ? new Date(trialEndsAt).toLocaleDateString() : null
   return (
     <div className="mt-4">
       <div className="flex items-start gap-2">
         <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-orange-400" />
         <div>
           <p className="text-sm font-medium">{t("trial.title")}</p>
-          <p className="mt-0.5 text-sm text-foreground/50">
-            {until ? `${t("trial.until")} ${until}.` : t("trial.description")}
-          </p>
+          <p className="mt-0.5 text-sm text-foreground/50">{t("trial.description")}</p>
         </div>
       </div>
       {isOwner ? (

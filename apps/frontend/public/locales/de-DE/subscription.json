@@ -35,7 +35,6 @@
   "trial": {
     "title": "Testphase aktiv",
     "description": "Dieser Haushalt hat während der Testphase Zugriff auf den Komplett-Plan.",
-    "until": "Voller Zugriff bis",
     "cta": "Jetzt abonnieren"
   },
   "comp": {

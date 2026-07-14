@@ -22,7 +22,6 @@ function sub(overrides: Partial<SubscriptionEntityProps> = {}): SubscriptionEnti
     trialConsumed: false,
     compReason: null,
     compExpiresAt: null,
-    trialEndsAt: null,
     stripeCouponId: null,
     discountPercent: null,
     createdAt: new Date(),
@@ -113,6 +112,16 @@ describe("EntitlementsService.resolve (M16 — 2 tiers)", () => {
 
     const ent = await service.resolve("hh_1");
     expect(ent.plan).toBe("completo");
+  });
+
+  it("type=trial legado (admin local removido no PR4) → locked, não completo", async () => {
+    const { service, repo } = make();
+    repo.getOrCreate.mockResolvedValue(sub({ type: "trial", status: "trialing" }));
+
+    const ent = await service.resolve("hh_1");
+
+    expect(ent.plan).toBe("locked");
+    expect(ent.source).toBe("locked");
   });
 
   it("custom (comp) → completo + source comp", async () => {

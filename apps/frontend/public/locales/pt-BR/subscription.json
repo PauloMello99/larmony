@@ -35,7 +35,6 @@
   "trial": {
     "title": "Período de teste ativo",
     "description": "Este lar tem acesso ao plano Completo durante o período de teste.",
-    "until": "Acesso Completo até",
     "cta": "Assinar agora"
   },
   "comp": {

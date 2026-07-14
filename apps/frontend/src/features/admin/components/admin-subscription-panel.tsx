@@ -2,20 +2,25 @@
 
 import * as React from "react"
 import { useTranslation } from "react-i18next"
-import { Gift, Percent, ShieldCheck, Clock, ExternalLink } from "lucide-react"
+import { Gift, Percent, ShieldCheck, ExternalLink, Receipt } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Badge } from "@/shared/components/ui/badge"
 import { Input } from "@/shared/components/ui/input"
+import { Skeleton } from "@/shared/components/ui/skeleton"
 import { DatePicker } from "@/shared/components/ui/date-picker"
 import { useSubscription } from "@/features/subscription"
+import { formatCentsToBRL } from "@/shared/lib/currency"
 import { translateApiError } from "@/shared/lib/api-error"
-import { useAdminBilling } from "../hooks/use-admin"
+import { useAdminBilling, useAdminInvoices } from "../hooks/use-admin"
 import { ConfirmDialog } from "./confirm-dialog"
 
 /**
- * Painel de gestão da assinatura de UM lar (comp/trial/desconto, B-7).
+ * Painel de gestão da assinatura de UM lar (comp/desconto/faturas, M16 PR4).
  * Extraído da antiga página /admin/billing (M15): agora vive na aba
  * Assinatura do detalhe do lar — o lar já está selecionado pelo contexto.
+ * Trial administrativo local foi removido no M16 (trial hoje é self-serve
+ * via Stripe, ver `features/subscription`); "dar acesso grátis" continua
+ * possível via comp (isenção).
  */
 export function AdminSubscriptionPanel({
   householdId,
@@ -39,8 +44,6 @@ export function AdminSubscriptionPanel({
   }
 
   const isComp = subscription.type === "custom"
-  const isTrial = subscription.type === "trial"
-  const isFree = subscription.type === "free"
   const hasStripeSub = !!subscription.stripeSubscriptionId
   const hasDiscount = !!subscription.stripeCouponId
 
@@ -54,6 +57,11 @@ export function AdminSubscriptionPanel({
         <Badge className="bg-foreground/[0.08] text-foreground/60">
           {subscription.status}
         </Badge>
+        {subscription.tier && (
+          <Badge className="bg-foreground/[0.08] text-foreground/60">
+            {t(`billing.tier.${subscription.tier}`)}
+          </Badge>
+        )}
         {hasDiscount && subscription.discountPercent != null && (
           <Badge className="bg-emerald-400/10 text-emerald-400">
             -{subscription.discountPercent}%
@@ -90,130 +98,74 @@ export function AdminSubscriptionPanel({
 
       <div className="border-t border-foreground/[0.06]" />
 
-      <TrialPanel
-        householdId={householdId}
-        isTrial={isTrial}
-        isFree={isFree}
-        trialEndsAt={subscription.trialEndsAt}
-      />
-
-      <div className="border-t border-foreground/[0.06]" />
-
       <DiscountPanel
         householdId={householdId}
         hasStripeSub={hasStripeSub}
         hasDiscount={hasDiscount}
       />
+
+      <div className="border-t border-foreground/[0.06]" />
+
+      <InvoicesPanel householdId={householdId} />
     </div>
   )
 }
 
-function TrialPanel({
-  householdId,
-  isTrial,
-  isFree,
-  trialEndsAt,
-}: {
-  householdId: string
-  isTrial: boolean
-  isFree: boolean
-  trialEndsAt: string | null
-}) {
+function InvoicesPanel({ householdId }: { householdId: string }) {
   const { t } = useTranslation("admin")
-  const { t: tCommon } = useTranslation("common")
-  const { grantTrial, revokeTrial } = useAdminBilling()
-  const [months, setMonths] = React.useState("")
-  const [confirmRevoke, setConfirmRevoke] = React.useState(false)
-  const [err, setErr] = React.useState<string | null>(null)
-
-  async function grant() {
-    const n = Number(months)
-    if (!Number.isInteger(n) || n < 1 || n > 24) {
-      setErr(t("billing.trialMonthsError"))
-      return
-    }
-    setErr(null)
-    try {
-      await grantTrial.mutateAsync({ householdId, months: n })
-      setMonths("")
-    } catch (e) {
-      setErr(
-        e instanceof Error
-          ? translateApiError(e, tCommon)
-          : t("billing.grantTrialError"),
-      )
-    }
-  }
+  const { invoices, loading, error } = useAdminInvoices(householdId)
 
   return (
     <div>
       <div className="flex items-center gap-2">
-        <Clock className="h-4 w-4 text-orange-400" />
-        <h3 className="text-sm font-medium text-foreground">{t("billing.trialTitle")}</h3>
+        <Receipt className="h-4 w-4 text-orange-400" />
+        <h3 className="text-sm font-medium text-foreground">{t("billing.invoicesTitle")}</h3>
       </div>
 
-      {isTrial ? (
-        <div className="mt-3">
-          <p className="text-sm text-foreground/70">
-            {trialEndsAt
-              ? t("billing.trialActiveUntil", {
-                  date: new Date(trialEndsAt).toLocaleDateString(t("format.dateLocale")),
-                })
-              : t("billing.trialActive")}
-          </p>
-          <Button
-            variant="outline"
-            size="sm"
-            className="mt-3"
-            onClick={() => setConfirmRevoke(true)}
-          >
-            {t("billing.revokeTrial")}
-          </Button>
-        </div>
-      ) : !isFree ? (
-        <p className="mt-3 text-sm text-foreground/40">
-          {t("billing.trialOnlyFree")}
-        </p>
+      {loading ? (
+        <Skeleton className="mt-3 h-20 w-full rounded-lg" />
+      ) : error ? (
+        <p className="mt-3 text-sm text-destructive">{error}</p>
+      ) : invoices.length === 0 ? (
+        <p className="mt-3 text-sm text-foreground/40">{t("billing.invoicesEmpty")}</p>
       ) : (
-        <div className="mt-3 space-y-3">
-          <div>
-            <label className="text-xs text-foreground/50">{t("billing.trialDurationLabel")}</label>
-            <Input
-              type="number"
-              min={1}
-              max={24}
-              value={months}
-              onChange={(e) => setMonths(e.target.value)}
-              className="mt-1"
-            />
-          </div>
-          {err && <p className="text-sm text-destructive">{err}</p>}
-          <Button size="sm" onClick={() => void grant()} disabled={grantTrial.isPending}>
-            {grantTrial.isPending ? t("billing.granting") : t("billing.grantTrial")}
-          </Button>
-        </div>
+        <ul className="mt-3 space-y-1.5">
+          {invoices.map((invoice) => (
+            <li
+              key={invoice.id}
+              className="flex items-center justify-between gap-3 rounded-lg border border-foreground/[0.06] px-3 py-2 text-sm"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-foreground/70">
+                  {invoice.number ?? invoice.id}
+                </span>
+                <span className="text-xs text-foreground/40">
+                  {new Date(invoice.createdAt).toLocaleDateString(t("format.dateLocale"))}
+                </span>
+                <Badge className="bg-foreground/[0.08] text-[10px] text-foreground/50">
+                  {invoice.status}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="font-medium text-foreground/80">
+                  {formatCentsToBRL(invoice.amountCents)}
+                </span>
+                {invoice.hostedInvoiceUrl && (
+                  <a
+                    href={invoice.hostedInvoiceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-foreground/40 hover:text-foreground"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    {t("billing.viewInvoice")}
+                  </a>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
-
-      <ConfirmDialog
-        open={confirmRevoke}
-        onOpenChange={setConfirmRevoke}
-        title={t("billing.confirmRevokeTrialTitle")}
-        description={t("billing.confirmRevokeTrialDescription")}
-        confirmLabel={t("billing.revoke")}
-        destructive
-        loading={revokeTrial.isPending}
-        error={
-          revokeTrial.error instanceof Error
-            ? translateApiError(revokeTrial.error, tCommon)
-            : null
-        }
-        onConfirm={() =>
-          revokeTrial.mutate(
-            { householdId },
-            { onSuccess: () => setConfirmRevoke(false) },
-          )
-        }
-      />
     </div>
   )
 }

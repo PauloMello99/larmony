@@ -35,7 +35,6 @@
   "trial": {
     "title": "Periodo de prueba activo",
     "description": "Este hogar tiene acceso al plan Completo durante el periodo de prueba.",
-    "until": "Acceso completo hasta",
     "cta": "Suscribirse ahora"
   },
   "comp": {

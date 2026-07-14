@@ -16,7 +16,6 @@ interface SubscriptionRow {
   trialConsumed: boolean;
   compReason: string | null;
   compExpiresAt: Date | null;
-  trialEndsAt: Date | null;
   stripeCouponId: string | null;
   discountPercent: number | null;
   createdAt: Date;
@@ -36,7 +35,6 @@ export class SubscriptionMapper {
       trialConsumed: row.trialConsumed,
       compReason: row.compReason,
       compExpiresAt: row.compExpiresAt,
-      trialEndsAt: row.trialEndsAt,
       stripeCouponId: row.stripeCouponId,
       discountPercent: row.discountPercent,
       createdAt: row.createdAt,
