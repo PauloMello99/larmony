@@ -34,10 +34,13 @@ const STATUS_TABS: { value: StatusTab; labelKey: string }[] = [
   { value: "suspended", labelKey: "households.tabSuspended" },
 ]
 
+// M16: "trial" nunca mais é escrito (trial administrativo local foi
+// removido no PR4 — trial hoje é self-serve via Stripe, type="standard" +
+// status="trialing", indistinguível de qualquer outro pagante por `type`).
+// Fora do filtro para não expor uma opção que nunca traz resultado.
 const PLAN_OPTIONS: Array<SubscriptionPlanType | "all"> = [
   "all",
   "free",
-  "trial",
   "standard",
   "custom",
 ]
