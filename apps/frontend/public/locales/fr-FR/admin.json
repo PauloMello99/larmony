@@ -36,6 +36,9 @@
     "statPastDue": "Paiement en retard",
     "statComp": "Exonérations",
     "statApproxMrr": "MRR (approx.)",
+    "statRevenue30d": "Revenus (30j)",
+    "statFailedPayments30d": "Paiements échoués (30j)",
+    "viewRevenueInStripe": "Voir les revenus dans Stripe",
     "planDistributionTitle": "Foyers par plan",
     "planDistributionEmpty": "Aucun foyer avec abonnement pour l'instant.",
     "billingGrowthTitle": "Abonnements · nouveaux vs annulés (12 mois, approx.)",
@@ -184,6 +187,7 @@
   "billing": {
     "loadError": "Impossible de charger l’abonnement.",
     "openInStripe": "Ouvrir dans Stripe",
+    "openSubscriptionInStripe": "Ouvrir l'abonnement dans Stripe",
     "trialTitle": "Essai",
     "trialActive": "Essai actif.",
     "trialActiveUntil": "Essai actif jusqu’au {{date}}.",

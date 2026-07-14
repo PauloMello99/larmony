@@ -25,8 +25,8 @@ export interface PlatformStats {
  * aplica `discount_percent` quando presente; não reflete cupons de valor fixo
  * nem parcelas em atraso. `newSubscriptions`/`canceledSubscriptions` no
  * `BillingGrowthPoint` vêm da tabela de estado (`created_at`/`updated_at`),
- * não de um event log — aproximado até o espelho de invoices (PR2 commit 2)
- * alimentar `revenueCents`/`failedPayments` com dados reais.
+ * não de um event log — aproximado. `revenueCents30d`/`failedPayments30d` já
+ * vêm do espelho real de invoices (`billing_invoice_events`, PR2 commit 2).
  */
 export interface BillingStats {
   payingActive: number;
@@ -37,6 +37,10 @@ export interface BillingStats {
   canceled: number;
   approxMrrCents: number;
   planDistribution: { plan: string; count: number }[];
+  /** Soma de invoice.paid nos últimos 30 dias (dado real, não aproximado). */
+  revenueCents30d: number;
+  /** Contagem de invoice.payment_failed nos últimos 30 dias. */
+  failedPayments30d: number;
 }
 
 export interface BillingGrowthPoint {

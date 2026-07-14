@@ -60,17 +60,30 @@ export function AdminSubscriptionPanel({
           </Badge>
         )}
         {/* Deep-links: detalhe fino (faturas, payments, refund manual) fica no Stripe. */}
-        {subscription.stripeCustomerId && (
-          <a
-            href={`https://dashboard.stripe.com/customers/${subscription.stripeCustomerId}`}
-            target="_blank"
-            rel="noreferrer"
-            className="ml-auto inline-flex items-center gap-1 text-xs text-foreground/40 hover:text-foreground"
-          >
-            <ExternalLink className="h-3 w-3" />
-            {t("billing.openInStripe")}
-          </a>
-        )}
+        <div className="ml-auto flex items-center gap-3">
+          {subscription.stripeSubscriptionId && (
+            <a
+              href={`https://dashboard.stripe.com/subscriptions/${subscription.stripeSubscriptionId}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 text-xs text-foreground/40 hover:text-foreground"
+            >
+              <ExternalLink className="h-3 w-3" />
+              {t("billing.openSubscriptionInStripe")}
+            </a>
+          )}
+          {subscription.stripeCustomerId && (
+            <a
+              href={`https://dashboard.stripe.com/customers/${subscription.stripeCustomerId}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 text-xs text-foreground/40 hover:text-foreground"
+            >
+              <ExternalLink className="h-3 w-3" />
+              {t("billing.openInStripe")}
+            </a>
+          )}
+        </div>
       </div>
 
       <CompPanel householdId={householdId} isComp={isComp} reason={subscription.compReason} />

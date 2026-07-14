@@ -36,6 +36,9 @@
     "statPastDue": "Past due",
     "statComp": "Comps",
     "statApproxMrr": "MRR (approx.)",
+    "statRevenue30d": "Revenue (30d)",
+    "statFailedPayments30d": "Failed payments (30d)",
+    "viewRevenueInStripe": "View revenue in Stripe",
     "planDistributionTitle": "Households by plan",
     "planDistributionEmpty": "No household with a subscription yet.",
     "billingGrowthTitle": "Subscriptions · new vs canceled (12 months, approx.)",
@@ -184,6 +187,7 @@
   "billing": {
     "loadError": "Could not load the subscription.",
     "openInStripe": "Open in Stripe",
+    "openSubscriptionInStripe": "Open subscription in Stripe",
     "trialTitle": "Trial",
     "trialActive": "Trial active.",
     "trialActiveUntil": "Trial active until {{date}}.",

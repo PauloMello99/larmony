@@ -470,6 +470,7 @@ describe("Admin platform panel (e2e)", () => {
         `UPDATE public.subscriptions SET type='free', status='active', price_cents=NULL, billing_interval=NULL, discount_percent=NULL WHERE household_id = $1`,
         [householdId],
       );
+      await pool.query(`DELETE FROM public.billing_invoice_events WHERE stripe_invoice_id LIKE 'in_admin_e2e_%'`);
     });
 
     it("standard/active mensal sem desconto → payingActive=1 e MRR = price_cents", async () => {
@@ -548,6 +549,25 @@ describe("Admin platform panel (e2e)", () => {
       );
       res = await authed(app, "get", "/admin/stats/billing", superAdmin.accessToken).expect(200);
       expect(res.body.canceled).toBeGreaterThanOrEqual(1);
+    });
+
+    it("revenueCents30d/failedPayments30d refletem o espelho real de invoices (delta, janela de 30d)", async () => {
+      const before = await authed(app, "get", "/admin/stats/billing", superAdmin.accessToken).expect(
+        200,
+      );
+
+      await pool.query(
+        `INSERT INTO public.billing_invoice_events (stripe_invoice_id, household_id, type, amount_cents, currency, occurred_at)
+         VALUES ($1, $2, 'paid', 1490, 'brl', now()), ($3, $2, 'payment_failed', 1490, 'brl', now())`,
+        [`in_admin_e2e_${Date.now()}_paid`, householdId, `in_admin_e2e_${Date.now()}_failed`],
+      );
+
+      const after = await authed(app, "get", "/admin/stats/billing", superAdmin.accessToken).expect(
+        200,
+      );
+
+      expect(after.body.revenueCents30d - before.body.revenueCents30d).toBe(1490);
+      expect(after.body.failedPayments30d - before.body.failedPayments30d).toBe(1);
     });
   });
 });

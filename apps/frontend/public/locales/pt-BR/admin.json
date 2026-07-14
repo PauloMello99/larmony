@@ -36,6 +36,9 @@
     "statPastDue": "Pagamento pendente",
     "statComp": "Isenções",
     "statApproxMrr": "MRR (aprox.)",
+    "statRevenue30d": "Receita (30d)",
+    "statFailedPayments30d": "Falhas de pagamento (30d)",
+    "viewRevenueInStripe": "Ver receita no Stripe",
     "planDistributionTitle": "Lares por plano",
     "planDistributionEmpty": "Nenhum lar com assinatura ainda.",
     "billingGrowthTitle": "Assinaturas · novas x canceladas (12 meses, aprox.)",
@@ -184,6 +187,7 @@
   "billing": {
     "loadError": "Não foi possível carregar a assinatura.",
     "openInStripe": "Abrir no Stripe",
+    "openSubscriptionInStripe": "Abrir assinatura no Stripe",
     "trialTitle": "Trial",
     "trialActive": "Trial ativo.",
     "trialActiveUntil": "Trial ativo até {{date}}.",

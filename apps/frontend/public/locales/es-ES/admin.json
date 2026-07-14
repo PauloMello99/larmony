@@ -36,6 +36,9 @@
     "statPastDue": "Pago pendiente",
     "statComp": "Exenciones",
     "statApproxMrr": "MRR (aprox.)",
+    "statRevenue30d": "Ingresos (30d)",
+    "statFailedPayments30d": "Pagos fallidos (30d)",
+    "viewRevenueInStripe": "Ver ingresos en Stripe",
     "planDistributionTitle": "Hogares por plan",
     "planDistributionEmpty": "Ningún hogar con suscripción todavía.",
     "billingGrowthTitle": "Suscripciones · nuevas vs canceladas (12 meses, aprox.)",
@@ -184,6 +187,7 @@
   "billing": {
     "loadError": "No se pudo cargar la suscripción.",
     "openInStripe": "Abrir en Stripe",
+    "openSubscriptionInStripe": "Abrir suscripción en Stripe",
     "trialTitle": "Prueba",
     "trialActive": "Periodo de prueba activo.",
     "trialActiveUntil": "Periodo de prueba activo hasta {{date}}.",

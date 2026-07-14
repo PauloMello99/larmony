@@ -147,6 +147,19 @@ export class DrizzleAdminRepository implements IAdminRepository {
       ORDER BY count DESC
     `);
 
+    // Dado real (não aproximado) — vem do espelho de invoices, não da tabela de estado.
+    const { rows: invoiceRows } = await this.db.execute<{
+      revenue_cents_30d: number;
+      failed_payments_30d: number;
+    }>(sql`
+      SELECT
+        COALESCE(SUM(amount_cents) FILTER (WHERE type = 'paid'), 0)::int AS revenue_cents_30d,
+        COUNT(*) FILTER (WHERE type = 'payment_failed')::int AS failed_payments_30d
+      FROM billing_invoice_events
+      WHERE occurred_at >= now() - interval '30 days'
+    `);
+    const inv = invoiceRows[0];
+
     return {
       payingActive: Number(r?.paying_active ?? 0),
       trialing: Number(r?.trialing ?? 0),
@@ -156,6 +169,8 @@ export class DrizzleAdminRepository implements IAdminRepository {
       canceled: Number(r?.canceled ?? 0),
       approxMrrCents: Number(r?.approx_mrr_cents ?? 0),
       planDistribution: planRows.map((p) => ({ plan: p.plan, count: Number(p.count) })),
+      revenueCents30d: Number(inv?.revenue_cents_30d ?? 0),
+      failedPayments30d: Number(inv?.failed_payments_30d ?? 0),
     };
   }
 

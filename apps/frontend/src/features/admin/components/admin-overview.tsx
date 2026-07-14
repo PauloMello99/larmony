@@ -14,6 +14,7 @@ import {
   AlertTriangle,
   Gift,
   DollarSign,
+  ExternalLink,
 } from "lucide-react"
 import {
   Area,
@@ -195,6 +196,31 @@ export function AdminOverview() {
           icon={DollarSign}
           loading={billingLoading}
         />
+      </div>
+
+      {/* Receita real (espelho de invoices, M15 PR2 commit 3) */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        <StatCard
+          label={t("overview.statRevenue30d")}
+          value={billing ? formatCentsToBRL(billing.revenueCents30d) : "—"}
+          icon={DollarSign}
+          loading={billingLoading}
+        />
+        <StatCard
+          label={t("overview.statFailedPayments30d")}
+          value={billing?.failedPayments30d ?? 0}
+          icon={AlertTriangle}
+          loading={billingLoading}
+        />
+        <a
+          href="https://dashboard.stripe.com/payments"
+          target="_blank"
+          rel="noreferrer"
+          className="col-span-2 flex items-center gap-1.5 rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4 text-sm text-foreground/50 transition-colors hover:text-foreground sm:col-span-1"
+        >
+          <ExternalLink className="h-3.5 w-3.5 text-primary" />
+          {t("overview.viewRevenueInStripe")}
+        </a>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">

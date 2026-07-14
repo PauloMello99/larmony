@@ -36,6 +36,9 @@
     "statPastDue": "Zahlung überfällig",
     "statComp": "Befreiungen",
     "statApproxMrr": "MRR (ca.)",
+    "statRevenue30d": "Umsatz (30 Tage)",
+    "statFailedPayments30d": "Fehlgeschlagene Zahlungen (30 Tage)",
+    "viewRevenueInStripe": "Umsatz in Stripe ansehen",
     "planDistributionTitle": "Haushalte nach Plan",
     "planDistributionEmpty": "Noch kein Haushalt mit Abo.",
     "billingGrowthTitle": "Abos · neu vs. gekündigt (12 Monate, ca.)",
@@ -184,6 +187,7 @@
   "billing": {
     "loadError": "Das Abonnement konnte nicht geladen werden.",
     "openInStripe": "In Stripe öffnen",
+    "openSubscriptionInStripe": "Abo in Stripe öffnen",
     "trialTitle": "Testphase",
     "trialActive": "Testphase aktiv.",
     "trialActiveUntil": "Testphase aktiv bis {{date}}.",
