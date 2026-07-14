@@ -44,7 +44,7 @@ interface BudgetFormProps {
   budget?: Budget | null
   /** Categorias já orçadas neste período — excluídas do Select ao criar. */
   budgetedCategoryIds: string[]
-  /** Lar já atingiu o limite de orçamentos ativos do Free (D-1) — bloqueia só a criação. */
+  /** Lar sem a capability `budgets` (Essencial/locked, M16) — bloqueia só a criação. */
   atLimit?: boolean
   onSubmit: (values: CreateBudgetFormValues) => Promise<void>
 }
@@ -94,8 +94,6 @@ export function BudgetForm({
       await onSubmit(values)
       onOpenChange(false)
     } catch (err) {
-      // Limite de orçamentos ativos do Free (D-1) chega aqui via
-      // api.BUDGET_LIMIT_REACHED.
       setError(translateApiError(err, tCommon))
     }
   })

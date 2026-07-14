@@ -6,7 +6,6 @@ import { PlusCircle, Target } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
-import { useEntitlements } from "@/features/subscription"
 import { useGoals } from "../hooks/use-goals"
 import { useGoalMutations } from "../hooks/use-goal-mutations"
 import { GoalForm } from "./goal-form"
@@ -22,8 +21,6 @@ export function GoalsPage() {
   const { goals, loading } = useGoals(householdId)
   const { createGoal, updateGoal, deleteGoal, addContribution, deleteContribution } =
     useGoalMutations(householdId)
-  const { limits } = useEntitlements(householdId)
-  const atGoalLimit = goals.length >= limits.maxActiveGoals
 
   const [formOpen, setFormOpen] = useState(false)
   const [editing, setEditing] = useState<Goal | null>(null)
@@ -106,7 +103,6 @@ export function GoalsPage() {
         open={formOpen}
         onOpenChange={setFormOpen}
         goal={editing}
-        atLimit={atGoalLimit}
         onSubmit={handleSubmit}
       />
 

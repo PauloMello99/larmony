@@ -21,6 +21,13 @@ export interface CreateCheckoutSessionInput {
   metadata: Record<string, string>;
   /** Locale da UI (AppLocale) — página hospedada do Stripe no idioma do usuário. */
   locale?: string | null;
+  /**
+   * Trial self-serve (M16) — dias de teste antes da 1ª cobrança. Quando
+   * presente, o gateway também força coleta de cartão upfront
+   * (`payment_method_collection: "always"`): todos passam pelo checkout,
+   * inclusive no trial, para dar tracking real de conversão trial→pago.
+   */
+  trialPeriodDays?: number;
 }
 
 export interface CreateCheckoutSessionOutput {

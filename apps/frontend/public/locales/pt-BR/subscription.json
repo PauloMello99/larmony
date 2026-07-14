@@ -1,13 +1,13 @@
 {
   "title": "Assinatura",
-  "description": "Plano, status e gerenciamento da assinatura desta lar.",
+  "description": "Plano, status e gerenciamento da assinatura deste lar.",
   "planTitle": "Plano atual",
   "loadError": "Não foi possível carregar a assinatura. Tente novamente.",
-  "ownerOnly": "Apenas o responsável pela lar pode gerenciar a assinatura.",
+  "ownerOnly": "Apenas o responsável pelo lar pode gerenciar a assinatura.",
   "plan": {
-    "free": "Grátis",
-    "premium": "Premium",
-    "custom": "Isenção"
+    "locked": "Sem assinatura",
+    "essencial": "Essencial",
+    "completo": "Completo"
   },
   "status": {
     "active": "Ativa",
@@ -15,42 +15,43 @@
     "past_due": "Pagamento pendente",
     "canceled": "Cancelada"
   },
-  "premiumOffer": {
-    "title": "Larmony Premium — R$ 14,90/mês",
-    "description": "Relatórios avançados, múltiplos membros e tudo que sua lar precisa para controlar as finanças em conjunto."
-  },
-  "free": {
-    "description": "Sua lar está no plano Grátis.",
-    "cta": "Assinar o Premium",
+  "locked": {
+    "description": "Este lar não tem uma assinatura ativa — você ainda pode ver seus dados, mas criar ou editar exige assinar.",
+    "trialNotice": "Experimente qualquer plano grátis por 30 dias (cartão necessário, sem cobrança até o fim do teste).",
+    "onboardingNotice": "Seu lar foi criado! Escolha um plano para começar — os primeiros 30 dias são grátis.",
+    "descriptionEssencial": "O essencial para controlar as finanças do dia a dia.",
+    "descriptionCompleto": "Tudo do Essencial, mais orçamentos, lançamentos programados e relatórios avançados.",
+    "intervalMonthly": "Mensal",
+    "intervalAnnual": "Anual (2 meses grátis)",
+    "cta": "Iniciar teste grátis",
     "ctaPending": "Redirecionando…"
   },
-  "premium": {
-    "description": "Sua lar tem o Premium ativo. Aproveite todos os recursos.",
+  "active": {
+    "description": "Sua assinatura está ativa. Aproveite todos os recursos do seu plano.",
     "pastDue": "Há um pagamento pendente. Atualize o método de pagamento no portal para não perder o acesso.",
     "portalCta": "Gerenciar assinatura",
     "portalPending": "Redirecionando…"
   },
   "trial": {
     "title": "Período de teste ativo",
-    "description": "Sua lar tem acesso Premium durante o período de teste.",
-    "until": "Acesso Premium completo até",
-    "cta": "Assinar o Premium"
+    "description": "Este lar tem acesso ao plano Completo durante o período de teste.",
+    "until": "Acesso Completo até",
+    "cta": "Assinar agora"
   },
   "comp": {
     "title": "Isenção concedida",
-    "description": "Sua lar tem acesso completo por cortesia — sem cobrança.",
+    "description": "Este lar tem acesso completo por cortesia — sem cobrança.",
     "reasonLabel": "Motivo"
   },
   "banner": {
-    "success": "Assinatura confirmada! O acesso Premium é ativado assim que o Stripe confirma o pagamento.",
+    "success": "Assinatura confirmada! O acesso é ativado assim que o Stripe confirma o pagamento.",
     "cancel": "Checkout cancelado. Nenhuma cobrança foi feita."
   },
   "gate": {
-    "title": "Recurso Premium",
-    "description": "Relatórios avançados fazem parte do plano Premium. Faça o upgrade para desbloquear.",
-    "descriptionCategories": "Categorias personalizadas fazem parte do plano Premium. Faça o upgrade para desbloquear.",
-    "descriptionGoals": "Você atingiu o limite de metas do plano Grátis. Faça o upgrade para criar metas ilimitadas.",
-    "descriptionBudgets": "Você atingiu o limite de orçamentos ativos do plano Grátis. Faça o upgrade para criar orçamentos ilimitados.",
+    "title": "Recurso do plano Completo",
+    "description": "Relatórios avançados fazem parte do plano Completo. Faça upgrade para desbloquear.",
+    "descriptionCategories": "Categorias personalizadas fazem parte do plano Completo. Faça upgrade para desbloquear.",
+    "descriptionBudgets": "Orçamentos fazem parte do plano Completo. Faça upgrade para desbloquear.",
     "cta": "Ver planos"
   }
 }

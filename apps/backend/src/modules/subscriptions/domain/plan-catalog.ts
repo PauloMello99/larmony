@@ -64,6 +64,9 @@ export const PLAN_CATALOG: PlanDefinition[] = [
 /** Plano pré-selecionado no checkout quando o usuário não escolhe explicitamente. */
 export const DEFAULT_PLAN_KEY = "completo_monthly";
 
+/** Duração do trial self-serve (M16) — cartão upfront, dá acesso Completo. */
+export const TRIAL_PERIOD_DAYS = 30;
+
 /** Resolve o tier a partir do `lookup_key` do Price (ex.: "completo_annual" → "completo"). */
 export function tierFromLookupKey(lookupKey: string | null): SubscriptionTier | null {
   if (!lookupKey) return null;

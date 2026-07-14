@@ -236,6 +236,13 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
     return row?.slug ?? null;
   }
 
+  async markTrialConsumed(householdId: string): Promise<void> {
+    await this.db
+      .update(schema.subscriptions)
+      .set({ trialConsumed: true, updatedAt: new Date() })
+      .where(eq(schema.subscriptions.householdId, householdId));
+  }
+
   async expireTrial(householdId: string): Promise<void> {
     // Volta a free — nenhum dado do lar é apagado (downgrade nunca destrói).
     await this.db

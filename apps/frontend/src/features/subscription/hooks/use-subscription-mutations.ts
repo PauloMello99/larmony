@@ -17,10 +17,12 @@ import type { StripeRedirect } from "../types"
 export function useSubscriptionMutations(householdId: string) {
   const { t } = useTranslation("common")
   const checkout = useMutation({
-    mutationFn: () =>
+    // planKey: qual plano (Essencial/Completo × mensal/anual) o usuário
+    // escolheu — é esse plano que é cobrado ao fim do trial (M16).
+    mutationFn: (planKey?: string) =>
       apiRequest<StripeRedirect>(
         `/households/${householdId}/subscription/checkout`,
-        { method: "POST", body: JSON.stringify({ locale: readLocaleCookie() }) },
+        { method: "POST", body: JSON.stringify({ locale: readLocaleCookie(), planKey }) },
       ),
     onSuccess: ({ url }) => {
       window.location.assign(url)
@@ -39,7 +41,7 @@ export function useSubscriptionMutations(householdId: string) {
   })
 
   return {
-    startCheckout: checkout.mutate,
+    startCheckout: (planKey?: string) => checkout.mutate(planKey),
     checkoutPending: checkout.isPending,
     checkoutError:
       checkout.error instanceof Error ? translateApiError(checkout.error, t) : null,
