@@ -8,6 +8,16 @@ export interface PlatformStats {
   totalMemberships: number
 }
 
+/** Envelope de paginação das listas do admin (mesmo shape do audit-logs). */
+export interface AdminPage<T> {
+  data: T[]
+  total: number
+  page: number
+  pages: number
+}
+
+export type SubscriptionPlanType = "free" | "trial" | "standard" | "custom"
+
 export interface AdminHousehold {
   id: string
   name: string
@@ -15,7 +25,22 @@ export interface AdminHousehold {
   suspendedAt: string | null
   memberCount: number
   ownerName: string | null
+  ownerEmail: string | null
+  /** Plano efetivo (lar sem linha de subscription = "free"). */
+  plan: SubscriptionPlanType
+  subscriptionStatus: string | null
   createdAt: string
+}
+
+/** Filtros server-side da lista de lares. */
+export interface AdminHouseholdFilters {
+  page?: number
+  limit?: number
+  q?: string
+  plan?: SubscriptionPlanType
+  suspended?: boolean
+  sortBy?: "createdAt" | "name" | "memberCount"
+  sortDir?: "asc" | "desc"
 }
 
 export interface AdminUser {
@@ -120,9 +145,7 @@ export interface AuditLogPage {
   pages: number
 }
 
-/** Filtros/ordenação client-side das tabelas. */
-export type HouseholdStatusFilter = "all" | "active" | "suspended"
+/** Filtros/ordenação client-side remanescentes (users migra no M15 8/8). */
 export type UserRoleFilter = "all" | "super_admin" | "user"
-export type HouseholdSortKey = "name" | "createdAt" | "memberCount"
 export type UserSortKey = "name" | "createdAt" | "householdCount"
 export type SortDir = "asc" | "desc"

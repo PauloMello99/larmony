@@ -8,6 +8,8 @@ import { translateApiError } from "@/shared/lib/api-error"
 import type {
   AdminHousehold,
   AdminHouseholdDetail,
+  AdminHouseholdFilters,
+  AdminPage,
   AdminUser,
   AdminUserDetail,
   AuditLogFilters,
@@ -16,6 +18,13 @@ import type {
   PlatformRole,
   PlatformStats,
 } from "../types"
+
+/** Args da suspensão — o flag cancela a sub Stripe viva antes (política M15). */
+interface SuspendArgs {
+  id: string
+  suspended: boolean
+  cancelStripeSubscription?: boolean
+}
 
 export function useAdminStats() {
   const { t } = useTranslation("common")
@@ -75,16 +84,17 @@ export function useAdminUserDetail(id: string | undefined) {
 export function useSetHouseholdSuspended() {
   const queryClient = useQueryClient()
   const mutation = useMutation({
-    mutationFn: ({ id, suspended }: { id: string; suspended: boolean }) =>
+    mutationFn: ({ id, suspended, cancelStripeSubscription }: SuspendArgs) =>
       apiRequest<void>(`/admin/households/${id}/suspend`, {
         method: "PATCH",
-        body: JSON.stringify({ suspended }),
+        body: JSON.stringify({ suspended, cancelStripeSubscription }),
       }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.admin.all })
     },
   })
-  return (id: string, suspended: boolean) => mutation.mutateAsync({ id, suspended })
+  return (id: string, suspended: boolean, cancelStripeSubscription?: boolean) =>
+    mutation.mutateAsync({ id, suspended, cancelStripeSubscription })
 }
 
 export function useSetUserPlatformRole() {
@@ -126,20 +136,32 @@ export function useAdminAuditLogs(filters?: AuditLogFilters) {
   }
 }
 
-export function useAdminHouseholds() {
+/** Lista de lares server-side: filtros/paginação/sort viajam na query string. */
+export function useAdminHouseholds(filters?: AdminHouseholdFilters) {
   const { t } = useTranslation("common")
   const queryClient = useQueryClient()
 
-  const { data = [], isLoading, error, refetch } = useQuery({
-    queryKey: queryKeys.admin.households(),
-    queryFn: () => apiRequest<AdminHousehold[]>("/admin/households"),
+  const params = new URLSearchParams()
+  if (filters?.page) params.set("page", String(filters.page))
+  if (filters?.limit) params.set("limit", String(filters.limit))
+  if (filters?.q) params.set("q", filters.q)
+  if (filters?.plan) params.set("plan", filters.plan)
+  if (filters?.suspended !== undefined) params.set("suspended", String(filters.suspended))
+  if (filters?.sortBy) params.set("sortBy", filters.sortBy)
+  if (filters?.sortDir) params.set("sortDir", filters.sortDir)
+  const qs = params.toString()
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: queryKeys.admin.households(filters as Record<string, unknown>),
+    queryFn: () =>
+      apiRequest<AdminPage<AdminHousehold>>(`/admin/households${qs ? `?${qs}` : ""}`),
   })
 
   const suspendMutation = useMutation({
-    mutationFn: ({ id, suspended }: { id: string; suspended: boolean }) =>
+    mutationFn: ({ id, suspended, cancelStripeSubscription }: SuspendArgs) =>
       apiRequest<void>(`/admin/households/${id}/suspend`, {
         method: "PATCH",
-        body: JSON.stringify({ suspended }),
+        body: JSON.stringify({ suspended, cancelStripeSubscription }),
       }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.admin.all })
@@ -147,12 +169,12 @@ export function useAdminHouseholds() {
   })
 
   return {
-    households: data,
+    page: data ?? null,
     loading: isLoading,
     error: error instanceof Error ? translateApiError(error, t) : null,
     refetch,
-    setSuspended: (id: string, suspended: boolean) =>
-      suspendMutation.mutateAsync({ id, suspended }),
+    setSuspended: (id: string, suspended: boolean, cancelStripeSubscription?: boolean) =>
+      suspendMutation.mutateAsync({ id, suspended, cancelStripeSubscription }),
   }
 }
 
