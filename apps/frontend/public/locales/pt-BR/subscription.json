@@ -52,6 +52,11 @@
     "description": "Relatórios avançados fazem parte do plano Completo. Faça upgrade para desbloquear.",
     "descriptionCategories": "Categorias personalizadas fazem parte do plano Completo. Faça upgrade para desbloquear.",
     "descriptionBudgets": "Orçamentos fazem parte do plano Completo. Faça upgrade para desbloquear.",
+    "descriptionScheduledEntries": "Lançamentos programados fazem parte do plano Completo. Faça upgrade para desbloquear.",
     "cta": "Ver planos"
+  },
+  "lockedBanner": {
+    "description": "Este lar está em modo somente-leitura — sem assinatura ativa.",
+    "cta": "Assinar"
   }
 }

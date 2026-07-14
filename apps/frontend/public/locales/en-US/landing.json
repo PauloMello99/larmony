@@ -7,7 +7,7 @@
       "faq": "FAQ"
     },
     "login": "Log in",
-    "cta": "Get started free",
+    "cta": "Try it free",
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
   },
@@ -16,7 +16,7 @@
     "titleLine1": "Household finances,",
     "titleHighlight": "in harmony.",
     "subtitle": "Transactions, budgets, goals, and bills — shared with everyone in your home. Exact cents, zero spreadsheets.",
-    "ctaPrimary": "Get started free →",
+    "ctaPrimary": "Try free for 30 days →",
     "ctaSecondary": "See a demo",
     "proof": {
       "centsLine1": "exact cents,",
@@ -133,7 +133,7 @@
     "steps": {
       "s1": {
         "title": "Create your home",
-        "desc": "In under a minute and with no card. A home is the space where your household finances live together."
+        "desc": "In under a minute. A home is the space where your household finances live together — with a 30-day free trial of the Complete plan."
       },
       "s2": {
         "title": "Invite the people you live with",
@@ -167,52 +167,37 @@
   "pricing": {
     "kicker": "Pricing",
     "title": "Simple and transparent",
-    "subtitle": "Start free. Upgrade whenever you want more — no lock-in.",
-    "note": "You create your account for free and upgrade to Family inside the app, with secure payments processed by Stripe. Cancel anytime; Pro is coming soon.",
+    "subtitle": "Two plans, no catch — plus a 30-day free trial of Complete on either one.",
+    "note": "Card required to start the trial, no charge until the 30 days are up. Secure payments processed by Stripe — cancel anytime.",
+    "intervalMonthly": "Monthly",
+    "intervalAnnual": "Annual",
+    "perMonth": "/mo",
+    "perYear": "/yr",
     "plans": {
-      "free": {
-        "name": "Free",
-        "price": "Free",
-        "period": "",
-        "description": "To organize your household finances without paying a thing.",
-        "cta": "Get started free",
+      "essencial": {
+        "name": "Essential",
+        "description": "The essentials to manage day-to-day finances.",
+        "cta": "Try free for 30 days",
         "features": {
           "f1": "Unlimited transactions with the default categories",
-          "f2": "Budgets and goals (up to 3 each)",
+          "f2": "Unlimited savings goals",
           "f3": "Bill reminders by email",
-          "f4": "1 home, you + 1 member",
+          "f4": "Unlimited members and homes",
           "f5": "Dashboard and monthly report"
         }
       },
-      "family": {
-        "name": "Family",
-        "price": "R$ 14,90",
-        "period": "/mo",
+      "completo": {
+        "name": "Complete",
         "badge": "Recommended",
-        "description": "For anyone who wants advanced reports and to support the project.",
-        "cta": "Subscribe to Family",
+        "description": "Everything in Essential, plus budgets, scheduled entries and advanced reports.",
+        "cta": "Try free for 30 days",
         "features": {
-          "f1": "Everything in the Free plan",
-          "f2": "Unlimited members and homes",
-          "f3": "Unlimited custom categories",
+          "f1": "Everything in the Essential plan",
+          "f2": "Budgets by category",
+          "f3": "Scheduled entries and recurrences",
           "f4": "Advanced reports — annual and comparative",
           "f5": "CSV report export",
-          "f6": "New premium features as they launch",
-          "f7": "Support the development of Larmony"
-        }
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "TBD",
-        "period": "",
-        "badge": "Coming soon",
-        "description": "Advanced features for anyone who needs more control.",
-        "cta": "Coming soon",
-        "features": {
-          "f1": "Open Finance integration",
-          "f2": "Custom automations",
-          "f3": "Advanced report exports",
-          "f4": "Priority support"
+          "f6": "Unlimited custom categories"
         }
       }
     }
@@ -222,20 +207,20 @@
     "title": "Frequently asked questions",
     "items": {
       "q1": {
-        "question": "Is Larmony free?",
-        "answer": "Yes. The Free plan covers your home's day-to-day at no cost. The Family plan (R$ 14,90/month) unlocks advanced reports and helps keep the project going — but you don't need it to get started."
+        "question": "Does Larmony have a free plan?",
+        "answer": "Not a permanent free plan, but everyone starts with a 30-day free trial of the Complete plan (card required, no charge until the trial ends). After that, you choose between Essential (R$ 9,90/month) and Complete (R$ 19,90/month)."
       },
       "q2": {
-        "question": "What comes with the Family plan?",
-        "answer": "Unlimited members and homes, custom categories, advanced reports (annual view and comparisons), and CSV report export. And as new premium features launch, they're included in Family at no extra cost. No lock-in."
+        "question": "What's the difference between Essential and Complete?",
+        "answer": "Essential covers the core: transactions, default categories, goals, dashboard and monthly report, with unlimited members and homes. Complete adds budgets by category, scheduled entries, advanced reports (annual view and CSV export), and custom categories."
       },
       "q3": {
         "question": "Can I cancel anytime?",
-        "answer": "Yes. Your subscription is managed through Stripe's secure portal, with no penalty. You keep Family access until the end of the cycle you've already paid for, then return to Free."
+        "answer": "Yes. Your subscription is managed through Stripe's secure portal, with no penalty. You keep access until the end of the cycle you've already paid for; after that, your data stays available in read-only mode until you subscribe again."
       },
       "q4": {
         "question": "Do I need to connect my bank account?",
-        "answer": "No. Larmony works with manual entries and automatic recurrences — you control exactly what goes in. Open Finance integration is on the roadmap (Pro plan)."
+        "answer": "No. Larmony works with manual entries and automatic recurrences — you control exactly what goes in. Open Finance integration is on the roadmap for a future plan."
       },
       "q5": {
         "question": "Is my financial data secure?",
@@ -250,8 +235,8 @@
   "finalCta": {
     "titleLine1": "Bring harmony to",
     "titleLine2": "your household bills",
-    "subtitle": "Create your home in under a minute. Free, no credit card required.",
-    "cta": "Create my home for free →"
+    "subtitle": "Create your home in under a minute. 30-day free trial of the Complete plan.",
+    "cta": "Try free for 30 days →"
   },
   "footer": {
     "description": "Manage your household finances. Transactions, budgets, and goals in one place.",

@@ -52,6 +52,11 @@
     "description": "Les rapports avancés font partie du plan Complet. Passe au niveau supérieur pour les débloquer.",
     "descriptionCategories": "Les catégories personnalisées font partie du plan Complet. Passe au niveau supérieur pour les débloquer.",
     "descriptionBudgets": "Les budgets font partie du plan Complet. Passe au niveau supérieur pour les débloquer.",
+    "descriptionScheduledEntries": "Les écritures programmées font partie du plan Complet. Passe au niveau supérieur pour les débloquer.",
     "cta": "Voir les plans"
+  },
+  "lockedBanner": {
+    "description": "Ce foyer est en lecture seule — aucun abonnement actif.",
+    "cta": "S’abonner"
   }
 }

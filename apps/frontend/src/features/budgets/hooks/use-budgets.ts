@@ -7,7 +7,7 @@ import { queryKeys } from "@/infrastructure/query/query-keys"
 import { translateApiError } from "@/shared/lib/api-error"
 import type { Budget, BudgetFilters } from "../types"
 
-export function useBudgets(householdId: string, filters: BudgetFilters) {
+export function useBudgets(householdId: string, filters: BudgetFilters, enabled = true) {
   const { t } = useTranslation("common")
   const query = useQuery({
     queryKey: queryKeys.budgets.list(householdId, { ...filters }),
@@ -15,7 +15,7 @@ export function useBudgets(householdId: string, filters: BudgetFilters) {
       apiRequest<Budget[]>(
         `/households/${householdId}/budgets?month=${filters.month}&year=${filters.year}`,
       ),
-    enabled: !!householdId,
+    enabled: !!householdId && enabled,
   })
 
   return {

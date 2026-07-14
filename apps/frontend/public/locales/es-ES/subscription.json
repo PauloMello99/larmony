@@ -52,6 +52,11 @@
     "description": "Los informes avanzados forman parte del plan Completo. Actualiza tu plan para desbloquearlos.",
     "descriptionCategories": "Las categorías personalizadas forman parte del plan Completo. Actualiza tu plan para desbloquearlas.",
     "descriptionBudgets": "Los presupuestos forman parte del plan Completo. Actualiza tu plan para desbloquearlos.",
+    "descriptionScheduledEntries": "Los movimientos programados forman parte del plan Completo. Actualiza tu plan para desbloquearlos.",
     "cta": "Ver planes"
+  },
+  "lockedBanner": {
+    "description": "Este hogar está en modo de solo lectura — sin suscripción activa.",
+    "cta": "Suscribirse"
   }
 }

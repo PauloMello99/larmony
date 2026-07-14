@@ -13,6 +13,12 @@ GoalsPage.getLayout = (page: ReactElement) => (
   </AuthGuard>
 )
 
-export const getServerSideProps = makeI18nProps(["common", "dashboard", "onboarding", "goals"])
+export const getServerSideProps = makeI18nProps([
+  "common",
+  "dashboard",
+  "onboarding",
+  "goals",
+  "subscription",
+])
 
 export default GoalsPage

@@ -7,7 +7,7 @@
       "faq": "FAQ"
     },
     "login": "Entrar",
-    "cta": "Começar grátis",
+    "cta": "Testar grátis",
     "openMenu": "Abrir menu",
     "closeMenu": "Fechar menu"
   },
@@ -16,7 +16,7 @@
     "titleLine1": "As finanças da casa,",
     "titleHighlight": "em harmonia.",
     "subtitle": "Transações, orçamentos, metas e contas a pagar — compartilhados com quem divide o lar com você. Centavos exatos, zero planilha.",
-    "ctaPrimary": "Começar grátis →",
+    "ctaPrimary": "Testar grátis por 30 dias →",
     "ctaSecondary": "Ver demonstração",
     "proof": {
       "centsLine1": "centavos exatos,",
@@ -133,7 +133,7 @@
     "steps": {
       "s1": {
         "title": "Crie o seu lar",
-        "desc": "Em menos de um minuto e sem cartão. O lar é o espaço onde as finanças da casa ficam reunidas."
+        "desc": "Em menos de um minuto. O lar é o espaço onde as finanças da casa ficam reunidas — com 30 dias de teste grátis do plano Completo."
       },
       "s2": {
         "title": "Convide quem mora com você",
@@ -167,52 +167,37 @@
   "pricing": {
     "kicker": "Preços",
     "title": "Simples e transparente",
-    "subtitle": "Comece grátis. Faça upgrade quando quiser mais — sem fidelidade.",
-    "note": "Você cria a conta grátis e faz o upgrade para o Family dentro do app, com pagamento seguro processado pelo Stripe. Cancele quando quiser; o Pro chega em breve.",
+    "subtitle": "Dois planos, sem pegadinha — e 30 dias de teste grátis do Completo em qualquer um deles.",
+    "note": "Cartão necessário para começar o teste, sem cobrança até o fim dos 30 dias. Pagamento seguro processado pelo Stripe — cancele quando quiser.",
+    "intervalMonthly": "Mensal",
+    "intervalAnnual": "Anual",
+    "perMonth": "/mês",
+    "perYear": "/ano",
     "plans": {
-      "free": {
-        "name": "Free",
-        "price": "Grátis",
-        "period": "",
-        "description": "Para organizar as finanças da casa sem pagar nada.",
-        "cta": "Começar grátis",
+      "essencial": {
+        "name": "Essencial",
+        "description": "O essencial para controlar as finanças do dia a dia.",
+        "cta": "Testar grátis por 30 dias",
         "features": {
           "f1": "Transações ilimitadas com as categorias padrão",
-          "f2": "Orçamentos e metas (até 3 de cada)",
+          "f2": "Metas de economia ilimitadas",
           "f3": "Lembretes de contas por e-mail",
-          "f4": "1 lar, você + 1 membro",
+          "f4": "Membros e lares ilimitados",
           "f5": "Dashboard e relatório mensal"
         }
       },
-      "family": {
-        "name": "Family",
-        "price": "R$ 14,90",
-        "period": "/mês",
+      "completo": {
+        "name": "Completo",
         "badge": "Recomendado",
-        "description": "Para quem quer relatórios avançados e apoiar o projeto.",
-        "cta": "Assinar Family",
+        "description": "Tudo do Essencial, mais orçamentos, lançamentos programados e relatórios avançados.",
+        "cta": "Testar grátis por 30 dias",
         "features": {
-          "f1": "Tudo do plano Free",
-          "f2": "Membros e lares ilimitados",
-          "f3": "Categorias personalizadas ilimitadas",
+          "f1": "Tudo do plano Essencial",
+          "f2": "Orçamentos por categoria",
+          "f3": "Lançamentos programados e recorrências",
           "f4": "Relatórios avançados — anual e comparativos",
           "f5": "Exportação de relatórios em CSV",
-          "f6": "Novos recursos premium conforme lançam",
-          "f7": "Apoie o desenvolvimento do Larmony"
-        }
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "A definir",
-        "period": "",
-        "badge": "Em breve",
-        "description": "Recursos avançados para quem precisa de mais controle.",
-        "cta": "Em breve",
-        "features": {
-          "f1": "Integração com Open Finance",
-          "f2": "Automações personalizadas",
-          "f3": "Exportação avançada de relatórios",
-          "f4": "Suporte prioritário"
+          "f6": "Categorias personalizadas ilimitadas"
         }
       }
     }
@@ -222,20 +207,20 @@
     "title": "Perguntas frequentes",
     "items": {
       "q1": {
-        "question": "O Larmony é gratuito?",
-        "answer": "Sim. O plano Free cobre o dia a dia do lar sem custo. O plano Family (R$ 14,90/mês) desbloqueia os relatórios avançados e ajuda a manter o projeto — mas você não precisa dele para começar."
+        "question": "O Larmony tem plano gratuito?",
+        "answer": "Não um plano grátis permanente, mas todo mundo começa com 30 dias de teste grátis do plano Completo (cartão necessário, sem cobrança até o fim do teste). Depois disso, você escolhe entre Essencial (R$ 9,90/mês) e Completo (R$ 19,90/mês)."
       },
       "q2": {
-        "question": "O que vem no plano Family?",
-        "answer": "Membros e lares ilimitados, categorias personalizadas, relatórios avançados (visão anual e comparativos) e exportação de relatórios em CSV. E, conforme novos recursos premium são lançados, eles já entram no Family sem custo adicional. Sem fidelidade."
+        "question": "Qual a diferença entre Essencial e Completo?",
+        "answer": "O Essencial cobre o núcleo: transações, categorias padrão, metas, dashboard e relatório mensal, com membros e lares ilimitados. O Completo adiciona orçamentos por categoria, lançamentos programados, relatórios avançados (anual e exportação em CSV) e categorias personalizadas."
       },
       "q3": {
         "question": "Posso cancelar quando quiser?",
-        "answer": "Sim. A assinatura é gerenciada pelo portal seguro do Stripe, sem multa. Você mantém o acesso Family até o fim do ciclo já pago e depois volta ao Free."
+        "answer": "Sim. A assinatura é gerenciada pelo portal seguro do Stripe, sem multa. Você mantém o acesso até o fim do ciclo já pago; depois disso, seus dados ficam disponíveis em modo somente-leitura até você assinar de novo."
       },
       "q4": {
         "question": "Preciso conectar minha conta bancária?",
-        "answer": "Não. O Larmony funciona com lançamentos manuais e recorrências automáticas — você controla exatamente o que entra. A integração com Open Finance está no roadmap (plano Pro)."
+        "answer": "Não. O Larmony funciona com lançamentos manuais e recorrências automáticas — você controla exatamente o que entra. A integração com Open Finance está no roadmap para um plano futuro."
       },
       "q5": {
         "question": "Meus dados financeiros estão seguros?",
@@ -250,8 +235,8 @@
   "finalCta": {
     "titleLine1": "Traga harmonia para",
     "titleLine2": "as contas da sua casa",
-    "subtitle": "Crie o seu lar em menos de um minuto. Grátis, sem cartão de crédito.",
-    "cta": "Criar meu lar grátis →"
+    "subtitle": "Crie o seu lar em menos de um minuto. 30 dias de teste grátis do plano Completo.",
+    "cta": "Testar grátis por 30 dias →"
   },
   "footer": {
     "description": "Controle financeiro do seu lar. Transações, orçamentos e metas em um só lugar.",

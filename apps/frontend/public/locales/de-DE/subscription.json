@@ -52,6 +52,11 @@
     "description": "Erweiterte Berichte sind Teil des Komplett-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
     "descriptionCategories": "Individuelle Kategorien sind Teil des Komplett-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
     "descriptionBudgets": "Budgets sind Teil des Komplett-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
+    "descriptionScheduledEntries": "Geplante Buchungen sind Teil des Komplett-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
     "cta": "Pläne ansehen"
+  },
+  "lockedBanner": {
+    "description": "Dieser Haushalt befindet sich im Nur-Lese-Modus — kein aktives Abonnement.",
+    "cta": "Abonnieren"
   }
 }

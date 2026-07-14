@@ -52,6 +52,11 @@
     "description": "Advanced reports are part of the Complete plan. Upgrade to unlock.",
     "descriptionCategories": "Custom categories are part of the Complete plan. Upgrade to unlock.",
     "descriptionBudgets": "Budgets are part of the Complete plan. Upgrade to unlock.",
+    "descriptionScheduledEntries": "Scheduled entries are part of the Complete plan. Upgrade to unlock.",
     "cta": "View plans"
+  },
+  "lockedBanner": {
+    "description": "This household is in read-only mode — no active subscription.",
+    "cta": "Subscribe"
   }
 }
