@@ -13,6 +13,6 @@ HouseholdIndexPage.getLayout = (page: ReactElement) => (
   </AuthGuard>
 )
 
-export const getServerSideProps = makeI18nProps(["common", "dashboard", "onboarding"])
+export const getServerSideProps = makeI18nProps(["common", "dashboard", "onboarding", "subscription"])
 
 export default HouseholdIndexPage

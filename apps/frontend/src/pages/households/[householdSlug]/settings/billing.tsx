@@ -27,4 +27,4 @@ SettingsBillingPage.getLayout = (page: ReactElement) => (
 
 export default SettingsBillingPage
 
-export const getServerSideProps = makeI18nProps(["common", "dashboard", "onboarding"])
+export const getServerSideProps = makeI18nProps(["common", "dashboard", "onboarding", "subscription"])

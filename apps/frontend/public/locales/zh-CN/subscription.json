@@ -52,6 +52,11 @@
     "description": "高级报告属于完整版套餐。请升级以解锁。",
     "descriptionCategories": "自定义分类属于完整版套餐。请升级以解锁。",
     "descriptionBudgets": "预算属于完整版套餐。请升级以解锁。",
+    "descriptionScheduledEntries": "计划记账属于完整版套餐。请升级以解锁。",
     "cta": "查看套餐"
+  },
+  "lockedBanner": {
+    "description": "该家庭处于只读模式——没有有效订阅。",
+    "cta": "订阅"
   }
 }

@@ -7,7 +7,7 @@
       "faq": "FAQ"
     },
     "login": "Anmelden",
-    "cta": "Kostenlos starten",
+    "cta": "Kostenlos testen",
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen"
   },
@@ -16,7 +16,7 @@
     "titleLine1": "Die Finanzen deines Zuhauses,",
     "titleHighlight": "in Harmonie.",
     "subtitle": "Transaktionen, Budgets, Ziele und Rechnungen — geteilt mit allen, die den Haushalt mit dir teilen. Exakte Cent-Beträge, null Tabellenkalkulationen.",
-    "ctaPrimary": "Kostenlos starten →",
+    "ctaPrimary": "30 Tage kostenlos testen →",
     "ctaSecondary": "Demo ansehen",
     "proof": {
       "centsLine1": "exakte Cent-Beträge,",
@@ -133,7 +133,7 @@
     "steps": {
       "s1": {
         "title": "Erstelle deinen Haushalt",
-        "desc": "In weniger als einer Minute und ohne Karte. Der Haushalt ist der Ort, an dem die Finanzen des Zuhauses zusammenlaufen."
+        "desc": "In weniger als einer Minute. Der Haushalt ist der Ort, an dem die Finanzen des Zuhauses zusammenlaufen — mit 30 Tagen kostenloser Testphase des Komplett-Plans."
       },
       "s2": {
         "title": "Lade die Menschen ein, mit denen du zusammenwohnst",
@@ -167,52 +167,37 @@
   "pricing": {
     "kicker": "Preise",
     "title": "Einfach und transparent",
-    "subtitle": "Starte kostenlos. Upgrade, wann du mehr willst — ohne Bindung.",
-    "note": "Du erstellst das Konto kostenlos und führst das Upgrade auf Family direkt in der App durch, mit sicherer Zahlung über Stripe. Kündige, wann immer du willst; Pro kommt bald.",
+    "subtitle": "Zwei Pläne, kein Haken — plus 30 Tage kostenlose Testphase von Komplett bei beiden.",
+    "note": "Karte erforderlich, um die Testphase zu starten, keine Abbuchung bis zum Ende der 30 Tage. Sichere Zahlung über Stripe abgewickelt — jederzeit kündbar.",
+    "intervalMonthly": "Monatlich",
+    "intervalAnnual": "Jährlich",
+    "perMonth": "/Mon.",
+    "perYear": "/Jahr",
     "plans": {
-      "free": {
-        "name": "Free",
-        "price": "Kostenlos",
-        "period": "",
-        "description": "Um die Finanzen des Zuhauses zu organisieren, ohne etwas zu zahlen.",
-        "cta": "Kostenlos starten",
+      "essencial": {
+        "name": "Essenziell",
+        "description": "Das Wesentliche für die Verwaltung der täglichen Finanzen.",
+        "cta": "30 Tage kostenlos testen",
         "features": {
           "f1": "Unbegrenzte Transaktionen mit den Standardkategorien",
-          "f2": "Budgets und Ziele (je bis zu 3)",
+          "f2": "Unbegrenzte Sparziele",
           "f3": "Rechnungserinnerungen per E-Mail",
-          "f4": "1 Haushalt, du + 1 Mitglied",
+          "f4": "Unbegrenzte Mitglieder und Haushalte",
           "f5": "Dashboard und Monatsbericht"
         }
       },
-      "family": {
-        "name": "Family",
-        "price": "R$ 14,90",
-        "period": "/Mon.",
+      "completo": {
+        "name": "Komplett",
         "badge": "Empfohlen",
-        "description": "Für alle, die erweiterte Berichte wollen und das Projekt unterstützen möchten.",
-        "cta": "Family abonnieren",
+        "description": "Alles aus Essenziell, plus Budgets, geplante Buchungen und erweiterte Berichte.",
+        "cta": "30 Tage kostenlos testen",
         "features": {
-          "f1": "Alles aus dem Free-Plan",
-          "f2": "Unbegrenzte Mitglieder und Haushalte",
-          "f3": "Unbegrenzte individuelle Kategorien",
+          "f1": "Alles aus dem Essenziell-Plan",
+          "f2": "Budgets pro Kategorie",
+          "f3": "Geplante Buchungen und Wiederholungen",
           "f4": "Erweiterte Berichte — jährlich und im Vergleich",
           "f5": "CSV-Berichtsexport",
-          "f6": "Neue Premium-Funktionen, sobald sie erscheinen",
-          "f7": "Unterstütze die Entwicklung von Larmony"
-        }
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "Noch offen",
-        "period": "",
-        "badge": "Demnächst",
-        "description": "Erweiterte Funktionen für alle, die mehr Kontrolle brauchen.",
-        "cta": "Demnächst",
-        "features": {
-          "f1": "Open-Finance-Integration",
-          "f2": "Individuelle Automatisierungen",
-          "f3": "Erweiterter Berichtsexport",
-          "f4": "Prioritäts-Support"
+          "f6": "Unbegrenzte individuelle Kategorien"
         }
       }
     }
@@ -222,20 +207,20 @@
     "title": "Häufig gestellte Fragen",
     "items": {
       "q1": {
-        "question": "Ist Larmony kostenlos?",
-        "answer": "Ja. Der Free-Plan deckt den Haushaltsalltag ohne Kosten ab. Der Family-Plan (R$ 14,90/Monat) schaltet die erweiterten Berichte frei und hilft, das Projekt zu erhalten — aber du brauchst ihn nicht, um zu starten."
+        "question": "Hat Larmony einen kostenlosen Plan?",
+        "answer": "Keinen dauerhaft kostenlosen Plan, aber alle starten mit 30 Tagen kostenloser Testphase des Komplett-Plans (Karte erforderlich, keine Abbuchung bis zum Ende der Testphase). Danach wählst du zwischen Essenziell (R$ 9,90/Monat) und Komplett (R$ 19,90/Monat)."
       },
       "q2": {
-        "question": "Was ist im Family-Plan enthalten?",
-        "answer": "Unbegrenzte Mitglieder und Haushalte, individuelle Kategorien, erweiterte Berichte (jährliche Übersicht und Vergleiche) sowie CSV-Berichtsexport. Und sobald neue Premium-Funktionen erscheinen, gehören sie ohne Aufpreis zu Family. Ohne Bindung."
+        "question": "Was ist der Unterschied zwischen Essenziell und Komplett?",
+        "answer": "Essenziell deckt den Kern ab: Transaktionen, Standardkategorien, Ziele, Dashboard und Monatsbericht, mit unbegrenzten Mitgliedern und Haushalten. Komplett fügt Budgets pro Kategorie, geplante Buchungen, erweiterte Berichte (jährliche Übersicht und CSV-Export) und individuelle Kategorien hinzu."
       },
       "q3": {
         "question": "Kann ich jederzeit kündigen?",
-        "answer": "Ja. Das Abonnement wird über das sichere Stripe-Portal verwaltet, ohne Gebühr. Du behältst den Family-Zugang bis zum Ende des bereits bezahlten Zyklus und kehrst danach zu Free zurück."
+        "answer": "Ja. Das Abonnement wird über das sichere Stripe-Portal verwaltet, ohne Gebühr. Du behältst den Zugang bis zum Ende des bereits bezahlten Zyklus; danach bleiben deine Daten im Nur-Lese-Modus verfügbar, bis du erneut abonnierst."
       },
       "q4": {
         "question": "Muss ich mein Bankkonto verbinden?",
-        "answer": "Nein. Larmony funktioniert mit manuellen Einträgen und automatischen Wiederholungen — du kontrollierst genau, was erfasst wird. Die Open-Finance-Integration steht auf der Roadmap (Pro-Plan)."
+        "answer": "Nein. Larmony funktioniert mit manuellen Einträgen und automatischen Wiederholungen — du kontrollierst genau, was erfasst wird. Die Open-Finance-Integration steht auf der Roadmap für einen zukünftigen Plan."
       },
       "q5": {
         "question": "Sind meine Finanzdaten sicher?",
@@ -250,8 +235,8 @@
   "finalCta": {
     "titleLine1": "Bring Harmonie in",
     "titleLine2": "die Finanzen deines Zuhauses",
-    "subtitle": "Erstelle deinen Haushalt in weniger als einer Minute. Kostenlos, ohne Kreditkarte.",
-    "cta": "Meinen Haushalt kostenlos erstellen →"
+    "subtitle": "Erstelle deinen Haushalt in weniger als einer Minute. 30 Tage kostenlose Testphase des Komplett-Plans.",
+    "cta": "30 Tage kostenlos testen →"
   },
   "footer": {
     "description": "Die Finanzen deines Zuhauses im Griff. Transaktionen, Budgets und Ziele an einem Ort.",

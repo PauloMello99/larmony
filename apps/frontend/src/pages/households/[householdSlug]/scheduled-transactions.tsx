@@ -18,6 +18,7 @@ export const getServerSideProps = makeI18nProps([
   "dashboard",
   "onboarding",
   "scheduled-transactions",
+  "subscription",
 ])
 
 export default ScheduledTransactionsPage

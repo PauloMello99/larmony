@@ -11,6 +11,7 @@ import { HouseholdSwitcher } from "@/features/dashboard/components/household-swi
 import { HouseholdProvider } from "@/features/dashboard/components/household-context"
 import { useHouseholds, useResolveHouseholdBySlug } from "@/features/dashboard/hooks/use-households"
 import { useMe } from "@/features/auth/hooks/use-me"
+import { useEntitlements, LockedBanner } from "@/features/subscription"
 import { Trans, useTranslation } from "react-i18next"
 import { OnboardingProvider } from "@/features/onboarding/providers/onboarding-provider"
 import { TourRenderer } from "@/features/onboarding/components/tour-renderer"
@@ -123,6 +124,13 @@ export function HouseholdLayout({ children }: HouseholdLayoutProps) {
     setMobileOpen(false)
   }, [router.pathname])
 
+  // M16: lar sem assinatura ativa é somente-leitura — o banner é só um aviso
+  // (o backend já barra as escritas via 402); some na própria página de
+  // assinatura, onde o estado já é tratado em detalhe.
+  const { plan: entitlementsPlan } = useEntitlements(household?.id ?? "")
+  const isSubscriptionPage = currentSubpath.startsWith("settings/subscription")
+  const showLockedBanner = entitlementsPlan === "locked" && !isSubscriptionPage
+
   if (!household) return null
 
   const householdSwitcher = <HouseholdSwitcher household={household} />
@@ -165,6 +173,9 @@ export function HouseholdLayout({ children }: HouseholdLayoutProps) {
             </Link>
           </div>
         ) : null}
+        {showLockedBanner && (
+          <LockedBanner householdSlug={household.slug} isOwner={household.role === "owner"} />
+        )}
         <TopHeader
           breadcrumbs={breadcrumbs}
           onMobileMenuToggle={() => setMobileOpen((v) => !v)}

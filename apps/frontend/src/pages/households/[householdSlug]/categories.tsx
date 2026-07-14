@@ -13,6 +13,12 @@ CategoriesPage.getLayout = (page: ReactElement) => (
   </AuthGuard>
 )
 
-export const getServerSideProps = makeI18nProps(["common", "dashboard", "onboarding", "categories"])
+export const getServerSideProps = makeI18nProps([
+  "common",
+  "dashboard",
+  "onboarding",
+  "categories",
+  "subscription",
+])
 
 export default CategoriesPage
