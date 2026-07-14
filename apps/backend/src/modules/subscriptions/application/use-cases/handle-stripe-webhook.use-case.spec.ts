@@ -3,6 +3,7 @@ import type { IPaymentGateway, StripeWebhookEvent, NormalizedSubscription } from
 import type { ISubscriptionRepository } from "../../domain/subscription.repository.interface";
 import type { IBillingPlanRepository } from "../../domain/billing-plan.repository.interface";
 import type { IStripeWebhookEventRepository } from "../../domain/stripe-webhook-event.repository.interface";
+import type { IBillingInvoiceEventRepository } from "../../domain/billing-invoice-event.repository.interface";
 
 function make() {
   const gateway: jest.Mocked<IPaymentGateway> = {
@@ -44,13 +45,17 @@ function make() {
     claim: jest.fn().mockResolvedValue(true),
     markProcessed: jest.fn().mockResolvedValue(undefined),
   };
+  const invoiceEvents: jest.Mocked<IBillingInvoiceEventRepository> = {
+    record: jest.fn().mockResolvedValue(undefined),
+  };
   const useCase = new HandleStripeWebhookUseCase(
     gateway,
     subscriptions,
     billingPlans,
     events,
+    invoiceEvents,
   );
-  return { useCase, gateway, subscriptions, billingPlans, events };
+  return { useCase, gateway, subscriptions, billingPlans, events, invoiceEvents };
 }
 
 const normalizedSub: NormalizedSubscription = {
@@ -160,6 +165,81 @@ describe("HandleStripeWebhookUseCase", () => {
     expect(billingPlans.updateFromStripePrice).toHaveBeenCalledWith(
       "price_1",
       expect.objectContaining({ active: false }),
+    );
+  });
+
+  it("invoice.paid → resolve household pelo customer e grava o espelho (type=paid)", async () => {
+    const { useCase, gateway, subscriptions, invoiceEvents } = make();
+    const occurredAt = new Date("2026-07-14T12:00:00Z");
+    gateway.constructWebhookEvent.mockReturnValue(
+      event({
+        type: "invoice.paid",
+        invoice: {
+          id: "in_1",
+          customerId: "cus_1",
+          amountCents: 1490,
+          currency: "brl",
+          occurredAt,
+        },
+      }),
+    );
+    subscriptions.findHouseholdIdByStripeCustomerId.mockResolvedValue("hh_1");
+
+    await useCase.execute("body", "sig");
+
+    expect(subscriptions.findHouseholdIdByStripeCustomerId).toHaveBeenCalledWith("cus_1");
+    expect(invoiceEvents.record).toHaveBeenCalledWith({
+      stripeInvoiceId: "in_1",
+      householdId: "hh_1",
+      type: "paid",
+      amountCents: 1490,
+      currency: "brl",
+      occurredAt,
+    });
+  });
+
+  it("invoice.payment_failed → grava type=payment_failed", async () => {
+    const { useCase, gateway, invoiceEvents } = make();
+    gateway.constructWebhookEvent.mockReturnValue(
+      event({
+        type: "invoice.payment_failed",
+        invoice: {
+          id: "in_2",
+          customerId: "cus_2",
+          amountCents: 1490,
+          currency: "brl",
+          occurredAt: new Date("2026-07-14T12:00:00Z"),
+        },
+      }),
+    );
+
+    await useCase.execute("body", "sig");
+
+    expect(invoiceEvents.record).toHaveBeenCalledWith(
+      expect.objectContaining({ stripeInvoiceId: "in_2", type: "payment_failed" }),
+    );
+  });
+
+  it("invoice sem customer conhecido → grava com householdId null (não descarta)", async () => {
+    const { useCase, gateway, subscriptions, invoiceEvents } = make();
+    gateway.constructWebhookEvent.mockReturnValue(
+      event({
+        type: "invoice.paid",
+        invoice: {
+          id: "in_3",
+          customerId: null,
+          amountCents: 1490,
+          currency: "brl",
+          occurredAt: new Date("2026-07-14T12:00:00Z"),
+        },
+      }),
+    );
+
+    await useCase.execute("body", "sig");
+
+    expect(subscriptions.findHouseholdIdByStripeCustomerId).not.toHaveBeenCalled();
+    expect(invoiceEvents.record).toHaveBeenCalledWith(
+      expect.objectContaining({ stripeInvoiceId: "in_3", householdId: null }),
     );
   });
 });

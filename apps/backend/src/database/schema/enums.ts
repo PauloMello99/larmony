@@ -34,6 +34,11 @@ export const billingIntervalEnum = pgEnum("billing_interval", [
   "annual",
 ]);
 
+export const billingInvoiceEventTypeEnum = pgEnum("billing_invoice_event_type", [
+  "paid",
+  "payment_failed",
+]);
+
 export const transactionTypeEnum = pgEnum("transaction_type", [
   "income",
   "expense",
