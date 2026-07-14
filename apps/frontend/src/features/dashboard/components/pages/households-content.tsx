@@ -17,6 +17,11 @@ export function HouseholdsContent() {
   const { createHousehold } = useHouseholdMutations()
   const isWelcome = router.query.welcome === "1"
   const autoOpened = React.useRef(false)
+  // M16: evita o handleCreateOpenChange (disparado pelo onOpenChange(false) que
+  // o próprio CreateHouseholdForm chama após o submit) de correr por cima do
+  // redirect pro gate de assinatura abaixo — sem isso os dois `router.replace`
+  // corridos na mesma criação faziam a navegação voltar pra /households.
+  const redirectingToSubscription = React.useRef(false)
 
   // Onboarding (M1b): recém-cadastrado sem lares ainda → abre o Sheet de criar
   // lar automaticamente, uma única vez.
@@ -30,14 +35,23 @@ export function HouseholdsContent() {
 
   function handleCreateOpenChange(open: boolean) {
     setCreateOpen(open)
-    if (!open && isWelcome) {
+    if (!open && isWelcome && !redirectingToSubscription.current) {
       void router.replace("/households", undefined, { shallow: true })
     }
   }
 
   async function handleCreate(values: CreateHouseholdFormValues) {
-    await createHousehold(values)
+    const created = await createHousehold(values)
     // invalidateQueries in useHouseholdMutations.onSuccess triggers automatic refetch
+
+    // M16: todo lar novo nasce sem assinatura (locked). No onboarding (recém-
+    // cadastrado, 1º lar), leva direto pro gate de assinatura — em vez de
+    // devolver pra lista de lares — pra apresentar o teste grátis antes de usar
+    // o app. Fora do onboarding, o dono decide quando assinar.
+    if (isWelcome) {
+      redirectingToSubscription.current = true
+      await router.replace(`/households/${created.slug}/settings/subscription?onboarding=1`)
+    }
   }
 
   return (

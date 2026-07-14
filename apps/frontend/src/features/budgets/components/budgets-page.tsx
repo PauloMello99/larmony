@@ -40,8 +40,10 @@ export function BudgetsPage() {
   const [period, setPeriod] = useState<BudgetFilters>(currentPeriod)
   const { budgets, loading } = useBudgets(householdId, period)
   const { createBudget, updateBudget, deleteBudget } = useBudgetMutations(householdId)
-  const { limits } = useEntitlements(householdId)
-  const atBudgetLimit = budgets.length >= limits.maxActiveBudgets
+  // M16: orçamentos são Completo-only (capability, não mais contagem). O
+  // paywall completo da página (Essencial/locked nem carrega a lista — 402
+  // no backend) chega no PR3; aqui só evita quebrar a criação.
+  const { capabilities } = useEntitlements(householdId)
 
   const isEditable = isEditablePeriod(period, currentPeriod())
   const isFuture = isFuturePeriod(period, currentPeriod())
@@ -134,7 +136,7 @@ export function BudgetsPage() {
         householdId={householdId}
         budget={editing}
         budgetedCategoryIds={budgets.map((b) => b.categoryId)}
-        atLimit={atBudgetLimit}
+        atLimit={!capabilities.budgets}
         onSubmit={handleSubmit}
       />
 

@@ -94,4 +94,11 @@ export interface ISubscriptionRepository {
    * bateria de integração real do hardening).
    */
   findHouseholdSlug(householdId: string): Promise<string | null>;
+
+  /**
+   * Marca o trial self-serve como consumido (M16) — 1 trial por lar. Setado
+   * ao iniciar o checkout com trial (não espera a confirmação do webhook: um
+   * checkout abandonado não deve liberar um 2º trial).
+   */
+  markTrialConsumed(householdId: string): Promise<void>;
 }

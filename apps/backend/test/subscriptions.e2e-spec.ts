@@ -141,4 +141,48 @@ describe("Subscriptions (e2e)", () => {
     ).expect(200);
     expect(after.body.stripeCustomerId).toBe(before.body.stripeCustomerId);
   });
+
+  describe("trial self-serve + seleção de plano (M16)", () => {
+    it("1º checkout concede trial (marca trial_consumed) e aceita planKey explícito", async () => {
+      const solo = await signUpUser(app, "sub.trial.owner");
+      const created = await authed(app, "post", "/households", solo.accessToken)
+        .send({ name: "E2E Lar Trial" })
+        .expect(201);
+      const soloHouseholdId = created.body.id;
+
+      const before = await pool.query(
+        `SELECT trial_consumed FROM public.subscriptions WHERE household_id = $1`,
+        [soloHouseholdId],
+      );
+      // Linha ainda não existe (getOrCreate lazy) — trial_consumed é false por padrão.
+      expect(before.rows[0]?.trial_consumed ?? false).toBe(false);
+
+      const res = await authed(
+        app,
+        "post",
+        `/households/${soloHouseholdId}/subscription/checkout`,
+        solo.accessToken,
+      )
+        .send({ planKey: "essencial_monthly" })
+        .expect(201);
+      expect(res.body.url).toMatch(/^https:\/\/checkout\.stripe\.com\//);
+
+      const after = await pool.query(
+        `SELECT trial_consumed FROM public.subscriptions WHERE household_id = $1`,
+        [soloHouseholdId],
+      );
+      expect(after.rows[0].trial_consumed).toBe(true);
+    });
+
+    it("planKey inválido → 400 (validação do DTO)", async () => {
+      await authed(
+        app,
+        "post",
+        `/households/${householdId}/subscription/checkout`,
+        owner.accessToken,
+      )
+        .send({ planKey: "plano-inexistente" })
+        .expect(400);
+    });
+  });
 });

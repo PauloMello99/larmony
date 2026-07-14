@@ -93,6 +93,14 @@ export class StripePaymentGateway implements IPaymentGateway {
       metadata: input.metadata,
       // Página hospedada no idioma da UI do usuário (adendo ADR-0018).
       locale: toStripeLocale(input.locale) as Stripe.Checkout.SessionCreateParams.Locale,
+      ...(input.trialPeriodDays
+        ? {
+            subscription_data: { trial_period_days: input.trialPeriodDays },
+            // Cartão upfront mesmo em trial (M16) — todo mundo passa pelo
+            // checkout, dá tracking real de conversão trial→pago.
+            payment_method_collection: "always",
+          }
+        : {}),
     });
 
     if (!session.url) throw new Error("Stripe não retornou uma URL de checkout.");

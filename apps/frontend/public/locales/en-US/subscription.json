@@ -1,56 +1,57 @@
 {
   "title": "Subscription",
-  "description": "Plan, status and management of this household's subscription.",
+  "description": "Plan, status and subscription management for this household.",
   "planTitle": "Current plan",
-  "loadError": "Could not load the subscription. Please try again.",
+  "loadError": "Couldn't load the subscription. Please try again.",
   "ownerOnly": "Only the household owner can manage the subscription.",
   "plan": {
-    "free": "Free",
-    "premium": "Premium",
-    "custom": "Comp"
+    "locked": "No subscription",
+    "essencial": "Essential",
+    "completo": "Complete"
   },
   "status": {
     "active": "Active",
-    "trialing": "Trial",
-    "past_due": "Payment due",
+    "trialing": "Trial period",
+    "past_due": "Payment pending",
     "canceled": "Canceled"
   },
-  "premiumOffer": {
-    "title": "Larmony Premium — R$ 14.90/mo",
-    "description": "Advanced reports, multiple members and everything your household needs to manage finances together."
-  },
-  "free": {
-    "description": "Your household is on the Free plan.",
-    "cta": "Subscribe to Premium",
+  "locked": {
+    "description": "This household doesn't have an active subscription — you can still view your data, but creating or editing requires subscribing.",
+    "trialNotice": "Try any plan free for 30 days (card required, no charge until the trial ends).",
+    "onboardingNotice": "Your household was created! Choose a plan to get started — the first 30 days are free.",
+    "descriptionEssencial": "The essentials to manage day-to-day finances.",
+    "descriptionCompleto": "Everything in Essential, plus budgets, scheduled entries and advanced reports.",
+    "intervalMonthly": "Monthly",
+    "intervalAnnual": "Annual (2 months free)",
+    "cta": "Start free trial",
     "ctaPending": "Redirecting…"
   },
-  "premium": {
-    "description": "Your household has Premium active. Enjoy all features.",
-    "pastDue": "There is a payment due. Update your payment method in the portal to keep access.",
+  "active": {
+    "description": "Your subscription is active. Enjoy all the features of your plan.",
+    "pastDue": "There's a pending payment. Update your payment method in the portal to avoid losing access.",
     "portalCta": "Manage subscription",
     "portalPending": "Redirecting…"
   },
   "trial": {
-    "title": "Trial active",
-    "description": "Your household has Premium access during the trial.",
-    "until": "Full Premium access until",
-    "cta": "Subscribe to Premium"
+    "title": "Trial period active",
+    "description": "This household has Complete plan access during the trial period.",
+    "until": "Full access until",
+    "cta": "Subscribe now"
   },
   "comp": {
-    "title": "Comp granted",
-    "description": "Your household has full access as a courtesy — no charge.",
+    "title": "Complimentary access granted",
+    "description": "This household has full access as a courtesy — no charge.",
     "reasonLabel": "Reason"
   },
   "banner": {
-    "success": "Subscription confirmed! Premium access is enabled once Stripe confirms the payment.",
+    "success": "Subscription confirmed! Access is activated as soon as Stripe confirms the payment.",
     "cancel": "Checkout canceled. No charge was made."
   },
   "gate": {
-    "title": "Premium feature",
-    "description": "Advanced reports are part of the Premium plan. Upgrade to unlock.",
-    "descriptionCategories": "Custom categories are part of the Premium plan. Upgrade to unlock.",
-    "descriptionGoals": "You've reached the goal limit of the Free plan. Upgrade to create unlimited goals.",
-    "descriptionBudgets": "You've reached the active budget limit of the Free plan. Upgrade to create unlimited budgets.",
-    "cta": "See plans"
+    "title": "Complete plan feature",
+    "description": "Advanced reports are part of the Complete plan. Upgrade to unlock.",
+    "descriptionCategories": "Custom categories are part of the Complete plan. Upgrade to unlock.",
+    "descriptionBudgets": "Budgets are part of the Complete plan. Upgrade to unlock.",
+    "cta": "View plans"
   }
 }
