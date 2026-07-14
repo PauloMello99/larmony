@@ -8,6 +8,7 @@ export * from "./billing-invoice-events";
 export * from "./notifications";
 export * from "./notification-preferences";
 export * from "./notification-dedup";
+export * from "./support-tickets";
 export * from "./audit";
 export * from "./finance/categories";
 export * from "./finance/scheduled-transaction-entries";
