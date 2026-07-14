@@ -4,6 +4,7 @@ export * from "./households";
 export * from "./subscriptions";
 export * from "./stripe-webhook-events";
 export * from "./billing-plans";
+export * from "./billing-invoice-events";
 export * from "./notifications";
 export * from "./notification-preferences";
 export * from "./notification-dedup";

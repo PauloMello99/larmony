@@ -30,7 +30,21 @@
     "statusTitle": "ステータス別の世帯数",
     "statusActive": "有効",
     "statusSuspended": "停止中",
-    "statusEmpty": "まだ世帯がありません。"
+    "statusEmpty": "まだ世帯がありません。",
+    "statPayingActive": "支払い中",
+    "statTrialing": "トライアル中",
+    "statPastDue": "支払い遅延",
+    "statComp": "免除",
+    "statApproxMrr": "MRR（概算）",
+    "statRevenue30d": "収益（30日）",
+    "statFailedPayments30d": "支払い失敗（30日）",
+    "viewRevenueInStripe": "Stripeで収益を見る",
+    "planDistributionTitle": "プラン別の世帯数",
+    "planDistributionEmpty": "サブスクリプションのある世帯はまだありません。",
+    "billingGrowthTitle": "サブスクリプション・新規 対 解約（過去12か月、概算）",
+    "billingGrowthEmpty": "過去12か月のサブスクリプション変動はありません。",
+    "billingSeriesNew": "新規",
+    "billingSeriesCanceled": "解約"
   },
   "users": {
     "title": "ユーザー",
@@ -173,6 +187,7 @@
   "billing": {
     "loadError": "サブスクリプションを読み込めませんでした。",
     "openInStripe": "Stripeで開く",
+    "openSubscriptionInStripe": "Stripeでサブスクリプションを開く",
     "trialTitle": "トライアル",
     "trialActive": "トライアル中です。",
     "trialActiveUntil": "{{date}}までトライアル中です。",

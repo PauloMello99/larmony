@@ -459,4 +459,115 @@ describe("Admin platform panel (e2e)", () => {
       ).toBe(true);
     });
   });
+
+  // Posicionado por último de propósito: flipa a subscription do lar-alvo
+  // (linha lazy, criada só no 1º acesso à assinatura) por vários cenários —
+  // rodar antes quebraria os testes que assumem `subscription: null` /
+  // `plan: "free"` pré-lazy nos describes anteriores.
+  describe("stats de billing (M15 PR2) — MRR normaliza intervalo + desconto", () => {
+    afterAll(async () => {
+      await pool.query(
+        `UPDATE public.subscriptions SET type='free', status='active', price_cents=NULL, billing_interval=NULL, discount_percent=NULL WHERE household_id = $1`,
+        [householdId],
+      );
+      await pool.query(`DELETE FROM public.billing_invoice_events WHERE stripe_invoice_id LIKE 'in_admin_e2e_%'`);
+    });
+
+    it("standard/active mensal sem desconto → payingActive=1 e MRR = price_cents", async () => {
+      await pool.query(
+        `UPDATE public.subscriptions SET type='standard', status='active', price_cents=1490, billing_interval='monthly', discount_percent=NULL WHERE household_id = $1`,
+        [householdId],
+      );
+      const res = await authed(app, "get", "/admin/stats/billing", superAdmin.accessToken).expect(
+        200,
+      );
+      expect(res.body.payingActive).toBeGreaterThanOrEqual(1);
+      expect(res.body.approxMrrCents).toBeGreaterThanOrEqual(1490);
+      expect(
+        res.body.planDistribution.find((p: { plan: string }) => p.plan === "standard").count,
+      ).toBeGreaterThanOrEqual(1);
+    });
+
+    it("anual normaliza para 1/12 do preço (MRR aproximado)", async () => {
+      // Isola: zera o mensal do teste anterior antes de medir o efeito do anual.
+      await pool.query(
+        `UPDATE public.subscriptions SET type='free', status='active', price_cents=NULL, billing_interval=NULL WHERE household_id = $1`,
+        [householdId],
+      );
+      const before = (
+        await authed(app, "get", "/admin/stats/billing", superAdmin.accessToken).expect(200)
+      ).body.approxMrrCents;
+
+      await pool.query(
+        `UPDATE public.subscriptions SET type='standard', status='active', price_cents=14900, billing_interval='annual', discount_percent=NULL WHERE household_id = $1`,
+        [householdId],
+      );
+      const after = (
+        await authed(app, "get", "/admin/stats/billing", superAdmin.accessToken).expect(200)
+      ).body.approxMrrCents;
+
+      // 14900/12 ≈ 1242 (SUM(::int) arredonda) — aceita a vizinhança pelo
+      // arredondamento do Postgres, não trunca.
+      expect(after - before).toBeGreaterThanOrEqual(1240);
+      expect(after - before).toBeLessThanOrEqual(1242);
+    });
+
+    it("desconto percentual reduz o MRR proporcionalmente (delta, não valor absoluto — a suíte completa pode ter outros lares standard)", async () => {
+      await pool.query(
+        `UPDATE public.subscriptions SET type='free', status='active', price_cents=NULL, billing_interval=NULL, discount_percent=NULL WHERE household_id = $1`,
+        [householdId],
+      );
+      const before = (
+        await authed(app, "get", "/admin/stats/billing", superAdmin.accessToken).expect(200)
+      ).body.approxMrrCents;
+
+      await pool.query(
+        `UPDATE public.subscriptions SET type='standard', status='active', price_cents=1490, billing_interval='monthly', discount_percent=20 WHERE household_id = $1`,
+        [householdId],
+      );
+      const after = (
+        await authed(app, "get", "/admin/stats/billing", superAdmin.accessToken).expect(200)
+      ).body.approxMrrCents;
+
+      // 1490 * 0.8 = 1192.
+      expect(after - before).toBe(1192);
+    });
+
+    it("past_due e canceled contam nos buckets certos, não em payingActive", async () => {
+      await pool.query(
+        `UPDATE public.subscriptions SET type='standard', status='past_due', price_cents=1490, billing_interval='monthly', discount_percent=NULL WHERE household_id = $1`,
+        [householdId],
+      );
+      let res = await authed(app, "get", "/admin/stats/billing", superAdmin.accessToken).expect(
+        200,
+      );
+      expect(res.body.pastDue).toBeGreaterThanOrEqual(1);
+
+      await pool.query(
+        `UPDATE public.subscriptions SET status='canceled' WHERE household_id = $1`,
+        [householdId],
+      );
+      res = await authed(app, "get", "/admin/stats/billing", superAdmin.accessToken).expect(200);
+      expect(res.body.canceled).toBeGreaterThanOrEqual(1);
+    });
+
+    it("revenueCents30d/failedPayments30d refletem o espelho real de invoices (delta, janela de 30d)", async () => {
+      const before = await authed(app, "get", "/admin/stats/billing", superAdmin.accessToken).expect(
+        200,
+      );
+
+      await pool.query(
+        `INSERT INTO public.billing_invoice_events (stripe_invoice_id, household_id, type, amount_cents, currency, occurred_at)
+         VALUES ($1, $2, 'paid', 1490, 'brl', now()), ($3, $2, 'payment_failed', 1490, 'brl', now())`,
+        [`in_admin_e2e_${Date.now()}_paid`, householdId, `in_admin_e2e_${Date.now()}_failed`],
+      );
+
+      const after = await authed(app, "get", "/admin/stats/billing", superAdmin.accessToken).expect(
+        200,
+      );
+
+      expect(after.body.revenueCents30d - before.body.revenueCents30d).toBe(1490);
+      expect(after.body.failedPayments30d - before.body.failedPayments30d).toBe(1);
+    });
+  });
 });

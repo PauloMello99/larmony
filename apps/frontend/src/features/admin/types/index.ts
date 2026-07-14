@@ -77,6 +77,31 @@ export interface GrowthPoint {
   newUsers: number
 }
 
+/**
+ * KPIs de billing (M15 PR2). `approxMrrCents` normaliza intervalo (monthly=1x,
+ * semiannual=/6, annual=/12) e desconto — aproximado, não reflete cupom de
+ * valor fixo. `revenueCents30d`/`failedPayments30d` já vêm do espelho real de
+ * invoices (não são aproximados).
+ */
+export interface BillingStats {
+  payingActive: number
+  trialing: number
+  pastDue: number
+  comp: number
+  free: number
+  canceled: number
+  approxMrrCents: number
+  planDistribution: { plan: string; count: number }[]
+  revenueCents30d: number
+  failedPayments30d: number
+}
+
+export interface BillingGrowthPoint {
+  month: string
+  newSubscriptions: number
+  canceledSubscriptions: number
+}
+
 export interface AdminHouseholdMember {
   userId: string
   name: string

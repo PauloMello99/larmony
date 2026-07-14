@@ -119,6 +119,20 @@ export interface NormalizedPrice {
   interval: BillingInterval | null;
 }
 
+/**
+ * Espelho mínimo de invoice.paid/invoice.payment_failed (M15 PR2) — sem line
+ * items, sem dado de cartão. `amountCents` é `amount_paid` (paid) ou
+ * `amount_due` (payment_failed, valor que a tentativa buscou cobrar).
+ */
+export interface NormalizedInvoice {
+  id: string;
+  customerId: string | null;
+  amountCents: number;
+  currency: string;
+  /** Momento do evento no Stripe (event.created) — nunca a hora local de processamento. */
+  occurredAt: Date;
+}
+
 /** Evento de webhook já verificado e normalizado (campos por tipo). */
 export interface StripeWebhookEvent {
   id: string;
@@ -132,6 +146,8 @@ export interface StripeWebhookEvent {
   product?: NormalizedProduct;
   // price.*
   price?: NormalizedPrice;
+  // invoice.paid / invoice.payment_failed
+  invoice?: NormalizedInvoice;
 }
 
 /** Porta de pagamento (implementada por StripePaymentGateway). */

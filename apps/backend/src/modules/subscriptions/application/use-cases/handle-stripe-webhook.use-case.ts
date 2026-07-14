@@ -15,6 +15,10 @@ import {
   STRIPE_WEBHOOK_EVENT_REPOSITORY,
   type IStripeWebhookEventRepository,
 } from "../../domain/stripe-webhook-event.repository.interface";
+import {
+  BILLING_INVOICE_EVENT_REPOSITORY,
+  type IBillingInvoiceEventRepository,
+} from "../../domain/billing-invoice-event.repository.interface";
 import { toSyncData } from "../../domain/subscription-sync";
 import type { StripeWebhookEvent } from "../../domain/ports/payment-gateway.port";
 
@@ -36,6 +40,8 @@ export class HandleStripeWebhookUseCase {
     private readonly billingPlans: IBillingPlanRepository,
     @Inject(STRIPE_WEBHOOK_EVENT_REPOSITORY)
     private readonly events: IStripeWebhookEventRepository,
+    @Inject(BILLING_INVOICE_EVENT_REPOSITORY)
+    private readonly invoiceEvents: IBillingInvoiceEventRepository,
   ) {}
 
   async execute(payload: Buffer | string, signature: string): Promise<void> {
@@ -101,6 +107,27 @@ export class HandleStripeWebhookUseCase {
             interval: price.interval,
           });
         }
+        return;
+      }
+
+      case "invoice.paid":
+      case "invoice.payment_failed": {
+        const invoice = event.invoice;
+        if (!invoice) return;
+        // Resolve o lar pelo customer — invoice sem customer conhecido
+        // (não deveria acontecer, mas o Stripe não garante) grava sem lar
+        // (household_id NULL, ON DELETE SET NULL) em vez de descartar o evento.
+        const householdId = invoice.customerId
+          ? await this.subscriptions.findHouseholdIdByStripeCustomerId(invoice.customerId)
+          : null;
+        await this.invoiceEvents.record({
+          stripeInvoiceId: invoice.id,
+          householdId,
+          type: event.type === "invoice.paid" ? "paid" : "payment_failed",
+          amountCents: invoice.amountCents,
+          currency: invoice.currency,
+          occurredAt: invoice.occurredAt,
+        });
         return;
       }
 

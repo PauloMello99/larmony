@@ -18,6 +18,8 @@ import {
   AdminUserDetail,
   AdminUserHouseholdChip,
   AdminUserRow,
+  BillingGrowthPoint,
+  BillingStats,
   GrowthPoint,
   IAdminRepository,
   ListHouseholdNotificationsFilter,
@@ -99,6 +101,110 @@ export class DrizzleAdminRepository implements IAdminRepository {
       month: r.month,
       newHouseholds: Number(r.new_orgs),
       newUsers: Number(r.new_users),
+    }));
+  }
+
+  async getBillingStats(): Promise<BillingStats> {
+    // approxMrrCents normaliza price_cents pelo intervalo (monthly=1x,
+    // semiannual=/6, annual=/12) e aplica discount_percent — é o único jeito
+    // de estimar MRR sem persistir invoices (decisão: minimização de dado
+    // sensível de pagamento, ver ADR-0026). Só cobre lares que já têm linha de
+    // subscription (criada lazy no 1º acesso à assinatura) — os demais são
+    // Free implícito e não entram nesta contagem nem no MRR.
+    const { rows } = await this.db.execute<{
+      paying_active: number;
+      trialing: number;
+      past_due: number;
+      comp: number;
+      free: number;
+      canceled: number;
+      approx_mrr_cents: number;
+    }>(sql`
+      SELECT
+        COUNT(*) FILTER (WHERE type = 'standard' AND status = 'active')::int AS paying_active,
+        COUNT(*) FILTER (WHERE status = 'trialing')::int AS trialing,
+        COUNT(*) FILTER (WHERE status = 'past_due')::int AS past_due,
+        COUNT(*) FILTER (WHERE type = 'custom')::int AS comp,
+        COUNT(*) FILTER (WHERE type = 'free')::int AS free,
+        COUNT(*) FILTER (WHERE status = 'canceled')::int AS canceled,
+        COALESCE(SUM(
+          CASE WHEN type = 'standard' AND status = 'active' THEN
+            (price_cents::numeric / CASE billing_interval
+              WHEN 'annual' THEN 12
+              WHEN 'semiannual' THEN 6
+              ELSE 1
+            END) * (1 - COALESCE(discount_percent, 0)::numeric / 100)
+          ELSE 0 END
+        ), 0)::int AS approx_mrr_cents
+      FROM subscriptions
+    `);
+    const r = rows[0];
+
+    const { rows: planRows } = await this.db.execute<{ plan: string; count: number }>(sql`
+      SELECT type::text AS plan, COUNT(*)::int AS count
+      FROM subscriptions
+      GROUP BY type
+      ORDER BY count DESC
+    `);
+
+    // Dado real (não aproximado) — vem do espelho de invoices, não da tabela de estado.
+    const { rows: invoiceRows } = await this.db.execute<{
+      revenue_cents_30d: number;
+      failed_payments_30d: number;
+    }>(sql`
+      SELECT
+        COALESCE(SUM(amount_cents) FILTER (WHERE type = 'paid'), 0)::int AS revenue_cents_30d,
+        COUNT(*) FILTER (WHERE type = 'payment_failed')::int AS failed_payments_30d
+      FROM billing_invoice_events
+      WHERE occurred_at >= now() - interval '30 days'
+    `);
+    const inv = invoiceRows[0];
+
+    return {
+      payingActive: Number(r?.paying_active ?? 0),
+      trialing: Number(r?.trialing ?? 0),
+      pastDue: Number(r?.past_due ?? 0),
+      comp: Number(r?.comp ?? 0),
+      free: Number(r?.free ?? 0),
+      canceled: Number(r?.canceled ?? 0),
+      approxMrrCents: Number(r?.approx_mrr_cents ?? 0),
+      planDistribution: planRows.map((p) => ({ plan: p.plan, count: Number(p.count) })),
+      revenueCents30d: Number(inv?.revenue_cents_30d ?? 0),
+      failedPayments30d: Number(inv?.failed_payments_30d ?? 0),
+    };
+  }
+
+  async getBillingGrowthSeries(): Promise<BillingGrowthPoint[]> {
+    // Aproximado (estado, não event log): "novas" = subscriptions que viraram
+    // standard no mês (created_at); "canceladas" = status canceled atualizado
+    // no mês (updated_at) — um upgrade→downgrade→upgrade no mesmo mês conta
+    // uma vez cada, não é um funil histórico fiel. O espelho de invoices
+    // (PR2 commit 2) não resolve isso — só dá receita/falhas reais.
+    const { rows } = await this.db.execute<{
+      month: string;
+      new_subs: number;
+      canceled_subs: number;
+    }>(sql`
+      WITH months AS (
+        SELECT generate_series(
+          date_trunc('month', now()) - interval '11 months',
+          date_trunc('month', now()),
+          interval '1 month'
+        ) AS m
+      )
+      SELECT
+        to_char(months.m, 'YYYY-MM') AS month,
+        (SELECT COUNT(*) FROM subscriptions s
+           WHERE s.type = 'standard' AND date_trunc('month', s.created_at) = months.m)::int AS new_subs,
+        (SELECT COUNT(*) FROM subscriptions s
+           WHERE s.status = 'canceled' AND date_trunc('month', s.updated_at) = months.m)::int AS canceled_subs
+      FROM months
+      ORDER BY months.m ASC
+    `);
+    return rows.map((r) => ({
+      month: r.month,
+      newSubscriptions: Number(r.new_subs),
+      canceledSubscriptions: Number(r.canceled_subs),
     }));
   }
 

@@ -30,7 +30,21 @@
     "statusTitle": "家庭状态分布",
     "statusActive": "活跃",
     "statusSuspended": "已暂停",
-    "statusEmpty": "暂无家庭。"
+    "statusEmpty": "暂无家庭。",
+    "statPayingActive": "付费中",
+    "statTrialing": "试用中",
+    "statPastDue": "付款逾期",
+    "statComp": "豁免",
+    "statApproxMrr": "MRR（估算）",
+    "statRevenue30d": "收入（30天）",
+    "statFailedPayments30d": "支付失败（30天）",
+    "viewRevenueInStripe": "在 Stripe 中查看收入",
+    "planDistributionTitle": "按套餐分布的家庭",
+    "planDistributionEmpty": "暂无任何家庭订阅。",
+    "billingGrowthTitle": "订阅·新增与取消（近12个月，估算）",
+    "billingGrowthEmpty": "近12个月没有订阅变动。",
+    "billingSeriesNew": "新增",
+    "billingSeriesCanceled": "已取消"
   },
   "users": {
     "title": "用户",
@@ -173,6 +187,7 @@
   "billing": {
     "loadError": "无法加载订阅信息。",
     "openInStripe": "在 Stripe 中打开",
+    "openSubscriptionInStripe": "在 Stripe 中打开订阅",
     "trialTitle": "试用",
     "trialActive": "试用已激活。",
     "trialActiveUntil": "试用有效期至 {{date}}。",

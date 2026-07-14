@@ -16,6 +16,8 @@ import { CurrentUser } from "../../auth/decorators/current-user.decorator";
 import { AuthUser } from "../../auth/application/ports/auth-provider.interface";
 import { GetPlatformStatsUseCase } from "../application/use-cases/get-platform-stats.use-case";
 import { GetPlatformGrowthUseCase } from "../application/use-cases/get-platform-growth.use-case";
+import { GetBillingStatsUseCase } from "../application/use-cases/get-billing-stats.use-case";
+import { GetBillingGrowthUseCase } from "../application/use-cases/get-billing-growth.use-case";
 import { ListPlatformHouseholdsUseCase } from "../application/use-cases/list-platform-households.use-case";
 import { ListPlatformUsersUseCase } from "../application/use-cases/list-platform-users.use-case";
 import { GetHouseholdDetailUseCase } from "../application/use-cases/get-household-detail.use-case";
@@ -46,6 +48,8 @@ export class AdminController {
   constructor(
     private readonly getStats: GetPlatformStatsUseCase,
     private readonly getGrowth: GetPlatformGrowthUseCase,
+    private readonly getBillingStats: GetBillingStatsUseCase,
+    private readonly getBillingGrowth: GetBillingGrowthUseCase,
     private readonly listHouseholds: ListPlatformHouseholdsUseCase,
     private readonly listUsers: ListPlatformUsersUseCase,
     private readonly getHouseholdDetail: GetHouseholdDetailUseCase,
@@ -68,6 +72,16 @@ export class AdminController {
   @Get("stats/growth")
   growth() {
     return this.getGrowth.execute();
+  }
+
+  @Get("stats/billing")
+  billingStats() {
+    return this.getBillingStats.execute();
+  }
+
+  @Get("stats/billing/growth")
+  billingGrowth() {
+    return this.getBillingGrowth.execute();
   }
 
   @Get("households")

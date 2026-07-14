@@ -108,6 +108,25 @@ estado via `GET /households/:id/subscription` (ou UI) + tabela `subscriptions`.
   `comp_expires_at`).
 - [ ] passou
 
+## Eventos de invoice (M15 PR2)
+
+O webhook agora trata `invoice.paid`/`invoice.payment_failed`, gravando um
+espelho mínimo em `billing_invoice_events` (sem dados de cartão/line items —
+só id/lar/tipo/valor/moeda/timestamp; ver ADR-0028 e o princípio de
+minimização já usado em `stripe_webhook_events`).
+
+- **Local**: o listener (`pnpm --filter backend stripe:webhook` = `stripe
+  listen --forward-to ...`) não filtra por `--events`, então já encaminha
+  `invoice.paid`/`invoice.payment_failed` por padrão — nenhuma mudança de
+  setup é necessária para testar localmente (cenário 2 do checklist acima já
+  dispara `invoice.paid` no upgrade).
+- **Staging/produção**: o endpoint de webhook configurado no Stripe Dashboard
+  (não o CLI) tem uma lista explícita de `enabled_events` definida na criação
+  — os dois tipos novos precisam ser **adicionados manualmente** a essa lista
+  para o ambiente passar a recebê-los (Dashboard → Developers → Webhooks →
+  endpoint → "+ Select events"). Sem isso, o handler existe mas nunca é
+  invocado nesses ambientes.
+
 ## Registro de execuções
 
 | Data | Cenários | Resultado | Observações |
