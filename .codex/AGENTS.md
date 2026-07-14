@@ -60,6 +60,24 @@ Supabase local: `npx supabase start` (API 54321, DB 54322, Studio 54323).
 - **Estado transitório**: schema/migrations ainda são os herdados do ink-ops —
   serão squashados no M1 (fundação). Não criar migrations sobre o schema velho.
 
+## Workflow de agentes
+
+O processo de desenvolvimento do repo está formalizado em `docs/ai/agentic-workflow.md`
+(roteamento adaptativo simples/intermediária/complexa, critérios de elevação por risco,
+validação com os scripts reais) e `docs/ai/development-style-profile.md` (regras de
+estilo do autor — MUST/SHOULD/MAY/MUST NOT). Siga essas regras mesmo sem subagentes:
+
+- **Menor fluxo suficiente**: mudança localizada ⇒ implementar + check-types/lint;
+  poucos módulos ⇒ localizar → implementar → testar; transversal/risco ⇒ planejar
+  antes e revisar depois.
+- **Elevação por risco**: banco, RLS/tenancy, auth, billing/dinheiro, cron, contratos
+  públicos ou integrações externas ⇒ tratar como complexa mesmo se pequena.
+- **Proibido**: push, deploy, migrations remotas, reset/clean destrutivos, commits sem
+  solicitação.
+
+(No Claude Code, esse protocolo é executado pela skill `development-workflow` com os
+subagentes de `.claude/agents/`.)
+
 ## Memória semântica (RAG) — OBRIGATÓRIO
 
 > **Recall primeiro (faça isto antes de ler código).** Para qualquer pergunta
