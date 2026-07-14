@@ -27,10 +27,8 @@ import { ListHouseholdGoalsUseCase } from "../application/use-cases/list-househo
 import { ListHouseholdScheduledEntriesUseCase } from "../application/use-cases/list-household-scheduled-entries.use-case";
 import { ListHouseholdNotificationsUseCase } from "../application/use-cases/list-household-notifications.use-case";
 import { SetHouseholdSuspendedUseCase } from "../application/use-cases/set-household-suspended.use-case";
-import { SetUserPlatformRoleUseCase } from "../application/use-cases/set-user-platform-role.use-case";
 import { ListAuditLogsUseCase } from "../../audit/application/use-cases/list-audit-logs.use-case";
 import { SetSuspendedDto } from "./dto/set-suspended.dto";
-import { SetPlatformRoleDto } from "./dto/set-platform-role.dto";
 import { AuditLogsQueryDto } from "./dto/audit-logs-query.dto";
 import { ListHouseholdsQueryDto } from "./dto/list-households-query.dto";
 import { ListUsersQueryDto } from "./dto/list-users-query.dto";
@@ -59,7 +57,6 @@ export class AdminController {
     private readonly listHouseholdScheduledEntries: ListHouseholdScheduledEntriesUseCase,
     private readonly listHouseholdNotifications: ListHouseholdNotificationsUseCase,
     private readonly setHouseholdSuspended: SetHouseholdSuspendedUseCase,
-    private readonly setUserPlatformRole: SetUserPlatformRoleUseCase,
     private readonly listAuditLogs: ListAuditLogsUseCase,
   ) {}
 
@@ -163,13 +160,7 @@ export class AdminController {
     );
   }
 
-  @Patch("users/:id/platform-role")
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async platformRole(
-    @Param("id", ParseUUIDPipe) id: string,
-    @Body() dto: SetPlatformRoleDto,
-    @CurrentUser() user: AuthUser,
-  ) {
-    await this.setUserPlatformRole.execute(id, dto.role, user.id);
-  }
+  // Promote/demote de super_admin NÃO tem rota de propósito (M15): operação
+  // DB-only via runbook (docs/runbooks/super-admin-promotion.md) — sem
+  // superfície de sistema para escalar privilégio de plataforma.
 }

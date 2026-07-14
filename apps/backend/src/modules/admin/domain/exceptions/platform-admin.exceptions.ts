@@ -9,15 +9,6 @@ export class PlatformTargetNotFoundException extends DomainException {
   }
 }
 
-/** Um super_admin não pode rebaixar a si mesmo (evita lockout). */
-export class CannotChangeOwnPlatformRoleException extends DomainException {
-  readonly code = "CANNOT_CHANGE_OWN_PLATFORM_ROLE";
-
-  constructor() {
-    super("You cannot change your own platform role");
-  }
-}
-
 /**
  * Suspender um lar com assinatura Stripe VIVA sem cancelá-la manteria a
  * cobrança com o acesso bloqueado (inaceitável — CDC). O 409 é a rede de

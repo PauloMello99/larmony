@@ -289,10 +289,4 @@ export interface IAdminRepository {
    * `customer.subscription.deleted` segue idempotente por cima).
    */
   markSubscriptionCanceled(householdId: string): Promise<void>;
-  /** Define o platform_role de um usuário. Retorna false se o usuário não existe. */
-  setUserPlatformRole(userId: string, role: PlatformRole): Promise<boolean>;
-  /** Usuário pelo id da app (para checagens de auto-rebaixamento). */
-  findUserById(
-    userId: string,
-  ): Promise<{ id: string; authId: string; platformRole: PlatformRole } | null>;
 }

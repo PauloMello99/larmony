@@ -16,7 +16,6 @@ import { ListHouseholdGoalsUseCase } from "./application/use-cases/list-househol
 import { ListHouseholdScheduledEntriesUseCase } from "./application/use-cases/list-household-scheduled-entries.use-case";
 import { ListHouseholdNotificationsUseCase } from "./application/use-cases/list-household-notifications.use-case";
 import { SetHouseholdSuspendedUseCase } from "./application/use-cases/set-household-suspended.use-case";
-import { SetUserPlatformRoleUseCase } from "./application/use-cases/set-user-platform-role.use-case";
 import { ListAuditLogsUseCase } from "../audit/application/use-cases/list-audit-logs.use-case";
 import { AdminController } from "./interface/admin.controller";
 
@@ -40,7 +39,6 @@ import { AdminController } from "./interface/admin.controller";
     ListHouseholdScheduledEntriesUseCase,
     ListHouseholdNotificationsUseCase,
     SetHouseholdSuspendedUseCase,
-    SetUserPlatformRoleUseCase,
     ListAuditLogsUseCase,
   ],
 })

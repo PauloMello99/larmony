@@ -767,30 +767,4 @@ export class DrizzleAdminRepository implements IAdminRepository {
     `);
   }
 
-  async setUserPlatformRole(
-    userId: string,
-    role: PlatformRole,
-  ): Promise<boolean> {
-    const rows = await this.db
-      .update(schema.users)
-      .set({ platformRole: role, updatedAt: new Date() })
-      .where(eq(schema.users.id, userId))
-      .returning({ id: schema.users.id });
-    return rows.length > 0;
-  }
-
-  async findUserById(
-    userId: string,
-  ): Promise<{ id: string; authId: string; platformRole: PlatformRole } | null> {
-    const [row] = await this.db
-      .select({
-        id: schema.users.id,
-        authId: schema.users.authId,
-        platformRole: schema.users.platformRole,
-      })
-      .from(schema.users)
-      .where(eq(schema.users.id, userId))
-      .limit(1);
-    return row ?? null;
-  }
 }
