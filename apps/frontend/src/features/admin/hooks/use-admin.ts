@@ -6,10 +6,16 @@ import { apiRequest } from "@/infrastructure/api/client"
 import { queryKeys } from "@/infrastructure/query/query-keys"
 import { translateApiError } from "@/shared/lib/api-error"
 import type {
+  AdminBudgetRow,
+  AdminCategoryRow,
+  AdminGoalRow,
   AdminHousehold,
   AdminHouseholdDetail,
   AdminHouseholdFilters,
+  AdminNotificationRow,
   AdminPage,
+  AdminScheduledEntryRow,
+  AdminTransactionRow,
   AdminUser,
   AdminUserDetail,
   AuditLogFilters,
@@ -64,6 +70,59 @@ export function useAdminHouseholdDetail(id: string | undefined) {
     loading: isLoading,
     error: error instanceof Error ? translateApiError(error, t) : null,
   }
+}
+
+/** Base das abas paginadas do drill-down (GET /admin/households/:id/<tab>). */
+function useAdminHouseholdTab<T>(
+  id: string | undefined,
+  tab: string,
+  params: Record<string, string | number | undefined> = {},
+) {
+  const { t } = useTranslation("common")
+  const search = new URLSearchParams()
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined && v !== "") search.set(k, String(v))
+  }
+  const qs = search.toString()
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: queryKeys.admin.householdTab(id ?? "", tab, params),
+    queryFn: () =>
+      apiRequest<AdminPage<T>>(`/admin/households/${id}/${tab}${qs ? `?${qs}` : ""}`),
+    enabled: !!id,
+  })
+  return {
+    page: data ?? null,
+    loading: isLoading,
+    error: error instanceof Error ? translateApiError(error, t) : null,
+  }
+}
+
+export function useAdminHouseholdTransactions(
+  id: string | undefined,
+  params: { page?: number; type?: "income" | "expense" } = {},
+) {
+  return useAdminHouseholdTab<AdminTransactionRow>(id, "transactions", params)
+}
+
+export function useAdminHouseholdCategories(id: string | undefined, page = 1) {
+  return useAdminHouseholdTab<AdminCategoryRow>(id, "categories", { page, limit: 50 })
+}
+
+export function useAdminHouseholdBudgets(id: string | undefined, page = 1) {
+  return useAdminHouseholdTab<AdminBudgetRow>(id, "budgets", { page })
+}
+
+export function useAdminHouseholdGoals(id: string | undefined, page = 1) {
+  return useAdminHouseholdTab<AdminGoalRow>(id, "goals", { page })
+}
+
+export function useAdminHouseholdScheduledEntries(id: string | undefined, page = 1) {
+  return useAdminHouseholdTab<AdminScheduledEntryRow>(id, "scheduled-entries", { page })
+}
+
+export function useAdminHouseholdNotifications(id: string | undefined, page = 1) {
+  return useAdminHouseholdTab<AdminNotificationRow>(id, "notifications", { page })
 }
 
 export function useAdminUserDetail(id: string | undefined) {
