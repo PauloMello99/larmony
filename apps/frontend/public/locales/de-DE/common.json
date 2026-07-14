@@ -86,7 +86,7 @@
     "SERVICE_NOT_PAYABLE": "Diese Dienstleistung kann nicht bezahlt werden.",
     "SERVICE_FORBIDDEN": "Du hast keine Berechtigung, diese Dienstleistung zu ändern.",
     "PLATFORM_TARGET_NOT_FOUND": "Eintrag nicht gefunden.",
-    "CANNOT_CHANGE_OWN_PLATFORM_ROLE": "Du kannst deine eigene Plattformrolle nicht ändern.",
+    "HOUSEHOLD_HAS_ACTIVE_SUBSCRIPTION": "Dieser Haushalt hat ein aktives Abo — kündige es vor dem Sperren.",
     "CATEGORY_NOT_FOUND": "Kategorie nicht gefunden.",
     "BUDGET_NOT_FOUND": "Budget nicht gefunden.",
     "BUDGET_ALREADY_EXISTS": "Für diese Kategorie existiert in diesem Monat bereits ein Budget.",

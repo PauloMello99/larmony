@@ -18,10 +18,10 @@ import type {
   AdminTransactionRow,
   AdminUser,
   AdminUserDetail,
+  AdminUserFilters,
   AuditLogFilters,
   AuditLogPage,
   GrowthPoint,
-  PlatformRole,
   PlatformStats,
 } from "../types"
 
@@ -154,21 +154,6 @@ export function useSetHouseholdSuspended() {
   })
   return (id: string, suspended: boolean, cancelStripeSubscription?: boolean) =>
     mutation.mutateAsync({ id, suspended, cancelStripeSubscription })
-}
-
-export function useSetUserPlatformRole() {
-  const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: ({ id, role }: { id: string; role: PlatformRole }) =>
-      apiRequest<void>(`/admin/users/${id}/platform-role`, {
-        method: "PATCH",
-        body: JSON.stringify({ role }),
-      }),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.all })
-    },
-  })
-  return (id: string, role: PlatformRole) => mutation.mutateAsync({ id, role })
 }
 
 export function useAdminAuditLogs(filters?: AuditLogFilters) {
@@ -315,32 +300,28 @@ export function useAdminBilling() {
   return { grantComp, revokeComp, applyDiscount, removeDiscount, grantTrial, revokeTrial }
 }
 
-export function useAdminUsers() {
+/** Lista de usuários server-side. Sem mutation de role: promote/demote é DB-only (M15). */
+export function useAdminUsers(filters?: AdminUserFilters) {
   const { t } = useTranslation("common")
-  const queryClient = useQueryClient()
 
-  const { data = [], isLoading, error, refetch } = useQuery({
-    queryKey: queryKeys.admin.users(),
-    queryFn: () => apiRequest<AdminUser[]>("/admin/users"),
-  })
+  const params = new URLSearchParams()
+  if (filters?.page) params.set("page", String(filters.page))
+  if (filters?.limit) params.set("limit", String(filters.limit))
+  if (filters?.q) params.set("q", filters.q)
+  if (filters?.platformRole) params.set("platformRole", filters.platformRole)
+  if (filters?.sortBy) params.set("sortBy", filters.sortBy)
+  if (filters?.sortDir) params.set("sortDir", filters.sortDir)
+  const qs = params.toString()
 
-  const roleMutation = useMutation({
-    mutationFn: ({ id, role }: { id: string; role: PlatformRole }) =>
-      apiRequest<void>(`/admin/users/${id}/platform-role`, {
-        method: "PATCH",
-        body: JSON.stringify({ role }),
-      }),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.all })
-    },
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: queryKeys.admin.users(filters as Record<string, unknown>),
+    queryFn: () => apiRequest<AdminPage<AdminUser>>(`/admin/users${qs ? `?${qs}` : ""}`),
   })
 
   return {
-    users: data,
+    page: data ?? null,
     loading: isLoading,
     error: error instanceof Error ? translateApiError(error, t) : null,
     refetch,
-    setPlatformRole: (id: string, role: PlatformRole) =>
-      roleMutation.mutateAsync({ id, role }),
   }
 }

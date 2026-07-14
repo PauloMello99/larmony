@@ -102,7 +102,7 @@ export const queryKeys = {
     householdDetail: (id: string) => ["admin", "households", "detail", id] as const,
     householdTab: (id: string, tab: string, params?: Record<string, unknown>) =>
       ["admin", "households", "detail", id, tab, params ?? {}] as const,
-    users: () => ["admin", "users"] as const,
+    users: (filters?: Record<string, unknown>) => ["admin", "users", filters ?? {}] as const,
     userDetail: (id: string) => ["admin", "users", "detail", id] as const,
     auditLogs: (filters?: Record<string, unknown>) =>
       ["admin", "audit-logs", filters ?? {}] as const,

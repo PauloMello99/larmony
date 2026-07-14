@@ -43,13 +43,31 @@ export interface AdminHouseholdFilters {
   sortDir?: "asc" | "desc"
 }
 
+/** Lar a que um usuário pertence (chips na lista de usuários). */
+export interface AdminUserHouseholdChip {
+  id: string
+  name: string
+  role: string
+}
+
 export interface AdminUser {
   id: string
   name: string
   email: string
   platformRole: PlatformRole
   householdCount: number
+  households: AdminUserHouseholdChip[]
   createdAt: string
+}
+
+/** Filtros server-side da lista de usuários. */
+export interface AdminUserFilters {
+  page?: number
+  limit?: number
+  q?: string
+  platformRole?: PlatformRole
+  sortBy?: "createdAt" | "name" | "householdCount"
+  sortDir?: "asc" | "desc"
 }
 
 /** Ponto da série de crescimento (novos por mês). */
@@ -237,7 +255,3 @@ export interface AuditLogPage {
   pages: number
 }
 
-/** Filtros/ordenação client-side remanescentes (users migra no M15 8/8). */
-export type UserRoleFilter = "all" | "super_admin" | "user"
-export type UserSortKey = "name" | "createdAt" | "householdCount"
-export type SortDir = "asc" | "desc"
