@@ -35,15 +35,15 @@ describe("HouseholdEntitlementGuard", () => {
   it("capability habilitada → libera", async () => {
     const { guard, entitlements } = make("advanced_reports");
     entitlements.resolve.mockResolvedValue({
-      plan: "premium",
+      plan: "completo",
       status: "active",
       source: "stripe",
-      capabilities: { advanced_reports: true, report_export: true, custom_categories: true },
-      limits: {
-        maxHouseholdsOwned: Infinity,
-        maxMembersPerHousehold: Infinity,
-        maxActiveGoals: Infinity,
-        maxActiveBudgets: Infinity,
+      capabilities: {
+        budgets: true,
+        scheduled_entries: true,
+        advanced_reports: true,
+        report_export: true,
+        custom_categories: true,
       },
     });
 
@@ -51,18 +51,18 @@ describe("HouseholdEntitlementGuard", () => {
     expect(entitlements.resolve).toHaveBeenCalledWith("hh_1");
   });
 
-  it("capability negada → lança PremiumRequiredException", async () => {
+  it("capability negada (essencial pedindo feature Completo) → lança PremiumRequiredException", async () => {
     const { guard, entitlements } = make("advanced_reports");
     entitlements.resolve.mockResolvedValue({
-      plan: "free",
+      plan: "essencial",
       status: "active",
-      source: "free",
-      capabilities: { advanced_reports: false, report_export: false, custom_categories: false },
-      limits: {
-        maxHouseholdsOwned: 1,
-        maxMembersPerHousehold: 2,
-        maxActiveGoals: 3,
-        maxActiveBudgets: 3,
+      source: "stripe",
+      capabilities: {
+        budgets: false,
+        scheduled_entries: false,
+        advanced_reports: false,
+        report_export: false,
+        custom_categories: false,
       },
     });
 

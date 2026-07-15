@@ -29,11 +29,42 @@
 | ADR-0023 | Dispatcher multicanal de notificações + dedup por evento (M11) | 2026-07-11 | Aceito |
 | ADR-0024 | Assertividade dos disparos: timezone + hora por lar (M12) | 2026-07-11 | Aceito |
 | ADR-0025 | M13 Open Finance desacoplado do lançamento + gatilho de ativação | 2026-07-11 | Aceito |
-| ADR-0026 | Billing (Stripe) + Entitlements + comp/desconto administrativo (M14) | 2026-07-12 | Aceito |
+| ADR-0026 | Billing (Stripe) + Entitlements + comp/desconto administrativo (M14) | 2026-07-12 | Aceito (adendo D-1 e trial administrativo local superseded pelo ADR-0029) |
 | ADR-0027 | Sessão em localStorage vs cookie httpOnly (hardening pré-produção) | 2026-07-13 | Aceito |
 | ADR-0028 | Redesign do super admin: centrado em lares, suspensão segura, role DB-only (M15) | 2026-07-14 | Aceito |
+| ADR-0029 | Assinatura pago-only: 2 tiers (Essencial/Completo) + trial self-serve, fim do Free (M16) | 2026-07-14 | Aceito (supersede o adendo D-1 do ADR-0026) |
 
 ## Decisões/registros recentes (sem ADR)
+
+- **2026-07-14 — M16 CONCLUÍDO — overhaul do modelo de assinatura: pago-only,
+  2 tiers, trial self-serve (ADR-0029)**: fim do freemium. **PR 0**: criado o
+  subagente `pricing-strategist` (read-only/consultivo) para pesquisar
+  concorrentes BR e recomendar preço — decisão do responsável de não fixar
+  número sem essa pesquisa; preço aprovado: Essencial R$ 9,90/mês (R$ 99/ano),
+  Completo R$ 19,90/mês (R$ 199/ano). **PR 1** (núcleo): `ResolvedPlan` vira
+  `locked|essencial|completo`; régua por contagem do D-1 (ADR-0026) removida
+  por completo — pago = ilimitado, só capabilities diferenciam tier;
+  `ActiveSubscriptionGuard` novo bloqueia escrita (402
+  `SUBSCRIPTION_REQUIRED`) para `locked`, aplicado **por-controller** (não
+  `APP_GUARD` global — um review de arquitetura pegou que um guard global
+  rodaria antes do `AuthGuard` e criaria um vetor de escrita/probe
+  pré-autenticação); `households` fica fora do guard (gestão de conta nunca
+  bloqueia). **PR 2**: checkout ganha `planKey` (usuário escolhe
+  Essencial/Completo no checkout, decisão do responsável contra a
+  recomendação de "vira Essencial por padrão" pós-trial) + trial self-serve
+  de 30 dias com cartão upfront (`payment_method_collection: "always"`,
+  `trial_consumed` marca antes da chamada ao Stripe); onboarding redireciona
+  pro gate de assinatura após criar o 1º lar. **PR 3**: `LockedBanner` em
+  toda página de lar sem assinatura; orçamentos/lançamentos programados
+  ganham paywall de página inteira (Completo-only, GET também bloqueado);
+  landing reconstruída com 2 planos + trial, sem nenhuma menção a "grátis".
+  **PR 4**: `IPaymentGateway.listInvoices` + listagem de faturas no admin
+  (pedido original do responsável); trial administrativo local removido
+  (`GrantTrialUseCase`/`RevokeTrialUseCase` + rotas — redundante desde o
+  self-serve do PR2; único "acesso grátis" via admin continua sendo comp);
+  painel mostra o `tier`. Enum `subscription_type` do banco **não mudou**
+  (`free` agora significa `locked`, sem migração de enum). Detalhe completo
+  no `.memory/adr/0029-subscription-paid-only-2-tiers.md`.
 
 - **2026-07-14 — M15 CONCLUÍDO — PR 2 (KPIs de billing) + PR 3 (canal de
   suporte), ADR-0028**: fecha o redesign do super admin nas 3 fatias

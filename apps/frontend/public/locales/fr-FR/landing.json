@@ -7,7 +7,7 @@
       "faq": "FAQ"
     },
     "login": "Se connecter",
-    "cta": "Commencer gratuitement",
+    "cta": "Essayer gratuitement",
     "openMenu": "Ouvrir le menu",
     "closeMenu": "Fermer le menu"
   },
@@ -16,7 +16,7 @@
     "titleLine1": "Les finances de la maison,",
     "titleHighlight": "en harmonie.",
     "subtitle": "Transactions, budgets, objectifs et factures à payer — partagés avec celles et ceux qui partagent ton foyer. Des centimes exacts, zéro tableur.",
-    "ctaPrimary": "Commencer gratuitement →",
+    "ctaPrimary": "Essai gratuit de 30 jours →",
     "ctaSecondary": "Voir la démo",
     "proof": {
       "centsLine1": "centimes exacts,",
@@ -133,7 +133,7 @@
     "steps": {
       "s1": {
         "title": "Crée ton foyer",
-        "desc": "En moins d’une minute et sans carte. Le foyer est l’espace où les finances de la maison sont réunies."
+        "desc": "En moins d’une minute. Le foyer est l’espace où les finances de la maison sont réunies — avec 30 jours d’essai gratuit du plan Complet."
       },
       "s2": {
         "title": "Invite celles et ceux qui vivent avec toi",
@@ -167,52 +167,37 @@
   "pricing": {
     "kicker": "Tarifs",
     "title": "Simple et transparent",
-    "subtitle": "Commence gratuitement. Passe à l’offre supérieure quand tu veux plus — sans engagement.",
-    "note": "Tu crées ton compte gratuitement et tu passes à Family dans l’app, avec un paiement sécurisé traité par Stripe. Résilie quand tu veux ; Pro arrive bientôt.",
+    "subtitle": "Deux plans, sans piège — et 30 jours d’essai gratuit du plan Complet sur les deux.",
+    "note": "Carte requise pour démarrer l’essai, aucun prélèvement avant la fin des 30 jours. Paiement sécurisé traité par Stripe — résilie quand tu veux.",
+    "intervalMonthly": "Mensuel",
+    "intervalAnnual": "Annuel",
+    "perMonth": "/mois",
+    "perYear": "/an",
     "plans": {
-      "free": {
-        "name": "Free",
-        "price": "Gratuit",
-        "period": "",
-        "description": "Pour organiser les finances de la maison sans rien payer.",
-        "cta": "Commencer gratuitement",
+      "essencial": {
+        "name": "Essentiel",
+        "description": "L’essentiel pour gérer les finances au quotidien.",
+        "cta": "Essai gratuit de 30 jours",
         "features": {
           "f1": "Transactions illimitées avec les catégories par défaut",
-          "f2": "Budgets et objectifs (jusqu’à 3 chacun)",
+          "f2": "Objectifs d’épargne illimités",
           "f3": "Rappels de factures par e-mail",
-          "f4": "1 foyer, toi + 1 membre",
+          "f4": "Membres et foyers illimités",
           "f5": "Tableau de bord et rapport mensuel"
         }
       },
-      "family": {
-        "name": "Family",
-        "price": "R$ 14,90",
-        "period": "/mois",
+      "completo": {
+        "name": "Complet",
         "badge": "Recommandé",
-        "description": "Pour celles et ceux qui veulent des rapports avancés et soutenir le projet.",
-        "cta": "S’abonner à Family",
+        "description": "Tout ce qu’il y a dans Essentiel, plus les budgets, les écritures programmées et les rapports avancés.",
+        "cta": "Essai gratuit de 30 jours",
         "features": {
-          "f1": "Tout le plan Free",
-          "f2": "Membres et foyers illimités",
-          "f3": "Catégories personnalisées illimitées",
+          "f1": "Tout le plan Essentiel",
+          "f2": "Budgets par catégorie",
+          "f3": "Écritures programmées et récurrences",
           "f4": "Rapports avancés — annuels et comparatifs",
           "f5": "Export CSV des rapports",
-          "f6": "Nouvelles fonctionnalités premium au fil des sorties",
-          "f7": "Soutiens le développement de Larmony"
-        }
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "À définir",
-        "period": "",
-        "badge": "Bientôt",
-        "description": "Fonctionnalités avancées pour celles et ceux qui ont besoin de plus de contrôle.",
-        "cta": "Bientôt",
-        "features": {
-          "f1": "Intégration Open Finance",
-          "f2": "Automatisations personnalisées",
-          "f3": "Export avancé des rapports",
-          "f4": "Support prioritaire"
+          "f6": "Catégories personnalisées illimitées"
         }
       }
     }
@@ -222,20 +207,20 @@
     "title": "Questions fréquentes",
     "items": {
       "q1": {
-        "question": "Larmony est-il gratuit ?",
-        "answer": "Oui. Le plan Free couvre le quotidien du foyer sans frais. Le plan Family (R$ 14,90/mois) débloque les rapports avancés et aide à faire vivre le projet — mais tu n’en as pas besoin pour commencer."
+        "question": "Larmony a-t-il un plan gratuit ?",
+        "answer": "Pas de plan gratuit permanent, mais tout le monde commence avec 30 jours d’essai gratuit du plan Complet (carte requise, aucun prélèvement avant la fin de l’essai). Ensuite, tu choisis entre Essentiel (R$ 9,90/mois) et Complet (R$ 19,90/mois)."
       },
       "q2": {
-        "question": "Qu’est-ce qui est inclus dans le plan Family ?",
-        "answer": "Membres et foyers illimités, catégories personnalisées, rapports avancés (vue annuelle et comparatifs) et export CSV des rapports. Et au fur et à mesure que de nouvelles fonctionnalités premium sortent, elles entrent dans Family sans coût supplémentaire. Sans engagement."
+        "question": "Quelle est la différence entre Essentiel et Complet ?",
+        "answer": "Essentiel couvre l’essentiel : transactions, catégories par défaut, objectifs, tableau de bord et rapport mensuel, avec membres et foyers illimités. Complet ajoute les budgets par catégorie, les écritures programmées, les rapports avancés (vue annuelle et export CSV) et les catégories personnalisées."
       },
       "q3": {
         "question": "Puis-je résilier quand je veux ?",
-        "answer": "Oui. L’abonnement est géré via le portail sécurisé de Stripe, sans pénalité. Tu conserves l’accès Family jusqu’à la fin du cycle déjà payé, puis tu reviens à Free."
+        "answer": "Oui. L’abonnement est géré via le portail sécurisé de Stripe, sans pénalité. Tu conserves l’accès jusqu’à la fin du cycle déjà payé ; ensuite, tes données restent disponibles en lecture seule jusqu’à ce que tu te réabonnes."
       },
       "q4": {
         "question": "Dois-je connecter mon compte bancaire ?",
-        "answer": "Non. Larmony fonctionne avec des saisies manuelles et des récurrences automatiques — tu contrôles exactement ce qui entre. L’intégration Open Finance est sur la feuille de route (plan Pro)."
+        "answer": "Non. Larmony fonctionne avec des saisies manuelles et des récurrences automatiques — tu contrôles exactement ce qui entre. L’intégration Open Finance est sur la feuille de route pour un futur plan."
       },
       "q5": {
         "question": "Mes données financières sont-elles en sécurité ?",
@@ -250,8 +235,8 @@
   "finalCta": {
     "titleLine1": "Mets de l’harmonie dans",
     "titleLine2": "les comptes de ta maison",
-    "subtitle": "Crée ton foyer en moins d’une minute. Gratuit, sans carte bancaire.",
-    "cta": "Créer mon foyer gratuit →"
+    "subtitle": "Crée ton foyer en moins d’une minute. 30 jours d’essai gratuit du plan Complet.",
+    "cta": "Essai gratuit de 30 jours →"
   },
   "footer": {
     "description": "Le contrôle financier de ton foyer. Transactions, budgets et objectifs au même endroit.",

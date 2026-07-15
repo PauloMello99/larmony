@@ -75,7 +75,7 @@ describe("Admin subscription comp/discount (e2e)", () => {
     expect(got.body.type).toBe("custom");
     expect(got.body.status).toBe("active");
     expect(got.body.compReason).toBe("parceria estratégica");
-    expect(got.body.entitlements.plan).toBe("custom");
+    expect(got.body.entitlements.plan).toBe("completo");
     expect(got.body.entitlements.source).toBe("comp");
     expect(got.body.entitlements.capabilities.advanced_reports).toBe(true);
   });
@@ -122,81 +122,24 @@ describe("Admin subscription comp/discount (e2e)", () => {
     expect(res.body.code).toBe("INVALID_DISCOUNT");
   });
 
-  describe("trial administrativo", () => {
-    it("não-admin → 403", async () => {
+  describe("faturas (M16 PR4)", () => {
+    it("não-admin (dono) → 403 ao listar faturas", async () => {
       await authed(
-        app,
-        "post",
-        `/admin/households/${householdId}/subscription/trial`,
-        owner.accessToken,
-      )
-        .send({ months: 3 })
-        .expect(403);
-    });
-
-    it("super_admin concede trial → trialing + entitlements premium/source trial", async () => {
-      await authed(
-        app,
-        "post",
-        `/admin/households/${householdId}/subscription/trial`,
-        superAdmin.accessToken,
-      )
-        .send({ months: 3 })
-        .expect(204);
-
-      const got = await authed(
         app,
         "get",
-        `/households/${householdId}/subscription`,
+        `/admin/households/${householdId}/subscription/invoices`,
         owner.accessToken,
-      ).expect(200);
-      expect(got.body.type).toBe("trial");
-      expect(got.body.status).toBe("trialing");
-      expect(got.body.trialEndsAt).not.toBeNull();
-      expect(got.body.entitlements.plan).toBe("premium");
-      expect(got.body.entitlements.source).toBe("trial");
-      expect(got.body.entitlements.capabilities.advanced_reports).toBe(true);
+      ).expect(403);
     });
 
-    it("conceder trial sobre lar que já está em trial → 422 TRIAL_NOT_ALLOWED", async () => {
+    it("lar sem customer Stripe → lista vazia", async () => {
       const res = await authed(
-        app,
-        "post",
-        `/admin/households/${householdId}/subscription/trial`,
-        superAdmin.accessToken,
-      )
-        .send({ months: 1 })
-        .expect(422);
-      expect(res.body.code).toBe("TRIAL_NOT_ALLOWED");
-    });
-
-    it("revogar trial → volta a free", async () => {
-      await authed(
-        app,
-        "delete",
-        `/admin/households/${householdId}/subscription/trial`,
-        superAdmin.accessToken,
-      ).expect(204);
-
-      const got = await authed(
         app,
         "get",
-        `/households/${householdId}/subscription`,
-        owner.accessToken,
-      ).expect(200);
-      expect(got.body.type).toBe("free");
-      expect(got.body.trialEndsAt).toBeNull();
-      expect(got.body.entitlements.source).toBe("free");
-    });
-
-    it("revogar trial de lar que não está em trial → 422", async () => {
-      const res = await authed(
-        app,
-        "delete",
-        `/admin/households/${householdId}/subscription/trial`,
+        `/admin/households/${householdId}/subscription/invoices`,
         superAdmin.accessToken,
-      ).expect(422);
-      expect(res.body.code).toBe("TRIAL_NOT_ALLOWED");
+      ).expect(200);
+      expect(res.body.invoices).toEqual([]);
     });
   });
 
@@ -232,28 +175,6 @@ describe("Admin subscription comp/discount (e2e)", () => {
       ).expect(200);
       expect(got.body.type).toBe("free");
       expect(got.body.compReason).toBeNull();
-    });
-
-    it("trial com trial_ends_at no passado → sweep volta o lar para free", async () => {
-      // Seed direto (o grant administrativo de trial é coberto nos casos do H-3).
-      await pool.query(
-        `UPDATE public.subscriptions
-           SET type = 'trial', status = 'trialing', trial_ends_at = now() - interval '1 day'
-         WHERE household_id = $1`,
-        [householdId],
-      );
-
-      await tick().expect(200);
-
-      const got = await authed(
-        app,
-        "get",
-        `/households/${householdId}/subscription`,
-        owner.accessToken,
-      ).expect(200);
-      expect(got.body.type).toBe("free");
-      expect(got.body.status).toBe("active");
-      expect(got.body.entitlements.capabilities.advanced_reports).toBe(false);
     });
 
     it("comp com validade futura NÃO é expirado pelo sweep", async () => {

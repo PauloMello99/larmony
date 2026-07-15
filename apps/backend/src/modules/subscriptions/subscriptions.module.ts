@@ -14,14 +14,14 @@ import { RevokeCompUseCase } from "./application/use-cases/revoke-comp.use-case"
 import { ApplyDiscountUseCase } from "./application/use-cases/apply-discount.use-case";
 import { RemoveDiscountUseCase } from "./application/use-cases/remove-discount.use-case";
 import { ExpireSubscriptionsUseCase } from "./application/use-cases/expire-subscriptions.use-case";
-import { GrantTrialUseCase } from "./application/use-cases/grant-trial.use-case";
-import { RevokeTrialUseCase } from "./application/use-cases/revoke-trial.use-case";
+import { ListSubscriptionInvoicesUseCase } from "./application/use-cases/list-subscription-invoices.use-case";
 import { BillingReconciliationJob } from "./application/jobs/billing-reconciliation.job";
 import { BillingExpirySweepJob } from "./application/jobs/billing-expiry-sweep.job";
 import { SubscriptionsController } from "./interface/subscriptions.controller";
 import { StripeWebhookController } from "./interface/stripe-webhook.controller";
 import { AdminSubscriptionController } from "./interface/admin-subscription.controller";
 import { HouseholdEntitlementGuard } from "./interface/guards/household-entitlement.guard";
+import { ActiveSubscriptionGuard } from "./interface/guards/active-subscription.guard";
 
 @Module({
   // UserInfrastructureModule: GrantCompUseCase resolve o users.id do ator
@@ -38,6 +38,7 @@ import { HouseholdEntitlementGuard } from "./interface/guards/household-entitlem
     CreatePortalSessionUseCase,
     EntitlementsService,
     HouseholdEntitlementGuard,
+    ActiveSubscriptionGuard,
     PlanCatalogService,
     HandleStripeWebhookUseCase,
     ReconcileSubscriptionsUseCase,
@@ -46,8 +47,7 @@ import { HouseholdEntitlementGuard } from "./interface/guards/household-entitlem
     ApplyDiscountUseCase,
     RemoveDiscountUseCase,
     ExpireSubscriptionsUseCase,
-    GrantTrialUseCase,
-    RevokeTrialUseCase,
+    ListSubscriptionInvoicesUseCase,
     // Registrados no tick do internal-cron via @CronJobName (DiscoveryService).
     BillingReconciliationJob,
     BillingExpirySweepJob,
@@ -55,6 +55,6 @@ import { HouseholdEntitlementGuard } from "./interface/guards/household-entitlem
   // Exportados para gatear rotas de outros módulos por entitlement (B-4, mesmo
   // padrão de bridge cross-módulo do DispatchNotificationUseCase, ADR-0023):
   // o consumidor importa SubscriptionsModule e usa @UseGuards(HouseholdEntitlementGuard).
-  exports: [EntitlementsService, HouseholdEntitlementGuard],
+  exports: [EntitlementsService, HouseholdEntitlementGuard, ActiveSubscriptionGuard],
 })
 export class SubscriptionsModule {}

@@ -8,6 +8,7 @@ import { GetSubscriptionUseCase } from "../application/use-cases/get-subscriptio
 import { CreateCheckoutSessionUseCase } from "../application/use-cases/create-checkout-session.use-case";
 import { CreatePortalSessionUseCase } from "../application/use-cases/create-portal-session.use-case";
 import { SessionLocaleDto } from "./dto/session-locale.dto";
+import { CheckoutSessionDto } from "./dto/checkout-session.dto";
 
 @Controller("households/:householdId/subscription")
 @UseGuards(AuthGuard, HouseholdMembershipGuard)
@@ -28,9 +29,9 @@ export class SubscriptionsController {
   checkout(
     @Param("householdId", ParseUUIDPipe) householdId: string,
     @CurrentUser() user: AuthUser,
-    @Body() dto: SessionLocaleDto,
+    @Body() dto: CheckoutSessionDto,
   ) {
-    return this.createCheckoutSession.execute(householdId, user.email, dto.locale);
+    return this.createCheckoutSession.execute(householdId, user.email, dto.locale, dto.planKey);
   }
 
   @Post("portal")

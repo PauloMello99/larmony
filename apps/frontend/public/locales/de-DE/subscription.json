@@ -5,9 +5,9 @@
   "loadError": "Das Abonnement konnte nicht geladen werden. Bitte versuche es erneut.",
   "ownerOnly": "Nur der Verantwortliche des Haushalts kann das Abonnement verwalten.",
   "plan": {
-    "free": "Kostenlos",
-    "premium": "Premium",
-    "custom": "Befreiung"
+    "locked": "Kein Abonnement",
+    "essencial": "Essenziell",
+    "completo": "Komplett"
   },
   "status": {
     "active": "Aktiv",
@@ -15,42 +15,47 @@
     "past_due": "Zahlung ausstehend",
     "canceled": "Gekündigt"
   },
-  "premiumOffer": {
-    "title": "Larmony Premium — 14,90 R$/Monat",
-    "description": "Erweiterte Berichte, mehrere Mitglieder und alles, was dein Haushalt braucht, um die Finanzen gemeinsam zu kontrollieren."
-  },
-  "free": {
-    "description": "Dein Haushalt ist im kostenlosen Plan.",
-    "cta": "Premium abonnieren",
+  "locked": {
+    "description": "Dieser Haushalt hat kein aktives Abonnement — du kannst deine Daten weiterhin einsehen, aber Erstellen oder Bearbeiten erfordert ein Abonnement.",
+    "trialNotice": "Teste jeden Plan 30 Tage kostenlos (Karte erforderlich, keine Abbuchung bis zum Ende der Testphase).",
+    "onboardingNotice": "Dein Haushalt wurde erstellt! Wähle einen Plan, um loszulegen — die ersten 30 Tage sind kostenlos.",
+    "descriptionEssencial": "Das Wesentliche für die Verwaltung der täglichen Finanzen.",
+    "descriptionCompleto": "Alles aus Essenziell, plus Budgets, geplante Buchungen und erweiterte Berichte.",
+    "intervalMonthly": "Monatlich",
+    "intervalAnnual": "Jährlich (2 Monate kostenlos)",
+    "cta": "Kostenlose Testphase starten",
     "ctaPending": "Weiterleitung…"
   },
-  "premium": {
-    "description": "Dein Haushalt hat Premium aktiv. Genieße alle Funktionen.",
+  "active": {
+    "description": "Dein Abonnement ist aktiv. Genieße alle Funktionen deines Plans.",
     "pastDue": "Es gibt eine ausstehende Zahlung. Aktualisiere die Zahlungsmethode im Portal, um den Zugriff nicht zu verlieren.",
     "portalCta": "Abonnement verwalten",
     "portalPending": "Weiterleitung…"
   },
   "trial": {
     "title": "Testphase aktiv",
-    "description": "Dein Haushalt hat während der Testphase Premium-Zugriff.",
-    "until": "Vollständiger Premium-Zugriff bis",
-    "cta": "Premium abonnieren"
+    "description": "Dieser Haushalt hat während der Testphase Zugriff auf den Komplett-Plan.",
+    "cta": "Jetzt abonnieren"
   },
   "comp": {
-    "title": "Befreiung gewährt",
-    "description": "Dein Haushalt hat kostenlosen vollen Zugriff — ohne Berechnung.",
+    "title": "Kostenlose Befreiung gewährt",
+    "description": "Dieser Haushalt hat vollen Zugriff als Kulanz — ohne Berechnung.",
     "reasonLabel": "Grund"
   },
   "banner": {
-    "success": "Abonnement bestätigt! Der Premium-Zugriff wird aktiviert, sobald Stripe die Zahlung bestätigt.",
+    "success": "Abonnement bestätigt! Der Zugriff wird aktiviert, sobald Stripe die Zahlung bestätigt.",
     "cancel": "Checkout abgebrochen. Es wurde keine Zahlung durchgeführt."
   },
   "gate": {
-    "title": "Premium-Funktion",
-    "description": "Erweiterte Berichte sind Teil des Premium-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
-    "descriptionCategories": "Individuelle Kategorien sind Teil des Premium-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
-    "descriptionGoals": "Du hast das Ziel-Limit des Free-Plans erreicht. Führe ein Upgrade durch, um unbegrenzt Ziele zu erstellen.",
-    "descriptionBudgets": "Du hast das Limit aktiver Budgets des Free-Plans erreicht. Führe ein Upgrade durch, um unbegrenzt Budgets zu erstellen.",
+    "title": "Komplett-Plan-Funktion",
+    "description": "Erweiterte Berichte sind Teil des Komplett-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
+    "descriptionCategories": "Individuelle Kategorien sind Teil des Komplett-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
+    "descriptionBudgets": "Budgets sind Teil des Komplett-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
+    "descriptionScheduledEntries": "Geplante Buchungen sind Teil des Komplett-Plans. Führe ein Upgrade durch, um sie freizuschalten.",
     "cta": "Pläne ansehen"
+  },
+  "lockedBanner": {
+    "description": "Dieser Haushalt befindet sich im Nur-Lese-Modus — kein aktives Abonnement.",
+    "cta": "Abonnieren"
   }
 }

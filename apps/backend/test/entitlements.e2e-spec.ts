@@ -9,6 +9,7 @@ import {
   TestUser,
 } from "./helpers";
 
+/** Gating de entitlements (M16 — pago-only, 2 tiers + locked). */
 describe("Entitlements gating (e2e)", () => {
   let app: INestApplication;
   let pool: Pool;
@@ -24,14 +25,8 @@ describe("Entitlements gating (e2e)", () => {
       .send({ name: "E2E Lar Entitlements" })
       .expect(201);
     householdId = created.body.id;
-
-    // Garante a linha de subscription (getOrCreate) — default type='free'.
-    await authed(
-      app,
-      "get",
-      `/households/${householdId}/subscription`,
-      owner.accessToken,
-    ).expect(200);
+    // Garante a linha de subscription (getOrCreate) — default type='free' (locked).
+    await authed(app, "get", `/households/${householdId}/subscription`, owner.accessToken).expect(200);
   });
 
   afterAll(async () => {
@@ -41,31 +36,21 @@ describe("Entitlements gating (e2e)", () => {
     await app.close();
   });
 
-  it("GET /subscription expõe entitlements (free → advanced_reports=false)", async () => {
+  it("sem assinatura (free) → plano locked; leitura livre, anual bloqueado (402)", async () => {
     const got = await authed(
       app,
       "get",
       `/households/${householdId}/subscription`,
       owner.accessToken,
     ).expect(200);
-
-    // Top-level preservado (contrato dos e2e de B-2/B-3).
     expect(got.body.type).toBe("free");
-    expect(got.body.status).toBeDefined();
-    // Novo contrato p/ o paywall (B-6).
-    expect(got.body.entitlements.plan).toBe("free");
-    expect(got.body.entitlements.source).toBe("free");
+    expect(got.body.entitlements.plan).toBe("locked");
+    expect(got.body.entitlements.source).toBe("locked");
     expect(got.body.entitlements.capabilities.advanced_reports).toBe(false);
-  });
 
-  it("lar Free: relatório mensal liberado (200), anual bloqueado (402 PREMIUM_REQUIRED)", async () => {
-    await authed(
-      app,
-      "get",
-      `/households/${householdId}/reports/monthly`,
-      owner.accessToken,
-    ).expect(200);
-
+    // Leitura (relatório mensal) livre mesmo locked.
+    await authed(app, "get", `/households/${householdId}/reports/monthly`, owner.accessToken).expect(200);
+    // Feature Completo (anual) bloqueada.
     const blocked = await authed(
       app,
       "get",
@@ -75,18 +60,12 @@ describe("Entitlements gating (e2e)", () => {
     expect(blocked.body.code).toBe("PREMIUM_REQUIRED");
   });
 
-  it("após virar premium (standard): relatório anual liberado (200) e capability true", async () => {
+  it("Essencial (standard/active, tier essencial) → anual ainda 402; plan=essencial", async () => {
     await pool.query(
-      `UPDATE public.subscriptions SET type = 'standard', status = 'active' WHERE household_id = $1`,
+      `UPDATE public.subscriptions SET type='standard', status='active', tier='essencial',
+         stripe_subscription_id='sub_ent_ess', comp_reason=NULL WHERE household_id = $1`,
       [householdId],
     );
-
-    await authed(
-      app,
-      "get",
-      `/households/${householdId}/reports/annual`,
-      owner.accessToken,
-    ).expect(200);
 
     const got = await authed(
       app,
@@ -94,22 +73,40 @@ describe("Entitlements gating (e2e)", () => {
       `/households/${householdId}/subscription`,
       owner.accessToken,
     ).expect(200);
-    expect(got.body.entitlements.plan).toBe("premium");
+    expect(got.body.entitlements.plan).toBe("essencial");
+    expect(got.body.entitlements.source).toBe("stripe");
+    expect(got.body.entitlements.capabilities.advanced_reports).toBe(false);
+
+    await authed(app, "get", `/households/${householdId}/reports/annual`, owner.accessToken).expect(402);
+  });
+
+  it("Completo (standard/active, tier completo) → anual liberado (200); capability true", async () => {
+    await pool.query(
+      `UPDATE public.subscriptions SET type='standard', status='active', tier='completo',
+         stripe_subscription_id='sub_ent_comp' WHERE household_id = $1`,
+      [householdId],
+    );
+
+    await authed(app, "get", `/households/${householdId}/reports/annual`, owner.accessToken).expect(200);
+
+    const got = await authed(
+      app,
+      "get",
+      `/households/${householdId}/subscription`,
+      owner.accessToken,
+    ).expect(200);
+    expect(got.body.entitlements.plan).toBe("completo");
     expect(got.body.entitlements.capabilities.advanced_reports).toBe(true);
   });
 
-  it("comp (type=custom) também libera o relatório anual (200)", async () => {
+  it("comp (type=custom) → completo + source comp; anual liberado (200)", async () => {
     await pool.query(
-      `UPDATE public.subscriptions SET type = 'custom', comp_reason = 'parceria' WHERE household_id = $1`,
+      `UPDATE public.subscriptions SET type='custom', status='active', comp_reason='parceria'
+       WHERE household_id = $1`,
       [householdId],
     );
 
-    await authed(
-      app,
-      "get",
-      `/households/${householdId}/reports/annual`,
-      owner.accessToken,
-    ).expect(200);
+    await authed(app, "get", `/households/${householdId}/reports/annual`, owner.accessToken).expect(200);
 
     const got = await authed(
       app,
@@ -117,7 +114,7 @@ describe("Entitlements gating (e2e)", () => {
       `/households/${householdId}/subscription`,
       owner.accessToken,
     ).expect(200);
-    expect(got.body.entitlements.plan).toBe("custom");
+    expect(got.body.entitlements.plan).toBe("completo");
     expect(got.body.entitlements.source).toBe("comp");
   });
 });

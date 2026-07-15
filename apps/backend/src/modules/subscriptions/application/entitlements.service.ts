@@ -6,30 +6,36 @@ import {
 import type { SubscriptionStatus } from "../domain/subscription.entity";
 import {
   capabilitiesFor,
-  limitsFor,
   type Capability,
-  type PlanLimits,
   type ResolvedPlan,
 } from "../domain/entitlements";
 
 export type { ResolvedPlan } from "../domain/entitlements";
-export type EntitlementSource = "stripe" | "comp" | "trial" | "free";
+/** Origem do acesso (dimensão de rótulo/UI, separada do plano resolvido). */
+export type EntitlementSource = "stripe" | "comp" | "trial" | "locked";
 
 export interface ResolvedEntitlements {
   plan: ResolvedPlan;
   status: SubscriptionStatus;
   source: EntitlementSource;
-  /** Mapa capability → habilitada para o plano resolvido. Régua comercial
-   *  (D-1, resolvida — ver adendo ADR-0026) vive em `domain/entitlements.ts`. */
+  /** Mapa capability → habilitada para o plano resolvido (M16). */
   capabilities: Record<Capability, boolean>;
-  /** Limites de contagem (lares/membros/metas/orçamentos) para o plano. */
-  limits: PlanLimits;
 }
 
 /**
- * Ponto único de gating server-side (ADR-0026 §7). Exportado pelo módulo no
- * mesmo padrão de bridge cross-módulo do `DispatchNotificationUseCase`
- * (ADR-0023) — outros módulos injetam esta classe diretamente, sem token.
+ * Ponto único de gating server-side (M16). Exportado pelo módulo no mesmo
+ * padrão de bridge cross-módulo do `DispatchNotificationUseCase` (ADR-0023) —
+ * outros módulos injetam esta classe diretamente, sem token.
+ *
+ * Resolução (ver plano M16):
+ * - `type=custom` (comp) ⇒ `completo` (isenção admin nunca é rebaixada).
+ * - `type=standard` + `status=trialing` ⇒ `completo` (trial self-serve via
+ *   Stripe dá acesso Completo, independente do plano escolhido no checkout).
+ * - `type=standard` + `status=active|past_due` ⇒ `tier` do preço (fallback
+ *   `completo` se, por algum motivo legado, o tier não estiver setado — nunca
+ *   restringe um pagante a menos do que contratou).
+ * - resto (`free`, `standard/canceled`, ou `trial` legado do admin local
+ *   removido no PR4) ⇒ `locked` (somente-leitura).
  */
 @Injectable()
 export class EntitlementsService {
@@ -39,32 +45,36 @@ export class EntitlementsService {
   ) {}
 
   async resolve(householdId: string): Promise<ResolvedEntitlements> {
-    const subscription = await this.repo.getOrCreate(householdId);
+    const sub = await this.repo.getOrCreate(householdId);
 
-    const plan: ResolvedPlan =
-      subscription.type === "free"
-        ? "free"
-        : subscription.type === "custom"
-          ? "custom"
-          : "premium";
+    let plan: ResolvedPlan;
+    let source: EntitlementSource;
 
-    // Trial vem ANTES do check de stripeSubscriptionId: o id de uma sub
-    // cancelada fica gravado para registro (B-3) e classificaria errado um
-    // lar em trial como source=stripe (pego pela bateria do hardening).
-    const source: EntitlementSource = subscription.compReason
-      ? "comp"
-      : subscription.type === "trial"
-        ? "trial"
-        : subscription.stripeSubscriptionId
-          ? "stripe"
-          : "free";
+    if (sub.type === "custom") {
+      plan = "completo";
+      source = "comp";
+    } else if (
+      sub.type === "standard" &&
+      (sub.status === "active" || sub.status === "trialing" || sub.status === "past_due")
+    ) {
+      if (sub.status === "trialing") {
+        plan = "completo";
+        source = "trial";
+      } else {
+        plan = sub.tier ?? "completo";
+        source = "stripe";
+      }
+    } else {
+      // free, ou standard/canceled → sem assinatura ativa.
+      plan = "locked";
+      source = "locked";
+    }
 
     return {
       plan,
-      status: subscription.status,
+      status: sub.status,
       source,
       capabilities: capabilitiesFor(plan),
-      limits: limitsFor(plan),
     };
   }
 }

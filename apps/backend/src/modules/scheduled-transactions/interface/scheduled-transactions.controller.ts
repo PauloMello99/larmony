@@ -13,6 +13,8 @@ import {
 } from "@nestjs/common";
 import { AuthGuard } from "../../auth/guards/auth.guard";
 import { HouseholdMembershipGuard } from "../../auth/guards/household-membership.guard";
+import { HouseholdEntitlementGuard } from "../../subscriptions/interface/guards/household-entitlement.guard";
+import { RequireCapability } from "../../subscriptions/interface/decorators/require-capability.decorator";
 import { CurrentUser } from "../../auth/decorators/current-user.decorator";
 import type { AuthUser } from "../../auth/application/ports/auth-provider.interface";
 import { GetMeUseCase } from "../../user/application/use-cases/get-me.use-case";
@@ -24,8 +26,11 @@ import { LaunchScheduledEntryUseCase } from "../application/use-cases/launch-sch
 import { CreateScheduledEntryDto } from "./dto/create-scheduled-entry.dto";
 import { UpdateScheduledEntryDto } from "./dto/update-scheduled-entry.dto";
 
+// Lançamentos programados são uma feature Completo (M16): gate de capability a
+// nível de classe bloqueia Essencial e locked em TODAS as rotas com 402.
 @Controller("households/:householdId/scheduled-transactions")
-@UseGuards(AuthGuard, HouseholdMembershipGuard)
+@RequireCapability("scheduled_entries")
+@UseGuards(AuthGuard, HouseholdMembershipGuard, HouseholdEntitlementGuard)
 export class ScheduledTransactionsController {
   constructor(
     private readonly getMe: GetMeUseCase,

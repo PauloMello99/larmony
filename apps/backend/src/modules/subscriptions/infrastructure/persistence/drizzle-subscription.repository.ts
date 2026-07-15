@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq, isNotNull, lt, or } from "drizzle-orm";
+import { and, eq, isNotNull, lt } from "drizzle-orm";
 import { DRIZZLE_ADMIN, type DrizzleDB } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
 import type {
@@ -105,6 +105,9 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
         stripeSubscriptionId: data.stripeSubscriptionId,
         status: data.status,
         type,
+        // Tier do plano pago (M16). Status sem acesso (canceled → type free)
+        // zera o tier; senão grava o resolvido do lookup_key.
+        tier: type === "free" ? null : data.tier,
         currentPeriodStart: data.currentPeriodStart,
         currentPeriodEnd: data.currentPeriodEnd,
         priceCents: data.priceCents,
@@ -121,6 +124,9 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
       .set({
         type: "custom",
         status: "active",
+        // Comp resolve para completo pelo type, não pelo tier — tier fica null
+        // (não há plano pago pactuado).
+        tier: null,
         priceCents: 0,
         // A sub Stripe (se havia) é cancelada pelo use-case antes; aqui só
         // desvinculamos — o stripeCustomerId é preservado (permite reverter).
@@ -140,6 +146,7 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
       .set({
         type: "free",
         status: "active",
+        tier: null,
         priceCents: 0,
         compReason: null,
         compGrantedBy: null,
@@ -174,49 +181,19 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
       .where(eq(schema.subscriptions.householdId, householdId));
   }
 
-  async grantTrial(householdId: string, endsAt: Date): Promise<void> {
-    await this.db
-      .update(schema.subscriptions)
-      .set({
-        type: "trial",
-        status: "trialing",
-        priceCents: 0,
-        trialEndsAt: endsAt,
-        // Trial exige lar free — qualquer sub id remanescente é de uma sub já
-        // cancelada (registro); limpa como o grantComp faz, senão o source
-        // dos entitlements classifica errado (bateria do hardening).
-        stripeSubscriptionId: null,
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.subscriptions.householdId, householdId));
-  }
-
   async findExpired(now: Date): Promise<ExpiredSubscription[]> {
     const rows = await this.db
-      .select({
-        householdId: schema.subscriptions.householdId,
-        type: schema.subscriptions.type,
-      })
+      .select({ householdId: schema.subscriptions.householdId })
       .from(schema.subscriptions)
       .where(
-        or(
-          and(
-            eq(schema.subscriptions.type, "custom"),
-            isNotNull(schema.subscriptions.compExpiresAt),
-            lt(schema.subscriptions.compExpiresAt, now),
-          ),
-          and(
-            eq(schema.subscriptions.type, "trial"),
-            isNotNull(schema.subscriptions.trialEndsAt),
-            lt(schema.subscriptions.trialEndsAt, now),
-          ),
+        and(
+          eq(schema.subscriptions.type, "custom"),
+          isNotNull(schema.subscriptions.compExpiresAt),
+          lt(schema.subscriptions.compExpiresAt, now),
         ),
       );
 
-    return rows.map((r) => ({
-      householdId: r.householdId,
-      kind: r.type === "custom" ? "comp" : "trial",
-    }));
+    return rows.map((r) => ({ householdId: r.householdId }));
   }
 
   async findHouseholdSlug(householdId: string): Promise<string | null> {
@@ -228,17 +205,10 @@ export class DrizzleSubscriptionRepository implements ISubscriptionRepository {
     return row?.slug ?? null;
   }
 
-  async expireTrial(householdId: string): Promise<void> {
-    // Volta a free — nenhum dado do lar é apagado (downgrade nunca destrói).
+  async markTrialConsumed(householdId: string): Promise<void> {
     await this.db
       .update(schema.subscriptions)
-      .set({
-        type: "free",
-        status: "active",
-        priceCents: 0,
-        trialEndsAt: null,
-        updatedAt: new Date(),
-      })
+      .set({ trialConsumed: true, updatedAt: new Date() })
       .where(eq(schema.subscriptions.householdId, householdId));
   }
 }

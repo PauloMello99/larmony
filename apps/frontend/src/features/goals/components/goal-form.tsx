@@ -28,7 +28,6 @@ import { Input } from "@/shared/components/ui/input"
 import { Textarea } from "@/shared/components/ui/textarea"
 import { CurrencyInput } from "@/shared/components/ui/currency-input"
 import { DatePicker } from "@/shared/components/ui/date-picker"
-import { PremiumGate } from "@/features/subscription"
 import { translateApiError } from "@/shared/lib/api-error"
 import { makeGoalSchema, type GoalFormValues } from "../schemas/goal.schemas"
 import type { Goal } from "../types"
@@ -48,16 +47,13 @@ interface GoalFormProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   goal?: Goal | null
-  /** Lar já atingiu o limite de metas simultâneas do Free (D-1) — bloqueia só a criação. */
-  atLimit?: boolean
   onSubmit: (values: GoalFormValues) => Promise<void>
 }
 
-export function GoalForm({ open, onOpenChange, goal, atLimit, onSubmit }: GoalFormProps) {
+export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) {
   const { t } = useTranslation("goals")
   const { t: tCommon } = useTranslation("common")
   const isEditing = !!goal
-  const blocked = !isEditing && !!atLimit
 
   const goalSchema = useMemo(() => makeGoalSchema(t), [t])
   const [error, setError] = useState<string | null>(null)
@@ -90,32 +86,9 @@ export function GoalForm({ open, onOpenChange, goal, atLimit, onSubmit }: GoalFo
       await onSubmit(values)
       onOpenChange(false)
     } catch (err) {
-      // Limite de metas do Free (D-1) chega aqui via api.GOAL_LIMIT_REACHED.
       setError(translateApiError(err, tCommon))
     }
   })
-
-  if (blocked) {
-    return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="right" className="gap-0 sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle>{t("form.createTitle")}</SheetTitle>
-          </SheetHeader>
-          <SheetBody className="py-6">
-            <PremiumGate descriptionKey="gate.descriptionGoals" />
-          </SheetBody>
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button variant="outline" className="w-full sm:w-auto">
-                {tCommon("actions.cancel")}
-              </Button>
-            </SheetClose>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    )
-  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>

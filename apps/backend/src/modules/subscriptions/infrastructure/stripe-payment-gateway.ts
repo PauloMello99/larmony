@@ -21,6 +21,8 @@ import type {
   NormalizedPrice,
   NormalizedInvoice,
   StripeWebhookEvent,
+  Invoice,
+  ListInvoicesOutput,
 } from "../domain/ports/payment-gateway.port";
 import { StripeNotConfiguredException } from "../domain/exceptions/stripe-not-configured.exception";
 import { WebhookSignatureInvalidException } from "../domain/exceptions/webhook-signature-invalid.exception";
@@ -93,6 +95,14 @@ export class StripePaymentGateway implements IPaymentGateway {
       metadata: input.metadata,
       // Página hospedada no idioma da UI do usuário (adendo ADR-0018).
       locale: toStripeLocale(input.locale) as Stripe.Checkout.SessionCreateParams.Locale,
+      ...(input.trialPeriodDays
+        ? {
+            subscription_data: { trial_period_days: input.trialPeriodDays },
+            // Cartão upfront mesmo em trial (M16) — todo mundo passa pelo
+            // checkout, dá tracking real de conversão trial→pago.
+            payment_method_collection: "always",
+          }
+        : {}),
     });
 
     if (!session.url) throw new Error("Stripe não retornou uma URL de checkout.");
@@ -232,6 +242,12 @@ export class StripePaymentGateway implements IPaymentGateway {
     }
   }
 
+  async listInvoices(customerId: string): Promise<ListInvoicesOutput> {
+    const client = this.requireClient();
+    const invoices = await client.invoices.list({ customer: customerId, limit: 24 });
+    return { invoices: invoices.data.map(normalizeInvoiceListItem) };
+  }
+
   private requireClient(): Stripe {
     if (!this.client) throw new StripeNotConfiguredException();
     return this.client;
@@ -263,6 +279,7 @@ function normalizeSubscription(sub: Stripe.Subscription): NormalizedSubscription
     currentPeriodEnd: item ? unixToDate(item.current_period_end) : null,
     priceCents: item?.price?.unit_amount ?? null,
     interval: normalizeInterval(item?.price?.recurring?.interval),
+    priceLookupKey: item?.price?.lookup_key ?? null,
     cancelAtPeriodEnd: sub.cancel_at_period_end,
     canceledAt: unixToDate(sub.canceled_at),
   };
@@ -280,6 +297,21 @@ function normalizeInvoice(invoice: Stripe.Invoice, event: Stripe.Event): Normali
     // event.created (unix seconds) — sempre presente, ao contrário de campos
     // opcionais do invoice como status_transitions.paid_at.
     occurredAt: new Date(event.created * 1000),
+  };
+}
+
+function normalizeInvoiceListItem(invoice: Stripe.Invoice): Invoice {
+  return {
+    id: invoice.id ?? "",
+    number: invoice.number ?? null,
+    // Fatura paga usa o valor efetivamente pago; as demais (draft/open/void)
+    // usam o total da fatura (amount_paid fica 0 antes do pagamento).
+    amountCents: invoice.status === "paid" ? invoice.amount_paid : invoice.total,
+    currency: invoice.currency,
+    status: invoice.status ?? "unknown",
+    createdAt: unixToDate(invoice.created) ?? new Date(0),
+    hostedInvoiceUrl: invoice.hosted_invoice_url ?? null,
+    invoicePdfUrl: invoice.invoice_pdf ?? null,
   };
 }
 

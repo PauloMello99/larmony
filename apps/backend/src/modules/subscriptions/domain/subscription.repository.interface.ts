@@ -14,10 +14,9 @@ export interface GrantCompInput {
   expiresAt: Date | null;
 }
 
-/** Assinatura local vencida (comp/trial) — alvo do billing-expiry-sweep. */
+/** Isenção (comp) local vencida — alvo do billing-expiry-sweep. */
 export interface ExpiredSubscription {
   householdId: string;
-  kind: "comp" | "trial";
 }
 
 export interface ISubscriptionRepository {
@@ -71,22 +70,13 @@ export interface ISubscriptionRepository {
   clearDiscountCache(householdId: string): Promise<void>;
 
   /**
-   * Concede trial administrativo local (H-3): `type='trial'`,
-   * `status='trialing'`, `trial_ends_at = endsAt`. 100% local (sem Stripe,
-   * sem cartão) — expira via billing-expiry-sweep.
-   */
-  grantTrial(householdId: string, endsAt: Date): Promise<void>;
-
-  /**
-   * Comps/trials locais vencidos em relação a `now` (billing-expiry-sweep):
-   * `type='custom'` com `comp_expires_at` passado, e `type='trial'` com
-   * `trial_ends_at` passado. Expirações Stripe NÃO entram aqui (o próprio
-   * Stripe cancela e o webhook/reconciliação espelham).
+   * Comps locais vencidos em relação a `now` (billing-expiry-sweep):
+   * `type='custom'` com `comp_expires_at` passado. Expirações Stripe NÃO
+   * entram aqui (o próprio Stripe cancela e o webhook/reconciliação
+   * espelham). Trial local (H-3) foi removido no M16 — trial hoje é
+   * self-serve via Stripe (`trialConsumed`), sem expiração local.
    */
   findExpired(now: Date): Promise<ExpiredSubscription[]>;
-
-  /** Encerra um trial local vencido → volta a `free` (nunca apaga dados). */
-  expireTrial(householdId: string): Promise<void>;
 
   /**
    * Slug do lar — usado para montar as URLs de retorno do checkout/portal
@@ -94,4 +84,11 @@ export interface ISubscriptionRepository {
    * bateria de integração real do hardening).
    */
   findHouseholdSlug(householdId: string): Promise<string | null>;
+
+  /**
+   * Marca o trial self-serve como consumido (M16) — 1 trial por lar. Setado
+   * ao iniciar o checkout com trial (não espera a confirmação do webhook: um
+   * checkout abandonado não deve liberar um 2º trial).
+   */
+  markTrialConsumed(householdId: string): Promise<void>;
 }

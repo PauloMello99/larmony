@@ -1,17 +1,21 @@
 import type {
   SubscriptionStatus,
   SubscriptionPlan,
+  SubscriptionTier,
 } from "./subscription.entity";
 import type {
   NormalizedSubscription,
   BillingInterval,
 } from "./ports/payment-gateway.port";
+import { tierFromLookupKey } from "./plan-catalog";
 
-/** Dados que o webhook/reconciliação gravam numa subscription (M14, B-3). */
+/** Dados que o webhook/reconciliação gravam numa subscription (M14, B-3; tier M16). */
 export interface SyncFromStripeData {
   stripeSubscriptionId: string;
   status: SubscriptionStatus;
   type: SubscriptionPlan;
+  /** Tier resolvido do `lookup_key` do Price (M16); null se não resolvido. */
+  tier: SubscriptionTier | null;
   currentPeriodStart: Date | null;
   currentPeriodEnd: Date | null;
   priceCents: number | null;
@@ -47,6 +51,9 @@ export function toSyncData(sub: NormalizedSubscription): SyncFromStripeData {
     stripeSubscriptionId: sub.id,
     status,
     type,
+    // Tier vem do lookup_key do Price; num status sem acesso (canceled) o tier
+    // é irrelevante (o lar fica locked) — mas mantemos o que veio, se veio.
+    tier: tierFromLookupKey(sub.priceLookupKey),
     currentPeriodStart: sub.currentPeriodStart,
     currentPeriodEnd: sub.currentPeriodEnd,
     priceCents: sub.priceCents,

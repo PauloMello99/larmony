@@ -1,24 +1,19 @@
-// Espelha o contrato do backend (subscriptions module, ADR-0026 B-4):
+// Espelha o contrato do backend (subscriptions module, M16 — pago-only + 2 tiers).
 // GET /households/:id/subscription → entidade + bloco `entitlements`.
 
 export type SubscriptionPlanType = "free" | "trial" | "standard" | "custom"
 export type SubscriptionStatus = "active" | "trialing" | "past_due" | "canceled"
-export type ResolvedPlan = "free" | "premium" | "custom"
-export type EntitlementSource = "stripe" | "comp" | "trial" | "free"
+/** `locked` = sem assinatura ativa (somente-leitura); `essencial`/`completo` = tiers pagos. */
+export type ResolvedPlan = "locked" | "essencial" | "completo"
+export type EntitlementSource = "stripe" | "comp" | "trial" | "locked"
 
-/** Capabilities expostas pelo backend (D-1 resolvido — ver adendo ADR-0026). */
+/** Capabilities Completo-only expostas pelo backend (M16). */
 export interface Capabilities {
+  budgets: boolean
+  scheduled_entries: boolean
   advanced_reports: boolean
   report_export: boolean
   custom_categories: boolean
-}
-
-/** Limites de contagem do plano (régua do Free, D-1). `Infinity` = sem limite. */
-export interface PlanLimits {
-  maxHouseholdsOwned: number
-  maxMembersPerHousehold: number
-  maxActiveGoals: number
-  maxActiveBudgets: number
 }
 
 export interface ResolvedEntitlements {
@@ -26,7 +21,6 @@ export interface ResolvedEntitlements {
   status: SubscriptionStatus
   source: EntitlementSource
   capabilities: Capabilities
-  limits: PlanLimits
 }
 
 export interface SubscriptionWithEntitlements {
@@ -36,9 +30,10 @@ export interface SubscriptionWithEntitlements {
   stripeSubscriptionId: string | null
   type: SubscriptionPlanType
   status: SubscriptionStatus
+  /** Tier resolvido do Price no sync Stripe (M16) — null se sem plano pago. */
+  tier: "essencial" | "completo" | null
   compReason: string | null
   compExpiresAt: string | null
-  trialEndsAt: string | null
   stripeCouponId: string | null
   discountPercent: number | null
   createdAt: string

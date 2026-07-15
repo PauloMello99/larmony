@@ -13,6 +13,12 @@ BudgetsPage.getLayout = (page: ReactElement) => (
   </AuthGuard>
 )
 
-export const getServerSideProps = makeI18nProps(["common", "dashboard", "onboarding", "budgets"])
+export const getServerSideProps = makeI18nProps([
+  "common",
+  "dashboard",
+  "onboarding",
+  "budgets",
+  "subscription",
+])
 
 export default BudgetsPage

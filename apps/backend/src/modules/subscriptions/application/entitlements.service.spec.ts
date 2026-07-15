@@ -18,9 +18,10 @@ function sub(overrides: Partial<SubscriptionEntityProps> = {}): SubscriptionEnti
     stripeSubscriptionId: null,
     type: "free",
     status: "active",
+    tier: null,
+    trialConsumed: false,
     compReason: null,
     compExpiresAt: null,
-    trialEndsAt: null,
     stripeCouponId: null,
     discountPercent: null,
     createdAt: new Date(),
@@ -29,73 +30,107 @@ function sub(overrides: Partial<SubscriptionEntityProps> = {}): SubscriptionEnti
   });
 }
 
-describe("EntitlementsService.resolve", () => {
-  it("free → plano free, sem advanced_reports, source free, limites do Free", async () => {
+describe("EntitlementsService.resolve (M16 — 2 tiers)", () => {
+  it("free (nunca assinou) → locked, sem capabilities, source locked", async () => {
     const { service, repo } = make();
     repo.getOrCreate.mockResolvedValue(sub({ type: "free" }));
 
     const ent = await service.resolve("hh_1");
 
-    expect(ent.plan).toBe("free");
+    expect(ent.plan).toBe("locked");
+    expect(ent.capabilities.budgets).toBe(false);
     expect(ent.capabilities.advanced_reports).toBe(false);
-    expect(ent.capabilities.report_export).toBe(false);
-    expect(ent.capabilities.custom_categories).toBe(false);
-    expect(ent.source).toBe("free");
-    expect(ent.limits).toEqual({
-      maxHouseholdsOwned: 1,
-      maxMembersPerHousehold: 2,
-      maxActiveGoals: 3,
-      maxActiveBudgets: 3,
-    });
+    expect(ent.source).toBe("locked");
   });
 
-  it("standard com sub Stripe → premium, advanced_reports true, source stripe", async () => {
+  it("standard/canceled → locked (cancelamento vira read-only)", async () => {
     const { service, repo } = make();
     repo.getOrCreate.mockResolvedValue(
-      sub({ type: "standard", status: "active", stripeSubscriptionId: "sub_x" }),
+      sub({ type: "free", status: "canceled", stripeSubscriptionId: "sub_x" }),
+    );
+
+    const ent = await service.resolve("hh_1");
+    expect(ent.plan).toBe("locked");
+  });
+
+  it("standard/active tier essencial → essencial, sem features avançadas, source stripe", async () => {
+    const { service, repo } = make();
+    repo.getOrCreate.mockResolvedValue(
+      sub({ type: "standard", status: "active", tier: "essencial", stripeSubscriptionId: "sub_x" }),
     );
 
     const ent = await service.resolve("hh_1");
 
-    expect(ent.plan).toBe("premium");
-    expect(ent.capabilities.advanced_reports).toBe(true);
-    expect(ent.limits.maxHouseholdsOwned).toBe(Infinity);
+    expect(ent.plan).toBe("essencial");
+    expect(ent.capabilities.budgets).toBe(false);
+    expect(ent.capabilities.scheduled_entries).toBe(false);
     expect(ent.source).toBe("stripe");
   });
 
-  it("trial → premium (advanced_reports true)", async () => {
+  it("standard/active tier completo → completo, todas as features", async () => {
+    const { service, repo } = make();
+    repo.getOrCreate.mockResolvedValue(
+      sub({ type: "standard", status: "active", tier: "completo", stripeSubscriptionId: "sub_x" }),
+    );
+
+    const ent = await service.resolve("hh_1");
+
+    expect(ent.plan).toBe("completo");
+    expect(ent.capabilities.budgets).toBe(true);
+    expect(ent.capabilities.advanced_reports).toBe(true);
+    expect(ent.source).toBe("stripe");
+  });
+
+  it("standard/trialing → completo (trial dá tudo) independentemente do tier do preço", async () => {
+    const { service, repo } = make();
+    repo.getOrCreate.mockResolvedValue(
+      sub({ type: "standard", status: "trialing", tier: "essencial", stripeSubscriptionId: "sub_x" }),
+    );
+
+    const ent = await service.resolve("hh_1");
+
+    expect(ent.plan).toBe("completo");
+    expect(ent.capabilities.budgets).toBe(true);
+    expect(ent.source).toBe("trial");
+  });
+
+  it("standard/past_due → mantém acesso do tier (não vira locked na 1ª falha)", async () => {
+    const { service, repo } = make();
+    repo.getOrCreate.mockResolvedValue(
+      sub({ type: "standard", status: "past_due", tier: "completo", stripeSubscriptionId: "sub_x" }),
+    );
+
+    const ent = await service.resolve("hh_1");
+    expect(ent.plan).toBe("completo");
+  });
+
+  it("standard/active sem tier setado → fallback completo (nunca restringe pagante)", async () => {
+    const { service, repo } = make();
+    repo.getOrCreate.mockResolvedValue(
+      sub({ type: "standard", status: "active", tier: null, stripeSubscriptionId: "sub_x" }),
+    );
+
+    const ent = await service.resolve("hh_1");
+    expect(ent.plan).toBe("completo");
+  });
+
+  it("type=trial legado (admin local removido no PR4) → locked, não completo", async () => {
     const { service, repo } = make();
     repo.getOrCreate.mockResolvedValue(sub({ type: "trial", status: "trialing" }));
 
     const ent = await service.resolve("hh_1");
 
-    expect(ent.plan).toBe("premium");
-    expect(ent.capabilities.advanced_reports).toBe(true);
+    expect(ent.plan).toBe("locked");
+    expect(ent.source).toBe("locked");
   });
 
-  it("trial com sub Stripe cancelada remanescente → source trial (não stripe)", async () => {
-    // Regressão da bateria do hardening: o id da sub cancelada fica gravado
-    // para registro e classificava um lar em trial como source=stripe.
+  it("custom (comp) → completo + source comp", async () => {
     const { service, repo } = make();
-    repo.getOrCreate.mockResolvedValue(
-      sub({ type: "trial", status: "trialing", stripeSubscriptionId: "sub_cancelada" }),
-    );
+    repo.getOrCreate.mockResolvedValue(sub({ type: "custom", compReason: "parceria" }));
 
     const ent = await service.resolve("hh_1");
 
-    expect(ent.source).toBe("trial");
-    expect(ent.plan).toBe("premium");
-  });
-
-  it("custom (comp) → capabilities premium + source comp", async () => {
-    const { service, repo } = make();
-    repo.getOrCreate.mockResolvedValue(
-      sub({ type: "custom", compReason: "parceria" }),
-    );
-
-    const ent = await service.resolve("hh_1");
-
-    expect(ent.plan).toBe("custom");
+    expect(ent.plan).toBe("completo");
     expect(ent.capabilities.advanced_reports).toBe(true);
     expect(ent.source).toBe("comp");
   });

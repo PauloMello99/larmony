@@ -6,7 +6,7 @@ import { PiggyBank, PlusCircle } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
-import { useEntitlements } from "@/features/subscription"
+import { useEntitlements, PremiumGate } from "@/features/subscription"
 import { useBudgets } from "../hooks/use-budgets"
 import { useBudgetMutations } from "../hooks/use-budget-mutations"
 import { BudgetForm } from "./budget-form"
@@ -38,10 +38,12 @@ export function BudgetsPage() {
   const { t } = useTranslation("budgets")
   const { householdId } = useCurrentHousehold()
   const [period, setPeriod] = useState<BudgetFilters>(currentPeriod)
-  const { budgets, loading } = useBudgets(householdId, period)
+  // M16: orçamentos são Completo-only (capability, não mais contagem). A lista
+  // 402 no backend para quem não tem a capability, então só busca quando ela
+  // já foi confirmada — e a página inteira vira paywall nesse caso.
+  const { capabilities, loading: entLoading } = useEntitlements(householdId)
+  const { budgets, loading } = useBudgets(householdId, period, capabilities.budgets)
   const { createBudget, updateBudget, deleteBudget } = useBudgetMutations(householdId)
-  const { limits } = useEntitlements(householdId)
-  const atBudgetLimit = budgets.length >= limits.maxActiveBudgets
 
   const isEditable = isEditablePeriod(period, currentPeriod())
   const isFuture = isFuturePeriod(period, currentPeriod())
@@ -69,6 +71,34 @@ export function BudgetsPage() {
         amountCents: values.amountCents,
       })
     }
+  }
+
+  if (entLoading) {
+    return (
+      <div className="flex flex-col">
+        <div className="mb-6">
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
+          <p className="mt-1 text-sm text-foreground/40">{t("page.subtitle")}</p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-28 w-full rounded-xl" />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (!capabilities.budgets) {
+    return (
+      <div className="flex flex-col">
+        <div className="mb-6">
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
+          <p className="mt-1 text-sm text-foreground/40">{t("page.subtitle")}</p>
+        </div>
+        <PremiumGate descriptionKey="gate.descriptionBudgets" />
+      </div>
+    )
   }
 
   return (
@@ -134,7 +164,7 @@ export function BudgetsPage() {
         householdId={householdId}
         budget={editing}
         budgetedCategoryIds={budgets.map((b) => b.categoryId)}
-        atLimit={atBudgetLimit}
+        atLimit={!capabilities.budgets}
         onSubmit={handleSubmit}
       />
 

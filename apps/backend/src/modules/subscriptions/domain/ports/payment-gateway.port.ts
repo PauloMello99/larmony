@@ -21,6 +21,13 @@ export interface CreateCheckoutSessionInput {
   metadata: Record<string, string>;
   /** Locale da UI (AppLocale) — página hospedada do Stripe no idioma do usuário. */
   locale?: string | null;
+  /**
+   * Trial self-serve (M16) — dias de teste antes da 1ª cobrança. Quando
+   * presente, o gateway também força coleta de cartão upfront
+   * (`payment_method_collection: "always"`): todos passam pelo checkout,
+   * inclusive no trial, para dar tracking real de conversão trial→pago.
+   */
+  trialPeriodDays?: number;
 }
 
 export interface CreateCheckoutSessionOutput {
@@ -86,6 +93,26 @@ export interface CreateCouponOutput {
   couponId: string;
 }
 
+// ─── Faturas (M16 PR4) — listagem para o painel admin ───────────────────────
+
+export interface Invoice {
+  id: string;
+  /** Número legível da fatura (ex.: "INV-0001") — null se ainda não emitida. */
+  number: string | null;
+  amountCents: number;
+  currency: string;
+  status: string;
+  createdAt: Date;
+  /** Página hospedada da fatura no Stripe — null se indisponível. */
+  hostedInvoiceUrl: string | null;
+  /** PDF da fatura — null se indisponível (ex.: fatura ainda em draft). */
+  invoicePdfUrl: string | null;
+}
+
+export interface ListInvoicesOutput {
+  invoices: Invoice[];
+}
+
 // ─── Webhook (M14, B-3) — formas normalizadas: o Stripe fica 100% na infra ───
 
 export type BillingInterval = "monthly" | "annual";
@@ -100,6 +127,8 @@ export interface NormalizedSubscription {
   currentPeriodEnd: Date | null;
   priceCents: number | null;
   interval: BillingInterval | null;
+  /** `lookup_key` do Price da assinatura — resolve o tier (M16). Null se ausente. */
+  priceLookupKey: string | null;
   cancelAtPeriodEnd: boolean;
   canceledAt: Date | null;
 }
@@ -199,4 +228,7 @@ export interface IPaymentGateway {
     subscriptionId: string,
     options?: { prorate?: boolean; invoiceNow?: boolean },
   ): Promise<void>;
+
+  /** Faturas do customer (M16 PR4) — painel admin lista os meses já pagos. */
+  listInvoices(customerId: string): Promise<ListInvoicesOutput>;
 }

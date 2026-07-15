@@ -478,45 +478,63 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
   (M10); é assim mesmo que qualquer seed de histórico de orçamento precisa
   ser feito.
 
-### Free/Family — régua de billing (M14, D-1 resolvido — adendo ADR-0026)
+### Essencial/Completo/locked — régua de billing (M16, pago-only — ADR-0029)
 
-- Billing é **por household**, não por usuário — não existe "plano do
-  usuário". `EntitlementsService.resolve(householdId)` retorna `plan` +
-  `capabilities` + **`limits: PlanLimits`** (novo, numérico — distinto das
-  capabilities booleanas de `@RequireCapability`).
-- **`PLAN_LIMITS`** (`subscriptions/domain/entitlements.ts`) — Free:
-  `maxHouseholdsOwned=1`, `maxMembersPerHousehold=2` (dono+1),
-  `maxActiveGoals=3`, `maxActiveBudgets=3`; premium/custom: `Infinity` nos 4.
-  Capabilities booleanas novas: `custom_categories` (Free=false) e
-  `report_export` (Free=false, **distinta** de `advanced_reports` — o
-  relatório mensal continua grátis pra visualizar, só o CSV é Family).
-- **Limite de lares por dono não usa o `HouseholdEntitlementGuard`** (esse
-  resolve entitlements de um lar **já existente**; criar um lar novo não tem
-  lar ainda). `CreateHouseholdUseCase` conta lares onde o usuário é `owner`
-  via `findAllByAuthId` (já retorna `role`) — se `>=1` e **nenhum** deles for
-  premium/custom, bloqueia (upgrade de qualquer lar existente libera criar
-  outro). Demais limites (membros, metas, orçamentos) são resolvidos no
-  `householdId` do próprio recurso, dentro do use-case de criação.
-- **Membros**: conta ativos + convites pendentes (não só ativos) — senão dava
-  pra burlar convidando em excesso. **Categorias**: só a rota de criação é
-  gateada (`custom_categories`); listar/editar/excluir continua livre. As 13
-  categorias padrão são inseridas direto na transação de criação do household
-  (não passam pelo endpoint de criação), então o gate não afeta onboarding.
-  **Metas**: contagem total (`GoalEntity` não tem status de conclusão — sem
-  "ativa" vs "concluída"). **Orçamentos**: conta séries com `ended_from IS
-  NULL` (ADR-0022 — a aberta é a "ativa"; encerrar uma libera criar outra).
-- **Exceções dedicadas por recurso** (`HouseholdLimitReachedException`,
-  `MemberLimitReachedException`, `GoalLimitReachedException`,
-  `BudgetLimitReachedException`), cada uma com `code` próprio → 402 em
-  `domain-status.map.ts` — não reusar `PremiumRequiredException` pra limite
-  numérico (mensagem ficaria incoerente com a capability errada).
-- **Sem downgrade retroativo**: o gate só impede **criar** além do limite;
-  lares que já excedem (ex.: 5 membros antes desta régua) não perdem dados
-  nem ficam bloqueados de usar o que já têm.
+- **Sem plano gratuito funcional.** Billing é **por household**, não por
+  usuário. `EntitlementsService.resolve(householdId)` retorna `plan` (
+  `locked | essencial | completo`) + `status` + `source` (
+  `stripe | comp | trial | locked`) + `capabilities` — **não há mais
+  `limits`/régua por contagem** (removida por completo no M16; a régua D-1
+  do M14 está superseded).
+- **Resolução**: `type=custom` (comp) ⇒ `completo`, nunca rebaixado;
+  `type=standard` + `status=trialing` ⇒ `completo` (trial self-serve dá
+  acesso Completo independente do tier escolhido para cobrança pós-trial);
+  `type=standard` + `status=active|past_due` ⇒ `tier` do preço (fallback
+  `completo` se o tier não estiver setado — nunca restringe um pagante a
+  menos do que contratou); resto (`free`, `standard/canceled`, ou o legado
+  `type=trial` do admin local removido) ⇒ `locked` (somente-leitura).
+- **`locked`** (nunca assinou, trial expirado, ou cancelado) = o dono/membros
+  ainda **veem** os próprios dados, mas toda escrita é bloqueada — nunca
+  apaga nada. `ActiveSubscriptionGuard` (`subscriptions/interface/guards/`)
+  bloqueia POST/PATCH/DELETE quando `plan==="locked"` → 402
+  `SUBSCRIPTION_REQUIRED`; aplicado **por-controller** (nunca `APP_GUARD`
+  global — rodaria antes do `AuthGuard`, e `getOrCreate()` faria INSERT de
+  subscription pra qualquer UUID adivinhado, mesmo sem autenticação) em
+  `transactions`/`categories`/`goals`. **`households` fica de fora** —
+  renomear/gerenciar membros/sair/deletar o lar continua disponível mesmo
+  locked (gestão de conta nunca prende o usuário; o paywall protege dados
+  financeiros, não o encanamento da conta).
+- **Capabilities** (`CAPABILITIES`, `subscriptions/domain/entitlements.ts`) —
+  5 booleanas, todas **Completo-only**: `budgets`, `scheduled_entries`
+  (novas no M16), `advanced_reports`, `report_export`, `custom_categories`
+  (existentes do M14). Essencial e `locked` têm todas `false`. Módulos
+  inteiramente Completo (orçamentos, lançamentos programados) usam
+  `@RequireCapability` + `HouseholdEntitlementGuard` **a nível de classe**
+  (bloqueia TODAS as rotas, incl. GET — a lista some por completo pra
+  Essencial/locked, não só a criação). **Categorias personalizadas**: só a
+  criação é gateada (`custom_categories`); listar/editar/excluir categorias
+  (incl. as 13 padrão) continua sempre livre — comportamento herdado do M14,
+  correto desde então.
+- **Trial self-serve** (30 dias, via Stripe, não mais admin local): o
+  usuário escolhe o `planKey` (Essencial ou Completo × mensal/anual) **no
+  checkout** — é esse plano que é cobrado ao fim do trial, sem tier-padrão
+  pós-trial (decisão do responsável). `subscriptions.trial_consumed` marca
+  antes da chamada ao Stripe (checkout abandonado não libera 2º trial).
+  `payment_method_collection: "always"` força cartão upfront mesmo em
+  trial — todo mundo passa pelo checkout, dá tracking real de conversão.
+- **Trial administrativo local (H-3, M14) foi removido no M16 PR4** —
+  redundante desde o self-serve. `GrantTrialUseCase`/`RevokeTrialUseCase` e
+  a coluna `trial_ends_at` (agora dead-but-harmless) não são mais usados; o
+  único "acesso grátis" concedível pelo admin continua sendo o **comp**
+  (isenção), inalterado desde o ADR-0026.
+- **Sem migração de enum**: `subscription_type` no banco continua
+  `free|trial|standard|custom` — `free` só passou a **significar**
+  "sem assinatura ativa" (`locked`) em vez de "plano gratuito funcional".
 - **Fora de escopo, registrado como follow-up futuro**: categorias-padrão
-  hoje são sempre criadas em pt-BR, independente do idioma do usuário —
-  falta perguntar idioma no signup e localizar o catálogo de categorias
-  padrão. Não implementado nesta fase.
+  hoje são sempre criadas em pt-BR, independente do idioma do usuário
+  (herdado do M14, não tocado no M16); filtro de plano na lista admin de
+  lares (`admin-households.tsx`) segue pelo `type` bruto do Stripe, não pelo
+  `tier` resolvido.
 
 ### Pendências não bloqueantes para V1
 

@@ -1,6 +1,14 @@
 import { INestApplication } from "@nestjs/common";
 import { Pool } from "pg";
-import { adminPool, authed, cleanupByEmailPattern, createTestApp, signUpUser, TestUser } from "./helpers";
+import {
+  activateHousehold,
+  adminPool,
+  authed,
+  cleanupByEmailPattern,
+  createTestApp,
+  signUpUser,
+  TestUser,
+} from "./helpers";
 
 /** M4 — parcelamento (split determinístico) + rateio (igual/específico/combinado). */
 describe("Installments + Rateio (e2e)", () => {
@@ -30,6 +38,8 @@ describe("Installments + Rateio (e2e)", () => {
       .send({ name: "E2E Lar M4" })
       .expect(201);
     householdId = created.body.id;
+    // M16: ativa a assinatura (Completo) para liberar as escritas financeiras.
+    await activateHousehold(pool, householdId, "completo");
 
     // Segundo membro via convite + aceite.
     const guest = await signUpUser(app, "m4.guest");

@@ -1,6 +1,14 @@
 import { INestApplication } from "@nestjs/common";
 import { Pool } from "pg";
-import { adminPool, authed, cleanupByEmailPattern, createTestApp, signUpUser, TestUser } from "./helpers";
+import {
+  activateHousehold,
+  adminPool,
+  authed,
+  cleanupByEmailPattern,
+  createTestApp,
+  signUpUser,
+  TestUser,
+} from "./helpers";
 
 /** Mês/ano (1-12/YYYY) do mês corrente do processo de teste — mesma âncora do backend. */
 function currentPeriod(): { month: number; year: number } {
@@ -30,6 +38,9 @@ describe("Notifications preferences + dispatch (e2e)", () => {
       .send({ name: "E2E Lar Notificacoes" })
       .expect(201);
     householdId = created.body.id;
+    // M16: notificações de orçamento/lançamento exigem essas features (Completo)
+    // + escrita de transações; ativa o lar como Completo.
+    await activateHousehold(pool, householdId, "completo");
 
     const categories = await authed(
       app,
@@ -121,6 +132,8 @@ describe("Notifications preferences + dispatch (e2e)", () => {
       .send({ name: "E2E Home Notifications EN" })
       .expect(201);
     const enHouseholdId = enHousehold.body.id;
+    // M16: ativa (Completo) para liberar as escritas de meta/aporte.
+    await activateHousehold(pool, enHouseholdId, "completo");
 
     const goal = await authed(app, "post", `/households/${enHouseholdId}/goals`, enUser.accessToken)
       .send({ name: "Trip", targetAmountCents: 50000, color: "#3b82f6" })

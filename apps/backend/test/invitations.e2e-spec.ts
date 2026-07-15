@@ -123,39 +123,19 @@ describe("Invitations (e2e)", () => {
     expect(after.body.map((i: { email: string }) => i.email)).not.toContain(email);
   });
 
-  it("limite de membros do Free (D-1, P-3): dono+1 ok, o próximo bloqueado (402), libera após upgrade", async () => {
-    // Lar isolado (Free real) — não usa o `householdId` compartilhado (tem comp).
-    const solo = await signUpUser(app, "mem.limit.owner");
+  it("M16: convidar membros é ilimitado (sem régua de contagem do Free)", async () => {
+    const solo = await signUpUser(app, "mem.multi.owner");
     const solo1 = await authed(app, "post", "/households", solo.accessToken)
-      .send({ name: "E2E Lar Limite Membros" })
+      .send({ name: "E2E Lar Membros Multi" })
       .expect(201);
     const soloHouseholdId = solo1.body.id;
 
-    // Dono + 1 convite = 2, no teto (maxMembersPerHousehold do Free) — permitido.
-    await authed(app, "post", `/households/${soloHouseholdId}/members/invite`, solo.accessToken)
-      .send({ email: uniqueEmail("mem.limit.a") })
-      .expect(201);
-
-    // 3º (dono + 2 convites) excede o teto — bloqueado.
-    const blocked = await authed(
-      app,
-      "post",
-      `/households/${soloHouseholdId}/members/invite`,
-      solo.accessToken,
-    )
-      .send({ email: uniqueEmail("mem.limit.b") })
-      .expect(402);
-    expect(blocked.body.code).toBe("MEMBER_LIMIT_REACHED");
-
-    // Upgrade do lar libera convidar mais gente.
-    await pool.query(
-      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
-       VALUES ($1, 'custom', 'active', 'e2e limite de membros — upgrade')
-       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
-      [soloHouseholdId],
-    );
-    await authed(app, "post", `/households/${soloHouseholdId}/members/invite`, solo.accessToken)
-      .send({ email: uniqueEmail("mem.limit.c") })
-      .expect(201);
+    // Convidar gestão de membros não passa pelo paywall (encanamento de conta);
+    // e não há mais teto de contagem — três convites seguidos são permitidos.
+    for (const p of ["mem.multi.a", "mem.multi.b", "mem.multi.c"]) {
+      await authed(app, "post", `/households/${soloHouseholdId}/members/invite`, solo.accessToken)
+        .send({ email: uniqueEmail(p) })
+        .expect(201);
+    }
   });
 });

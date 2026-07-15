@@ -8,6 +8,7 @@ import { Skeleton } from "@/shared/components/ui/skeleton"
 import { Pagination } from "@/shared/components/ui/pagination"
 import { usePagination } from "@/shared/hooks/use-pagination"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
+import { useEntitlements, PremiumGate } from "@/features/subscription"
 import { useScheduledEntries } from "../hooks/use-scheduled-entries"
 import { useScheduledEntryMutations } from "../hooks/use-scheduled-entry-mutations"
 import { ScheduledEntryForm } from "./scheduled-entry-form"
@@ -19,7 +20,11 @@ import type { ScheduledEntryFormValues } from "../schemas/scheduled-entry.schema
 export function ScheduledTransactionsPage() {
   const { t } = useTranslation("scheduled-transactions")
   const { householdId } = useCurrentHousehold()
-  const { entries, loading } = useScheduledEntries(householdId)
+  // M16: lançamentos programados são Completo-only (capability). A lista 402
+  // no backend para quem não tem a capability, então só busca quando ela já
+  // foi confirmada — e a página inteira vira paywall nesse caso.
+  const { capabilities, loading: entLoading } = useEntitlements(householdId)
+  const { entries, loading } = useScheduledEntries(householdId, capabilities.scheduled_entries)
   // Ativos primeiro (inativos aparecem esmaecidos na tabela), depois pagina.
   const sortedEntries = useMemo(
     () => [...entries].sort((a, b) => Number(b.isActive) - Number(a.isActive)),
@@ -57,6 +62,34 @@ export function ScheduledTransactionsPage() {
 
   async function handleLaunch(entry: ScheduledEntry) {
     await launchEntry(entry.id)
+  }
+
+  if (entLoading) {
+    return (
+      <div className="flex flex-col">
+        <div className="mb-6">
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
+          <p className="mt-1 text-sm text-foreground/40">{t("page.subtitle")}</p>
+        </div>
+        <div className="grid gap-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full rounded-lg" />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (!capabilities.scheduled_entries) {
+    return (
+      <div className="flex flex-col">
+        <div className="mb-6">
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
+          <p className="mt-1 text-sm text-foreground/40">{t("page.subtitle")}</p>
+        </div>
+        <PremiumGate descriptionKey="gate.descriptionScheduledEntries" />
+      </div>
+    )
   }
 
   return (
