@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -40,6 +40,7 @@ import { DatePicker } from "@/shared/components/ui/date-picker"
 import { useCategories } from "@/features/categories/hooks/use-categories"
 import { useOnboarding } from "@/features/onboarding/providers/onboarding-provider"
 import { formatDate, useActiveLocale } from "@/shared/lib/format"
+import { translateApiError } from "@/shared/lib/api-error"
 import {
   makeScheduledEntrySchema,
   type ScheduledEntryFormValues,
@@ -107,6 +108,8 @@ export function ScheduledEntryForm({
   const today = new Date()
   const todayISO = format(today, "yyyy-MM-dd")
 
+  const [error, setError] = useState<string | null>(null)
+
   const schema = useMemo(() => makeScheduledEntrySchema(t), [t])
   const form = useForm<ScheduledEntryFormValues>({
     resolver: zodResolver(schema),
@@ -147,6 +150,7 @@ export function ScheduledEntryForm({
             }
           : makeDefaultValues(todayISO),
       )
+      setError(null)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, entry])
@@ -160,8 +164,13 @@ export function ScheduledEntryForm({
   }, [open, isEditing, activeTour, isTourSeen, startTour])
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit(values)
-    onOpenChange(false)
+    setError(null)
+    try {
+      await onSubmit(values)
+      onOpenChange(false)
+    } catch (err) {
+      setError(translateApiError(err, tCommon))
+    }
   })
 
   return (
@@ -478,6 +487,8 @@ export function ScheduledEntryForm({
                   </FormItem>
                 )}
               />
+
+              {error && <p className="text-sm text-red-400">{error}</p>}
             </SheetBody>
 
             <SheetFooter>
