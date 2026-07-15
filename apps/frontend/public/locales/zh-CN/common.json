@@ -104,6 +104,7 @@
     "PLAN_NOT_AVAILABLE": "该套餐暂不可用——请稍后重试。",
     "WEBHOOK_SIGNATURE_INVALID": "无法验证支付请求。",
     "PREMIUM_REQUIRED": "此功能需要高级版套餐。",
+    "SUBSCRIPTION_REQUIRED": "该家庭没有有效的订阅。请开始免费试用或订阅以继续。",
     "INVALID_DISCOUNT": "折扣无效——请检查参数。",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "该家庭没有有效的 Stripe 订阅。",
     "TRIAL_NOT_ALLOWED": "该家庭当前套餐不支持试用。",

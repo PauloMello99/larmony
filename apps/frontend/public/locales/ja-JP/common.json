@@ -104,6 +104,7 @@
     "PLAN_NOT_AVAILABLE": "このプランはまだご利用いただけません。しばらくしてから再度お試しください。",
     "WEBHOOK_SIGNATURE_INVALID": "決済リクエストを検証できませんでした。",
     "PREMIUM_REQUIRED": "この機能にはプレミアムプランが必要です。",
+    "SUBSCRIPTION_REQUIRED": "この世帯には有効なサブスクリプションがありません。続けるには無料トライアルを開始するか、サブスクリプションに登録してください。",
     "INVALID_DISCOUNT": "割引が無効です。パラメーターを確認してください。",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "この世帯には有効なStripeサブスクリプションがありません。",
     "TRIAL_NOT_ALLOWED": "この世帯の現在のプランでは、トライアルをご利用いただけません。",

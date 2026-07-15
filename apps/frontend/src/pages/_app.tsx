@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import Head from "next/head"
 import type { AppProps } from "next/app"
 import type { NextPage } from "next"
 import type { ReactElement, ReactNode } from "react"
@@ -29,6 +30,15 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <ErrorBoundary>
+      {/* Sem isso o mobile usa um viewport de desktop (~980px) e o iOS Safari
+          zooma ao focar inputs. Precisa estar no _app (next/head), não no
+          _document — o Next.js não hidrata/atualiza viewport meta declarado
+          lá (aviso "no-document-viewport-meta"). maximum-scale/user-scalable
+          ficam de fora de propósito — travar o pinch-zoom é ruim pra
+          acessibilidade. */}
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
       {/* Sora global (Design System): font-family no `html` com o NOME literal
           da fonte — conteúdo portalado (Radix dropdown/dialog/sheet vão direto
           no body) não herdaria de um wrapper dentro do React tree. O wrapper

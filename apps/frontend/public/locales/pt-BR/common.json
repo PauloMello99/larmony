@@ -104,6 +104,7 @@
     "PLAN_NOT_AVAILABLE": "O plano ainda não está disponível — tente novamente em instantes.",
     "WEBHOOK_SIGNATURE_INVALID": "Não foi possível validar a requisição de pagamento.",
     "PREMIUM_REQUIRED": "Este recurso requer um plano premium.",
+    "SUBSCRIPTION_REQUIRED": "Este lar não tem uma assinatura ativa. Inicie o teste grátis ou assine para continuar.",
     "INVALID_DISCOUNT": "Desconto inválido — confira os parâmetros.",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "O lar não tem uma assinatura Stripe ativa.",
     "TRIAL_NOT_ALLOWED": "O trial não está disponível para o plano atual do lar.",

@@ -104,6 +104,7 @@
     "PLAN_NOT_AVAILABLE": "El plan aún no está disponible — inténtelo de nuevo en unos instantes.",
     "WEBHOOK_SIGNATURE_INVALID": "No se pudo validar la solicitud de pago.",
     "PREMIUM_REQUIRED": "Esta función requiere un plan premium.",
+    "SUBSCRIPTION_REQUIRED": "Este hogar no tiene una suscripción activa. Inicia la prueba gratuita o suscríbete para continuar.",
     "INVALID_DISCOUNT": "Descuento no válido — revise los parámetros.",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "El hogar no tiene una suscripción de Stripe activa.",
     "TRIAL_NOT_ALLOWED": "El período de prueba no está disponible para el plan actual del hogar.",

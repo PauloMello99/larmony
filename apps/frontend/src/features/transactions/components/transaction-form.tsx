@@ -37,6 +37,7 @@ import { Label } from "@/shared/components/ui/label"
 import { CurrencyInput } from "@/shared/components/ui/currency-input"
 import { DatePicker } from "@/shared/components/ui/date-picker"
 import { formatCentsToBRL } from "@/shared/lib/currency"
+import { translateApiError } from "@/shared/lib/api-error"
 import { useCategories } from "@/features/categories/hooks/use-categories"
 import { useMembers } from "@/features/households/hooks/use-members"
 import { useOnboarding } from "@/features/onboarding/providers/onboarding-provider"
@@ -98,6 +99,7 @@ export function TransactionForm({
   const [selected, setSelected] = useState<string[]>([])
   const [shares, setShares] = useState<Record<string, number>>({})
   const [rateioInit, setRateioInit] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const schema = useMemo(() => makeTransactionSchema(t), [t])
   const form = useForm<TransactionFormValues>({
@@ -134,6 +136,7 @@ export function TransactionForm({
         setSelected([])
         setShares({})
       }
+      setError(null)
     }
   }, [open, transaction, form, editingRateado])
 
@@ -183,12 +186,17 @@ export function TransactionForm({
 
   const handleSubmit = form.handleSubmit(async (values) => {
     if (rateioInvalid) return
-    await onSubmit({
-      ...values,
-      installmentCount: parcelarOn && !isEditing ? installmentCount : undefined,
-      members: buildMembers(),
-    })
-    onOpenChange(false)
+    setError(null)
+    try {
+      await onSubmit({
+        ...values,
+        installmentCount: parcelarOn && !isEditing ? installmentCount : undefined,
+        members: buildMembers(),
+      })
+      onOpenChange(false)
+    } catch (err) {
+      setError(translateApiError(err, tCommon))
+    }
   })
 
   return (
@@ -422,6 +430,8 @@ export function TransactionForm({
                   />
                 )}
               </div>
+
+              {error && <p className="text-sm text-red-400">{error}</p>}
             </SheetBody>
 
             <SheetFooter>

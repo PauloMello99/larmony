@@ -104,6 +104,7 @@
     "PLAN_NOT_AVAILABLE": "Le plan n’est pas encore disponible — réessaie dans un instant.",
     "WEBHOOK_SIGNATURE_INVALID": "Impossible de valider la requête de paiement.",
     "PREMIUM_REQUIRED": "Cette fonctionnalité nécessite un plan premium.",
+    "SUBSCRIPTION_REQUIRED": "Ce foyer n'a pas d'abonnement actif. Démarre l'essai gratuit ou abonne-toi pour continuer.",
     "INVALID_DISCOUNT": "Remise invalide — vérifie les paramètres.",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "Le foyer n’a pas d’abonnement Stripe actif.",
     "TRIAL_NOT_ALLOWED": "L’essai n’est pas disponible pour le plan actuel du foyer.",
