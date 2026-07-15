@@ -104,6 +104,7 @@
     "PLAN_NOT_AVAILABLE": "Der Plan ist noch nicht verfügbar — bitte versuche es in Kürze erneut.",
     "WEBHOOK_SIGNATURE_INVALID": "Die Zahlungsanfrage konnte nicht validiert werden.",
     "PREMIUM_REQUIRED": "Diese Funktion erfordert einen Premium-Plan.",
+    "SUBSCRIPTION_REQUIRED": "Dieser Haushalt hat kein aktives Abonnement. Starte die kostenlose Testphase oder abonniere, um fortzufahren.",
     "INVALID_DISCOUNT": "Ungültiger Rabatt — bitte prüfe die Parameter.",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "Der Haushalt hat kein aktives Stripe-Abonnement.",
     "TRIAL_NOT_ALLOWED": "Die Testphase ist für den aktuellen Plan des Haushalts nicht verfügbar.",

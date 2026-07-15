@@ -104,6 +104,7 @@
     "PLAN_NOT_AVAILABLE": "This plan isn't available yet — please try again in a moment.",
     "WEBHOOK_SIGNATURE_INVALID": "Could not validate the payment request.",
     "PREMIUM_REQUIRED": "This feature requires a premium plan.",
+    "SUBSCRIPTION_REQUIRED": "This home doesn't have an active subscription. Start the free trial or subscribe to continue.",
     "INVALID_DISCOUNT": "Invalid discount — please check the parameters.",
     "SUBSCRIPTION_NOT_STRIPE_LINKED": "The home doesn't have an active Stripe subscription.",
     "TRIAL_NOT_ALLOWED": "The trial isn't available for the home's current plan.",
