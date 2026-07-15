@@ -1,0 +1,61 @@
+{
+  "title": "Subscription",
+  "description": "Plan, status and subscription management for this household.",
+  "planTitle": "Current plan",
+  "loadError": "Couldn't load the subscription. Please try again.",
+  "ownerOnly": "Only the household owner can manage the subscription.",
+  "plan": {
+    "locked": "No subscription",
+    "essencial": "Essential",
+    "completo": "Complete"
+  },
+  "status": {
+    "active": "Active",
+    "trialing": "Trial period",
+    "past_due": "Payment pending",
+    "canceled": "Canceled"
+  },
+  "locked": {
+    "description": "This household doesn't have an active subscription — you can still view your data, but creating or editing requires subscribing.",
+    "trialNotice": "Try any plan free for 30 days (card required, no charge until the trial ends).",
+    "onboardingNotice": "Your household was created! Choose a plan to get started — the first 30 days are free.",
+    "descriptionEssencial": "The essentials to manage day-to-day finances.",
+    "descriptionCompleto": "Everything in Essential, plus budgets, scheduled entries and advanced reports.",
+    "intervalMonthly": "Monthly",
+    "intervalAnnual": "Annual (2 months free)",
+    "cta": "Start free trial",
+    "ctaPending": "Redirecting…"
+  },
+  "active": {
+    "description": "Your subscription is active. Enjoy all the features of your plan.",
+    "pastDue": "There's a pending payment. Update your payment method in the portal to avoid losing access.",
+    "portalCta": "Manage subscription",
+    "portalPending": "Redirecting…"
+  },
+  "trial": {
+    "title": "Trial period active",
+    "description": "This household has Complete plan access during the trial period.",
+    "cta": "Subscribe now"
+  },
+  "comp": {
+    "title": "Complimentary access granted",
+    "description": "This household has full access as a courtesy — no charge.",
+    "reasonLabel": "Reason"
+  },
+  "banner": {
+    "success": "Subscription confirmed! Access is activated as soon as Stripe confirms the payment.",
+    "cancel": "Checkout canceled. No charge was made."
+  },
+  "gate": {
+    "title": "Complete plan feature",
+    "description": "Advanced reports are part of the Complete plan. Upgrade to unlock.",
+    "descriptionCategories": "Custom categories are part of the Complete plan. Upgrade to unlock.",
+    "descriptionBudgets": "Budgets are part of the Complete plan. Upgrade to unlock.",
+    "descriptionScheduledEntries": "Scheduled entries are part of the Complete plan. Upgrade to unlock.",
+    "cta": "View plans"
+  },
+  "lockedBanner": {
+    "description": "This household is in read-only mode — no active subscription.",
+    "cta": "Subscribe"
+  }
+}

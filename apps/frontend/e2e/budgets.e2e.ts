@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test"
+import { suppressOnboardingTours } from "./helpers"
 
 /**
  * M5 — Budgets: criar orçamento, ver o spending derivado refletir uma despesa
@@ -10,6 +11,10 @@ const password = "SenhaForteE2e123!"
 
 test.describe.configure({ mode: "serial" })
 
+test.beforeEach(async ({ page }) => {
+  await suppressOnboardingTours(page)
+})
+
 test("signup e cria um lar", async ({ page }) => {
   await page.goto("/auth/signup")
   await page.fill("#name", "E2E Budgets")
@@ -18,13 +23,13 @@ test("signup e cria um lar", async ({ page }) => {
   await page.fill("#confirmPassword", password)
   await page.click('button[type="submit"]')
 
-  await page.waitForURL(/\/dashboard\/households\?welcome=1/, { timeout: 20_000 })
+  await page.waitForURL(/\/households\?welcome=1/, { timeout: 20_000 })
   await page
     .locator('input:visible[type="text"], input:visible:not([type])')
     .first()
     .fill(`E2E Lar Orcamentos ${runId}`)
   await page.getByRole("button", { name: /^criar/i }).last().click()
-  await page.waitForURL(/\/dashboard\/households$/)
+  await page.waitForURL(/\/households$/)
 })
 
 async function login(page: import("@playwright/test").Page) {
@@ -32,9 +37,9 @@ async function login(page: import("@playwright/test").Page) {
   await page.fill('input[type="email"]', email)
   await page.fill('input[type="password"]', password)
   await page.click('button[type="submit"]')
-  await page.waitForURL(/\/dashboard\/households/)
-  await page.locator('a[href*="/dashboard/household/"]').first().click()
-  await page.waitForURL(/\/dashboard\/household\/[^/]+$/)
+  await page.waitForURL(/\/households/)
+  await page.locator('a[href*="/households/"]').first().click()
+  await page.waitForURL(/\/households\/[^/]+$/)
 }
 
 test("cria orçamento e o spending reflete uma despesa (excedido)", async ({ page }) => {
@@ -67,6 +72,56 @@ test("cria orçamento e o spending reflete uma despesa (excedido)", async ({ pag
   await expect(card.getByText("Alimentação")).toBeVisible()
   await expect(card.getByText("Excedido")).toBeVisible()
   await expect(card.getByText("R$ 900,00")).toBeVisible()
+})
+
+function capitalizeFirst(label: string): string {
+  return label.charAt(0).toUpperCase() + label.slice(1)
+}
+
+function shiftMonth(base: Date, delta: number): { month: number; year: number } {
+  const total = base.getFullYear() * 12 + base.getMonth() + delta
+  return { year: Math.floor(total / 12), month: (total % 12) + 1 }
+}
+
+async function navigateToPeriod(
+  page: import("@playwright/test").Page,
+  month: number,
+  year: number,
+) {
+  const monthName = capitalizeFirst(
+    new Date(year, month - 1, 1).toLocaleDateString("pt-BR", { month: "long" }),
+  )
+  await page.getByRole("combobox", { name: "Mês do orçamento" }).click()
+  await page.getByRole("option", { name: monthName }).click()
+  await page.getByRole("combobox", { name: "Ano do orçamento" }).click()
+  await page.getByRole("option", { name: String(year) }).click()
+}
+
+test("mês futuro é projeção somente-leitura; mês passado é somente-leitura", async ({ page }) => {
+  await login(page)
+  await page.getByRole("navigation").last().getByRole("link", { name: "Orçamentos", exact: true }).click()
+  await page.waitForURL(/\/budgets$/)
+
+  const now = new Date()
+
+  // Navega para o mês seguinte — herda o limite como projeção, sem controles.
+  const nextPeriod = shiftMonth(now, 1)
+  await navigateToPeriod(page, nextPeriod.month, nextPeriod.year)
+
+  await expect(page.getByText("Alimentação")).toBeVisible()
+  await expect(page.getByText("de R$ 800,00")).toBeVisible()
+  await expect(page.getByRole("button", { name: "Novo orçamento" })).toHaveCount(0)
+  await expect(page.locator("main [aria-haspopup='menu']")).toHaveCount(0)
+  await expect(
+    page.getByText("Mês futuro — o limite exibido é uma projeção do valor vigente hoje."),
+  ).toBeVisible()
+
+  // Navega para o mês anterior — nada aparece ainda (série só existe a partir do mês corrente).
+  const prevPeriod = shiftMonth(now, -1)
+  await navigateToPeriod(page, prevPeriod.month, prevPeriod.year)
+
+  await expect(page.getByRole("button", { name: "Novo orçamento" })).toHaveCount(0)
+  await expect(page.getByText("Nenhum orçamento neste período.")).toBeVisible()
 })
 
 test("edita o limite (sai de excedido) e exclui", async ({ page }) => {

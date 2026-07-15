@@ -1,0 +1,275 @@
+{
+  "nav": {
+    "links": {
+      "features": "Recursos",
+      "product": "Produto",
+      "pricing": "Preços",
+      "faq": "FAQ"
+    },
+    "login": "Entrar",
+    "cta": "Testar grátis",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu"
+  },
+  "hero": {
+    "badge": "✦ Novo — Lembretes automáticos de contas",
+    "titleLine1": "As finanças da casa,",
+    "titleHighlight": "em harmonia.",
+    "subtitle": "Transações, orçamentos, metas e contas a pagar — compartilhados com quem divide o lar com você. Centavos exatos, zero planilha.",
+    "ctaPrimary": "Testar grátis por 30 dias →",
+    "ctaSecondary": "Ver demonstração",
+    "proof": {
+      "centsLine1": "centavos exatos,",
+      "centsLine2": "sem arredondamento",
+      "membersLine1": "membros",
+      "membersLine2": "por lar",
+      "languagesLine1": "idiomas",
+      "languagesLine2": "incl. inglês e espanhol"
+    }
+  },
+  "features": {
+    "kicker": "Recursos",
+    "title": "Tudo que o seu lar precisa",
+    "subtitle": "Projetado para o dia a dia de quem organiza as finanças de casa — sozinho ou com a família.",
+    "items": {
+      "transactions": {
+        "title": "Transações organizadas",
+        "description": "Categorize receitas e despesas, divida gastos entre quem mora na casa e acompanhe tudo em tempo real."
+      },
+      "budgets": {
+        "title": "Orçamentos por categoria",
+        "description": "Defina limites mensais por categoria e veja o quanto já foi gasto, com alerta quando estourar."
+      },
+      "goals": {
+        "title": "Metas de economia",
+        "description": "Crie metas para a viagem, a reforma ou a reserva de emergência e acompanhe o progresso junto com o lar."
+      },
+      "dashboard": {
+        "title": "Dashboard com KPIs reais",
+        "description": "Saldo do mês, comparação com o mês anterior, contas a vencer e orçamentos em um único painel."
+      },
+      "reminders": {
+        "title": "Lembretes de contas",
+        "description": "Nunca mais esqueça uma conta a pagar — notificação in-app e por e-mail antes do vencimento."
+      },
+      "household": {
+        "title": "Feito para o lar",
+        "description": "Convide quem mora com você, cada um com seu papel, e organizem as finanças domésticas juntos."
+      }
+    }
+  },
+  "tour": {
+    "kicker": "O produto",
+    "title": "Navegue pelo que o Larmony faz",
+    "subtitle": "Sem jargão financeiro. Clique nas abas e veja, em segundos, como cada parte funciona no dia a dia do lar.",
+    "tabs": {
+      "overview": "Visão geral",
+      "transactions": "Transações",
+      "categories": "Categorias",
+      "budgets": "Orçamentos",
+      "goals": "Metas",
+      "bills": "Contas"
+    },
+    "overview": {
+      "greeting": "Bom dia, Paulo 👋",
+      "kpis": {
+        "income": "Receitas do mês",
+        "expenses": "Despesas do mês",
+        "balance": "Saldo do mês"
+      },
+      "rows": {
+        "r1": "Salário — Julho",
+        "r2": "Supermercado Extra",
+        "r3": "Aluguel"
+      }
+    },
+    "transactions": {
+      "title": "Lançamentos recentes",
+      "splitBadge": "Rateio 50/50",
+      "rows": {
+        "r1": "Supermercado Extra",
+        "r2": "Internet",
+        "r3": "Salário — Julho",
+        "r4": "Aluguel"
+      }
+    },
+    "categories": {
+      "title": "Gastos por categoria",
+      "items": {
+        "c1": "Moradia",
+        "c2": "Alimentação",
+        "c3": "Transporte",
+        "c4": "Lazer"
+      }
+    },
+    "budgets": {
+      "title": "Orçamentos do mês",
+      "items": {
+        "b1": "Moradia",
+        "b2": "Alimentação",
+        "b3": "Transporte"
+      }
+    },
+    "goals": {
+      "title": "Metas de economia",
+      "items": {
+        "g1": "Viagem de fim de ano",
+        "g2": "Reserva de emergência"
+      }
+    },
+    "bills": {
+      "title": "Próximas contas",
+      "items": {
+        "b1": { "label": "Aluguel", "due": "Vence em 3 dias" },
+        "b2": { "label": "Energia", "due": "Vence em 8 dias" },
+        "b3": { "label": "Internet", "due": "Vence em 12 dias" }
+      }
+    }
+  },
+  "about": {
+    "kicker": "Sobre o Larmony",
+    "title": "Do zero ao controle em três passos",
+    "subtitle": "Sem planilha, sem conexão bancária obrigatória. Você monta o lar, convida quem divide as contas e começa a acompanhar junto.",
+    "steps": {
+      "s1": {
+        "title": "Crie o seu lar",
+        "desc": "Em menos de um minuto. O lar é o espaço onde as finanças da casa ficam reunidas — com 30 dias de teste grátis do plano Completo."
+      },
+      "s2": {
+        "title": "Convide quem mora com você",
+        "desc": "Cada pessoa entra com o próprio login. Todos veem as mesmas contas, cada um no seu idioma."
+      },
+      "s3": {
+        "title": "Acompanhem juntos",
+        "desc": "Lancem despesas, dividam os gastos e vejam metas e orçamentos evoluírem em tempo real."
+      }
+    },
+    "diff": {
+      "title": "Por que o Larmony e não uma planilha",
+      "d1": {
+        "title": "Multiusuário de verdade",
+        "desc": "Não é uma planilha compartilhada: cada membro tem login próprio e o dono controla quem entra e sai do lar."
+      },
+      "d2": {
+        "title": "Centavos exatos",
+        "desc": "Todo valor é guardado em centavos inteiros — sem arredondamento. Se a conta deu R$ 33,33 para cada um, é isso que aparece."
+      },
+      "d3": {
+        "title": "Dados isolados por lar",
+        "desc": "Cada lar é isolado no banco (RLS): um membro de um lar jamais enxerga os dados de outro. Sem PCI local — pagamento pelo Stripe."
+      }
+    },
+    "proof": {
+      "title": "O fim das planilhas perdidas e do \"quem pagou o quê?\"",
+      "description": "Uma fonte única, clara para a família toda — quem entrou ontem lê o painel do mesmo jeito que quem o criou."
+    }
+  },
+  "pricing": {
+    "kicker": "Preços",
+    "title": "Simples e transparente",
+    "subtitle": "Dois planos, sem pegadinha — e 30 dias de teste grátis do Completo em qualquer um deles.",
+    "note": "Cartão necessário para começar o teste, sem cobrança até o fim dos 30 dias. Pagamento seguro processado pelo Stripe — cancele quando quiser.",
+    "intervalMonthly": "Mensal",
+    "intervalAnnual": "Anual",
+    "perMonth": "/mês",
+    "perYear": "/ano",
+    "plans": {
+      "essencial": {
+        "name": "Essencial",
+        "description": "O essencial para controlar as finanças do dia a dia.",
+        "cta": "Testar grátis por 30 dias",
+        "features": {
+          "f1": "Transações ilimitadas com as categorias padrão",
+          "f2": "Metas de economia ilimitadas",
+          "f3": "Lembretes de contas por e-mail",
+          "f4": "Membros e lares ilimitados",
+          "f5": "Dashboard e relatório mensal"
+        }
+      },
+      "completo": {
+        "name": "Completo",
+        "badge": "Recomendado",
+        "description": "Tudo do Essencial, mais orçamentos, lançamentos programados e relatórios avançados.",
+        "cta": "Testar grátis por 30 dias",
+        "features": {
+          "f1": "Tudo do plano Essencial",
+          "f2": "Orçamentos por categoria",
+          "f3": "Lançamentos programados e recorrências",
+          "f4": "Relatórios avançados — anual e comparativos",
+          "f5": "Exportação de relatórios em CSV",
+          "f6": "Categorias personalizadas ilimitadas"
+        }
+      }
+    }
+  },
+  "faq": {
+    "kicker": "FAQ",
+    "title": "Perguntas frequentes",
+    "items": {
+      "q1": {
+        "question": "O Larmony tem plano gratuito?",
+        "answer": "Não um plano grátis permanente, mas todo mundo começa com 30 dias de teste grátis do plano Completo (cartão necessário, sem cobrança até o fim do teste). Depois disso, você escolhe entre Essencial (R$ 9,90/mês) e Completo (R$ 19,90/mês)."
+      },
+      "q2": {
+        "question": "Qual a diferença entre Essencial e Completo?",
+        "answer": "O Essencial cobre o núcleo: transações, categorias padrão, metas, dashboard e relatório mensal, com membros e lares ilimitados. O Completo adiciona orçamentos por categoria, lançamentos programados, relatórios avançados (anual e exportação em CSV) e categorias personalizadas."
+      },
+      "q3": {
+        "question": "Posso cancelar quando quiser?",
+        "answer": "Sim. A assinatura é gerenciada pelo portal seguro do Stripe, sem multa. Você mantém o acesso até o fim do ciclo já pago; depois disso, seus dados ficam disponíveis em modo somente-leitura até você assinar de novo."
+      },
+      "q4": {
+        "question": "Preciso conectar minha conta bancária?",
+        "answer": "Não. O Larmony funciona com lançamentos manuais e recorrências automáticas — você controla exatamente o que entra. A integração com Open Finance está no roadmap para um plano futuro."
+      },
+      "q5": {
+        "question": "Meus dados financeiros estão seguros?",
+        "answer": "Sim. Cada lar é isolado no banco de dados (RLS) — um membro de um lar jamais enxerga dados de outro. Sua senha é criptografada e o pagamento é processado pelo Stripe, sem dados de cartão no Larmony."
+      },
+      "q6": {
+        "question": "Funciona em outros idiomas?",
+        "answer": "Sim — o Larmony está disponível em 7 idiomas (português, inglês, espanhol, chinês, alemão, francês e japonês). Cada pessoa escolhe o próprio idioma e vê o mesmo lar traduzido, incluindo e-mails de lembrete."
+      }
+    }
+  },
+  "finalCta": {
+    "titleLine1": "Traga harmonia para",
+    "titleLine2": "as contas da sua casa",
+    "subtitle": "Crie o seu lar em menos de um minuto. 30 dias de teste grátis do plano Completo.",
+    "cta": "Testar grátis por 30 dias →"
+  },
+  "footer": {
+    "description": "Controle financeiro do seu lar. Transações, orçamentos e metas em um só lugar.",
+    "sections": {
+      "product": {
+        "title": "Produto",
+        "links": {
+          "features": "Recursos",
+          "pricing": "Preços",
+          "about": "Sobre",
+          "faq": "FAQ"
+        }
+      },
+      "legal": {
+        "title": "Legal",
+        "links": {
+          "terms": "Termos de uso",
+          "privacy": "Privacidade",
+          "cookies": "Cookies",
+          "security": "Segurança"
+        }
+      }
+    },
+    "copyright": "© {{year}} Larmony. Todos os direitos reservados."
+  },
+  "legal": {
+    "back": "← Voltar",
+    "meta": "Última atualização: {{updatedAt}} · versão {{version}}",
+    "officialNotice": "Documento oficial em português (Brasil). Traduções são apenas informativas.",
+    "footer": {
+      "copyright": "© {{year}} Larmony. Todos os direitos reservados.",
+      "terms": "Termos de Uso",
+      "privacy": "Privacidade"
+    }
+  }
+}

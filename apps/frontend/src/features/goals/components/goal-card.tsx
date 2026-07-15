@@ -1,8 +1,8 @@
 "use client"
 
+import { useTranslation } from "react-i18next"
 import { HandCoins, History, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { format, parse } from "date-fns"
-import { ptBR } from "date-fns/locale"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +12,7 @@ import {
 import { Button } from "@/shared/components/ui/button"
 import { cn } from "@/shared/lib/utils"
 import { formatCentsToBRL } from "@/shared/lib/currency"
+import { getDateFnsLocale, useActiveLocale } from "@/shared/lib/format"
 import type { Goal } from "../types"
 
 interface GoalCardProps {
@@ -22,17 +23,22 @@ interface GoalCardProps {
 }
 
 export function GoalCard({ goal, onContribute, onEdit, onDelete }: GoalCardProps) {
+  const { t } = useTranslation("goals")
+  const { t: tCommon } = useTranslation("common")
+  const locale = useActiveLocale()
   const pct =
     goal.targetAmountCents > 0
       ? Math.round((goal.savedCents / goal.targetAmountCents) * 100)
       : 0
   const done = goal.savedCents >= goal.targetAmountCents
   const targetLabel = goal.targetDate
-    ? format(parse(goal.targetDate, "yyyy-MM-dd", new Date()), "dd/MM/yyyy", { locale: ptBR })
+    ? format(parse(goal.targetDate, "yyyy-MM-dd", new Date()), "dd/MM/yyyy", {
+        locale: getDateFnsLocale(locale),
+      })
     : null
 
   return (
-    <div className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-4">
+    <div className="rounded-xl border border-foreground/[0.07] bg-foreground/[0.03] p-4">
       <div className="mb-3 flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <span
@@ -42,7 +48,7 @@ export function GoalCard({ goal, onContribute, onEdit, onDelete }: GoalCardProps
           <span className="truncate font-medium text-foreground">{goal.name}</span>
           {done && (
             <span className="shrink-0 rounded-full bg-success/10 px-1.5 py-0.5 text-[10px] font-medium text-success">
-              Concluída
+              {t("card.done")}
             </span>
           )}
         </div>
@@ -55,18 +61,18 @@ export function GoalCard({ goal, onContribute, onEdit, onDelete }: GoalCardProps
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => onContribute(goal)}>
               <History className="mr-2 h-4 w-4" />
-              Aportes
+              {t("card.contributions")}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onEdit(goal)}>
               <Pencil className="mr-2 h-4 w-4" />
-              Editar
+              {tCommon("actions.edit")}
             </DropdownMenuItem>
             <DropdownMenuItem
               className="text-red-400 focus:text-red-400"
               onClick={() => onDelete(goal)}
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              Excluir
+              {tCommon("actions.delete")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -77,7 +83,7 @@ export function GoalCard({ goal, onContribute, onEdit, onDelete }: GoalCardProps
           {formatCentsToBRL(goal.savedCents)}
         </span>
         <span className="text-sm text-muted-foreground">
-          de {formatCentsToBRL(goal.targetAmountCents)}
+          {t("card.ofTarget", { value: formatCentsToBRL(goal.targetAmountCents) })}
         </span>
       </div>
 
@@ -90,11 +96,13 @@ export function GoalCard({ goal, onContribute, onEdit, onDelete }: GoalCardProps
 
       <div className="mt-3 flex items-center justify-between gap-2">
         <p className="text-xs text-foreground/40">
-          {pct}%{targetLabel ? ` · até ${targetLabel}` : ""}
+          {targetLabel
+            ? t("card.progressWithDate", { pct, date: targetLabel })
+            : t("card.progress", { pct })}
         </p>
         <Button variant="outline" size="sm" className="h-7 gap-1.5" onClick={() => onContribute(goal)}>
           <HandCoins className="h-3.5 w-3.5" />
-          Aportar
+          {t("card.contribute")}
         </Button>
       </div>
     </div>

@@ -14,7 +14,7 @@ export interface TransactionEntityProps {
   installmentGroupId: string | null;
   installmentNumber: number | null;
   installmentCount: number | null;
-  recurrenceId: string | null;
+  scheduledTransactionEntryId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -33,7 +33,7 @@ export class TransactionEntity {
   readonly installmentGroupId: string | null;
   readonly installmentNumber: number | null;
   readonly installmentCount: number | null;
-  readonly recurrenceId: string | null;
+  readonly scheduledTransactionEntryId: string | null;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -51,7 +51,7 @@ export class TransactionEntity {
     this.installmentGroupId = props.installmentGroupId;
     this.installmentNumber = props.installmentNumber;
     this.installmentCount = props.installmentCount;
-    this.recurrenceId = props.recurrenceId;
+    this.scheduledTransactionEntryId = props.scheduledTransactionEntryId;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
   }

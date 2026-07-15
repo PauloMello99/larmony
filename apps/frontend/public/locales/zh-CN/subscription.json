@@ -1,0 +1,61 @@
+{
+  "title": "订阅",
+  "description": "该家庭的套餐、状态和订阅管理。",
+  "planTitle": "当前套餐",
+  "loadError": "订阅信息加载失败，请重试。",
+  "ownerOnly": "只有家庭负责人可以管理订阅。",
+  "plan": {
+    "locked": "未订阅",
+    "essencial": "基础版",
+    "completo": "完整版"
+  },
+  "status": {
+    "active": "有效",
+    "trialing": "试用期",
+    "past_due": "付款逾期",
+    "canceled": "已取消"
+  },
+  "locked": {
+    "description": "该家庭目前没有有效订阅——你仍可查看数据，但创建或编辑需要先订阅。",
+    "trialNotice": "任意套餐均可免费试用30天（需绑定银行卡，试用期结束前不会扣费）。",
+    "onboardingNotice": "您的家庭已创建！选择一个套餐开始使用——前30天免费。",
+    "descriptionEssencial": "管理日常财务所需的基础功能。",
+    "descriptionCompleto": "包含基础版的全部功能，另加预算、计划记账和高级报告。",
+    "intervalMonthly": "按月",
+    "intervalAnnual": "按年（免2个月）",
+    "cta": "开始免费试用",
+    "ctaPending": "跳转中……"
+  },
+  "active": {
+    "description": "您的订阅已生效，尽情使用套餐内的所有功能吧。",
+    "pastDue": "存在一笔逾期付款。请前往管理门户更新付款方式，以免失去访问权限。",
+    "portalCta": "管理订阅",
+    "portalPending": "跳转中……"
+  },
+  "trial": {
+    "title": "试用期进行中",
+    "description": "该家庭在试用期内可使用完整版的全部功能。",
+    "cta": "立即订阅"
+  },
+  "comp": {
+    "title": "已授予豁免",
+    "description": "该家庭已获得完整访问权限，无需付费。",
+    "reasonLabel": "原因"
+  },
+  "banner": {
+    "success": "订阅已确认！Stripe 确认付款后，访问权限将立即激活。",
+    "cancel": "结账已取消，未产生任何费用。"
+  },
+  "gate": {
+    "title": "完整版功能",
+    "description": "高级报告属于完整版套餐。请升级以解锁。",
+    "descriptionCategories": "自定义分类属于完整版套餐。请升级以解锁。",
+    "descriptionBudgets": "预算属于完整版套餐。请升级以解锁。",
+    "descriptionScheduledEntries": "计划记账属于完整版套餐。请升级以解锁。",
+    "cta": "查看套餐"
+  },
+  "lockedBanner": {
+    "description": "该家庭处于只读模式——没有有效订阅。",
+    "cta": "订阅"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "title": "Assinatura",
+  "description": "Plano, status e gerenciamento da assinatura deste lar.",
+  "planTitle": "Plano atual",
+  "loadError": "Não foi possível carregar a assinatura. Tente novamente.",
+  "ownerOnly": "Apenas o responsável pelo lar pode gerenciar a assinatura.",
+  "plan": {
+    "locked": "Sem assinatura",
+    "essencial": "Essencial",
+    "completo": "Completo"
+  },
+  "status": {
+    "active": "Ativa",
+    "trialing": "Período de teste",
+    "past_due": "Pagamento pendente",
+    "canceled": "Cancelada"
+  },
+  "locked": {
+    "description": "Este lar não tem uma assinatura ativa — você ainda pode ver seus dados, mas criar ou editar exige assinar.",
+    "trialNotice": "Experimente qualquer plano grátis por 30 dias (cartão necessário, sem cobrança até o fim do teste).",
+    "onboardingNotice": "Seu lar foi criado! Escolha um plano para começar — os primeiros 30 dias são grátis.",
+    "descriptionEssencial": "O essencial para controlar as finanças do dia a dia.",
+    "descriptionCompleto": "Tudo do Essencial, mais orçamentos, lançamentos programados e relatórios avançados.",
+    "intervalMonthly": "Mensal",
+    "intervalAnnual": "Anual (2 meses grátis)",
+    "cta": "Iniciar teste grátis",
+    "ctaPending": "Redirecionando…"
+  },
+  "active": {
+    "description": "Sua assinatura está ativa. Aproveite todos os recursos do seu plano.",
+    "pastDue": "Há um pagamento pendente. Atualize o método de pagamento no portal para não perder o acesso.",
+    "portalCta": "Gerenciar assinatura",
+    "portalPending": "Redirecionando…"
+  },
+  "trial": {
+    "title": "Período de teste ativo",
+    "description": "Este lar tem acesso ao plano Completo durante o período de teste.",
+    "cta": "Assinar agora"
+  },
+  "comp": {
+    "title": "Isenção concedida",
+    "description": "Este lar tem acesso completo por cortesia — sem cobrança.",
+    "reasonLabel": "Motivo"
+  },
+  "banner": {
+    "success": "Assinatura confirmada! O acesso é ativado assim que o Stripe confirma o pagamento.",
+    "cancel": "Checkout cancelado. Nenhuma cobrança foi feita."
+  },
+  "gate": {
+    "title": "Recurso do plano Completo",
+    "description": "Relatórios avançados fazem parte do plano Completo. Faça upgrade para desbloquear.",
+    "descriptionCategories": "Categorias personalizadas fazem parte do plano Completo. Faça upgrade para desbloquear.",
+    "descriptionBudgets": "Orçamentos fazem parte do plano Completo. Faça upgrade para desbloquear.",
+    "descriptionScheduledEntries": "Lançamentos programados fazem parte do plano Completo. Faça upgrade para desbloquear.",
+    "cta": "Ver planos"
+  },
+  "lockedBanner": {
+    "description": "Este lar está em modo somente-leitura — sem assinatura ativa.",
+    "cta": "Assinar"
+  }
+}

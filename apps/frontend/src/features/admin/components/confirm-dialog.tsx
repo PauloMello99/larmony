@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { Loader2 } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import {
@@ -36,13 +37,14 @@ export function ConfirmDialog({
   onOpenChange,
   title,
   description,
-  confirmLabel = "Confirmar",
-  cancelLabel = "Cancelar",
+  confirmLabel,
+  cancelLabel,
   destructive = false,
   loading = false,
   error,
   onConfirm,
 }: ConfirmDialogProps) {
+  const { t } = useTranslation("admin")
   return (
     <Dialog open={open} onOpenChange={(o) => !loading && onOpenChange(o)}>
       <DialogContent className="sm:max-w-md">
@@ -66,7 +68,7 @@ export function ConfirmDialog({
             onClick={() => onOpenChange(false)}
             disabled={loading}
           >
-            {cancelLabel}
+            {cancelLabel ?? t("confirm.cancel")}
           </Button>
           <Button
             variant={destructive ? "destructive" : "default"}
@@ -74,7 +76,7 @@ export function ConfirmDialog({
             disabled={loading}
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-            {confirmLabel}
+            {confirmLabel ?? t("confirm.confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

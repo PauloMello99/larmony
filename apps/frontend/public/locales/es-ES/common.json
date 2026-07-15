@@ -1,0 +1,117 @@
+{
+  "app": {
+    "name": "Larmony",
+    "tagline": "Organice sus finanzas de su hogar"
+  },
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "clear": "Limpiar",
+    "all": "Todo",
+    "back": "Volver"
+  },
+  "export": {
+    "title": "Exportar CSV",
+    "button": "Exportar",
+    "fields": "Campos del CSV",
+    "download": "Descargar CSV"
+  },
+  "filters": {
+    "label": "Filtros",
+    "advanced": "Filtros avanzados",
+    "min": "Mín",
+    "max": "Máx"
+  },
+  "datePicker": {
+    "placeholder": "Seleccione una fecha"
+  },
+  "phoneInput": {
+    "placeholder": "Número de teléfono",
+    "country": "País"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "markAll": "Marcar todas",
+    "empty": "No hay notificaciones."
+  },
+  "locale": {
+    "label": "Idioma",
+    "pt-BR": "Português (Brasil)",
+    "en": "English",
+    "es": "Español"
+  },
+  "pagination": {
+    "range": "{{from}}–{{to}} de {{total}}",
+    "perPage": "Por página",
+    "pageOf": "{{page}} de {{totalPages}}",
+    "previous": "Página anterior",
+    "next": "Página siguiente"
+  },
+  "api": {
+    "USER_NOT_FOUND": "Usuario no encontrado.",
+    "INVALID_CREDENTIALS": "Correo electrónico o contraseña inválidos.",
+    "AUTH_TOKEN_EXPIRED": "Su sesión ha expirado — inicie sesión de nuevo.",
+    "ORGANIZATION_NOT_FOUND": "Hogar no encontrado.",
+    "SLUG_ALREADY_TAKEN": "Este identificador ya está en uso.",
+    "ORG_FORBIDDEN": "No tiene permiso para realizar esta acción.",
+    "MEMBER_NOT_FOUND": "Miembro no encontrado.",
+    "INVITATION_NOT_FOUND": "Invitación no encontrada.",
+    "INVITATION_NOT_PENDING": "Esta invitación ya no está pendiente.",
+    "INVITATION_EXPIRED": "Esta invitación ha caducado.",
+    "INVITATION_EMAIL_MISMATCH": "Esta invitación fue enviada a otro correo electrónico.",
+    "INVITATION_EMAIL_FAILED": "No se pudo enviar el correo de invitación.",
+    "MATERIAL_NOT_FOUND": "Material no encontrado.",
+    "MATERIAL_IN_USE_BY_SERVICES": "Este material está en uso por servicios y no puede eliminarse.",
+    "INSUFFICIENT_STOCK": "Stock insuficiente.",
+    "CUSTOMER_NOT_FOUND": "Cliente no encontrado.",
+    "CALENDAR_EVENT_NOT_FOUND": "Evento no encontrado.",
+    "CALENDAR_EVENT_OVERLAP": "Ya existe un evento en este horario.",
+    "CALENDAR_EVENT_FORBIDDEN": "No tiene permiso para modificar este evento.",
+    "CALENDAR_EVENT_INVALID_RANGE": "El intervalo de fechas del evento no es válido.",
+    "TRANSACTION_NOT_FOUND": "Transacción no encontrada.",
+    "TRANSACTION_ALREADY_REVERSED": "Esta transacción ya ha sido revertida.",
+    "TRANSACTION_NOT_REVERSIBLE": "Esta transacción no se puede revertir.",
+    "CASHIER_FORBIDDEN": "No tiene permiso para realizar esta operación de caja.",
+    "AVATAR_UPLOAD_FAILED": "Error al subir el avatar — inténtelo de nuevo.",
+    "LAST_ACTIVE_OWNER": "El hogar necesita al menos un propietario activo.",
+    "SERVICE_NOT_FOUND": "Servicio no encontrado.",
+    "CUSTOMER_DISABLED": "Este cliente está deshabilitado.",
+    "EMPLOYEE_INACTIVE": "Este empleado está inactivo.",
+    "SERVICE_ALREADY_CANCELED": "Este servicio ya ha sido cancelado.",
+    "SERVICE_NOT_PAYABLE": "Este servicio no se puede pagar.",
+    "SERVICE_FORBIDDEN": "No tiene permiso para modificar este servicio.",
+    "PLATFORM_TARGET_NOT_FOUND": "Registro no encontrado.",
+    "HOUSEHOLD_HAS_ACTIVE_SUBSCRIPTION": "Este hogar tiene una suscripción activa — cancélala antes de suspender.",
+    "CATEGORY_NOT_FOUND": "Categoría no encontrada.",
+    "BUDGET_NOT_FOUND": "Presupuesto no encontrado.",
+    "BUDGET_ALREADY_EXISTS": "Ya existe un presupuesto para esta categoría en este mes.",
+    "BUDGET_PERIOD_NOT_EDITABLE": "Este presupuesto pertenece a un período cerrado y no se puede editar.",
+    "GOAL_NOT_FOUND": "Meta no encontrada.",
+    "GOAL_CONTRIBUTION_NOT_FOUND": "Aportación de la meta no encontrada.",
+    "TRANSACTION_SPLIT_INVALID": "La división de la transacción no es válida — revise los valores.",
+    "INSTALLMENT_GROUP_NOT_FOUND": "Grupo de cuotas no encontrado.",
+    "SCHEDULED_ENTRY_NOT_FOUND": "Movimiento programado no encontrado.",
+    "SCHEDULED_ENTRY_START_DATE_IN_PAST": "La fecha de inicio no puede estar en el pasado en modo automático.",
+    "SCHEDULED_ENTRY_INVALID_DATE_RANGE": "La fecha final no puede ser anterior a la fecha de inicio.",
+    "SCHEDULED_ENTRY_NOT_MANUAL": "Este movimiento programado no está en modo manual.",
+    "NO_STRIPE_CUSTOMER": "El hogar aún no tiene una suscripción — suscríbase antes de gestionar.",
+    "STRIPE_NOT_CONFIGURED": "Pagos no disponibles en este momento — inténtelo de nuevo más tarde.",
+    "PLAN_NOT_AVAILABLE": "El plan aún no está disponible — inténtelo de nuevo en unos instantes.",
+    "WEBHOOK_SIGNATURE_INVALID": "No se pudo validar la solicitud de pago.",
+    "PREMIUM_REQUIRED": "Esta función requiere un plan premium.",
+    "INVALID_DISCOUNT": "Descuento no válido — revise los parámetros.",
+    "SUBSCRIPTION_NOT_STRIPE_LINKED": "El hogar no tiene una suscripción de Stripe activa.",
+    "TRIAL_NOT_ALLOWED": "El período de prueba no está disponible para el plan actual del hogar.",
+    "HOUSEHOLD_LIMIT_REACHED": "Has alcanzado el límite de hogares del plan Free. Mejora un hogar existente para crear otro.",
+    "MEMBER_LIMIT_REACHED": "Este hogar alcanzó el límite de miembros del plan Free. Mejora el plan para invitar a más personas.",
+    "GOAL_LIMIT_REACHED": "Este hogar ya tiene el número máximo de metas del plan Free. Mejora el plan para crear más.",
+    "BUDGET_LIMIT_REACHED": "Este hogar ya tiene el número máximo de presupuestos activos del plan Free. Cierra un presupuesto existente o mejora el plan.",
+    "NETWORK": "Fallo de red — verifique su conexión e inténtelo de nuevo.",
+    "UNEXPECTED": "Se produjo un error inesperado. Inténtelo de nuevo."
+  }
+}

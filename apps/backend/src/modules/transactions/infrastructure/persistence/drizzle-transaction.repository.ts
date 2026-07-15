@@ -29,7 +29,8 @@ export class DrizzleTransactionRepository implements ITransactionRepository {
   constructor(
     // CRUD request-scoped (RLS-enforced).
     @Inject(DRIZZLE) private readonly db: DrizzleDB,
-    // Geração por recorrência roda no cron (sem request/RLS context) → admin.
+    // Geração automática (lançamentos programados, ADR-0020) roda no cron
+    // (sem request/RLS context) → admin.
     @Inject(DRIZZLE_ADMIN) private readonly admin: DrizzleDB,
   ) {}
 
@@ -71,7 +72,7 @@ export class DrizzleTransactionRepository implements ITransactionRepository {
           installmentGroupId: schema.transactions.installmentGroupId,
           installmentNumber: schema.transactions.installmentNumber,
           installmentCount: schema.transactions.installmentCount,
-          recurrenceId: schema.transactions.recurrenceId,
+          scheduledTransactionEntryId: schema.transactions.scheduledTransactionEntryId,
           memberCount: sql<number>`(select count(*)::int from ${schema.transactionMembers} where ${schema.transactionMembers.transactionId} = ${schema.transactions.id})`,
           createdAt: schema.transactions.createdAt,
           updatedAt: schema.transactions.updatedAt,
@@ -216,7 +217,7 @@ export class DrizzleTransactionRepository implements ITransactionRepository {
         description: data.description,
         date: data.date,
         notes: data.notes ?? null,
-        recurrenceId: data.recurrenceId,
+        scheduledTransactionEntryId: data.scheduledTransactionEntryId,
       })
       .returning();
 

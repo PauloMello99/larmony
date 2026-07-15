@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { PlusCircle, Target } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Skeleton } from "@/shared/components/ui/skeleton"
@@ -15,6 +16,7 @@ import type { Goal } from "../types"
 import type { ContributionFormValues, GoalFormValues } from "../schemas/goal.schemas"
 
 export function GoalsPage() {
+  const { t } = useTranslation("goals")
   const { householdId } = useCurrentHousehold()
   const { goals, loading } = useGoals(householdId)
   const { createGoal, updateGoal, deleteGoal, addContribution, deleteContribution } =
@@ -53,13 +55,11 @@ export function GoalsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="flex flex-col">
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold text-foreground sm:text-2xl">Metas</h1>
-          <p className="mt-1 text-sm text-foreground/40">
-            Objetivos de poupança do lar, com aportes de todos
-          </p>
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
+          <p className="mt-1 text-sm text-foreground/40">{t("page.subtitle")}</p>
         </div>
         <Button
           className="w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
@@ -67,7 +67,7 @@ export function GoalsPage() {
           onClick={openCreate}
         >
           <PlusCircle className="mr-2 h-4 w-4" />
-          Nova meta
+          {t("page.newGoal")}
         </Button>
       </div>
 
@@ -80,14 +80,14 @@ export function GoalsPage() {
       ) : goals.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-foreground/10 py-16 text-center sm:py-20">
           <Target className="mb-4 h-10 w-10 text-foreground/20" />
-          <p className="text-sm text-foreground/40">Nenhuma meta ainda.</p>
+          <p className="text-sm text-foreground/40">{t("page.empty")}</p>
           <Button
             className="mt-4 w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
             size="sm"
             onClick={openCreate}
           >
             <PlusCircle className="mr-2 h-4 w-4" />
-            Criar meta
+            {t("page.createGoal")}
           </Button>
         </div>
       ) : (
@@ -99,7 +99,12 @@ export function GoalsPage() {
         />
       )}
 
-      <GoalForm open={formOpen} onOpenChange={setFormOpen} goal={editing} onSubmit={handleSubmit} />
+      <GoalForm
+        open={formOpen}
+        onOpenChange={setFormOpen}
+        goal={editing}
+        onSubmit={handleSubmit}
+      />
 
       <ContributionDialog
         householdId={householdId}

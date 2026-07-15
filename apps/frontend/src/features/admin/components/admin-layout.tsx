@@ -3,17 +3,22 @@
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { LayoutDashboard, Building2, Users, CreditCard, Shield, ArrowLeft, Loader2, ShieldCheck } from "lucide-react"
+import { useTranslation } from "react-i18next"
+import { LayoutDashboard, Building2, Users, Shield, ArrowLeft, Loader2, ShieldCheck, LifeBuoy } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { useMe } from "@/features/auth/hooks/use-me"
 import { UserMenu } from "@/features/dashboard/components/user-menu"
+import { AppBackground } from "@/shared/components/app-background"
+import { useAdminSupportTickets } from "../hooks/use-admin"
 
+// Billing saiu do nav (M15): admin é centrado em LARES — a gestão de
+// assinatura vive na aba Assinatura do detalhe de cada lar.
 const NAV = [
-  { href: "/admin", label: "Visão geral", icon: LayoutDashboard },
-  { href: "/admin/households", label: "Lares", icon: Building2 },
-  { href: "/admin/users", label: "Usuários", icon: Users },
-  { href: "/admin/billing", label: "Assinaturas", icon: CreditCard },
-  { href: "/admin/audit-logs", label: "Auditoria", icon: Shield },
+  { href: "/admin", labelKey: "layout.navOverview", icon: LayoutDashboard },
+  { href: "/admin/households", labelKey: "layout.navHouseholds", icon: Building2 },
+  { href: "/admin/users", labelKey: "layout.navUsers", icon: Users },
+  { href: "/admin/support", labelKey: "layout.navSupport", icon: LifeBuoy },
+  { href: "/admin/audit-logs", labelKey: "layout.navAuditLogs", icon: Shield },
 ]
 
 /**
@@ -21,14 +26,16 @@ const NAV = [
  * acesso (super_admin) via /auth/me e oferece a navegação entre as seções.
  */
 export function AdminLayout({ children }: { children: React.ReactNode }) {
+  const { t } = useTranslation("admin")
   const router = useRouter()
   const { me, loading } = useMe()
-
   const isSuperAdmin = me?.platformRole === "super_admin"
+  const { page: openTickets } = useAdminSupportTickets({ status: "open", limit: 1 }, isSuperAdmin)
+  const openTicketsCount = openTickets?.total ?? 0
 
   React.useEffect(() => {
     if (!loading && me && !isSuperAdmin) {
-      void router.replace("/dashboard/households")
+      void router.replace("/households")
     }
   }, [loading, me, isSuperAdmin, router])
 
@@ -43,7 +50,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   if (!isSuperAdmin) {
     return (
       <div className="flex min-h-screen items-center justify-center text-sm text-foreground/40">
-        Acesso restrito ao super_admin.
+        {t("layout.accessRestricted")}
       </div>
     )
   }
@@ -54,22 +61,23 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       : router.pathname.startsWith(href)
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background">
+      <AppBackground />
       {/* Top bar */}
-      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-foreground/[0.06] bg-background/80 px-4 py-2.5 backdrop-blur sm:px-6">
+      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-foreground/[0.06] bg-background/70 px-4 py-2.5 backdrop-blur-xl sm:px-6">
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-5 w-5 text-primary" />
           <span className="text-sm font-semibold text-foreground">
-            larmony <span className="text-foreground/40">· Plataforma</span>
+            larmony <span className="text-foreground/40">{t("layout.platformSuffix")}</span>
           </span>
         </div>
         <div className="flex items-center gap-1">
           <Link
-            href="/dashboard/households"
+            href="/households"
             className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm text-foreground/50 transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span className="hidden sm:inline">Voltar ao app</span>
+            <span className="hidden sm:inline">{t("layout.backToApp")}</span>
           </Link>
           <UserMenu />
         </div>
@@ -98,7 +106,12 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                     active ? "text-primary" : "text-foreground/40",
                   )}
                 />
-                {item.label}
+                {t(item.labelKey)}
+                {item.href === "/admin/support" && openTicketsCount > 0 && (
+                  <span className="ml-auto flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-white">
+                    {openTicketsCount > 9 ? "9+" : openTicketsCount}
+                  </span>
+                )}
               </Link>
             )
           })}

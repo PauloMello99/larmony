@@ -1,0 +1,47 @@
+{
+  "format": {
+    "dateLocale": "pt-BR"
+  },
+  "list": {
+    "title": "Suporte",
+    "subtitle": "Seus chamados de ajuda, dúvidas e sugestões.",
+    "newTicket": "Novo chamado",
+    "loading": "Carregando…",
+    "empty": "Nenhum chamado ainda",
+    "emptyDescription": "Abra um chamado se precisar de ajuda, tiver uma dúvida ou sugestão."
+  },
+  "newTicket": {
+    "title": "Novo chamado",
+    "subtitle": "Conte pra gente o que você precisa — nossa equipe responde por aqui.",
+    "categoryLabel": "Categoria",
+    "subjectLabel": "Assunto",
+    "subjectPlaceholder": "Resuma em poucas palavras",
+    "bodyLabel": "Mensagem",
+    "bodyPlaceholder": "Descreva com detalhes...",
+    "submit": "Abrir chamado",
+    "submitting": "Abrindo…",
+    "genericError": "Não foi possível abrir o chamado. Tente novamente."
+  },
+  "category": {
+    "problem": "Problema",
+    "question": "Dúvida",
+    "suggestion": "Sugestão",
+    "billing": "Cobrança"
+  },
+  "status": {
+    "open": "Aberto",
+    "answered": "Respondido",
+    "closed": "Fechado"
+  },
+  "thread": {
+    "title": "Chamado",
+    "back": "Voltar aos chamados",
+    "loading": "Carregando…",
+    "genericError": "Não foi possível enviar a resposta. Tente novamente.",
+    "supportAuthor": "Suporte",
+    "closedNotice": "Este chamado está fechado. Abra um novo chamado se precisar de mais ajuda.",
+    "replyPlaceholder": "Escreva sua resposta...",
+    "replySubmit": "Responder",
+    "replySubmitting": "Enviando…"
+  }
+}

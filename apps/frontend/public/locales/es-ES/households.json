@@ -1,0 +1,130 @@
+{
+  "roles": { "owner": "Propietario", "member": "Miembro" },
+  "validation": {
+    "nameMin": "Mínimo 2 caracteres",
+    "nameMax": "Máximo 80 caracteres",
+    "emailInvalid": "Correo electrónico no válido"
+  },
+  "settings": {
+    "loading": "Cargando…",
+    "notFound": "Hogar no encontrado.",
+    "generalTitle": "Información general",
+    "generalDescription": "Nombre e identificador público del hogar.",
+    "nameLabel": "Nombre",
+    "slugLabel": "Slug",
+    "membersTitle": "Miembros",
+    "membersDescription": "Gestiona quién tiene acceso a este hogar.",
+    "invite": "Invitar",
+    "transferTitle": "Transferir hogar",
+    "transferDescription": "Transfiere la propiedad de este hogar a otro miembro.",
+    "transferProse": "La titularidad pasa al miembro elegido. Te conviertes en miembro con acceso total a los módulos.",
+    "dangerTitle": "Zona de peligro",
+    "dangerDescription": "Acciones irreversibles. Procede con precaución.",
+    "deleteTitle": "Eliminar hogar",
+    "deleteDescription": "Elimina permanentemente todos los datos de este hogar."
+  },
+  "membersPage": {
+    "loading": "Cargando miembros…",
+    "title": "Miembros",
+    "description": "Gestiona quién tiene acceso a este hogar.",
+    "invite": "Invitar",
+    "inviteCreated": "Invitación creada. Enlace de aceptación (dev — cópialo para probar):",
+    "copy": "Copiar",
+    "updatePermissionsError": "No se pudieron actualizar los permisos.",
+    "toggleStatusError": "No se pudo cambiar el estado del miembro."
+  },
+  "members": {
+    "title": "Miembros ({{count}})",
+    "pendingInvitations": "Invitaciones pendientes ({{count}})",
+    "nameHeader": "Nombre",
+    "emailHeader": "Correo electrónico",
+    "roleHeader": "Rol",
+    "you": "(tú)",
+    "invitationMeta": "{{role}} · expira {{date}}",
+    "actions": {
+      "permissions": "Permisos",
+      "makeOwner": "Convertir en propietario",
+      "makeMember": "Convertir en miembro",
+      "enable": "Habilitar",
+      "disable": "Deshabilitar",
+      "remove": "Eliminar"
+    }
+  },
+  "modules": {
+    "services": "Servicios",
+    "clients": "Clientes",
+    "schedule": "Agenda",
+    "stock": "Inventario",
+    "cashier": "Caja"
+  },
+  "roleDialog": {
+    "title": "Cambiar rol",
+    "description": "Cambia el rol de <span>{{name}}</span>.",
+    "newRoleLabel": "Nuevo rol",
+    "saving": "Guardando…"
+  },
+  "permissionsDialog": {
+    "title": "Permisos del miembro",
+    "description": "Elige los módulos a los que <span>{{name}}</span> puede acceder. En cada módulo, el miembro solo ve sus propios registros.",
+    "saving": "Guardando…",
+    "submit": "Guardar permisos"
+  },
+  "removeDialog": {
+    "title": "Eliminar miembro",
+    "description": "¿Seguro que deseas eliminar a <span>{{name}}</span> del hogar?",
+    "removing": "Eliminando…",
+    "submit": "Eliminar"
+  },
+  "transferDialog": {
+    "trigger": "Transferir",
+    "title": "Transferir hogar",
+    "description": "Elige al miembro que se convertirá en el nuevo propietario. Pasarás a tener el rol de <span>miembro</span> con acceso total a los módulos.",
+    "newOwnerLabel": "Nuevo propietario",
+    "selectPlaceholder": "Selecciona un miembro",
+    "memberOption": "{{name}} ({{email}})",
+    "error": "No se pudo transferir el hogar.",
+    "submitting": "Transfiriendo…",
+    "submit": "Transferir titularidad"
+  },
+  "deleteDialog": {
+    "trigger": "Eliminar hogar",
+    "title": "Eliminar hogar",
+    "description": "Esta acción es <span>irreversible</span>. Todos los datos del hogar se eliminarán permanentemente.",
+    "confirmLabel": "Escribe <span>{{name}}</span> para confirmar:",
+    "deleting": "Eliminando…",
+    "submit": "Eliminar permanentemente"
+  },
+  "createForm": {
+    "title": "Nuevo hogar",
+    "description": "Crea un espacio para tu hogar. Serás el propietario.",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Ej.: Casa de la Familia",
+    "timezoneLabel": "Zona horaria",
+    "timezoneHint": "Define cuándo vencen los movimientos y cuándo se envían los avisos. Detectada automáticamente — ajústala si es necesario.",
+    "limitReached": "Ya tienes un hogar en el plan Free. Ve a Configuración > Suscripción de un hogar existente para mejorar el plan y crear otro.",
+    "submitting": "Creando…",
+    "submit": "Crear hogar"
+  },
+  "editForm": {
+    "nameLabel": "Nombre del hogar",
+    "namePlaceholder": "Ej.: Casa de la Familia",
+    "slugLabel": "Identificador (slug)",
+    "slugHint": "Generado automáticamente — no se puede modificar.",
+    "timezoneLabel": "Zona horaria",
+    "timezoneHint": "Define cuándo vencen los movimientos y cuándo se envían los avisos.",
+    "notificationHourLabel": "Hora de los avisos",
+    "notificationHourHint": "Los recordatorios y el informe mensual se envían a partir de esta hora, en la zona horaria del hogar.",
+    "saving": "Guardando…",
+    "submit": "Guardar cambios"
+  },
+  "inviteForm": {
+    "title": "Invitar miembro",
+    "description": "La invitación se enviará por correo electrónico con un enlace de acceso.",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "nombre@ejemplo.com",
+    "roleLabel": "Rol",
+    "rolePlaceholder": "Selecciona un rol",
+    "submitting": "Enviando…",
+    "submit": "Enviar invitación"
+  }
+}

@@ -28,8 +28,7 @@ from qdrant_client.models import FusionQuery, Fusion, Prefetch
 from qdrant_store import DENSE, SPARSE, build_filter, get_client
 from sparse import embed_sparse_query
 
-_SNIPPET_CHARS = 600
-_PREFETCH = 20
+_PREFETCH = 20  # candidates fetched per vector branch (dense/sparse) before RRF fusion
 
 mcp = FastMCP("larmony-memory")
 

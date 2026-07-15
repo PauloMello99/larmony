@@ -35,7 +35,9 @@ import { UpdateMeUseCase } from "./use-cases/update-me.use-case";
 import { UploadAvatarUseCase } from "./use-cases/upload-avatar.use-case";
 import { DeleteAccountUseCase } from "./use-cases/delete-account.use-case";
 import { UpdateMeDto } from "./dto/update-me.dto";
+import { CompleteOnboardingDto } from "./dto/complete-onboarding.dto";
 import { GetMeUseCase } from "../user/application/use-cases/get-me.use-case";
+import { CompleteOnboardingUseCase } from "../user/application/use-cases/complete-onboarding.use-case";
 
 /** Subconjunto do arquivo multer que usamos (evita depender de @types/multer). */
 interface UploadedImage {
@@ -55,6 +57,7 @@ export class AuthController {
     private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
     private readonly resetPasswordUseCase: ResetPasswordUseCase,
     private readonly getMeUseCase: GetMeUseCase,
+    private readonly completeOnboardingUseCase: CompleteOnboardingUseCase,
     private readonly updateMeUseCase: UpdateMeUseCase,
     private readonly uploadAvatarUseCase: UploadAvatarUseCase,
     private readonly deleteAccountUseCase: DeleteAccountUseCase,
@@ -64,7 +67,7 @@ export class AuthController {
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Post("sign-up")
   signUp(@Body() dto: SignUpDto) {
-    return this.signUpUseCase.execute(dto.email, dto.password, dto.name);
+    return this.signUpUseCase.execute(dto.email, dto.password, dto.name, dto.locale);
   }
 
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
@@ -113,6 +116,15 @@ export class AuthController {
   @UseGuards(AuthGuard)
   updateMe(@CurrentUser() user: AuthUser, @Body() dto: UpdateMeDto) {
     return this.updateMeUseCase.execute(user, dto);
+  }
+
+  @Post("me/onboarding")
+  @UseGuards(AuthGuard)
+  completeOnboarding(
+    @CurrentUser() user: AuthUser,
+    @Body() dto: CompleteOnboardingDto,
+  ) {
+    return this.completeOnboardingUseCase.execute(user, dto);
   }
 
   @Delete("me")

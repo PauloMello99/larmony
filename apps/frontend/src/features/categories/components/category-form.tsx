@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Sheet,
@@ -30,11 +31,19 @@ import {
 } from "@/shared/components/ui/select"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
-import { categorySchema, type CategoryFormValues } from "../schemas/category.schemas"
+import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
+import { useEntitlements, PremiumGate } from "@/features/subscription"
+import { translateApiError } from "@/shared/lib/api-error"
+import { makeCategorySchema, type CategoryFormValues } from "../schemas/category.schemas"
 import { CATEGORY_ICON_OPTIONS } from "../lib/icon-options"
 import type { Category } from "../types"
 
-const TYPE_LABEL = { income: "Receita", expense: "Despesa", both: "Ambos" } as const
+/** Chaves i18n (namespace `categories`) — resolvidas no render. */
+const TYPE_LABEL_KEY = {
+  income: "types.income",
+  expense: "types.expense",
+  both: "types.both",
+} as const
 
 interface CategoryFormProps {
   open: boolean
@@ -44,7 +53,18 @@ interface CategoryFormProps {
 }
 
 export function CategoryForm({ open, onOpenChange, category, onSubmit }: CategoryFormProps) {
+  const { t } = useTranslation("categories")
+  const { t: tCommon } = useTranslation("common")
   const isEditing = !!category
+  const { household } = useCurrentHousehold()
+  const { capabilities } = useEntitlements(household.id)
+  // Categorias personalizadas são Family-only (P-4, D-1) — editar/excluir
+  // categorias já existentes (incl. as padrão) continua livre; só a criação
+  // de uma NOVA categoria é gateada.
+  const blocked = !isEditing && !capabilities.custom_categories
+
+  const categorySchema = useMemo(() => makeCategorySchema(t), [t])
+  const [error, setError] = useState<string | null>(null)
 
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(categorySchema),
@@ -63,13 +83,41 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
             }
           : { name: "", type: "expense", color: "#8b8b8b", icon: undefined },
       )
+      setError(null)
     }
   }, [open, category, form])
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit(values)
-    onOpenChange(false)
+    setError(null)
+    try {
+      await onSubmit(values)
+      onOpenChange(false)
+    } catch (err) {
+      setError(translateApiError(err, tCommon))
+    }
   })
+
+  if (blocked) {
+    return (
+      <Sheet open={open} onOpenChange={onOpenChange}>
+        <SheetContent side="right" className="gap-0 sm:max-w-md">
+          <SheetHeader>
+            <SheetTitle>{t("form.createTitle")}</SheetTitle>
+          </SheetHeader>
+          <SheetBody className="py-6">
+            <PremiumGate descriptionKey="gate.descriptionCategories" />
+          </SheetBody>
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button variant="outline" className="w-full sm:w-auto">
+                {tCommon("actions.cancel")}
+              </Button>
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    )
+  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -77,10 +125,8 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
         <Form {...form}>
           <form onSubmit={handleSubmit} className="flex h-full flex-col">
             <SheetHeader>
-              <SheetTitle>{isEditing ? "Editar categoria" : "Nova categoria"}</SheetTitle>
-              <SheetDescription>
-                Categorias organizam suas transações, orçamentos e contas.
-              </SheetDescription>
+              <SheetTitle>{isEditing ? t("form.editTitle") : t("form.createTitle")}</SheetTitle>
+              <SheetDescription>{t("form.description")}</SheetDescription>
             </SheetHeader>
 
             <SheetBody className="flex flex-col gap-4 py-6">
@@ -90,10 +136,15 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Nome <span className="text-red-400">*</span>
+                      {t("form.nameLabel")} <span className="text-red-400">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: Pets" autoComplete="off" autoFocus {...field} />
+                      <Input
+                        placeholder={t("form.namePlaceholder")}
+                        autoComplete="off"
+                        autoFocus
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -105,7 +156,7 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tipo</FormLabel>
+                    <FormLabel>{t("form.typeLabel")}</FormLabel>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
@@ -113,11 +164,13 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {(Object.keys(TYPE_LABEL) as Array<keyof typeof TYPE_LABEL>).map((v) => (
-                          <SelectItem key={v} value={v}>
-                            {TYPE_LABEL[v]}
-                          </SelectItem>
-                        ))}
+                        {(Object.keys(TYPE_LABEL_KEY) as Array<keyof typeof TYPE_LABEL_KEY>).map(
+                          (v) => (
+                            <SelectItem key={v} value={v}>
+                              {t(TYPE_LABEL_KEY[v])}
+                            </SelectItem>
+                          ),
+                        )}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -131,7 +184,7 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
                   name="color"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Cor</FormLabel>
+                      <FormLabel>{t("form.colorLabel")}</FormLabel>
                       <FormControl>
                         <div className="flex items-center gap-2">
                           <input
@@ -157,19 +210,19 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
                   name="icon"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ícone</FormLabel>
+                      <FormLabel>{t("form.iconLabel")}</FormLabel>
                       <Select value={field.value} onValueChange={field.onChange}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Escolher" />
+                            <SelectValue placeholder={t("form.iconPlaceholder")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {CATEGORY_ICON_OPTIONS.map(({ value, label, Icon }) => (
+                          {CATEGORY_ICON_OPTIONS.map(({ value, labelKey, Icon }) => (
                             <SelectItem key={value} value={value}>
                               <span className="flex items-center gap-2">
                                 <Icon className="h-3.5 w-3.5" />
-                                {label}
+                                {t(labelKey)}
                               </span>
                             </SelectItem>
                           ))}
@@ -180,12 +233,14 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
                   )}
                 />
               </div>
+
+              {error && <p className="text-sm text-red-400">{error}</p>}
             </SheetBody>
 
             <SheetFooter>
               <SheetClose asChild>
                 <Button type="button" variant="outline" className="w-full sm:w-auto">
-                  Cancelar
+                  {tCommon("actions.cancel")}
                 </Button>
               </SheetClose>
               <Button
@@ -194,10 +249,10 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
                 className="w-full sm:w-auto"
               >
                 {form.formState.isSubmitting
-                  ? "Salvando…"
+                  ? t("form.saving")
                   : isEditing
-                    ? "Salvar alterações"
-                    : "Criar categoria"}
+                    ? t("form.saveChanges")
+                    : t("form.create")}
               </Button>
             </SheetFooter>
           </form>

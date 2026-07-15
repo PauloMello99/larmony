@@ -11,6 +11,11 @@ export const queryKeys = {
   // ─── Current user ─────────────────────────────────────────────────────────
   me: ["me"] as const,
 
+  // ─── Preferências de notificação (M11) ─────────────────────────────────
+  notificationPreferences: {
+    all: ["notification-preferences"] as const,
+  },
+
   // ─── Households ────────────────────────────────────────────────────────
   households: {
     /** Matches every households key (list + all detail entries) */
@@ -58,16 +63,10 @@ export const queryKeys = {
       ["budgets", householdId, "list", filters ?? {}] as const,
   },
 
-  // ─── Bills ──────────────────────────────────────────────────────────────
-  bills: {
-    all: (householdId: string) => ["bills", householdId] as const,
-    list: (householdId: string) => ["bills", householdId, "list"] as const,
-  },
-
-  // ─── Recurrences ──────────────────────────────────────────────────────────
-  recurrences: {
-    all: (householdId: string) => ["recurrences", householdId] as const,
-    list: (householdId: string) => ["recurrences", householdId, "list"] as const,
+  // ─── Lançamentos programados (ADR-0020 — unifica bills + recurrences) ───────
+  scheduledTransactions: {
+    all: (householdId: string) => ["scheduled-transactions", householdId] as const,
+    list: (householdId: string) => ["scheduled-transactions", householdId, "list"] as const,
   },
 
   // ─── Goals ──────────────────────────────────────────────────────────────
@@ -82,9 +81,15 @@ export const queryKeys = {
   // ─── Reports ────────────────────────────────────────────────────────────
   reports: {
     all: (householdId: string) => ["reports", householdId] as const,
-    monthly: (householdId: string) => ["reports", householdId, "monthly"] as const,
+    monthly: (householdId: string, year: number, month: number) =>
+      ["reports", householdId, "monthly", year, month] as const,
     annual: (householdId: string, year: number) =>
       ["reports", householdId, "annual", year] as const,
+  },
+
+  // ─── Subscription / entitlements (M14, billing) ────────────────────────────
+  subscription: {
+    detail: (householdId: string) => ["subscription", householdId] as const,
   },
 
   // ─── Admin (plataforma / super_admin) ──────────────────────────────────────
@@ -92,11 +97,26 @@ export const queryKeys = {
     all: ["admin"] as const,
     stats: () => ["admin", "stats"] as const,
     growth: () => ["admin", "stats", "growth"] as const,
-    households: () => ["admin", "households"] as const,
+    billingStats: () => ["admin", "stats", "billing"] as const,
+    billingGrowth: () => ["admin", "stats", "billing", "growth"] as const,
+    households: (filters?: Record<string, unknown>) =>
+      ["admin", "households", filters ?? {}] as const,
     householdDetail: (id: string) => ["admin", "households", "detail", id] as const,
-    users: () => ["admin", "users"] as const,
+    householdTab: (id: string, tab: string, params?: Record<string, unknown>) =>
+      ["admin", "households", "detail", id, tab, params ?? {}] as const,
+    users: (filters?: Record<string, unknown>) => ["admin", "users", filters ?? {}] as const,
     userDetail: (id: string) => ["admin", "users", "detail", id] as const,
     auditLogs: (filters?: Record<string, unknown>) =>
       ["admin", "audit-logs", filters ?? {}] as const,
+    supportTickets: (filters?: Record<string, unknown>) =>
+      ["admin", "support-tickets", filters ?? {}] as const,
+    supportTicketDetail: (id: string) => ["admin", "support-tickets", "detail", id] as const,
+  },
+
+  // ─── Suporte in-app (M15 PR3) ───────────────────────────────────────────────
+  support: {
+    all: ["support"] as const,
+    list: (filters?: Record<string, unknown>) => ["support", "list", filters ?? {}] as const,
+    detail: (id: string) => ["support", "detail", id] as const,
   },
 } as const

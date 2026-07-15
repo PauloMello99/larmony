@@ -19,6 +19,8 @@ export class CreateGoalUseCase {
     authId: string,
     data: CreateGoalData,
   ): Promise<GoalEntity> {
+    // M16: metas são ilimitadas em qualquer plano pago (a régua de contagem do
+    // Free foi removida). O acesso de escrita é gateado pelo ActiveSubscriptionGuard.
     const goal = await this.goalRepo.create(householdId, data);
 
     await this.auditService.logByAuthId(authId, {

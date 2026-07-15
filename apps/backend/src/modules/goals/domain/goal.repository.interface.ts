@@ -79,4 +79,10 @@ export interface IGoalRepository {
     goalId: string,
     householdId: string,
   ): Promise<void>;
+
+  /** Total aportado na meta (SUM), derivado — usado p/ detectar "meta atingida" (M11). */
+  sumContributions(goalId: string): Promise<number>;
+
+  /** IDs dos membros habilitados do lar — fan-out da notificação de meta atingida. */
+  findHouseholdMemberUserIds(householdId: string): Promise<string[]>;
 }

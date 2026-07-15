@@ -2,7 +2,12 @@ import type { BudgetEntity } from "./budget.entity";
 
 export const BUDGET_REPOSITORY = Symbol("BUDGET_REPOSITORY");
 
-/** Item de listagem — categoria resolvida via JOIN + spending derivado das transações. */
+/**
+ * Item de listagem — categoria resolvida via JOIN + spending derivado das
+ * transações + limite resolvido on-read a partir da versão vigente no
+ * período (M10). `isEditable`/`isProjected` são atribuídos pelo use-case
+ * (comparação de período, não derivados por linha) — ver `list-budgets.use-case`.
+ */
 export interface BudgetListItem {
   id: string;
   householdId: string;
@@ -16,27 +21,93 @@ export interface BudgetListItem {
   spentCents: number;
   createdAt: Date;
   updatedAt: Date;
+  isEditable: boolean;
+  isProjected: boolean;
 }
 
 export interface CreateBudgetData {
   categoryId: string;
-  month: number;
-  year: number;
   amountCents: number;
 }
 
 export interface IBudgetRepository {
-  /** Todos os budgets do período (mês/ano) com spending derivado. */
+  /**
+   * Séries com limite resolvido para o período (mês/ano) + spending derivado.
+   * Só entram séries que já tinham versão vigente naquele período e que
+   * ainda não estavam encerradas (`endedFrom`) antes dele.
+   */
   findAllByPeriod(
     householdId: string,
     month: number,
     year: number,
-  ): Promise<BudgetListItem[]>;
+  ): Promise<Omit<BudgetListItem, "isEditable" | "isProjected">[]>;
+  /** Cria a série + sua primeira versão, ancorada no mês corrente. */
   create(householdId: string, data: CreateBudgetData): Promise<BudgetEntity>;
-  updateAmount(
+  /**
+   * Upsert da versão do mês corrente na série aberta (`ON CONFLICT
+   * (budget_id, effective_from) DO UPDATE`) — nunca altera uma versão
+   * passada. Lança `BudgetNotFoundException` se a série não existe;
+   * `BudgetPeriodNotEditableException` se existe mas está encerrada.
+   */
+  upsertCurrentVersion(
     id: string,
     householdId: string,
     amountCents: number,
   ): Promise<BudgetEntity>;
-  delete(id: string, householdId: string): Promise<void>;
+  /**
+   * Encerra a série a partir do mês corrente (`endedFrom`) — nunca hard
+   * delete. Lança `BudgetNotFoundException` se não existe uma série ABERTA
+   * com esse id.
+   */
+  endSeries(id: string, householdId: string): Promise<void>;
+
+  /**
+   * Resolve o orçamento (se houver) que cobre `categoryId` no período
+   * (mês/ano) — mesma resolução on-read do M10 (`findAllByPeriod`), mas
+   * escopada a UMA categoria. Usado pelo evento "orçamento estourado" (M11)
+   * logo após uma transação de despesa ser gravada. `null` se a categoria
+   * não tem orçamento cobrindo aquele período.
+   *
+   * Via `DRIZZLE` (request-scoped) — a transação recém-gravada por
+   * `CreateTransactionUseCase`/`CreateInstallmentTransactionUseCase` ainda
+   * está numa transação Postgres ABERTA nesta mesma conexão (a
+   * `RlsInterceptor` só dá COMMIT ao fim do request); ler por uma conexão
+   * diferente (ex.: DRIZZLE_ADMIN) não veria a escrita ainda não commitada.
+   * Use `findBudgetForCategoryPeriodAdmin` fora de request context (cron).
+   */
+  findBudgetForCategoryPeriod(
+    householdId: string,
+    categoryId: string,
+    month: number,
+    year: number,
+  ): Promise<{
+    budgetId: string;
+    categoryName: string;
+    limitCents: number;
+    spentCents: number;
+  } | null>;
+
+  /** Mesma resolução, via DRIZZLE_ADMIN — usada pelo engine de geração
+   *  automática (cron, sem request/RLS context, sem transação aberta a
+   *  esperar commit). */
+  findBudgetForCategoryPeriodAdmin(
+    householdId: string,
+    categoryId: string,
+    month: number,
+    year: number,
+  ): Promise<{
+    budgetId: string;
+    categoryName: string;
+    limitCents: number;
+    spentCents: number;
+  } | null>;
+
+  /** IDs dos membros habilitados do lar — fan-out da notificação de estouro. */
+  findHouseholdMemberUserIds(householdId: string): Promise<string[]>;
+
+  /** Fuso IANA do lar (M12) — âncora do "mês corrente" dos orçamentos. */
+  findTimezone(householdId: string): Promise<string>;
+
+  /** Séries ATIVAS (`endedFrom IS NULL`) do lar — régua do Free (D-1, P-5). */
+  countActiveSeries(householdId: string): Promise<number>;
 }

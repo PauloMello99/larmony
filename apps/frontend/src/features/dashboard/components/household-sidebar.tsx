@@ -30,7 +30,7 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
     window.localStorage.setItem("larmony_sidebar_collapsed", collapsed ? "1" : "0")
   }, [collapsed])
 
-  const basePath = `/dashboard/household/${household.slug}`
+  const basePath = `/households/${household.slug}`
 
   // Primeiro segmento da rota após [householdSlug] — ex.: "settings/cashier" → "settings".
   const afterHousehold = router.pathname.split("/[householdSlug]/")[1] ?? ""
@@ -56,7 +56,7 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
 
       <aside
         className={cn(
-          "flex shrink-0 flex-col border-r border-foreground/[0.06] bg-background",
+          "flex shrink-0 flex-col border-r border-foreground/[0.06] bg-background/70 backdrop-blur-xl",
           // Mobile: fixed drawer — slides in/out
           "fixed bottom-0 top-0 z-50 w-64",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
@@ -72,7 +72,7 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
           <button
             onClick={onMobileClose}
             className="mr-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-foreground/30 hover:bg-foreground/[0.06] hover:text-foreground md:hidden"
-            aria-label="Fechar menu"
+            aria-label={t("chrome.closeMenu")}
           >
             <X className="h-4 w-4" />
           </button>
@@ -90,7 +90,7 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
 
           {/* Desktop collapse toggle */}
           <Tooltip
-            content={collapsed ? "Expandir menu" : "Recolher menu"}
+            content={collapsed ? t("chrome.expandMenu") : t("chrome.collapseMenu")}
             side="right"
             disabled={!collapsed}
           >
@@ -100,7 +100,7 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
                 "hidden h-7 w-7 shrink-0 items-center justify-center rounded-md text-foreground/30 transition-colors hover:bg-foreground/[0.06] hover:text-foreground md:flex",
                 collapsed && "mx-auto",
               )}
-              aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+              aria-label={collapsed ? t("chrome.expandMenu") : t("chrome.collapseMenu")}
             >
               {collapsed ? (
                 <PanelLeftOpen className="h-4 w-4" />
@@ -153,6 +153,7 @@ export function HouseholdSidebar({ household, mobileOpen = false, onMobileClose 
                         <Link
                           href={item.href ? `${basePath}/${item.href}` : basePath}
                           onClick={onMobileClose}
+                          data-tour={item.dataTour}
                           className={cn(
                             "flex items-center rounded-md py-2 text-sm transition-colors",
                             // Desktop collapsed: icon only, centered

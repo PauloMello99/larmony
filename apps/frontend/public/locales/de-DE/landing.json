@@ -1,0 +1,275 @@
+{
+  "nav": {
+    "links": {
+      "features": "Funktionen",
+      "product": "Produkt",
+      "pricing": "Preise",
+      "faq": "FAQ"
+    },
+    "login": "Anmelden",
+    "cta": "Kostenlos testen",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen"
+  },
+  "hero": {
+    "badge": "✦ Neu — Automatische Erinnerungen an Rechnungen",
+    "titleLine1": "Die Finanzen deines Zuhauses,",
+    "titleHighlight": "in Harmonie.",
+    "subtitle": "Transaktionen, Budgets, Ziele und Rechnungen — geteilt mit allen, die den Haushalt mit dir teilen. Exakte Cent-Beträge, null Tabellenkalkulationen.",
+    "ctaPrimary": "30 Tage kostenlos testen →",
+    "ctaSecondary": "Demo ansehen",
+    "proof": {
+      "centsLine1": "exakte Cent-Beträge,",
+      "centsLine2": "ohne Rundung",
+      "membersLine1": "Mitglieder",
+      "membersLine2": "pro Haushalt",
+      "languagesLine1": "Sprachen",
+      "languagesLine2": "u. a. Englisch und Spanisch"
+    }
+  },
+  "features": {
+    "kicker": "Funktionen",
+    "title": "Alles, was dein Haushalt braucht",
+    "subtitle": "Entwickelt für den Alltag von allen, die die Finanzen zu Hause organisieren — allein oder mit der Familie.",
+    "items": {
+      "transactions": {
+        "title": "Organisierte Transaktionen",
+        "description": "Kategorisiere Einnahmen und Ausgaben, teile Kosten mit den Bewohnern und behalte alles in Echtzeit im Blick."
+      },
+      "budgets": {
+        "title": "Budgets pro Kategorie",
+        "description": "Lege monatliche Limits pro Kategorie fest und sieh, wie viel bereits ausgegeben wurde, mit Warnung bei Überschreitung."
+      },
+      "goals": {
+        "title": "Sparziele",
+        "description": "Erstelle Ziele für die Reise, die Renovierung oder den Notfallfonds und verfolge den Fortschritt gemeinsam mit dem Haushalt."
+      },
+      "dashboard": {
+        "title": "Dashboard mit echten Kennzahlen",
+        "description": "Saldo des Monats, Vergleich mit dem Vormonat, fällige Rechnungen und Budgets in einem einzigen Dashboard."
+      },
+      "reminders": {
+        "title": "Rechnungserinnerungen",
+        "description": "Vergiss nie wieder eine fällige Rechnung — Benachrichtigung in der App und per E-Mail vor Fälligkeit."
+      },
+      "household": {
+        "title": "Gemacht für den Haushalt",
+        "description": "Lade die Menschen ein, mit denen du zusammenwohnst, jeder mit seiner eigenen Rolle, und organisiert die Haushaltsfinanzen gemeinsam."
+      }
+    }
+  },
+  "tour": {
+    "kicker": "Das Produkt",
+    "title": "Entdecke, was Larmony kann",
+    "subtitle": "Ohne Finanzjargon. Klick durch die Tabs und sieh in Sekunden, wie jeder Bereich im Haushaltsalltag funktioniert.",
+    "tabs": {
+      "overview": "Übersicht",
+      "transactions": "Transaktionen",
+      "categories": "Kategorien",
+      "budgets": "Budgets",
+      "goals": "Ziele",
+      "bills": "Rechnungen"
+    },
+    "overview": {
+      "greeting": "Guten Morgen, Paulo 👋",
+      "kpis": {
+        "income": "Einnahmen des Monats",
+        "expenses": "Ausgaben des Monats",
+        "balance": "Saldo des Monats"
+      },
+      "rows": {
+        "r1": "Gehalt — Juli",
+        "r2": "Supermarkt Extra",
+        "r3": "Miete"
+      }
+    },
+    "transactions": {
+      "title": "Letzte Buchungen",
+      "splitBadge": "Aufteilung 50/50",
+      "rows": {
+        "r1": "Supermarkt Extra",
+        "r2": "Internet",
+        "r3": "Gehalt — Juli",
+        "r4": "Miete"
+      }
+    },
+    "categories": {
+      "title": "Ausgaben nach Kategorie",
+      "items": {
+        "c1": "Wohnen",
+        "c2": "Lebensmittel",
+        "c3": "Transport",
+        "c4": "Freizeit"
+      }
+    },
+    "budgets": {
+      "title": "Budgets des Monats",
+      "items": {
+        "b1": "Wohnen",
+        "b2": "Lebensmittel",
+        "b3": "Transport"
+      }
+    },
+    "goals": {
+      "title": "Sparziele",
+      "items": {
+        "g1": "Reise zum Jahresende",
+        "g2": "Notfallfonds"
+      }
+    },
+    "bills": {
+      "title": "Anstehende Rechnungen",
+      "items": {
+        "b1": { "label": "Miete", "due": "Fällig in 3 Tagen" },
+        "b2": { "label": "Strom", "due": "Fällig in 8 Tagen" },
+        "b3": { "label": "Internet", "due": "Fällig in 12 Tagen" }
+      }
+    }
+  },
+  "about": {
+    "kicker": "Über Larmony",
+    "title": "Von null zur Kontrolle in drei Schritten",
+    "subtitle": "Ohne Tabellen, ohne verpflichtende Bankverbindung. Du erstellst den Haushalt, lädst die Menschen ein, die die Kosten teilen, und verfolgt alles gemeinsam.",
+    "steps": {
+      "s1": {
+        "title": "Erstelle deinen Haushalt",
+        "desc": "In weniger als einer Minute. Der Haushalt ist der Ort, an dem die Finanzen des Zuhauses zusammenlaufen — mit 30 Tagen kostenloser Testphase des Komplett-Plans."
+      },
+      "s2": {
+        "title": "Lade die Menschen ein, mit denen du zusammenwohnst",
+        "desc": "Jede Person meldet sich mit dem eigenen Login an. Alle sehen dieselben Rechnungen, jede in ihrer eigenen Sprache."
+      },
+      "s3": {
+        "title": "Verfolgt alles gemeinsam",
+        "desc": "Erfasst Ausgaben, teilt die Kosten und seht zu, wie sich Ziele und Budgets in Echtzeit entwickeln."
+      }
+    },
+    "diff": {
+      "title": "Warum Larmony und keine Tabelle",
+      "d1": {
+        "title": "Echtes Mehrbenutzer-System",
+        "desc": "Keine geteilte Tabelle: Jedes Mitglied hat einen eigenen Login, und der Eigentümer kontrolliert, wer dem Haushalt beitritt und ihn verlässt."
+      },
+      "d2": {
+        "title": "Exakte Cent-Beträge",
+        "desc": "Jeder Betrag wird in ganzen Cent gespeichert — ohne Rundung. Wenn die Rechnung R$ 33,33 pro Person ergab, ist genau das zu sehen."
+      },
+      "d3": {
+        "title": "Daten pro Haushalt isoliert",
+        "desc": "Jeder Haushalt ist in der Datenbank isoliert (RLS): Ein Mitglied eines Haushalts sieht niemals die Daten eines anderen. Keine PCI-Daten lokal — Zahlung über Stripe."
+      }
+    },
+    "proof": {
+      "title": "Schluss mit verlorenen Tabellen und dem \"Wer hat was bezahlt?\"",
+      "description": "Eine einzige Quelle, klar für die ganze Familie — wer gestern beigetreten ist, liest das Dashboard genauso wie diejenige, die es erstellt hat."
+    }
+  },
+  "pricing": {
+    "kicker": "Preise",
+    "title": "Einfach und transparent",
+    "subtitle": "Zwei Pläne, kein Haken — plus 30 Tage kostenlose Testphase von Komplett bei beiden.",
+    "note": "Karte erforderlich, um die Testphase zu starten, keine Abbuchung bis zum Ende der 30 Tage. Sichere Zahlung über Stripe abgewickelt — jederzeit kündbar.",
+    "intervalMonthly": "Monatlich",
+    "intervalAnnual": "Jährlich",
+    "perMonth": "/Mon.",
+    "perYear": "/Jahr",
+    "plans": {
+      "essencial": {
+        "name": "Essenziell",
+        "description": "Das Wesentliche für die Verwaltung der täglichen Finanzen.",
+        "cta": "30 Tage kostenlos testen",
+        "features": {
+          "f1": "Unbegrenzte Transaktionen mit den Standardkategorien",
+          "f2": "Unbegrenzte Sparziele",
+          "f3": "Rechnungserinnerungen per E-Mail",
+          "f4": "Unbegrenzte Mitglieder und Haushalte",
+          "f5": "Dashboard und Monatsbericht"
+        }
+      },
+      "completo": {
+        "name": "Komplett",
+        "badge": "Empfohlen",
+        "description": "Alles aus Essenziell, plus Budgets, geplante Buchungen und erweiterte Berichte.",
+        "cta": "30 Tage kostenlos testen",
+        "features": {
+          "f1": "Alles aus dem Essenziell-Plan",
+          "f2": "Budgets pro Kategorie",
+          "f3": "Geplante Buchungen und Wiederholungen",
+          "f4": "Erweiterte Berichte — jährlich und im Vergleich",
+          "f5": "CSV-Berichtsexport",
+          "f6": "Unbegrenzte individuelle Kategorien"
+        }
+      }
+    }
+  },
+  "faq": {
+    "kicker": "FAQ",
+    "title": "Häufig gestellte Fragen",
+    "items": {
+      "q1": {
+        "question": "Hat Larmony einen kostenlosen Plan?",
+        "answer": "Keinen dauerhaft kostenlosen Plan, aber alle starten mit 30 Tagen kostenloser Testphase des Komplett-Plans (Karte erforderlich, keine Abbuchung bis zum Ende der Testphase). Danach wählst du zwischen Essenziell (R$ 9,90/Monat) und Komplett (R$ 19,90/Monat)."
+      },
+      "q2": {
+        "question": "Was ist der Unterschied zwischen Essenziell und Komplett?",
+        "answer": "Essenziell deckt den Kern ab: Transaktionen, Standardkategorien, Ziele, Dashboard und Monatsbericht, mit unbegrenzten Mitgliedern und Haushalten. Komplett fügt Budgets pro Kategorie, geplante Buchungen, erweiterte Berichte (jährliche Übersicht und CSV-Export) und individuelle Kategorien hinzu."
+      },
+      "q3": {
+        "question": "Kann ich jederzeit kündigen?",
+        "answer": "Ja. Das Abonnement wird über das sichere Stripe-Portal verwaltet, ohne Gebühr. Du behältst den Zugang bis zum Ende des bereits bezahlten Zyklus; danach bleiben deine Daten im Nur-Lese-Modus verfügbar, bis du erneut abonnierst."
+      },
+      "q4": {
+        "question": "Muss ich mein Bankkonto verbinden?",
+        "answer": "Nein. Larmony funktioniert mit manuellen Einträgen und automatischen Wiederholungen — du kontrollierst genau, was erfasst wird. Die Open-Finance-Integration steht auf der Roadmap für einen zukünftigen Plan."
+      },
+      "q5": {
+        "question": "Sind meine Finanzdaten sicher?",
+        "answer": "Ja. Jeder Haushalt ist in der Datenbank isoliert (RLS) — ein Mitglied eines Haushalts sieht niemals Daten eines anderen. Dein Passwort wird verschlüsselt, und die Zahlung wird über Stripe abgewickelt, ohne Kartendaten bei Larmony."
+      },
+      "q6": {
+        "question": "Funktioniert es in anderen Sprachen?",
+        "answer": "Ja — Larmony ist in 7 Sprachen verfügbar (Portugiesisch, Englisch, Spanisch, Chinesisch, Deutsch, Französisch und Japanisch). Jede Person wählt ihre eigene Sprache und sieht denselben Haushalt übersetzt, einschließlich Erinnerungs-E-Mails."
+      }
+    }
+  },
+  "finalCta": {
+    "titleLine1": "Bring Harmonie in",
+    "titleLine2": "die Finanzen deines Zuhauses",
+    "subtitle": "Erstelle deinen Haushalt in weniger als einer Minute. 30 Tage kostenlose Testphase des Komplett-Plans.",
+    "cta": "30 Tage kostenlos testen →"
+  },
+  "footer": {
+    "description": "Die Finanzen deines Zuhauses im Griff. Transaktionen, Budgets und Ziele an einem Ort.",
+    "sections": {
+      "product": {
+        "title": "Produkt",
+        "links": {
+          "features": "Funktionen",
+          "pricing": "Preise",
+          "about": "Über uns",
+          "faq": "FAQ"
+        }
+      },
+      "legal": {
+        "title": "Rechtliches",
+        "links": {
+          "terms": "Nutzungsbedingungen",
+          "privacy": "Datenschutz",
+          "cookies": "Cookies",
+          "security": "Sicherheit"
+        }
+      }
+    },
+    "copyright": "© {{year}} Larmony. Alle Rechte vorbehalten."
+  },
+  "legal": {
+    "back": "← Zurück",
+    "meta": "Letzte Aktualisierung: {{updatedAt}} · Version {{version}}",
+    "officialNotice": "Offizielles Dokument in brasilianischem Portugiesisch. Übersetzungen dienen nur zur Information.",
+    "footer": {
+      "copyright": "© {{year}} Larmony. Alle Rechte vorbehalten.",
+      "terms": "Nutzungsbedingungen",
+      "privacy": "Datenschutz"
+    }
+  }
+}

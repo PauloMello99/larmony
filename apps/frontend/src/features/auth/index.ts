@@ -8,10 +8,10 @@ export { GuestGuard } from "./components/guest-guard"
 
 // Schemas
 export {
-  loginSchema,
-  signupSchema,
-  recoverSchema,
-  resetPasswordSchema,
+  makeLoginSchema,
+  makeSignupSchema,
+  makeRecoverSchema,
+  makeResetPasswordSchema,
 } from "./schemas/auth.schemas"
 export type {
   LoginFormValues,

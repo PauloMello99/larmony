@@ -14,7 +14,8 @@ export class UpdateMeDto {
   @IsOptional()
   avatarUrl?: string | null;
 
-  @IsIn(["pt-BR", "en"])
+  // Espelho manual de SUPPORTED_LOCALES (apps/frontend/src/shared/lib/locale.ts).
+  @IsIn(["pt-BR", "en-US", "es-ES", "zh-CN", "de-DE", "fr-FR", "ja-JP"])
   @IsOptional()
   locale?: string;
 }

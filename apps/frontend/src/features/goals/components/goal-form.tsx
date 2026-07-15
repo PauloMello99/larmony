@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { X } from "lucide-react"
 import {
@@ -27,7 +28,8 @@ import { Input } from "@/shared/components/ui/input"
 import { Textarea } from "@/shared/components/ui/textarea"
 import { CurrencyInput } from "@/shared/components/ui/currency-input"
 import { DatePicker } from "@/shared/components/ui/date-picker"
-import { goalSchema, type GoalFormValues } from "../schemas/goal.schemas"
+import { translateApiError } from "@/shared/lib/api-error"
+import { makeGoalSchema, type GoalFormValues } from "../schemas/goal.schemas"
 import type { Goal } from "../types"
 
 const DEFAULT_VALUES: GoalFormValues = {
@@ -49,7 +51,12 @@ interface GoalFormProps {
 }
 
 export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) {
+  const { t } = useTranslation("goals")
+  const { t: tCommon } = useTranslation("common")
   const isEditing = !!goal
+
+  const goalSchema = useMemo(() => makeGoalSchema(t), [t])
+  const [error, setError] = useState<string | null>(null)
 
   const form = useForm<GoalFormValues>({
     resolver: zodResolver(goalSchema),
@@ -69,12 +76,18 @@ export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) 
             }
           : DEFAULT_VALUES,
       )
+      setError(null)
     }
   }, [open, goal, form])
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit(values)
-    onOpenChange(false)
+    setError(null)
+    try {
+      await onSubmit(values)
+      onOpenChange(false)
+    } catch (err) {
+      setError(translateApiError(err, tCommon))
+    }
   })
 
   return (
@@ -83,10 +96,8 @@ export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) 
         <Form {...form}>
           <form onSubmit={handleSubmit} className="flex h-full flex-col">
             <SheetHeader>
-              <SheetTitle>{isEditing ? "Editar meta" : "Nova meta"}</SheetTitle>
-              <SheetDescription>
-                Metas de poupança do lar — o progresso vem dos aportes.
-              </SheetDescription>
+              <SheetTitle>{isEditing ? t("form.editTitle") : t("form.createTitle")}</SheetTitle>
+              <SheetDescription>{t("form.description")}</SheetDescription>
             </SheetHeader>
 
             <SheetBody className="flex flex-col gap-4 py-6">
@@ -96,10 +107,15 @@ export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) 
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Nome <span className="text-red-400">*</span>
+                      {t("form.nameLabel")} <span className="text-red-400">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: Viagem" autoComplete="off" autoFocus {...field} />
+                      <Input
+                        placeholder={t("form.namePlaceholder")}
+                        autoComplete="off"
+                        autoFocus
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -113,7 +129,7 @@ export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) 
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Valor alvo <span className="text-red-400">*</span>
+                        {t("form.targetAmountLabel")} <span className="text-red-400">*</span>
                       </FormLabel>
                       <FormControl>
                         <CurrencyInput value={field.value} onChange={field.onChange} />
@@ -128,7 +144,7 @@ export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) 
                   name="color"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Cor</FormLabel>
+                      <FormLabel>{t("form.colorLabel")}</FormLabel>
                       <FormControl>
                         <div className="flex items-center gap-2">
                           <input
@@ -155,13 +171,13 @@ export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) 
                 name="targetDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Data alvo</FormLabel>
+                    <FormLabel>{t("form.targetDateLabel")}</FormLabel>
                     <FormControl>
                       <div className="flex items-center gap-2">
                         <DatePicker
                           value={field.value}
                           onChange={field.onChange}
-                          placeholder="Sem data alvo"
+                          placeholder={t("form.noTargetDate")}
                           startMonth={new Date()}
                           endMonth={TARGET_END_MONTH}
                           align="start"
@@ -172,7 +188,7 @@ export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) 
                             variant="ghost"
                             size="icon"
                             className="h-9 w-9 shrink-0"
-                            aria-label="Limpar data alvo"
+                            aria-label={t("form.clearTargetDate")}
                             onClick={() => field.onChange("")}
                           >
                             <X className="h-4 w-4" />
@@ -190,20 +206,27 @@ export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) 
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Descrição</FormLabel>
+                    <FormLabel>{t("form.descriptionLabel")}</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Opcional" rows={3} {...field} value={field.value ?? ""} />
+                      <Textarea
+                        placeholder={t("form.descriptionPlaceholder")}
+                        rows={3}
+                        {...field}
+                        value={field.value ?? ""}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {error && <p className="text-sm text-red-400">{error}</p>}
             </SheetBody>
 
             <SheetFooter>
               <SheetClose asChild>
                 <Button type="button" variant="outline" className="w-full sm:w-auto">
-                  Cancelar
+                  {tCommon("actions.cancel")}
                 </Button>
               </SheetClose>
               <Button
@@ -212,10 +235,10 @@ export function GoalForm({ open, onOpenChange, goal, onSubmit }: GoalFormProps) 
                 className="w-full sm:w-auto"
               >
                 {form.formState.isSubmitting
-                  ? "Salvando…"
+                  ? t("form.saving")
                   : isEditing
-                    ? "Salvar alterações"
-                    : "Criar meta"}
+                    ? t("form.saveChanges")
+                    : t("form.create")}
               </Button>
             </SheetFooter>
           </form>

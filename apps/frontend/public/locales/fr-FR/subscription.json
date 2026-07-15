@@ -1,0 +1,61 @@
+{
+  "title": "Abonnement",
+  "description": "Plan, statut et gestion de l’abonnement de ce foyer.",
+  "planTitle": "Plan actuel",
+  "loadError": "Impossible de charger l’abonnement. Réessaie.",
+  "ownerOnly": "Seul le responsable du foyer peut gérer l’abonnement.",
+  "plan": {
+    "locked": "Sans abonnement",
+    "essencial": "Essentiel",
+    "completo": "Complet"
+  },
+  "status": {
+    "active": "Actif",
+    "trialing": "Période d’essai",
+    "past_due": "Paiement en attente",
+    "canceled": "Annulé"
+  },
+  "locked": {
+    "description": "Ce foyer n’a pas d’abonnement actif — tu peux toujours voir tes données, mais créer ou modifier nécessite un abonnement.",
+    "trialNotice": "Essaie n’importe quel plan gratuitement pendant 30 jours (carte requise, aucun prélèvement avant la fin de l’essai).",
+    "onboardingNotice": "Ton foyer a été créé ! Choisis un plan pour commencer — les 30 premiers jours sont gratuits.",
+    "descriptionEssencial": "L’essentiel pour gérer les finances au quotidien.",
+    "descriptionCompleto": "Tout ce qu’il y a dans Essentiel, plus les budgets, les écritures programmées et les rapports avancés.",
+    "intervalMonthly": "Mensuel",
+    "intervalAnnual": "Annuel (2 mois offerts)",
+    "cta": "Démarrer l’essai gratuit",
+    "ctaPending": "Redirection…"
+  },
+  "active": {
+    "description": "Ton abonnement est actif. Profite de toutes les fonctionnalités de ton plan.",
+    "pastDue": "Un paiement est en attente. Mets à jour ton moyen de paiement sur le portail pour ne pas perdre l’accès.",
+    "portalCta": "Gérer l’abonnement",
+    "portalPending": "Redirection…"
+  },
+  "trial": {
+    "title": "Période d’essai active",
+    "description": "Ce foyer a accès au plan Complet pendant la période d’essai.",
+    "cta": "S’abonner maintenant"
+  },
+  "comp": {
+    "title": "Accès gracieux accordé",
+    "description": "Ce foyer a un accès complet à titre gracieux — sans facturation.",
+    "reasonLabel": "Motif"
+  },
+  "banner": {
+    "success": "Abonnement confirmé ! L’accès est activé dès que Stripe confirme le paiement.",
+    "cancel": "Paiement annulé. Aucune facturation n’a été effectuée."
+  },
+  "gate": {
+    "title": "Fonctionnalité du plan Complet",
+    "description": "Les rapports avancés font partie du plan Complet. Passe au niveau supérieur pour les débloquer.",
+    "descriptionCategories": "Les catégories personnalisées font partie du plan Complet. Passe au niveau supérieur pour les débloquer.",
+    "descriptionBudgets": "Les budgets font partie du plan Complet. Passe au niveau supérieur pour les débloquer.",
+    "descriptionScheduledEntries": "Les écritures programmées font partie du plan Complet. Passe au niveau supérieur pour les débloquer.",
+    "cta": "Voir les plans"
+  },
+  "lockedBanner": {
+    "description": "Ce foyer est en lecture seule — aucun abonnement actif.",
+    "cta": "S’abonner"
+  }
+}

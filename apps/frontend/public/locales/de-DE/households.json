@@ -1,0 +1,133 @@
+{
+  "roles": {
+    "owner": "Eigentümer",
+    "member": "Mitglied"
+  },
+  "validation": {
+    "nameMin": "Mindestens 2 Zeichen",
+    "nameMax": "Maximal 80 Zeichen",
+    "emailInvalid": "Ungültige E-Mail-Adresse"
+  },
+  "settings": {
+    "loading": "Wird geladen…",
+    "notFound": "Haushalt nicht gefunden.",
+    "generalTitle": "Allgemeine Informationen",
+    "generalDescription": "Name und öffentlicher Bezeichner des Haushalts.",
+    "nameLabel": "Name",
+    "slugLabel": "Slug",
+    "membersTitle": "Mitglieder",
+    "membersDescription": "Verwalte, wer Zugriff auf diesen Haushalt hat.",
+    "invite": "Einladen",
+    "transferTitle": "Haushalt übertragen",
+    "transferDescription": "Übertrage das Eigentum dieses Haushalts an ein anderes Mitglied.",
+    "transferProse": "Die Eigentümerschaft geht an das gewählte Mitglied über. Du wirst zum Mitglied mit vollem Zugriff auf alle Module.",
+    "dangerTitle": "Gefahrenzone",
+    "dangerDescription": "Unumkehrbare Aktionen. Mit Vorsicht fortfahren.",
+    "deleteTitle": "Haushalt löschen",
+    "deleteDescription": "Entfernt dauerhaft alle Daten dieses Haushalts."
+  },
+  "membersPage": {
+    "loading": "Mitglieder werden geladen…",
+    "title": "Mitglieder",
+    "description": "Verwalte, wer Zugriff auf diesen Haushalt hat.",
+    "invite": "Einladen",
+    "inviteCreated": "Einladung erstellt. Annahmelink (Entwicklung — zum Testen kopieren):",
+    "copy": "Kopieren",
+    "updatePermissionsError": "Die Berechtigungen konnten nicht aktualisiert werden.",
+    "toggleStatusError": "Der Status des Mitglieds konnte nicht geändert werden."
+  },
+  "members": {
+    "title": "Mitglieder ({{count}})",
+    "pendingInvitations": "Ausstehende Einladungen ({{count}})",
+    "nameHeader": "Name",
+    "emailHeader": "E-Mail",
+    "roleHeader": "Funktion",
+    "you": "(du)",
+    "invitationMeta": "{{role}} · läuft ab am {{date}}",
+    "actions": {
+      "permissions": "Berechtigungen",
+      "makeOwner": "Zum Eigentümer machen",
+      "makeMember": "Zum Mitglied machen",
+      "enable": "Aktivieren",
+      "disable": "Deaktivieren",
+      "remove": "Entfernen"
+    }
+  },
+  "modules": {
+    "services": "Dienstleistungen",
+    "clients": "Kunden",
+    "schedule": "Terminplan",
+    "stock": "Lager",
+    "cashier": "Kasse"
+  },
+  "roleDialog": {
+    "title": "Funktion ändern",
+    "description": "Ändere die Funktion von <span>{{name}}</span>.",
+    "newRoleLabel": "Neue Funktion",
+    "saving": "Wird gespeichert…"
+  },
+  "permissionsDialog": {
+    "title": "Berechtigungen des Mitglieds",
+    "description": "Wähle die Module, auf die <span>{{name}}</span> zugreifen kann. In jedem Modul sieht das Mitglied nur die eigenen Einträge.",
+    "saving": "Wird gespeichert…",
+    "submit": "Berechtigungen speichern"
+  },
+  "removeDialog": {
+    "title": "Mitglied entfernen",
+    "description": "Möchtest du <span>{{name}}</span> wirklich aus dem Haushalt entfernen?",
+    "removing": "Wird entfernt…",
+    "submit": "Entfernen"
+  },
+  "transferDialog": {
+    "trigger": "Übertragen",
+    "title": "Haushalt übertragen",
+    "description": "Wähle das Mitglied, das der neue Eigentümer wird. Du erhältst danach die Funktion <span>Mitglied</span> mit vollem Zugriff auf alle Module.",
+    "newOwnerLabel": "Neuer Eigentümer",
+    "selectPlaceholder": "Mitglied auswählen",
+    "memberOption": "{{name}} ({{email}})",
+    "error": "Der Haushalt konnte nicht übertragen werden.",
+    "submitting": "Wird übertragen…",
+    "submit": "Eigentümerschaft übertragen"
+  },
+  "deleteDialog": {
+    "trigger": "Haushalt löschen",
+    "title": "Haushalt löschen",
+    "description": "Diese Aktion ist <span>unumkehrbar</span>. Alle Daten des Haushalts werden dauerhaft gelöscht.",
+    "confirmLabel": "Gib <span>{{name}}</span> zur Bestätigung ein:",
+    "deleting": "Wird gelöscht…",
+    "submit": "Endgültig löschen"
+  },
+  "createForm": {
+    "title": "Neuer Haushalt",
+    "description": "Erstelle einen Bereich für deinen Haushalt. Du wirst der Eigentümer.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Z. B.: Familie Schmidt",
+    "timezoneLabel": "Zeitzone",
+    "timezoneHint": "Bestimmt, wann Einträge fällig werden und wann Hinweise gesendet werden. Automatisch erkannt — bei Bedarf anpassen.",
+    "limitReached": "Du hast bereits einen Haushalt im Free-Plan. Gehe zu Einstellungen > Abo eines bestehenden Haushalts, um ein Upgrade durchzuführen und einen weiteren zu erstellen.",
+    "submitting": "Wird erstellt…",
+    "submit": "Haushalt erstellen"
+  },
+  "editForm": {
+    "nameLabel": "Name des Haushalts",
+    "namePlaceholder": "Z. B.: Familie Schmidt",
+    "slugLabel": "Bezeichner (Slug)",
+    "slugHint": "Automatisch generiert — kann nicht geändert werden.",
+    "timezoneLabel": "Zeitzone",
+    "timezoneHint": "Bestimmt, wann Einträge fällig werden und wann Hinweise gesendet werden.",
+    "notificationHourLabel": "Uhrzeit für Hinweise",
+    "notificationHourHint": "Erinnerungen und der Monatsbericht werden ab dieser Uhrzeit in der Zeitzone des Haushalts versendet.",
+    "saving": "Wird gespeichert…",
+    "submit": "Änderungen speichern"
+  },
+  "inviteForm": {
+    "title": "Mitglied einladen",
+    "description": "Die Einladung wird per E-Mail mit einem Zugangslink gesendet.",
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "name@beispiel.com",
+    "roleLabel": "Funktion",
+    "rolePlaceholder": "Funktion auswählen",
+    "submitting": "Wird gesendet…",
+    "submit": "Einladung senden"
+  }
+}

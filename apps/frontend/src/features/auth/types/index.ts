@@ -1,3 +1,5 @@
+import type { AppLocale } from "@/shared/lib/locale"
+
 export interface AuthUser {
   id: string
   email: string
@@ -15,7 +17,9 @@ export interface Me {
   avatarUrl: string | null
   birthDate: string | null
   gender: "male" | "female" | "other" | null
-  locale: "pt-BR" | "en"
+  locale: AppLocale
+  /** Tours de onboarding concluídos: { [tourKey]: maiorVersãoVista }. */
+  onboarding: Record<string, number>
   createdAt: string
   updatedAt: string
 }
@@ -37,7 +41,12 @@ export interface StoredSession {
 export interface AuthContextValue {
   user: AuthUser | null
   loading: boolean
-  signUp: (name: string, email: string, password: string) => Promise<void>
+  signUp: (
+    name: string,
+    email: string,
+    password: string,
+    termsAccepted: boolean,
+  ) => Promise<void>
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
   forgotPassword: (email: string) => Promise<void>

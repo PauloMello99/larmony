@@ -51,35 +51,40 @@
    * Identidade Larmony (THEME-2): primária TEAL (marca/harmonia), semântica
    * financeira fixa — success/emerald = receita, destructive/red = despesa,
    * warning/amber = vencimento. Charts multi-hue (teal→emerald→amber→violet→sky).
+   *
+   * DARK-ONLY (Design System 2026-07-10): o app não tem mais tema claro.
+   * `:root` carrega os MESMOS valores do bloco `.dark` abaixo — garante
+   * primeiro paint escuro (color-scheme, scrollbars/inputs nativos) antes do
+   * next-themes aplicar a classe `.dark` (forcedTheme em providers/index.tsx).
    */
   :root {
-    color-scheme: light;
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.18 0.004 285.8);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.18 0.004 285.8);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.18 0.004 285.8);
-    /* Primary = teal-600 */
-    --primary: oklch(0.6 0.118 184.704);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.967 0.003 200);
-    --secondary-foreground: oklch(0.21 0.006 285.885);
-    --muted: oklch(0.967 0.003 200);
-    --muted-foreground: oklch(0.552 0.016 285.938);
-    --accent: oklch(0.958 0.02 190);
-    --accent-foreground: oklch(0.37 0.077 168.94);
-    --destructive: oklch(0.637 0.237 25.331);
+    color-scheme: dark;
+    --background: oklch(0.145 0.008 210);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0.01 215);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0.01 215);
+    --popover-foreground: oklch(0.985 0 0);
+    /* Primary = teal-500 (mais luminoso p/ contraste no dark) */
+    --primary: oklch(0.704 0.14 182.503);
+    --primary-foreground: oklch(0.145 0.008 210);
+    --secondary: oklch(0.27 0.01 220);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.27 0.01 220);
+    --muted-foreground: oklch(0.705 0.015 286.067);
+    --accent: oklch(0.28 0.03 195);
+    --accent-foreground: oklch(0.9 0.06 180);
+    --destructive: oklch(0.704 0.191 22.216);
     --destructive-foreground: oklch(0.985 0 0);
-    /* Receita (emerald-600) */
-    --success: oklch(0.596 0.145 163.225);
-    --success-foreground: oklch(0.985 0 0);
-    /* Vencimento próximo (amber-600) */
-    --warning: oklch(0.666 0.179 58.318);
-    --warning-foreground: oklch(0.985 0 0);
-    --border: oklch(0 0 0 / 10%);
-    --input: oklch(0 0 0 / 12%);
-    --ring: oklch(0.6 0.118 184.704);
+    /* Receita (emerald-400) */
+    --success: oklch(0.765 0.177 163.223);
+    --success-foreground: oklch(0.145 0.008 210);
+    /* Vencimento próximo (amber-400) */
+    --warning: oklch(0.828 0.189 84.429);
+    --warning-foreground: oklch(0.145 0.008 210);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.704 0.14 182.503);
     --radius: 0.45rem;
     /* Charts multi-hue: teal, emerald, amber, violet, sky */
     --chart-1: oklch(0.704 0.14 182.503);
@@ -87,17 +92,18 @@
     --chart-3: oklch(0.769 0.188 70.08);
     --chart-4: oklch(0.606 0.25 292.717);
     --chart-5: oklch(0.685 0.169 237.323);
-    --sidebar: oklch(0.985 0.002 200);
-    --sidebar-foreground: oklch(0.18 0.004 285.8);
-    --sidebar-primary: oklch(0.6 0.118 184.704);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.958 0.02 190);
-    --sidebar-accent-foreground: oklch(0.37 0.077 168.94);
-    --sidebar-border: oklch(0 0 0 / 10%);
-    --sidebar-ring: oklch(0.6 0.118 184.704);
+    --sidebar: oklch(0.185 0.01 212);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.704 0.14 182.503);
+    --sidebar-primary-foreground: oklch(0.145 0.008 210);
+    --sidebar-accent: oklch(0.28 0.03 195);
+    --sidebar-accent-foreground: oklch(0.9 0.06 180);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.552 0.016 285.938);
   }
 
-  /* Tema escuro — fundo neutro com tinta sutil de teal. */
+  /* Duplica `:root` (dark-only): mantido porque o next-themes (forcedTheme)
+     ainda aplica a classe e componentes futuros podem usar a variante `dark:`. */
   .dark {
     color-scheme: dark;
     --background: oklch(0.145 0.008 210);

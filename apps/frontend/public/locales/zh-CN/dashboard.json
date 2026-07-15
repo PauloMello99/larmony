@@ -1,0 +1,112 @@
+{
+  "nav": {
+    "overview": "总览",
+    "transactions": "交易",
+    "categories": "分类",
+    "budgets": "预算",
+    "goals": "目标",
+    "scheduledTransactions": "计划收支",
+    "reports": "报告",
+    "members": "成员",
+    "settings": "设置",
+    "settingsGeneral": "常规",
+    "settingsSubscription": "订阅",
+    "billing": "账单",
+    "households": "家庭",
+    "sectionHousehold": "家庭"
+  },
+  "overview": {
+    "goodMorning": "早上好",
+    "goodAfternoon": "下午好",
+    "goodEvening": "晚上好",
+    "incomeMonth": "本月收入",
+    "expensesMonth": "本月支出",
+    "balanceMonth": "本月结余",
+    "goalsTotal": "目标储蓄总额",
+    "recentTransactions": "最近交易",
+    "seeAll": "查看全部",
+    "upcomingEntries": "即将到来的收支",
+    "activeGoals": "进行中的目标",
+    "budgets": "预算",
+    "emptyTransactions": "暂无交易",
+    "emptyTransactionsHint": "您家庭的交易记录会显示在这里。",
+    "emptyEntries": "暂无待到期的收支",
+    "emptyEntriesHint": "创建手动计划收支以接收提醒。",
+    "emptyGoals": "暂无进行中的目标",
+    "emptyGoalsHint": "创建目标以追踪您的心愿。",
+    "emptyBudgets": "暂无设置的预算",
+    "emptyBudgetsHint": "为各分类设置支出上限。",
+    "vsLastMonth": "较上月",
+    "goalsActive_one": "{{count}} 个进行中的目标",
+    "goalsActive_other": "{{count}} 个进行中的目标",
+    "dueToday": "今日到期",
+    "dueInDays_one": "{{count}} 天后到期",
+    "dueInDays_other": "{{count}} 天后到期",
+    "budgetOver": "已超支",
+    "seeAllTransactions": "查看全部"
+  },
+  "userMenu": {
+    "account": "我的账户",
+    "language": "语言",
+    "support": "帮助与支持",
+    "platformPanel": "平台控制台",
+    "signOut": "退出登录"
+  },
+  "switcher": {
+    "label": "家庭",
+    "viewAll": "查看所有家庭"
+  },
+  "roles": {
+    "owner": "所有者",
+    "member": "成员"
+  },
+  "chrome": {
+    "openMenu": "打开菜单",
+    "closeMenu": "关闭菜单",
+    "expandMenu": "展开菜单",
+    "collapseMenu": "收起菜单"
+  },
+  "householdsList": {
+    "title": "家庭",
+    "subtitle": "选择一个家庭以继续",
+    "new": "新建家庭",
+    "create": "创建家庭",
+    "empty": "暂无家庭。",
+    "welcomeTitle": "欢迎使用 Larmony！",
+    "welcomeHint": "让我们创建第一个家庭，开始整理您家的财务。"
+  },
+  "adminBanner": {
+    "managingAs": "您正以 super_admin 身份管理 <strong>{{name}}</strong>。",
+    "backToPanel": "返回控制台",
+    "superAccess": "super_admin 访问权限"
+  },
+  "placeholders": {
+    "arriving": "预计 {{milestone}} 上线",
+    "underConstruction": "建设中",
+    "comingSoon": "此功能即将上线",
+    "transactions": {
+      "title": "交易",
+      "description": "家庭的收入与支出：带分类、经手人、分期和成员分摊的记录。"
+    },
+    "categories": {
+      "title": "分类",
+      "description": "使用收入和支出分类、颜色与图标来整理家庭财务。"
+    },
+    "budgets": {
+      "title": "预算",
+      "description": "按分类设置每月支出上限，追踪已使用的额度。"
+    },
+    "goals": {
+      "title": "目标",
+      "description": "为家庭目标储蓄，并追踪每个目标的进度。"
+    },
+    "bills": {
+      "title": "账单",
+      "description": "固定和周期性账单，在到期前通过邮件提醒。"
+    },
+    "reports": {
+      "title": "报告",
+      "description": "按分类和按人查看家庭财务的月度和年度分析。"
+    }
+  }
+}

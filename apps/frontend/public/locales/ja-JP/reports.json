@@ -1,0 +1,43 @@
+{
+  "page": {
+    "title": "レポート",
+    "description": "家計の月次・年次分析",
+    "monthly": "月次",
+    "annual": "年次"
+  },
+  "chart": {
+    "income": "収入",
+    "expense": "支出"
+  },
+  "monthly": {
+    "prevMonth": "前月",
+    "nextMonth": "翌月",
+    "seriesTitle": "収入 × 支出・過去6か月",
+    "seriesEmpty": "過去6か月の記帳はありません。",
+    "byCategory": "カテゴリー別支出・{{ref}}",
+    "byPerson": "担当者別支出・{{ref}}",
+    "noExpenses": "今月の支出はありません。",
+    "assignPersonHint": "誰が何を支払ったかを確認するには、取引の作成・編集時に担当者を割り当ててください。"
+  },
+  "annual": {
+    "prevYear": "前年",
+    "nextYear": "翌年",
+    "totalIncome": "総収入",
+    "totalExpense": "総支出",
+    "balance": "収支",
+    "seriesTitle": "収入 × 支出・{{year}}年",
+    "seriesEmpty": "{{year}}年の記帳はありません。"
+  },
+  "export": {
+    "upgradeHint": "レポートのエクスポートはプレミアム機能です",
+    "columns": {
+      "category": "カテゴリー",
+      "amount": "金額",
+      "year": "年",
+      "month": "月",
+      "income": "収入",
+      "expense": "支出",
+      "balance": "収支"
+    }
+  }
+}

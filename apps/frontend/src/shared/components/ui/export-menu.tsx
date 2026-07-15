@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { Download, Loader2 } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import {
@@ -27,6 +28,7 @@ interface ExportMenuProps {
  * o usuário ajusta quais campos vão no CSV e baixa pelo backend (respeita filtros).
  */
 export function ExportMenu({ columns, onExport, disabled }: ExportMenuProps) {
+  const { t } = useTranslation("common")
   const [selected, setSelected] = React.useState<Set<string>>(
     () => new Set(columns.map((c) => c.key)),
   )
@@ -65,16 +67,16 @@ export function ExportMenu({ columns, onExport, disabled }: ExportMenuProps) {
           variant="outline"
           disabled={disabled}
           className="shrink-0 gap-2"
-          title="Exportar CSV"
+          title={t("export.title")}
         >
           <Download className="h-4 w-4" />
-          <span className="hidden sm:inline">Exportar</span>
+          <span className="hidden sm:inline">{t("export.button")}</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-72 p-4">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-foreground">
-            Campos do CSV
+            {t("export.fields")}
           </span>
           <Button
             variant="ghost"
@@ -82,7 +84,7 @@ export function ExportMenu({ columns, onExport, disabled }: ExportMenuProps) {
             onClick={toggleAll}
             className="h-7 px-2 text-xs text-foreground/60"
           >
-            {allChecked ? "Limpar" : "Tudo"}
+            {allChecked ? t("actions.clear") : t("actions.all")}
           </Button>
         </div>
         <div className="mt-3 max-h-64 space-y-1 overflow-y-auto">
@@ -111,7 +113,7 @@ export function ExportMenu({ columns, onExport, disabled }: ExportMenuProps) {
           ) : (
             <Download className="h-4 w-4" />
           )}
-          Baixar CSV
+          {t("export.download")}
         </Button>
       </PopoverContent>
     </Popover>

@@ -1,0 +1,43 @@
+{
+  "page": {
+    "title": "Relatórios",
+    "description": "Visão mensal e anual das suas finanças",
+    "monthly": "Mensal",
+    "annual": "Anual"
+  },
+  "chart": {
+    "income": "Receita",
+    "expense": "Despesa"
+  },
+  "monthly": {
+    "prevMonth": "Mês anterior",
+    "nextMonth": "Próximo mês",
+    "seriesTitle": "Receita × Despesa · últimos 6 meses",
+    "seriesEmpty": "Sem movimentação nos últimos 6 meses.",
+    "byCategory": "Despesas por categoria · {{ref}}",
+    "byPerson": "Gasto por pessoa · {{ref}}",
+    "noExpenses": "Nenhuma despesa neste mês.",
+    "assignPersonHint": "Para ver quem gastou o quê, atribua uma pessoa ao criar ou editar cada transação."
+  },
+  "annual": {
+    "prevYear": "Ano anterior",
+    "nextYear": "Próximo ano",
+    "totalIncome": "Receita total",
+    "totalExpense": "Despesa total",
+    "balance": "Saldo",
+    "seriesTitle": "Receita × Despesa · {{year}}",
+    "seriesEmpty": "Sem movimentação em {{year}}."
+  },
+  "export": {
+    "upgradeHint": "Exportação de relatórios é um recurso Family",
+    "columns": {
+      "category": "Categoria",
+      "amount": "Valor",
+      "year": "Ano",
+      "month": "Mês",
+      "income": "Receitas",
+      "expense": "Despesas",
+      "balance": "Saldo"
+    }
+  }
+}

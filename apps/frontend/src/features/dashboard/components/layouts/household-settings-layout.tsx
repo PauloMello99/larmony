@@ -16,7 +16,7 @@ export function HouseholdSettingsLayout({ children }: HouseholdSettingsLayoutPro
   const router = useRouter()
   const { t } = useTranslation("dashboard")
   const { household } = useCurrentHousehold()
-  const basePath = `/dashboard/household/${household.slug}`
+  const basePath = `/households/${household.slug}`
 
   // Funcionário só vê as seções que pode acessar (ex.: Agenda).
   const navItems = SETTINGS_NAV.filter(
@@ -52,7 +52,7 @@ export function HouseholdSettingsLayout({ children }: HouseholdSettingsLayoutPro
       <aside className="hidden w-48 shrink-0 md:block">
         <div className="sticky top-6">
           <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-foreground/25">
-            Configurações
+            {t("nav.settings")}
           </p>
           <ul className="space-y-0.5">
             {navItems.map((item) => {

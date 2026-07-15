@@ -1,17 +1,9 @@
-import { IsInt, IsUUID, Max, Min } from "class-validator";
+import { IsInt, IsUUID, Min } from "class-validator";
 
+/** Sem month/year — a série sempre nasce ancorada no mês corrente (M10). */
 export class CreateBudgetDto {
   @IsUUID()
   categoryId!: string;
-
-  @IsInt()
-  @Min(1)
-  @Max(12)
-  month!: number;
-
-  @IsInt()
-  @Min(2000)
-  year!: number;
 
   @IsInt()
   @Min(1)

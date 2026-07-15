@@ -17,6 +17,9 @@
     "db:status": "tsx src/database/migrator.ts status",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
+    "db:backup": "tsx scripts/db-backup.ts",
+    "seed:local": "tsx scripts/seed-local-user.ts",
+    "stripe:webhook": "stripe listen --forward-to localhost:3001/webhooks/stripe",
     "clean": "pnpm -r exec rm -rf dist .turbo",
     "clean:reset": "pnpm clean && pnpm -r exec rm -rf node_modules"
   },
@@ -33,14 +36,17 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "date-fns": "^4.4.0",
+    "date-fns-tz": "^3.2.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
+    "helmet": "^8.3.0",
     "pg": "^8.21.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "reflect-metadata": "^0.2.2",
     "resend": "^6.12.4",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "stripe": "^22.3.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",

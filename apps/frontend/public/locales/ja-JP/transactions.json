@@ -1,0 +1,79 @@
+{
+  "page": {
+    "title": "取引",
+    "description": "世帯の収入と支出",
+    "newTransaction": "新規取引",
+    "empty": "この期間に取引はありません。",
+    "emptyCta": "取引を記帳"
+  },
+  "form": {
+    "titleCreate": "新規取引",
+    "titleEdit": "取引を編集",
+    "description": "世帯の収入または支出を記帳します。",
+    "typeLabel": "種類",
+    "typeIncome": "収入",
+    "typeExpense": "支出",
+    "amountLabel": "金額",
+    "amountTotalLabel": "合計金額",
+    "descriptionLabel": "説明",
+    "descriptionPlaceholder": "例: スーパーマーケット",
+    "dateLabel": "日付",
+    "categoryLabel": "カテゴリー",
+    "categoryPlaceholder": "カテゴリーなし",
+    "personLabel": "担当者",
+    "personPlaceholder": "自分",
+    "notesLabel": "メモ",
+    "notesPlaceholder": "任意の備考",
+    "installmentsLabel": "分割払い",
+    "installmentsHint": "合計金額を複数の月次分割払いに分けます — 各回1件の取引として、同じシリーズに紐付けられます。",
+    "installmentsPreview": "{{count}}回・各回約{{amount}}",
+    "splitLabel": "メンバー間で割り勘",
+    "splitHint": "世帯のメンバー間で金額を割り勘します(均等割り、またはそれぞれ個別の金額)。担当者別レポートに反映されます。",
+    "submitting": "保存中…",
+    "submitEdit": "変更を保存",
+    "submitInstallments": "分割払いを作成",
+    "submitCreate": "取引を作成"
+  },
+  "list": {
+    "headerDescription": "説明",
+    "headerCategory": "カテゴリー",
+    "headerPerson": "担当者",
+    "headerDate": "日付",
+    "headerAmount": "金額",
+    "installmentBadge": "{{number}}/{{total}}",
+    "badgeSplit": "割り勘",
+    "badgeRecurring": "定期取引",
+    "noCategory": "カテゴリーなし"
+  },
+  "filters": {
+    "byMonth": "月で絞り込み",
+    "byYear": "年で絞り込み",
+    "byType": "種類で絞り込み",
+    "byCategory": "カテゴリーで絞り込み",
+    "typeAll": "種類: すべて",
+    "typeIncome": "収入",
+    "typeExpense": "支出",
+    "categoryAll": "カテゴリー: すべて"
+  },
+  "split": {
+    "equal": "均等に割り勘",
+    "specific": "個別の金額",
+    "sum": "合計: {{sum}} / {{total}}",
+    "sumMismatch": " — 合計金額と一致させてください",
+    "equalPreview": "{{count}}人・各自約{{amount}}"
+  },
+  "deleteDialog": {
+    "title": "取引を削除",
+    "installmentDescription": "<desc>{{description}}</desc>は{{number}}/{{total}}回目の分割払いです。この回のみ削除しますか、それともシリーズ全体を削除しますか?",
+    "normalDescription": "<desc>{{description}}</desc>を削除してもよろしいですか?この操作は<emphasis>取り消せません</emphasis>。",
+    "deleting": "削除中…",
+    "deleteSeries": "シリーズ全体を削除",
+    "deleteInstallment": "この回のみ削除"
+  },
+  "validation": {
+    "amountRequired": "金額を入力してください",
+    "descriptionRequired": "説明は必須です",
+    "descriptionMax": "最大200文字までです",
+    "dateRequired": "日付は必須です"
+  }
+}

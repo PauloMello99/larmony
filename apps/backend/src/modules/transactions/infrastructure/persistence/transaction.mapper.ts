@@ -14,7 +14,7 @@ interface TransactionRow {
   installmentGroupId: string | null;
   installmentNumber: number | null;
   installmentCount: number | null;
-  recurrenceId: string | null;
+  scheduledTransactionEntryId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,7 +35,7 @@ export class TransactionMapper {
       installmentGroupId: row.installmentGroupId,
       installmentNumber: row.installmentNumber,
       installmentCount: row.installmentCount,
-      recurrenceId: row.recurrenceId,
+      scheduledTransactionEntryId: row.scheduledTransactionEntryId,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
     });

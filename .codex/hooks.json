@@ -1,0 +1,46 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -Command \"if ($env:TOOL_INPUT_FILE_PATH -like '*\\.memory\\*') { wsl bash bin/scripts/rag/reindex.sh }\""
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -Command \"docker compose -f docker-compose.rag.yml up -d 2>$null; Start-Process wsl -ArgumentList 'bash','bin/scripts/rag/reindex.sh' -WindowStyle Hidden\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -Command \"Write-Output 'RAG obrigatorio: para perguntas onde/como funciona X, chame a MCP tool memory_search (larmony-memory) ANTES de ler o codigo-fonte. Se este chat estabelecer uma decisao/convencao/gotcha duravel, registre em .memory/ (ou um novo ADR) antes de encerrar.'\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -Command \"Start-Process wsl -ArgumentList 'bash','bin/scripts/rag/reindex.sh' -WindowStyle Hidden\""
+          }
+        ]
+      }
+    ]
+  }
+}

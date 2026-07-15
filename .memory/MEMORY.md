@@ -28,3 +28,8 @@
 - [ADR-0017: Centavos inteiros](adr/0017-money-integer-cents.md) — dinheiro sem float em todo o stack
 - [ADR-0018: i18n pt-BR/en](adr/0018-i18n-locale-no-perfil.md) — locale persistido no perfil
 - [ADR-0019: Recorrência (engine no cron via DRIZZLE_ADMIN)](adr/0019-recurrence-engine-cron-admin-write.md) — modelo simples sem RRULE, geração no tick, sem reuso do use-case request-scoped
+- [ADR-0020: Unificar bills+recurrences](adr/0020-unify-bills-recurrences-scheduled-transactions.md) — scheduled_transaction_entries, posting_mode auto/manual
+- [ADR-0021: Design System Claude Design](adr/0021-design-system-claude-design.md) — logo, landing, glass app-wide
+- [ADR-0022: Orçamentos série + versões](adr/0022-budget-series-versions.md) — resolução on-read, upsert no mês corrente, remoção sempre encerra
+- [ADR-0023: Dispatcher multicanal de notificações](adr/0023-notification-dispatcher-multicanal.md) — in-app+e-mail+SMS/WhatsApp stub, dedup por evento em tabela dedicada
+- [ADR-0024: Timezone + hora dos disparos por lar](adr/0024-cron-timezone-household.md) — cron resolve "agora" no fuso do lar (date-fns-tz), hora preferida por lar, currentPeriodStart migrado

@@ -53,7 +53,16 @@ export class DrizzleUserRepository implements IUserRepository {
   async create(data: CreateUserData): Promise<UserEntity> {
     const [row] = await this.admin
       .insert(schema.users)
-      .values({ authId: data.authId, name: data.name, email: data.email })
+      .values({
+        authId: data.authId,
+        name: data.name,
+        email: data.email,
+        // Aceite dos Termos/Privacidade (LGPD): timestamp + versão vigente.
+        termsAcceptedAt: new Date(),
+        termsVersion: data.termsVersion,
+        // Locale da UI no cadastro; ausente → default do schema (pt-BR).
+        ...(data.locale !== undefined && { locale: data.locale }),
+      })
       .onConflictDoNothing()
       .returning();
     return UserMapper.toDomain(row!);
@@ -72,6 +81,22 @@ export class DrizzleUserRepository implements IUserRepository {
         ...(data.email !== undefined && { email: data.email }),
         ...(data.avatarUrl !== undefined && { avatarUrl: data.avatarUrl }),
         ...(data.locale !== undefined && { locale: data.locale }),
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.users.authId, authId))
+      .returning();
+    return UserMapper.toDomain(row!);
+  }
+
+  async mergeOnboarding(
+    authId: string,
+    patch: Record<string, number>,
+  ): Promise<UserEntity> {
+    const [row] = await this.db
+      .update(schema.users)
+      .set({
+        // Merge atômico via operador jsonb `||` (patch sobrescreve as chaves iguais).
+        onboarding: sql`${schema.users.onboarding} || ${JSON.stringify(patch)}::jsonb`,
         updatedAt: new Date(),
       })
       .where(eq(schema.users.authId, authId))

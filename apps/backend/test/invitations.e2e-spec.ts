@@ -17,6 +17,16 @@ describe("Invitations (e2e)", () => {
       .send({ name: "E2E Lar Convites" })
       .expect(201);
     householdId = created.body.id;
+
+    // Este arquivo acumula 3 convites no mesmo lar ao longo dos testes (nem
+    // todos aceitos/cancelados) — ultrapassa o limite do Free (P-3, D-1).
+    // Comp desbloqueia; o gate em si tem teste dedicado isolado noutro arquivo.
+    await pool.query(
+      `INSERT INTO public.subscriptions (household_id, type, status, comp_reason)
+       VALUES ($1, 'custom', 'active', 'e2e bootstrap — desbloqueia fixtures de invitations.e2e-spec')
+       ON CONFLICT (household_id) DO UPDATE SET type = 'custom', comp_reason = EXCLUDED.comp_reason`,
+      [householdId],
+    );
   });
 
   afterAll(async () => {
@@ -111,5 +121,21 @@ describe("Invitations (e2e)", () => {
       owner.accessToken,
     ).expect(200);
     expect(after.body.map((i: { email: string }) => i.email)).not.toContain(email);
+  });
+
+  it("M16: convidar membros é ilimitado (sem régua de contagem do Free)", async () => {
+    const solo = await signUpUser(app, "mem.multi.owner");
+    const solo1 = await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Membros Multi" })
+      .expect(201);
+    const soloHouseholdId = solo1.body.id;
+
+    // Convidar gestão de membros não passa pelo paywall (encanamento de conta);
+    // e não há mais teto de contagem — três convites seguidos são permitidos.
+    for (const p of ["mem.multi.a", "mem.multi.b", "mem.multi.c"]) {
+      await authed(app, "post", `/households/${soloHouseholdId}/members/invite`, solo.accessToken)
+        .send({ email: uniqueEmail(p) })
+        .expect(201);
+    }
   });
 });

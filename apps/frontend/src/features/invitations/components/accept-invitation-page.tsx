@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/router"
+import { useTranslation, Trans } from "react-i18next"
 import { Loader2 } from "lucide-react"
 import {
   Card,
@@ -13,17 +14,12 @@ import {
 } from "@/shared/components/ui/card"
 import { Button } from "@/shared/components/ui/button"
 import { useAuth } from "@/features/auth/hooks/use-auth"
+import { translateApiError } from "@/shared/lib/api-error"
 import {
   useInvitationLookup,
   useAcceptInvitation,
   useDeclineInvitation,
 } from "../hooks/use-invitation"
-import type { HouseholdRole } from "@/features/households/types"
-
-const ROLE_LABELS: Record<HouseholdRole, string> = {
-  owner: "Proprietário",
-  member: "Membro",
-}
 
 function Centered({ children }: { children: React.ReactNode }) {
   return (
@@ -42,6 +38,8 @@ function Spinner() {
 }
 
 export function AcceptInvitationPage() {
+  const { t } = useTranslation("invitations")
+  const { t: tCommon } = useTranslation("common")
   const router = useRouter()
   const token =
     typeof router.query.token === "string" ? router.query.token : undefined
@@ -69,9 +67,9 @@ export function AcceptInvitationPage() {
     return (
       <Centered>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Convite inválido</CardTitle>
+          <CardTitle className="text-xl">{t("invalid.title")}</CardTitle>
           <CardDescription className="text-foreground/40">
-            Este link de convite não é válido.
+            {t("invalid.description")}
           </CardDescription>
         </CardHeader>
       </Centered>
@@ -81,23 +79,23 @@ export function AcceptInvitationPage() {
   if (invite.status !== "pending" || invite.expired) {
     const reason =
       invite.status === "accepted"
-        ? "Este convite já foi aceito."
+        ? t("unavailable.accepted")
         : invite.status === "cancelled"
-          ? "Este convite foi cancelado."
-          : "Este convite expirou."
+          ? t("unavailable.cancelled")
+          : t("unavailable.expired")
     return (
       <Centered>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Convite indisponível</CardTitle>
+          <CardTitle className="text-xl">{t("unavailable.title")}</CardTitle>
           <CardDescription className="text-foreground/40">{reason}</CardDescription>
         </CardHeader>
         <CardFooter>
           <Button
             variant="outline"
             className="w-full"
-            onClick={() => void router.replace("/dashboard/households")}
+            onClick={() => void router.replace("/households")}
           >
-            Ir para o painel
+            {t("unavailable.goToDashboard")}
           </Button>
         </CardFooter>
       </Centered>
@@ -123,10 +121,12 @@ export function AcceptInvitationPage() {
     setAcceptError(null)
     try {
       const res = await acceptInvitation(token)
-      void router.replace(`/dashboard/household/${res.householdSlug}`)
+      void router.replace(`/households/${res.householdSlug}`)
     } catch (err) {
       setAcceptError(
-        err instanceof Error ? err.message : "Não foi possível aceitar o convite.",
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("accept.acceptError"),
       )
     }
   }
@@ -137,10 +137,12 @@ export function AcceptInvitationPage() {
     setAcceptError(null)
     try {
       await declineInvitation(token)
-      void router.replace("/dashboard/households")
+      void router.replace("/households")
     } catch (err) {
       setAcceptError(
-        err instanceof Error ? err.message : "Não foi possível recusar o convite.",
+        err instanceof Error
+          ? translateApiError(err, tCommon)
+          : t("accept.declineError"),
       )
     }
   }
@@ -151,10 +153,16 @@ export function AcceptInvitationPage() {
         <div className="mb-2 text-xl font-bold">
           <span className="text-primary">lar</span>mony
         </div>
-        <CardTitle className="text-xl">Convite para {invite.householdName}</CardTitle>
+        <CardTitle className="text-xl">
+          {t("accept.title", { householdName: invite.householdName })}
+        </CardTitle>
         <CardDescription className="text-foreground/40">
-          Você foi convidado como{" "}
-          <span className="text-foreground/70">{ROLE_LABELS[invite.role]}</span>.
+          <Trans
+            t={t}
+            i18nKey="accept.invitedAs"
+            values={{ role: t(`roles.${invite.role}`) }}
+            components={{ span: <span className="text-foreground/70" /> }}
+          />
         </CardDescription>
       </CardHeader>
 
@@ -166,13 +174,21 @@ export function AcceptInvitationPage() {
         )}
         {emailMismatch ? (
           <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-300">
-            Este convite é para <strong>{invite.email}</strong>, mas você está
-            logado como <strong>{user.email}</strong>. Entre com a conta correta
-            para aceitar.
+            <Trans
+              t={t}
+              i18nKey="accept.emailMismatch"
+              values={{ inviteEmail: invite.email, userEmail: user.email }}
+              components={{ strong: <strong /> }}
+            />
           </div>
         ) : (
           <p className="text-center text-sm text-foreground/50">
-            Aceitando como <span className="text-foreground/80">{user.email}</span>.
+            <Trans
+              t={t}
+              i18nKey="accept.acceptingAs"
+              values={{ email: user.email }}
+              components={{ span: <span className="text-foreground/80" /> }}
+            />
           </p>
         )}
       </CardContent>
@@ -183,7 +199,7 @@ export function AcceptInvitationPage() {
             className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
             onClick={() => void handleSwitchAccount()}
           >
-            Trocar de conta
+            {t("accept.switchAccount")}
           </Button>
         ) : (
           <>
@@ -193,7 +209,7 @@ export function AcceptInvitationPage() {
               onClick={() => void handleAccept()}
             >
               {accepting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Aceitar convite
+              {t("accept.submit")}
             </Button>
             <Button
               variant="ghost"
@@ -202,7 +218,7 @@ export function AcceptInvitationPage() {
               onClick={() => void handleDecline()}
             >
               {declining && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Recusar
+              {t("accept.decline")}
             </Button>
           </>
         )}

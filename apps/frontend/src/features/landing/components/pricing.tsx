@@ -1,156 +1,133 @@
 import * as React from "react"
 import Link from "next/link"
-import { Check, X } from "lucide-react"
-import { Badge } from "@/shared/components/ui/badge"
+import { useTranslation } from "react-i18next"
+import { Check } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { cn } from "@/shared/lib/utils"
-
-interface PlanFeature {
-  label: string
-  included: boolean
-}
+import { SectionHeading } from "./section-heading"
+import { Reveal } from "./reveal"
 
 interface Plan {
-  name: string
-  price: string
-  period: string
-  description: string
-  features: PlanFeature[]
-  cta: string
-  href: string
+  /** Sufixo da chave em `pricing.plans.<key>`. */
+  key: "essencial" | "completo"
+  /** Sufixos das features em `pricing.plans.<key>.features.<fN>`. */
+  features: string[]
   highlighted?: boolean
-  badge?: string
+  badge?: boolean
 }
 
 const PLANS: Plan[] = [
+  { key: "essencial", features: ["f1", "f2", "f3", "f4", "f5"] },
   {
-    name: "Pessoal",
-    price: "Grátis",
-    period: "",
-    description: "Para quem está começando a organizar as próprias finanças.",
-    cta: "Começar grátis",
-    href: "/auth/signup",
-    features: [
-      { label: "Transações e categorias ilimitadas", included: true },
-      { label: "1 lar", included: true },
-      { label: "Orçamentos e metas", included: true },
-      { label: "Lembretes de contas por e-mail", included: true },
-      { label: "Relatórios avançados", included: false },
-      { label: "Múltiplos membros no lar", included: false },
-      { label: "Múltiplos lares", included: false },
-      { label: "Suporte prioritário", included: false },
-    ],
-  },
-  {
-    name: "Família",
-    price: "Grátis",
-    period: "",
-    description: "Para quem divide as contas da casa com outras pessoas.",
-    cta: "Começar grátis",
-    href: "/auth/signup",
+    key: "completo",
     highlighted: true,
-    badge: "Recomendado",
-    features: [
-      { label: "Transações e categorias ilimitadas", included: true },
-      { label: "Membros ilimitados no lar", included: true },
-      { label: "Orçamentos e metas", included: true },
-      { label: "Lembretes de contas por e-mail", included: true },
-      { label: "Relatórios avançados", included: true },
-      { label: "Múltiplos membros no lar", included: true },
-      { label: "Múltiplos lares", included: true },
-      { label: "Suporte prioritário", included: false },
-    ],
-  },
-  {
-    name: "Em breve",
-    price: "A definir",
-    period: "",
-    description: "Recursos avançados para quem precisa de mais controle.",
-    cta: "Entrar na lista de espera",
-    href: "mailto:contato@larmony.me",
-    features: [
-      { label: "Exportação de relatórios", included: true },
-      { label: "Regras de recorrência avançadas", included: true },
-      { label: "Integração com Open Finance", included: true },
-      { label: "Relatórios avançados", included: true },
-      { label: "Múltiplos membros no lar", included: true },
-      { label: "Múltiplos lares", included: true },
-      { label: "Automações personalizadas", included: true },
-      { label: "Suporte prioritário", included: true },
-    ],
+    badge: true,
+    features: ["f1", "f2", "f3", "f4", "f5", "f6"],
   },
 ]
 
+// Preços travados 2026-07-14 (pricing-strategist + sign-off do responsável) —
+// mesmos valores do PLAN_CATALOG do backend e do CLIENT_PLAN_CATALOG do app
+// (M16). Hardcoded aqui pelo mesmo motivo do resto da landing: preço é
+// decisão de produto, não dado dinâmico buscado do backend.
+const PRICES = {
+  essencial: { monthly: "R$ 9,90", annual: "R$ 99" },
+  completo: { monthly: "R$ 19,90", annual: "R$ 199" },
+} as const
+
+const DELAYS = ["", "lp-d1"]
+
 export function Pricing() {
+  const { t } = useTranslation("landing")
+  const [interval, setInterval] = React.useState<"monthly" | "annual">("monthly")
+
   return (
-    <section id="precos" className="py-16 md:py-24">
+    <section id="precos" className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        {/* Header */}
-        <div className="mb-10 text-center sm:mb-16">
-          <div className="mb-4 flex justify-center">
-            <Badge
-              variant="outline"
-              className="border-white/10 text-white/60"
+        <SectionHeading
+          kicker={t("pricing.kicker")}
+          title={t("pricing.title")}
+          subtitle={t("pricing.subtitle")}
+        />
+
+        <div className="mb-8 flex justify-center">
+          <div className="inline-flex rounded-full border border-white/[0.08] p-1 text-sm">
+            <button
+              type="button"
+              onClick={() => setInterval("monthly")}
+              className={cn(
+                "rounded-full px-4 py-1.5 font-medium transition-colors",
+                interval === "monthly" ? "bg-white/10 text-white" : "text-white/50",
+              )}
             >
-              Preços
-            </Badge>
+              {t("pricing.intervalMonthly")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setInterval("annual")}
+              className={cn(
+                "rounded-full px-4 py-1.5 font-medium transition-colors",
+                interval === "annual" ? "bg-white/10 text-white" : "text-white/50",
+              )}
+            >
+              {t("pricing.intervalAnnual")}
+            </button>
           </div>
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
-            Simples e transparente
-          </h2>
-          <p className="mx-auto mt-4 max-w-lg text-white/50">
-            Sem taxas escondidas. Cancele quando quiser.
-          </p>
         </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {PLANS.map((plan) => (
-            <div
-              key={plan.name}
+        <div className="mx-auto grid max-w-3xl grid-cols-1 items-stretch gap-5 md:grid-cols-2">
+          {PLANS.map((plan, i) => (
+            <Reveal
+              key={plan.key}
+              delay={DELAYS[i % 2]}
               className={cn(
-                "relative flex flex-col rounded-2xl border p-8 transition-all",
+                "relative flex h-full flex-col rounded-3xl border p-8 transition-transform duration-300 hover:-translate-y-1.5",
                 plan.highlighted
                   ? "border-primary/50 bg-primary/5"
-                  : "border-white/5 bg-white/[0.03]",
+                  : "border-white/[0.07] bg-white/[0.03]",
               )}
             >
               {plan.badge && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <Badge className="bg-primary text-white">
-                    {plan.badge}
-                  </Badge>
-                </div>
+                <span
+                  className={cn(
+                    "absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3.5 py-1 text-[11.5px] font-bold",
+                    plan.highlighted
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-white/10 text-white/70",
+                  )}
+                >
+                  {t(`pricing.plans.${plan.key}.badge`)}
+                </span>
               )}
 
               <div className="mb-6">
-                <p className="text-sm font-medium text-white/60">{plan.name}</p>
-                <div className="mt-2 flex items-baseline gap-1">
-                  <span className="text-3xl font-bold text-white sm:text-4xl">
-                    {plan.price}
+                <p className="text-sm font-semibold text-white/55">
+                  {t(`pricing.plans.${plan.key}.name`)}
+                </p>
+                <div className="mt-2 flex items-baseline gap-1.5">
+                  <span className="text-[34px] font-extrabold tracking-tight text-white">
+                    {PRICES[plan.key][interval === "monthly" ? "monthly" : "annual"]}
                   </span>
-                  {plan.period && (
-                    <span className="text-white/40">{plan.period}</span>
-                  )}
+                  <span className="text-[13px] text-white/40">
+                    {interval === "monthly" ? t("pricing.perMonth") : t("pricing.perYear")}
+                  </span>
                 </div>
-                <p className="mt-3 text-sm text-white/50">{plan.description}</p>
+                <p className="mt-2 text-[13.5px] leading-snug text-white/55">
+                  {t(`pricing.plans.${plan.key}.description`)}
+                </p>
               </div>
 
-              <ul className="mb-8 flex-1 space-y-3">
+              <ul className="mb-7 flex-1 space-y-2.5">
                 {plan.features.map((feature) => (
-                  <li key={feature.label} className="flex items-center gap-3">
-                    {feature.included ? (
-                      <Check className="h-4 w-4 shrink-0 text-green-400" />
-                    ) : (
-                      <X className="h-4 w-4 shrink-0 text-white/20" />
-                    )}
-                    <span
+                  <li key={feature} className="flex items-center gap-2.5">
+                    <Check
                       className={cn(
-                        "text-sm",
-                        feature.included ? "text-white/70" : "text-white/30",
+                        "h-4 w-4 shrink-0",
+                        plan.highlighted ? "text-primary" : "text-success",
                       )}
-                    >
-                      {feature.label}
+                    />
+                    <span className="text-[13.5px] text-white/70">
+                      {t(`pricing.plans.${plan.key}.features.${feature}`)}
                     </span>
                   </li>
                 ))}
@@ -159,17 +136,21 @@ export function Pricing() {
               <Button
                 asChild
                 className={cn(
-                  "w-full",
+                  "w-full rounded-full",
                   plan.highlighted
                     ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                    : "border border-white/10 bg-transparent text-white hover:bg-white/5",
+                    : "border border-white/15 bg-transparent text-white hover:bg-white/5",
                 )}
               >
-                <Link href={plan.href}>{plan.cta}</Link>
+                <Link href="/auth/signup">{t(`pricing.plans.${plan.key}.cta`)}</Link>
               </Button>
-            </div>
+            </Reveal>
           ))}
         </div>
+
+        <p className="mx-auto mt-8 max-w-lg text-center text-[12.5px] leading-relaxed text-white/35">
+          {t("pricing.note")}
+        </p>
       </div>
     </section>
   )

@@ -13,7 +13,9 @@ export async function createTestApp(): Promise<INestApplication> {
     imports: [AppModule],
   }).compile();
 
-  const app = moduleRef.createNestApplication();
+  // rawBody: mesmo do main.ts — os e2e do webhook do Stripe precisam do
+  // req.rawBody para a verificação de assinatura.
+  const app = moduleRef.createNestApplication({ rawBody: true });
   app.useGlobalFilters(new AllExceptionsFilter(app.get(TelemetryService)));
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   await app.init();
@@ -50,7 +52,7 @@ export async function signUpUser(
   const password = "SenhaForteE2e123!";
   const res = await request(app.getHttpServer())
     .post("/auth/sign-up")
-    .send({ name: `E2E ${prefix}`, email, password })
+    .send({ name: `E2E ${prefix}`, email, password, termsAccepted: true })
     .expect(201);
 
   const accessToken: string =
@@ -62,11 +64,45 @@ export async function signUpUser(
 
 export function authed(
   app: INestApplication,
-  method: "get" | "post" | "patch" | "delete",
+  method: "get" | "post" | "patch" | "put" | "delete",
   url: string,
   token: string,
 ) {
   return request(app.getHttpServer())[method](url).set("Authorization", `Bearer ${token}`);
+}
+
+/**
+ * Ativa a assinatura de um lar de teste (M16): sem isso o lar nasce `locked`
+ * (sem assinatura) e o `ActiveSubscriptionGuard` bloqueia toda escrita com 402.
+ * Usa `type='custom'` (comp) — resolve para o tier **completo** sem depender do
+ * Stripe, liberando todas as features nos e2e de funcionalidade. Faz upsert
+ * porque a linha de subscription é criada lazy (pode não existir ainda).
+ * Passe `tier: "essencial"` para simular explicitamente o plano de entrada.
+ */
+export async function activateHousehold(
+  pool: Pool,
+  householdId: string,
+  tier: "essencial" | "completo" = "completo",
+): Promise<void> {
+  if (tier === "completo") {
+    await pool.query(
+      `INSERT INTO public.subscriptions (household_id, type, status, tier, comp_reason)
+       VALUES ($1, 'custom', 'active', 'completo', 'e2e-active')
+       ON CONFLICT (household_id) DO UPDATE
+         SET type = 'custom', status = 'active', tier = 'completo', comp_reason = 'e2e-active'`,
+      [householdId],
+    );
+    return;
+  }
+  // Essencial: assinatura paga standard/active no tier de entrada (sem features Completo).
+  await pool.query(
+    `INSERT INTO public.subscriptions (household_id, type, status, tier, stripe_subscription_id, comp_reason)
+     VALUES ($1, 'standard', 'active', 'essencial', $2, NULL)
+     ON CONFLICT (household_id) DO UPDATE
+       SET type = 'standard', status = 'active', tier = 'essencial',
+           stripe_subscription_id = EXCLUDED.stripe_subscription_id, comp_reason = NULL`,
+    [householdId, `sub_e2e_ess_${householdId.slice(0, 8)}`],
+  );
 }
 
 /**

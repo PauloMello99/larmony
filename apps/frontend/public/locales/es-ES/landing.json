@@ -1,0 +1,275 @@
+{
+  "nav": {
+    "links": {
+      "features": "Funciones",
+      "product": "Producto",
+      "pricing": "Precios",
+      "faq": "FAQ"
+    },
+    "login": "Iniciar sesión",
+    "cta": "Probar gratis",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
+  },
+  "hero": {
+    "badge": "✦ Nuevo — Recordatorios automáticos de facturas",
+    "titleLine1": "Las finanzas de tu casa,",
+    "titleHighlight": "en armonía.",
+    "subtitle": "Transacciones, presupuestos, metas y facturas por pagar — compartidos con quien vive contigo. Céntimos exactos, cero hojas de cálculo.",
+    "ctaPrimary": "Prueba gratis 30 días →",
+    "ctaSecondary": "Ver demostración",
+    "proof": {
+      "centsLine1": "céntimos exactos,",
+      "centsLine2": "sin redondeos",
+      "membersLine1": "miembros",
+      "membersLine2": "por hogar",
+      "languagesLine1": "idiomas",
+      "languagesLine2": "incl. portugués e inglés"
+    }
+  },
+  "features": {
+    "kicker": "Funciones",
+    "title": "Todo lo que tu hogar necesita",
+    "subtitle": "Diseñado para el día a día de quien organiza las finanzas de casa — solo o en familia.",
+    "items": {
+      "transactions": {
+        "title": "Transacciones organizadas",
+        "description": "Clasifica ingresos y gastos, divide los gastos entre quienes viven en casa y sigue todo en tiempo real."
+      },
+      "budgets": {
+        "title": "Presupuestos por categoría",
+        "description": "Define límites mensuales por categoría y ve cuánto se ha gastado, con avisos cuando se superan."
+      },
+      "goals": {
+        "title": "Metas de ahorro",
+        "description": "Crea metas para el viaje, la reforma o el fondo de emergencia y sigue el progreso junto con tu hogar."
+      },
+      "dashboard": {
+        "title": "Panel con KPIs reales",
+        "description": "Saldo del mes, comparación con el mes anterior, facturas por vencer y presupuestos en un solo panel."
+      },
+      "reminders": {
+        "title": "Recordatorios de facturas",
+        "description": "Nunca más olvides una factura por pagar — notificación en la app y por correo antes del vencimiento."
+      },
+      "household": {
+        "title": "Hecho para el hogar",
+        "description": "Invita a quienes viven contigo, cada uno con su rol, y organizad juntos las finanzas domésticas."
+      }
+    }
+  },
+  "tour": {
+    "kicker": "El producto",
+    "title": "Explora lo que hace Larmony",
+    "subtitle": "Sin jerga financiera. Haz clic en las pestañas y ve, en segundos, cómo funciona cada parte en el día a día del hogar.",
+    "tabs": {
+      "overview": "Resumen",
+      "transactions": "Transacciones",
+      "categories": "Categorías",
+      "budgets": "Presupuestos",
+      "goals": "Metas",
+      "bills": "Facturas"
+    },
+    "overview": {
+      "greeting": "Buenos días, Paulo 👋",
+      "kpis": {
+        "income": "Ingresos del mes",
+        "expenses": "Gastos del mes",
+        "balance": "Saldo del mes"
+      },
+      "rows": {
+        "r1": "Salario — Julio",
+        "r2": "Supermercado Extra",
+        "r3": "Alquiler"
+      }
+    },
+    "transactions": {
+      "title": "Movimientos recientes",
+      "splitBadge": "Reparto 50/50",
+      "rows": {
+        "r1": "Supermercado Extra",
+        "r2": "Internet",
+        "r3": "Salario — Julio",
+        "r4": "Alquiler"
+      }
+    },
+    "categories": {
+      "title": "Gastos por categoría",
+      "items": {
+        "c1": "Vivienda",
+        "c2": "Alimentación",
+        "c3": "Transporte",
+        "c4": "Ocio"
+      }
+    },
+    "budgets": {
+      "title": "Presupuestos del mes",
+      "items": {
+        "b1": "Vivienda",
+        "b2": "Alimentación",
+        "b3": "Transporte"
+      }
+    },
+    "goals": {
+      "title": "Metas de ahorro",
+      "items": {
+        "g1": "Viaje de fin de año",
+        "g2": "Fondo de emergencia"
+      }
+    },
+    "bills": {
+      "title": "Próximas facturas",
+      "items": {
+        "b1": { "label": "Alquiler", "due": "Vence en 3 días" },
+        "b2": { "label": "Luz", "due": "Vence en 8 días" },
+        "b3": { "label": "Internet", "due": "Vence en 12 días" }
+      }
+    }
+  },
+  "about": {
+    "kicker": "Sobre Larmony",
+    "title": "Del cero al control en tres pasos",
+    "subtitle": "Sin hojas de cálculo, sin conexión bancaria obligatoria. Montas el hogar, invitas a quienes comparten los gastos y empezáis a llevar el control juntos.",
+    "steps": {
+      "s1": {
+        "title": "Crea tu hogar",
+        "desc": "En menos de un minuto. El hogar es el espacio donde se reúnen las finanzas de casa — con 30 días de prueba gratis del plan Completo."
+      },
+      "s2": {
+        "title": "Invita a quienes viven contigo",
+        "desc": "Cada persona entra con su propio usuario. Todos ven las mismas cuentas, cada uno en su idioma."
+      },
+      "s3": {
+        "title": "Llevad el control juntos",
+        "desc": "Registrad gastos, repartid los importes y ved metas y presupuestos avanzar en tiempo real."
+      }
+    },
+    "diff": {
+      "title": "Por qué Larmony y no una hoja de cálculo",
+      "d1": {
+        "title": "Multiusuario de verdad",
+        "desc": "No es una hoja compartida: cada miembro tiene su propio usuario y el propietario controla quién entra y sale del hogar."
+      },
+      "d2": {
+        "title": "Céntimos exactos",
+        "desc": "Todo importe se guarda en céntimos enteros — sin redondeos. Si la cuenta salió a R$ 33,33 para cada uno, eso es lo que aparece."
+      },
+      "d3": {
+        "title": "Datos aislados por hogar",
+        "desc": "Cada hogar está aislado en la base de datos (RLS): un miembro de un hogar nunca ve los datos de otro. Sin PCI local — el pago lo procesa Stripe."
+      }
+    },
+    "proof": {
+      "title": "El fin de las hojas perdidas y del \"¿quién pagó qué?\"",
+      "description": "Una fuente única, clara para toda la familia — quien se unió ayer lee el panel igual que quien lo creó."
+    }
+  },
+  "pricing": {
+    "kicker": "Precios",
+    "title": "Simple y transparente",
+    "subtitle": "Dos planes, sin trampa — y 30 días de prueba gratis del Completo en cualquiera de ellos.",
+    "note": "Se requiere tarjeta para empezar la prueba, sin cobro hasta que terminen los 30 días. Pago seguro procesado por Stripe — cancela cuando quieras.",
+    "intervalMonthly": "Mensual",
+    "intervalAnnual": "Anual",
+    "perMonth": "/mes",
+    "perYear": "/año",
+    "plans": {
+      "essencial": {
+        "name": "Esencial",
+        "description": "Lo esencial para gestionar las finanzas del día a día.",
+        "cta": "Prueba gratis 30 días",
+        "features": {
+          "f1": "Transacciones ilimitadas con las categorías predeterminadas",
+          "f2": "Metas de ahorro ilimitadas",
+          "f3": "Recordatorios de facturas por correo",
+          "f4": "Miembros y hogares ilimitados",
+          "f5": "Panel e informe mensual"
+        }
+      },
+      "completo": {
+        "name": "Completo",
+        "badge": "Recomendado",
+        "description": "Todo lo de Esencial, más presupuestos, movimientos programados e informes avanzados.",
+        "cta": "Prueba gratis 30 días",
+        "features": {
+          "f1": "Todo lo del plan Esencial",
+          "f2": "Presupuestos por categoría",
+          "f3": "Movimientos programados y recurrencias",
+          "f4": "Informes avanzados — anual y comparativos",
+          "f5": "Exportación de informes en CSV",
+          "f6": "Categorías personalizadas ilimitadas"
+        }
+      }
+    }
+  },
+  "faq": {
+    "kicker": "FAQ",
+    "title": "Preguntas frecuentes",
+    "items": {
+      "q1": {
+        "question": "¿Larmony tiene un plan gratis?",
+        "answer": "No un plan gratis permanente, pero todos empiezan con 30 días de prueba gratis del plan Completo (se requiere tarjeta, sin cobro hasta que termine la prueba). Después, eliges entre Esencial (R$ 9,90/mes) y Completo (R$ 19,90/mes)."
+      },
+      "q2": {
+        "question": "¿Cuál es la diferencia entre Esencial y Completo?",
+        "answer": "Esencial cubre lo básico: transacciones, categorías predeterminadas, metas, panel e informe mensual, con miembros y hogares ilimitados. Completo añade presupuestos por categoría, movimientos programados, informes avanzados (vista anual y exportación CSV) y categorías personalizadas."
+      },
+      "q3": {
+        "question": "¿Puedo cancelar cuando quiera?",
+        "answer": "Sí. La suscripción se gestiona desde el portal seguro de Stripe, sin penalización. Mantienes el acceso hasta el fin del ciclo ya pagado; después, tus datos quedan disponibles en modo de solo lectura hasta que vuelvas a suscribirte."
+      },
+      "q4": {
+        "question": "¿Necesito conectar mi cuenta bancaria?",
+        "answer": "No. Larmony funciona con movimientos manuales y recurrencias automáticas — tú controlas exactamente lo que entra. La integración con Open Finance está en el roadmap para un plan futuro."
+      },
+      "q5": {
+        "question": "¿Mis datos financieros están seguros?",
+        "answer": "Sí. Cada hogar está aislado en la base de datos (RLS) — un miembro de un hogar nunca ve los datos de otro. Tu contraseña está cifrada y el pago lo procesa Stripe, sin datos de tarjeta en Larmony."
+      },
+      "q6": {
+        "question": "¿Funciona en otros idiomas?",
+        "answer": "Sí — Larmony está disponible en 7 idiomas (portugués, inglés, español, chino, alemán, francés y japonés). Cada persona elige su propio idioma y ve el mismo hogar traducido, incluidos los correos de recordatorio."
+      }
+    }
+  },
+  "finalCta": {
+    "titleLine1": "Trae armonía a",
+    "titleLine2": "los gastos de tu casa",
+    "subtitle": "Crea tu hogar en menos de un minuto. 30 días de prueba gratis del plan Completo.",
+    "cta": "Prueba gratis 30 días →"
+  },
+  "footer": {
+    "description": "Control financiero de tu hogar. Transacciones, presupuestos y metas en un solo lugar.",
+    "sections": {
+      "product": {
+        "title": "Producto",
+        "links": {
+          "features": "Funciones",
+          "pricing": "Precios",
+          "about": "Sobre",
+          "faq": "FAQ"
+        }
+      },
+      "legal": {
+        "title": "Legal",
+        "links": {
+          "terms": "Términos de uso",
+          "privacy": "Privacidad",
+          "cookies": "Cookies",
+          "security": "Seguridad"
+        }
+      }
+    },
+    "copyright": "© {{year}} Larmony. Todos los derechos reservados."
+  },
+  "legal": {
+    "back": "← Volver",
+    "meta": "Última actualización: {{updatedAt}} · versión {{version}}",
+    "officialNotice": "Documento oficial en portugués (Brasil). Las traducciones son solo informativas.",
+    "footer": {
+      "copyright": "© {{year}} Larmony. Todos los derechos reservados.",
+      "terms": "Términos de Uso",
+      "privacy": "Privacidad"
+    }
+  }
+}

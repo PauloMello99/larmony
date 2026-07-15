@@ -1,0 +1,93 @@
+{
+  "nav": {
+    "title": "Minha Conta",
+    "profile": "Perfil",
+    "access": "Acesso",
+    "appearance": "Tema",
+    "locale": "Idioma",
+    "notifications": "Notificações",
+    "danger": "Apagar Conta"
+  },
+  "profile": {
+    "title": "Perfil",
+    "description": "Gerencie seu nome, e-mail e foto de perfil.",
+    "loading": "Carregando…",
+    "avatarAlt": "Foto de perfil",
+    "avatarUpload": "Enviar foto",
+    "avatarUploading": "Enviando…",
+    "avatarHint": "PNG, JPG, WEBP ou GIF · até 5 MB.",
+    "avatarInvalidType": "Selecione um arquivo de imagem.",
+    "avatarTooLarge": "A imagem deve ter no máximo 5 MB.",
+    "avatarUploadError": "Falha ao enviar a foto.",
+    "nameLabel": "Nome",
+    "emailLabel": "E-mail",
+    "emailHint": "Alterar o e-mail muda também seu login.",
+    "saveError": "Não foi possível salvar o perfil.",
+    "saved": "Perfil atualizado.",
+    "submit": "Salvar alterações",
+    "submitting": "Salvando…"
+  },
+  "access": {
+    "title": "Acesso",
+    "description": "Gerencie sua senha e segurança de acesso.",
+    "changePassword": "Alterar senha",
+    "sentMessage": "Enviamos um link para <strong>{{email}}</strong>. Abra-o para definir uma nova senha — a sessão é recuperada com segurança pelo próprio link do e-mail.",
+    "explanation": "Por segurança, a troca de senha é feita por um link enviado ao seu e-mail. Ao clicar no link, você abre a tela de nova senha com a sessão recuperada automaticamente.",
+    "error": "Não foi possível enviar o e-mail. Tente novamente.",
+    "submit": "Enviar link de alteração"
+  },
+  "appearance": {
+    "title": "Tema",
+    "description": "Personalize a aparência do painel.",
+    "cardTitle": "Tema",
+    "cardDescription": "Escolha entre claro, escuro ou automático (segue o sistema).",
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema"
+  },
+  "locale": {
+    "description": "Escolha o idioma da interface e dos e-mails.",
+    "loading": "Carregando…",
+    "error": "Não foi possível trocar o idioma."
+  },
+  "notifications": {
+    "title": "Notificações",
+    "description": "Escolha como você quer ser avisado de cada evento.",
+    "loading": "Carregando…",
+    "error": "Não foi possível carregar suas preferências.",
+    "columns": {
+      "event": "Evento",
+      "inapp": "No app",
+      "email": "E-mail",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "stubbedHint": "Ainda não disponível nesta versão."
+    },
+    "events": {
+      "bill_reminder": "Lembrete de lançamento",
+      "goal_reached": "Meta atingida",
+      "budget_exceeded": "Orçamento estourado",
+      "auto_launch": "Lançamento automático",
+      "monthly_report": "Relatório mensal"
+    }
+  },
+  "danger": {
+    "title": "Zona de perigo",
+    "description": "Ações irreversíveis na sua conta.",
+    "cardTitle": "Apagar conta",
+    "cardDescription": "A exclusão permanente da conta removerá todos os seus dados pessoais. Esta ação é irreversível.",
+    "deleteTitle": "Excluir minha conta",
+    "deleteHint": "Você precisa transferir ou excluir as lares das quais é proprietário antes de excluir sua conta.",
+    "deleteButton": "Apagar conta",
+    "dialogTitle": "Excluir minha conta",
+    "dialogDescription": "Esta ação é <span>irreversível</span>. Seus dados pessoais serão permanentemente removidos. Se você ainda for proprietário de algum lar, a exclusão será bloqueada.",
+    "confirmLabel": "Digite seu e-mail <span>{{email}}</span> para confirmar:",
+    "deleteError": "Não foi possível excluir a conta.",
+    "confirmDelete": "Excluir permanentemente",
+    "deleting": "Excluindo…"
+  },
+  "validation": {
+    "nameRequired": "Nome é obrigatório",
+    "invalidEmail": "E-mail inválido"
+  }
+}

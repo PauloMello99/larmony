@@ -1,67 +1,136 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import Link from "next/link"
-import { BarChart3, PlusCircle } from "lucide-react"
-import { Button } from "@/shared/components/ui/button"
+import { useTranslation } from "react-i18next"
+import { Lock } from "lucide-react"
 import { Skeleton } from "@/shared/components/ui/skeleton"
+import { ExportMenu, type ExportColumn } from "@/shared/components/ui/export-menu"
 import { cn } from "@/shared/lib/utils"
+import { downloadCsv } from "@/shared/lib/download-csv"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
+import { useEntitlements, PremiumGate } from "@/features/subscription"
 import { useMonthlyReport } from "../hooks/use-monthly-report"
 import { useAnnualReport } from "../hooks/use-annual-report"
 import { MonthlyView } from "./monthly-view"
 import { AnnualView } from "./annual-view"
-import type { ReportView } from "../types"
+import type { MonthRef, ReportView } from "../types"
 
 export function ReportsPage() {
-  const { household, householdId } = useCurrentHousehold()
+  const { t } = useTranslation("reports")
+  const { householdId, household } = useCurrentHousehold()
   const [view, setView] = useState<ReportView>("monthly")
-  const [year, setYear] = useState(() => new Date().getFullYear())
+  const now = new Date()
+  const [year, setYear] = useState(() => now.getFullYear())
+  const [monthRef, setMonthRef] = useState<MonthRef>(() => ({
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+  }))
 
-  const monthly = useMonthlyReport(householdId)
-  const annual = useAnnualReport(householdId, year)
+  // Relatório anual é premium-only (B-4). Reflete o backend — nunca decide
+  // acesso no cliente; só evita disparar a request condenada e oferece upgrade.
+  const { capabilities, loading: entLoading } = useEntitlements(householdId)
+  const canAnnual = capabilities.advanced_reports
+  // Export CSV é Family-only (P-6) — capability própria, distinta de
+  // advanced_reports (o mensal em si é grátis pra visualizar).
+  const canExport = capabilities.report_export
 
-  const loading = view === "monthly" ? monthly.loading : annual.loading
+  const monthly = useMonthlyReport(householdId, monthRef.year, monthRef.month)
+  const annual = useAnnualReport(householdId, year, canAnnual)
+
+  const monthlyColumns: ExportColumn[] = useMemo(
+    () => [
+      { key: "category", label: t("export.columns.category") },
+      { key: "amount", label: t("export.columns.amount") },
+    ],
+    [t],
+  )
+  const annualColumns: ExportColumn[] = useMemo(
+    () => [
+      { key: "year", label: t("export.columns.year") },
+      { key: "month", label: t("export.columns.month") },
+      { key: "income", label: t("export.columns.income") },
+      { key: "expense", label: t("export.columns.expense") },
+      { key: "balance", label: t("export.columns.balance") },
+    ],
+    [t],
+  )
+
+  async function handleExport(fields: string[]) {
+    if (view === "monthly") {
+      await downloadCsv(
+        `/households/${householdId}/reports/monthly/export`,
+        `relatorio-mensal-${monthRef.year}-${String(monthRef.month).padStart(2, "0")}.csv`,
+        { fields: fields.join(","), month: monthRef.month, year: monthRef.year },
+      )
+    } else {
+      await downloadCsv(
+        `/households/${householdId}/reports/annual/export`,
+        `relatorio-anual-${year}.csv`,
+        { fields: fields.join(","), year },
+      )
+    }
+  }
+
+  const annualLocked = view === "annual" && !entLoading && !canAnnual
+  const loading =
+    view === "monthly"
+      ? monthly.loading
+      : entLoading || (canAnnual && annual.loading)
   const error = view === "monthly" ? monthly.error : annual.error
 
-  // Só a vista mensal usa o empty-state global (não há navegação — a janela é
-  // sempre "últimos 6 meses"). A anual é navegável por ano: um ano vazio não
-  // pode esconder os botões de navegação, senão o usuário fica preso sem
-  // conseguir voltar a um ano com dados. A AnnualView já trata "sem
-  // movimentação neste ano" internamente, mantendo a navegação visível.
-  const hasNoData =
-    view === "monthly" &&
-    monthly.report !== null &&
-    monthly.report.months.every((m) => m.incomeCents === 0 && m.expenseCents === 0)
-
-  const transactionsHref = `/dashboard/household/${household.slug}/transactions`
+  // Ambas as vistas são navegáveis (mês / ano), então tratam "sem movimentação"
+  // internamente — nenhuma usa empty-state global, senão a navegação some e o
+  // usuário fica preso num período vazio sem conseguir voltar.
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="flex flex-col">
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold text-foreground sm:text-2xl">Relatórios</h1>
-          <p className="mt-1 text-sm text-foreground/40">
-            Visão mensal e anual das suas finanças
-          </p>
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
+          <p className="mt-1 text-sm text-foreground/40">{t("page.description")}</p>
         </div>
 
-        <div className="flex rounded-md border border-foreground/[0.08] p-0.5 text-xs sm:w-auto">
-          {(["monthly", "annual"] as const).map((v) => (
-            <button
-              key={v}
-              type="button"
-              onClick={() => setView(v)}
-              className={cn(
-                "flex-1 rounded px-4 py-1.5 font-medium transition-colors sm:flex-none",
-                view === v
-                  ? "bg-primary text-primary-foreground"
-                  : "text-foreground/50 hover:text-foreground",
-              )}
-            >
-              {v === "monthly" ? "Mensal" : "Anual"}
-            </button>
-          ))}
+        <div className="flex items-center gap-2">
+          <div className="flex rounded-md border border-foreground/[0.08] p-0.5 text-xs sm:w-auto">
+            {(["monthly", "annual"] as const).map((v) => (
+              <button
+                key={v}
+                type="button"
+                onClick={() => setView(v)}
+                className={cn(
+                  "flex flex-1 items-center justify-center gap-1.5 rounded px-4 py-1.5 font-medium transition-colors sm:flex-none",
+                  view === v
+                    ? "bg-primary text-primary-foreground"
+                    : "text-foreground/50 hover:text-foreground",
+                )}
+              >
+                {v === "monthly" ? t("page.monthly") : t("page.annual")}
+                {v === "annual" && !canAnnual && !entLoading && (
+                  <Lock className="h-3 w-3 opacity-70" />
+                )}
+              </button>
+            ))}
+          </div>
+
+          {!annualLocked &&
+            (canExport ? (
+              <ExportMenu
+                columns={view === "monthly" ? monthlyColumns : annualColumns}
+                onExport={handleExport}
+                disabled={entLoading || loading}
+              />
+            ) : (
+              !entLoading && (
+                <Link
+                  href={`/households/${household.slug}/settings/subscription`}
+                  className="flex shrink-0 items-center gap-1.5 rounded-md border border-foreground/[0.08] px-3 py-2 text-xs text-foreground/50 transition-colors hover:text-foreground"
+                  title={t("export.upgradeHint")}
+                >
+                  <Lock className="h-3.5 w-3.5" />
+                </Link>
+              )
+            ))}
         </div>
       </div>
 
@@ -71,7 +140,9 @@ export function ReportsPage() {
         </div>
       )}
 
-      {loading ? (
+      {annualLocked ? (
+        <PremiumGate />
+      ) : loading ? (
         <div className="space-y-4">
           <Skeleton className="h-64 w-full rounded-xl" />
           <div className="grid gap-4 lg:grid-cols-2">
@@ -79,26 +150,9 @@ export function ReportsPage() {
             <Skeleton className="h-64 w-full rounded-xl" />
           </div>
         </div>
-      ) : hasNoData ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-foreground/10 py-16 text-center sm:py-20">
-          <BarChart3 className="mb-4 h-10 w-10 text-foreground/20" />
-          <p className="text-sm text-foreground/40">
-            Nenhuma transação ainda. Lance receitas e despesas para ver os relatórios.
-          </p>
-          <Button
-            asChild
-            className="mt-4 w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
-            size="sm"
-          >
-            <Link href={transactionsHref}>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Ir para transações
-            </Link>
-          </Button>
-        </div>
       ) : view === "monthly" && monthly.report ? (
-        <MonthlyView report={monthly.report} />
-      ) : annual.report ? (
+        <MonthlyView report={monthly.report} monthRef={monthRef} onMonthChange={setMonthRef} />
+      ) : view === "annual" && annual.report ? (
         <AnnualView report={annual.report} year={year} onYearChange={setYear} />
       ) : null}
     </div>

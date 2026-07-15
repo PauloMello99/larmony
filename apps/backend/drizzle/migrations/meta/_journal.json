@@ -5,22 +5,36 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1783241797150,
-      "tag": "0000_nifty_squadron_sinister",
+      "when": 1783909806670,
+      "tag": "0000_baseline",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1783241797151,
-      "tag": "0001_rls_policies",
+      "when": 1784090000000,
+      "tag": "0001_locale_tags",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
-      "when": 1783241797152,
-      "tag": "0002_recurrences",
+      "when": 1784176000000,
+      "tag": "0002_billing_invoice_events",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1784262400000,
+      "tag": "0003_support_tickets",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1784348800000,
+      "tag": "0004_subscription_tiers",
       "breakpoints": true
     }
   ]

@@ -1,8 +1,8 @@
 "use client"
 
 import { Bell, CheckCheck } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { formatDistanceToNow, parseISO } from "date-fns"
-import { ptBR } from "date-fns/locale"
 import { Button } from "@/shared/components/ui/button"
 import {
   DropdownMenu,
@@ -10,9 +10,12 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu"
 import { cn } from "@/shared/lib/utils"
+import { getDateFnsLocale, useActiveLocale } from "@/shared/lib/format"
 import { useNotifications } from "../hooks/use-notifications"
 
 export function NotificationBell() {
+  const { t } = useTranslation("common")
+  const dateFnsLocale = getDateFnsLocale(useActiveLocale())
   const { items, unread, markRead, markAllRead } = useNotifications()
 
   return (
@@ -29,12 +32,12 @@ export function NotificationBell() {
               {unread > 9 ? "9+" : unread}
             </span>
           )}
-          <span className="sr-only">Notificações</span>
+          <span className="sr-only">{t("notifications.title")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80 p-0">
         <div className="flex items-center justify-between border-b border-foreground/10 px-3 py-2">
-          <span className="text-sm font-medium text-foreground">Notificações</span>
+          <span className="text-sm font-medium text-foreground">{t("notifications.title")}</span>
           {unread > 0 && (
             <button
               type="button"
@@ -42,14 +45,14 @@ export function NotificationBell() {
               className="flex items-center gap-1 text-xs text-foreground/50 transition-colors hover:text-foreground"
             >
               <CheckCheck className="h-3.5 w-3.5" />
-              Marcar todas
+              {t("notifications.markAll")}
             </button>
           )}
         </div>
         <div className="max-h-80 overflow-y-auto py-1">
           {items.length === 0 ? (
             <p className="px-3 py-6 text-center text-sm text-foreground/30">
-              Nenhuma notificação.
+              {t("notifications.empty")}
             </p>
           ) : (
             items.map((n) => (
@@ -82,7 +85,7 @@ export function NotificationBell() {
                   <span className="block text-[11px] text-foreground/30">
                     {formatDistanceToNow(parseISO(n.createdAt), {
                       addSuffix: true,
-                      locale: ptBR,
+                      locale: dateFnsLocale,
                     })}
                   </span>
                 </span>

@@ -1,10 +1,12 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { PiggyBank, PlusCircle } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { useCurrentHousehold } from "@/features/dashboard/components/household-context"
+import { useEntitlements, PremiumGate } from "@/features/subscription"
 import { useBudgets } from "../hooks/use-budgets"
 import { useBudgetMutations } from "../hooks/use-budget-mutations"
 import { BudgetForm } from "./budget-form"
@@ -19,11 +21,32 @@ function currentPeriod(): BudgetFilters {
   return { month: now.getMonth() + 1, year: now.getFullYear() }
 }
 
+/**
+ * Espelha (só para UX) a imutabilidade enforçada no servidor (M10): editar/
+ * criar só valem no mês corrente. Passado é somente-leitura; futuro é
+ * projeção do limite vigente (sem scheduling — nunca editável).
+ */
+function isEditablePeriod(period: BudgetFilters, today: BudgetFilters): boolean {
+  return period.month === today.month && period.year === today.year
+}
+
+function isFuturePeriod(period: BudgetFilters, today: BudgetFilters): boolean {
+  return period.year > today.year || (period.year === today.year && period.month > today.month)
+}
+
 export function BudgetsPage() {
+  const { t } = useTranslation("budgets")
   const { householdId } = useCurrentHousehold()
   const [period, setPeriod] = useState<BudgetFilters>(currentPeriod)
-  const { budgets, loading } = useBudgets(householdId, period)
+  // M16: orçamentos são Completo-only (capability, não mais contagem). A lista
+  // 402 no backend para quem não tem a capability, então só busca quando ela
+  // já foi confirmada — e a página inteira vira paywall nesse caso.
+  const { capabilities, loading: entLoading } = useEntitlements(householdId)
+  const { budgets, loading } = useBudgets(householdId, period, capabilities.budgets)
   const { createBudget, updateBudget, deleteBudget } = useBudgetMutations(householdId)
+
+  const isEditable = isEditablePeriod(period, currentPeriod())
+  const isFuture = isFuturePeriod(period, currentPeriod())
 
   const [formOpen, setFormOpen] = useState(false)
   const [editing, setEditing] = useState<Budget | null>(null)
@@ -45,33 +68,65 @@ export function BudgetsPage() {
     } else {
       await createBudget({
         categoryId: values.categoryId,
-        month: period.month,
-        year: period.year,
         amountCents: values.amountCents,
       })
     }
   }
 
+  if (entLoading) {
+    return (
+      <div className="flex flex-col">
+        <div className="mb-6">
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
+          <p className="mt-1 text-sm text-foreground/40">{t("page.subtitle")}</p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-28 w-full rounded-xl" />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (!capabilities.budgets) {
+    return (
+      <div className="flex flex-col">
+        <div className="mb-6">
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
+          <p className="mt-1 text-sm text-foreground/40">{t("page.subtitle")}</p>
+        </div>
+        <PremiumGate descriptionKey="gate.descriptionBudgets" />
+      </div>
+    )
+  }
+
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="flex flex-col">
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold text-foreground sm:text-2xl">Orçamentos</h1>
-          <p className="mt-1 text-sm text-foreground/40">
-            Limites mensais de gasto por categoria
-          </p>
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{t("page.title")}</h1>
+          <p className="mt-1 text-sm text-foreground/40">{t("page.subtitle")}</p>
         </div>
-        <Button
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
-          size="sm"
-          onClick={openCreate}
-        >
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Novo orçamento
-        </Button>
+        {isEditable && (
+          <Button
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
+            size="sm"
+            onClick={openCreate}
+          >
+            <PlusCircle className="mr-2 h-4 w-4" />
+            {t("page.newBudget")}
+          </Button>
+        )}
       </div>
 
       <BudgetPeriodNav period={period} onChange={setPeriod} />
+
+      {!isEditable && (
+        <p className="mb-4 text-sm text-foreground/40">
+          {isFuture ? t("page.projectedNotice") : t("page.readOnlyNotice")}
+        </p>
+      )}
 
       {loading ? (
         <div className="grid gap-3 sm:grid-cols-2">
@@ -82,18 +137,25 @@ export function BudgetsPage() {
       ) : budgets.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-foreground/10 py-16 text-center sm:py-20">
           <PiggyBank className="mb-4 h-10 w-10 text-foreground/20" />
-          <p className="text-sm text-foreground/40">Nenhum orçamento neste período.</p>
-          <Button
-            className="mt-4 w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
-            size="sm"
-            onClick={openCreate}
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Criar orçamento
-          </Button>
+          <p className="text-sm text-foreground/40">{t("page.empty")}</p>
+          {isEditable && (
+            <Button
+              className="mt-4 w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
+              size="sm"
+              onClick={openCreate}
+            >
+              <PlusCircle className="mr-2 h-4 w-4" />
+              {t("page.createBudget")}
+            </Button>
+          )}
         </div>
       ) : (
-        <BudgetList budgets={budgets} onEdit={openEdit} onDelete={setDeleting} />
+        <BudgetList
+          budgets={budgets}
+          readOnly={!isEditable}
+          onEdit={openEdit}
+          onDelete={setDeleting}
+        />
       )}
 
       <BudgetForm
@@ -102,6 +164,7 @@ export function BudgetsPage() {
         householdId={householdId}
         budget={editing}
         budgetedCategoryIds={budgets.map((b) => b.categoryId)}
+        atLimit={!capabilities.budgets}
         onSubmit={handleSubmit}
       />
 

@@ -1,0 +1,275 @@
+{
+  "nav": {
+    "links": {
+      "features": "Fonctionnalités",
+      "product": "Produit",
+      "pricing": "Tarifs",
+      "faq": "FAQ"
+    },
+    "login": "Se connecter",
+    "cta": "Essayer gratuitement",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu"
+  },
+  "hero": {
+    "badge": "✦ Nouveau — Rappels automatiques de factures",
+    "titleLine1": "Les finances de la maison,",
+    "titleHighlight": "en harmonie.",
+    "subtitle": "Transactions, budgets, objectifs et factures à payer — partagés avec celles et ceux qui partagent ton foyer. Des centimes exacts, zéro tableur.",
+    "ctaPrimary": "Essai gratuit de 30 jours →",
+    "ctaSecondary": "Voir la démo",
+    "proof": {
+      "centsLine1": "centimes exacts,",
+      "centsLine2": "sans arrondi",
+      "membersLine1": "membres",
+      "membersLine2": "par foyer",
+      "languagesLine1": "langues",
+      "languagesLine2": "dont anglais, espagnol"
+    }
+  },
+  "features": {
+    "kicker": "Fonctionnalités",
+    "title": "Tout ce dont ton foyer a besoin",
+    "subtitle": "Conçu pour le quotidien de celles et ceux qui organisent les finances de la maison — seul(e) ou en famille.",
+    "items": {
+      "transactions": {
+        "title": "Transactions organisées",
+        "description": "Catégorise revenus et dépenses, répartis les frais entre les habitants de la maison et suis tout en temps réel."
+      },
+      "budgets": {
+        "title": "Budgets par catégorie",
+        "description": "Définis des limites mensuelles par catégorie et vois combien a déjà été dépensé, avec une alerte en cas de dépassement."
+      },
+      "goals": {
+        "title": "Objectifs d’épargne",
+        "description": "Crée des objectifs pour le voyage, les travaux ou l’épargne de précaution et suis la progression avec ton foyer."
+      },
+      "dashboard": {
+        "title": "Tableau de bord avec de vrais indicateurs",
+        "description": "Solde du mois, comparaison avec le mois précédent, factures à échéance et budgets sur un seul écran."
+      },
+      "reminders": {
+        "title": "Rappels de factures",
+        "description": "Ne rate plus jamais une facture à payer — notification dans l’app et par e-mail avant l’échéance."
+      },
+      "household": {
+        "title": "Pensé pour le foyer",
+        "description": "Invite celles et ceux qui vivent avec toi, chacun avec son propre rôle, et organisez les finances domestiques ensemble."
+      }
+    }
+  },
+  "tour": {
+    "kicker": "Le produit",
+    "title": "Navigue dans tout ce que Larmony fait",
+    "subtitle": "Sans jargon financier. Clique sur les onglets et vois, en quelques secondes, comment chaque partie fonctionne au quotidien du foyer.",
+    "tabs": {
+      "overview": "Vue d’ensemble",
+      "transactions": "Transactions",
+      "categories": "Catégories",
+      "budgets": "Budgets",
+      "goals": "Objectifs",
+      "bills": "Factures"
+    },
+    "overview": {
+      "greeting": "Bonjour, Paulo 👋",
+      "kpis": {
+        "income": "Revenus du mois",
+        "expenses": "Dépenses du mois",
+        "balance": "Solde du mois"
+      },
+      "rows": {
+        "r1": "Salaire — Juillet",
+        "r2": "Supermarché Extra",
+        "r3": "Loyer"
+      }
+    },
+    "transactions": {
+      "title": "Écritures récentes",
+      "splitBadge": "Répartition 50/50",
+      "rows": {
+        "r1": "Supermarché Extra",
+        "r2": "Internet",
+        "r3": "Salaire — Juillet",
+        "r4": "Loyer"
+      }
+    },
+    "categories": {
+      "title": "Dépenses par catégorie",
+      "items": {
+        "c1": "Logement",
+        "c2": "Alimentation",
+        "c3": "Transport",
+        "c4": "Loisirs"
+      }
+    },
+    "budgets": {
+      "title": "Budgets du mois",
+      "items": {
+        "b1": "Logement",
+        "b2": "Alimentation",
+        "b3": "Transport"
+      }
+    },
+    "goals": {
+      "title": "Objectifs d’épargne",
+      "items": {
+        "g1": "Voyage de fin d’année",
+        "g2": "Épargne de précaution"
+      }
+    },
+    "bills": {
+      "title": "Prochaines factures",
+      "items": {
+        "b1": { "label": "Loyer", "due": "Échéance dans 3 jours" },
+        "b2": { "label": "Électricité", "due": "Échéance dans 8 jours" },
+        "b3": { "label": "Internet", "due": "Échéance dans 12 jours" }
+      }
+    }
+  },
+  "about": {
+    "kicker": "À propos de Larmony",
+    "title": "Du zéro au contrôle en trois étapes",
+    "subtitle": "Sans tableur, sans connexion bancaire obligatoire. Tu crées le foyer, tu invites celles et ceux qui partagent les comptes et vous commencez à suivre ensemble.",
+    "steps": {
+      "s1": {
+        "title": "Crée ton foyer",
+        "desc": "En moins d’une minute. Le foyer est l’espace où les finances de la maison sont réunies — avec 30 jours d’essai gratuit du plan Complet."
+      },
+      "s2": {
+        "title": "Invite celles et ceux qui vivent avec toi",
+        "desc": "Chaque personne entre avec son propre identifiant. Tout le monde voit les mêmes comptes, chacun dans sa langue."
+      },
+      "s3": {
+        "title": "Suivez ensemble",
+        "desc": "Saisissez les dépenses, répartissez les frais et voyez objectifs et budgets évoluer en temps réel."
+      }
+    },
+    "diff": {
+      "title": "Pourquoi Larmony plutôt qu’un tableur",
+      "d1": {
+        "title": "Multi-utilisateur pour de vrai",
+        "desc": "Ce n’est pas un tableur partagé : chaque membre a son propre identifiant et le propriétaire contrôle qui entre et qui sort du foyer."
+      },
+      "d2": {
+        "title": "Centimes exacts",
+        "desc": "Chaque montant est stocké en centimes entiers — sans arrondi. Si le compte donne R$ 33,33 pour chacun, c’est exactement ce qui s’affiche."
+      },
+      "d3": {
+        "title": "Données isolées par foyer",
+        "desc": "Chaque foyer est isolé dans la base (RLS) : un membre d’un foyer ne voit jamais les données d’un autre. Aucune donnée PCI en local — paiement via Stripe."
+      }
+    },
+    "proof": {
+      "title": "La fin des tableurs perdus et du « qui a payé quoi ? »",
+      "description": "Une source unique, claire pour toute la famille — celui qui est arrivé hier lit le tableau de bord de la même façon que celui qui l’a créé."
+    }
+  },
+  "pricing": {
+    "kicker": "Tarifs",
+    "title": "Simple et transparent",
+    "subtitle": "Deux plans, sans piège — et 30 jours d’essai gratuit du plan Complet sur les deux.",
+    "note": "Carte requise pour démarrer l’essai, aucun prélèvement avant la fin des 30 jours. Paiement sécurisé traité par Stripe — résilie quand tu veux.",
+    "intervalMonthly": "Mensuel",
+    "intervalAnnual": "Annuel",
+    "perMonth": "/mois",
+    "perYear": "/an",
+    "plans": {
+      "essencial": {
+        "name": "Essentiel",
+        "description": "L’essentiel pour gérer les finances au quotidien.",
+        "cta": "Essai gratuit de 30 jours",
+        "features": {
+          "f1": "Transactions illimitées avec les catégories par défaut",
+          "f2": "Objectifs d’épargne illimités",
+          "f3": "Rappels de factures par e-mail",
+          "f4": "Membres et foyers illimités",
+          "f5": "Tableau de bord et rapport mensuel"
+        }
+      },
+      "completo": {
+        "name": "Complet",
+        "badge": "Recommandé",
+        "description": "Tout ce qu’il y a dans Essentiel, plus les budgets, les écritures programmées et les rapports avancés.",
+        "cta": "Essai gratuit de 30 jours",
+        "features": {
+          "f1": "Tout le plan Essentiel",
+          "f2": "Budgets par catégorie",
+          "f3": "Écritures programmées et récurrences",
+          "f4": "Rapports avancés — annuels et comparatifs",
+          "f5": "Export CSV des rapports",
+          "f6": "Catégories personnalisées illimitées"
+        }
+      }
+    }
+  },
+  "faq": {
+    "kicker": "FAQ",
+    "title": "Questions fréquentes",
+    "items": {
+      "q1": {
+        "question": "Larmony a-t-il un plan gratuit ?",
+        "answer": "Pas de plan gratuit permanent, mais tout le monde commence avec 30 jours d’essai gratuit du plan Complet (carte requise, aucun prélèvement avant la fin de l’essai). Ensuite, tu choisis entre Essentiel (R$ 9,90/mois) et Complet (R$ 19,90/mois)."
+      },
+      "q2": {
+        "question": "Quelle est la différence entre Essentiel et Complet ?",
+        "answer": "Essentiel couvre l’essentiel : transactions, catégories par défaut, objectifs, tableau de bord et rapport mensuel, avec membres et foyers illimités. Complet ajoute les budgets par catégorie, les écritures programmées, les rapports avancés (vue annuelle et export CSV) et les catégories personnalisées."
+      },
+      "q3": {
+        "question": "Puis-je résilier quand je veux ?",
+        "answer": "Oui. L’abonnement est géré via le portail sécurisé de Stripe, sans pénalité. Tu conserves l’accès jusqu’à la fin du cycle déjà payé ; ensuite, tes données restent disponibles en lecture seule jusqu’à ce que tu te réabonnes."
+      },
+      "q4": {
+        "question": "Dois-je connecter mon compte bancaire ?",
+        "answer": "Non. Larmony fonctionne avec des saisies manuelles et des récurrences automatiques — tu contrôles exactement ce qui entre. L’intégration Open Finance est sur la feuille de route pour un futur plan."
+      },
+      "q5": {
+        "question": "Mes données financières sont-elles en sécurité ?",
+        "answer": "Oui. Chaque foyer est isolé dans la base de données (RLS) — un membre d’un foyer ne voit jamais les données d’un autre. Ton mot de passe est chiffré et le paiement est traité par Stripe, sans aucune donnée de carte dans Larmony."
+      },
+      "q6": {
+        "question": "Fonctionne-t-il dans d’autres langues ?",
+        "answer": "Oui — Larmony est disponible en 7 langues (portugais, anglais, espagnol, chinois, allemand, français et japonais). Chaque personne choisit sa propre langue et voit le même foyer traduit, y compris les e-mails de rappel."
+      }
+    }
+  },
+  "finalCta": {
+    "titleLine1": "Mets de l’harmonie dans",
+    "titleLine2": "les comptes de ta maison",
+    "subtitle": "Crée ton foyer en moins d’une minute. 30 jours d’essai gratuit du plan Complet.",
+    "cta": "Essai gratuit de 30 jours →"
+  },
+  "footer": {
+    "description": "Le contrôle financier de ton foyer. Transactions, budgets et objectifs au même endroit.",
+    "sections": {
+      "product": {
+        "title": "Produit",
+        "links": {
+          "features": "Fonctionnalités",
+          "pricing": "Tarifs",
+          "about": "À propos",
+          "faq": "FAQ"
+        }
+      },
+      "legal": {
+        "title": "Mentions légales",
+        "links": {
+          "terms": "Conditions d’utilisation",
+          "privacy": "Confidentialité",
+          "cookies": "Cookies",
+          "security": "Sécurité"
+        }
+      }
+    },
+    "copyright": "© {{year}} Larmony. Tous droits réservés."
+  },
+  "legal": {
+    "back": "← Retour",
+    "meta": "Dernière mise à jour : {{updatedAt}} · version {{version}}",
+    "officialNotice": "Document officiel en portugais (Brésil). Les traductions sont fournies à titre informatif uniquement.",
+    "footer": {
+      "copyright": "© {{year}} Larmony. Tous droits réservés.",
+      "terms": "Conditions d’utilisation",
+      "privacy": "Confidentialité"
+    }
+  }
+}

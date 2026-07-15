@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Sheet,
@@ -30,7 +31,8 @@ import {
 } from "@/shared/components/ui/select";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { inviteSchema, type InviteFormValues } from "../schemas/household.schemas";
+import { translateApiError } from "@/shared/lib/api-error";
+import { makeInviteSchema, type InviteFormValues } from "../schemas/household.schemas";
 
 interface InviteMemberFormProps {
   open: boolean;
@@ -43,29 +45,48 @@ export function InviteMemberForm({
   onOpenChange,
   onSubmit,
 }: InviteMemberFormProps) {
+  const { t } = useTranslation("households");
+  const { t: tCommon } = useTranslation("common");
+  const schema = useMemo(() => makeInviteSchema(t), [t]);
+  const [error, setError] = useState<string | null>(null);
   const form = useForm<InviteFormValues>({
-    resolver: zodResolver(inviteSchema),
+    resolver: zodResolver(schema),
     defaultValues: { email: "", role: "member" },
   });
 
   useEffect(() => {
-    if (open) form.reset({ email: "", role: "member" });
+    if (open) {
+      form.reset({ email: "", role: "member" });
+      setError(null);
+    }
   }, [open, form]);
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit(values);
-    onOpenChange(false);
+    setError(null);
+    try {
+      await onSubmit(values);
+      onOpenChange(false);
+    } catch (err) {
+      // Limite de membros do Free (D-1) chega aqui via api.MEMBER_LIMIT_REACHED
+      // — mensagem já orienta upgrade (translateApiError, sem UI dedicada).
+      setError(translateApiError(err, tCommon));
+    }
   });
 
+  function handleOpenChange(next: boolean) {
+    if (!next) setError(null);
+    onOpenChange(next);
+  }
+
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent side="right" className="gap-0 sm:max-w-md">
         <Form {...form}>
           <form onSubmit={handleSubmit} className="flex h-full flex-col">
             <SheetHeader>
-              <SheetTitle>Convidar membro</SheetTitle>
+              <SheetTitle>{t("inviteForm.title")}</SheetTitle>
               <SheetDescription>
-                O convite será enviado por e-mail com um link de acesso.
+                {t("inviteForm.description")}
               </SheetDescription>
             </SheetHeader>
 
@@ -77,12 +98,12 @@ export function InviteMemberForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        E-mail <span className="text-red-400">*</span>
+                        {t("inviteForm.emailLabel")} <span className="text-red-400">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           type="email"
-                          placeholder="nome@exemplo.com"
+                          placeholder={t("inviteForm.emailPlaceholder")}
                           autoComplete="off"
                           autoFocus
                           {...field}
@@ -100,19 +121,19 @@ export function InviteMemberForm({
                   name="role"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Função</FormLabel>
+                      <FormLabel>{t("inviteForm.roleLabel")}</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Selecione uma função" />
+                            <SelectValue placeholder={t("inviteForm.rolePlaceholder")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="member">Funcionário</SelectItem>
-                          <SelectItem value="owner">Proprietário</SelectItem>
+                          <SelectItem value="member">{t("roles.member")}</SelectItem>
+                          <SelectItem value="owner">{t("roles.owner")}</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -120,6 +141,8 @@ export function InviteMemberForm({
                   )}
                 />
               </div>
+
+              {error && <p className="text-sm text-red-400">{error}</p>}
             </SheetBody>
 
             <SheetFooter>
@@ -129,7 +152,7 @@ export function InviteMemberForm({
                   variant="outline"
                   className="w-full sm:w-auto"
                 >
-                  Cancelar
+                  {tCommon("actions.cancel")}
                 </Button>
               </SheetClose>
               <Button
@@ -137,7 +160,7 @@ export function InviteMemberForm({
                 disabled={form.formState.isSubmitting}
                 className="w-full sm:w-auto"
               >
-                {form.formState.isSubmitting ? "Enviando…" : "Enviar convite"}
+                {form.formState.isSubmitting ? t("inviteForm.submitting") : t("inviteForm.submit")}
               </Button>
             </SheetFooter>
           </form>

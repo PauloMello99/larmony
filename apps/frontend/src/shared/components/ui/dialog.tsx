@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { XIcon } from "lucide-react"
 import { Dialog as DialogPrimitive } from "radix-ui"
 import { cn } from "@/shared/lib/utils"
@@ -41,16 +42,27 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  onInteractOutside,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean
 }) {
+  const { t } = useTranslation("common")
   return (
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content
+        onInteractOutside={(event) => {
+          // Ver shared/components/ui/sheet.tsx: overlays de onboarding não são
+          // layers do Radix e seriam tratados como clique externo.
+          if (event.target instanceof Element && event.target.closest("[data-tour-overlay]")) {
+            event.preventDefault()
+            return
+          }
+          onInteractOutside?.(event)
+        }}
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl border border-foreground/[0.08] bg-popover p-6 shadow-2xl duration-200 outline-none",
+          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl border border-foreground/[0.08] bg-popover/90 backdrop-blur-xl p-6 shadow-2xl duration-200 outline-none",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
           "sm:max-w-lg",
@@ -62,7 +74,7 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close className="absolute top-4 right-4 rounded-md p-1 text-foreground/40 opacity-70 transition-opacity hover:text-foreground hover:opacity-100 focus:outline-none disabled:pointer-events-none">
             <XIcon className="h-4 w-4" />
-            <span className="sr-only">Fechar</span>
+            <span className="sr-only">{t("actions.close")}</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Content>
@@ -85,6 +97,7 @@ function DialogFooter({
   children,
   ...props
 }: React.ComponentProps<"div"> & { showCloseButton?: boolean }) {
+  const { t } = useTranslation("common")
   return (
     <div
       className={cn(
@@ -96,7 +109,7 @@ function DialogFooter({
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close asChild>
-          <Button variant="outline">Cancelar</Button>
+          <Button variant="outline">{t("actions.cancel")}</Button>
         </DialogPrimitive.Close>
       )}
     </div>

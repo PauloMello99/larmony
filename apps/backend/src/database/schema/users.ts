@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, date } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, date, jsonb } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { platformRoleEnum, genderEnum } from "./enums";
 import { householdMemberships } from "./households";
@@ -13,8 +13,18 @@ export const users = pgTable("users", {
   avatarUrl: text("avatar_url"),
   birthDate: date("birth_date"),
   gender: genderEnum("gender"),
-  // Idioma da UI e dos e-mails (ADR-0018): pt-BR (default) | en.
+  // Idioma da UI, das notificações e dos e-mails (ADR-0018): pt-BR (default) | en | es.
   locale: text("locale").notNull().default("pt-BR"),
+  // Tours de onboarding já concluídos: mapa { [tourKey]: maiorVersãoVista }.
+  onboarding: jsonb("onboarding")
+    .$type<Record<string, number>>()
+    .notNull()
+    .default({}),
+  // Aceite dos Termos de Uso/Política de Privacidade (LGPD, accountability):
+  // gravado no sign-up com a versão vigente dos documentos. Nullable para
+  // contas anteriores à introdução do aceite (re-aceite fica p/ fase futura).
+  termsAcceptedAt: timestamp("terms_accepted_at", { withTimezone: true }),
+  termsVersion: text("terms_version"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

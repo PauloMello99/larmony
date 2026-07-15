@@ -11,6 +11,7 @@ import {
   USER_REPOSITORY,
 } from "../../user/domain/user.repository.interface";
 import { AuditService } from "../../audit/audit.service";
+import { TERMS_VERSION } from "../terms-version";
 
 @Injectable()
 export class SignUpUseCase {
@@ -28,6 +29,7 @@ export class SignUpUseCase {
     email: string,
     password: string,
     name: string,
+    locale?: string,
   ): Promise<AuthSession> {
     // Cadastro atômico (SEC-3): a identidade no provedor de auth e a linha em
     // `public.users` precisam existir juntas. Como são dois sistemas distintos
@@ -42,6 +44,10 @@ export class SignUpUseCase {
         authId: session.user.id,
         email: session.user.email,
         name,
+        // Aceite validado no DTO (@Equals(true)); aqui gravamos a versão (LGPD).
+        termsVersion: TERMS_VERSION,
+        // Locale ativo da UI no cadastro (ADR-0018); ausente → default pt-BR.
+        locale,
       });
       createdUserId = created.id;
     } catch (err) {
@@ -54,13 +60,13 @@ export class SignUpUseCase {
       action: "create",
       entityType: "user",
       entityId: createdUserId,
-      metadata: { name, email },
+      metadata: { name, email, termsVersion: TERMS_VERSION },
     });
 
     // E-mail de boas-vindas: best-effort — nunca quebra/bloqueia o cadastro.
     try {
       const appUrl = this.config.get<string>("FRONTEND_URL");
-      await this.mail.sendWelcome({ to: email, name, appUrl });
+      await this.mail.sendWelcome({ to: email, name, appUrl, locale });
     } catch (mailErr) {
       this.logger.warn(
         `Falha ao enviar welcome para ${email}: ${

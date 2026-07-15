@@ -7,16 +7,18 @@ import type { Budget } from "../types"
 
 interface CreateBudgetInput {
   categoryId: string
-  month: number
-  year: number
   amountCents: number
 }
 
 export function useBudgetMutations(householdId: string) {
   const queryClient = useQueryClient()
 
-  const invalidate = () =>
+  // Também invalida o overview — o card de Orçamentos do dashboard (M3)
+  // mostra o mesmo limite derivado e ficaria defasado sem isso.
+  const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.budgets.all(householdId) })
+    queryClient.invalidateQueries({ queryKey: queryKeys.households.overview(householdId) })
+  }
 
   const createBudgetMutation = useMutation({
     mutationFn: (input: CreateBudgetInput) =>

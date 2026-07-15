@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { format, isValid, parse } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
+import { getDateFnsLocale, useActiveLocale } from "@/shared/lib/format";
 import { Button } from "@/shared/components/ui/button";
 import { Calendar } from "@/shared/components/ui/calendar";
 import {
@@ -30,12 +31,14 @@ export function DatePicker({
   value,
   onChange,
   id,
-  placeholder = "Selecione uma data",
+  placeholder,
   className,
   align = "center",
   startMonth = new Date(1920, 0),
   endMonth = new Date(),
 }: DatePickerProps) {
+  const { t } = useTranslation("common");
+  const locale = useActiveLocale();
   const [open, setOpen] = React.useState(false);
 
   const parsed = value ? parse(value, "yyyy-MM-dd", new Date()) : undefined;
@@ -56,8 +59,8 @@ export function DatePicker({
         >
           <CalendarIcon className="h-4 w-4 shrink-0 text-foreground/40" />
           {selected
-            ? format(selected, "dd/MM/yyyy", { locale: ptBR })
-            : placeholder}
+            ? format(selected, "P", { locale: getDateFnsLocale(locale) })
+            : (placeholder ?? t("datePicker.placeholder"))}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align={align}>

@@ -1,0 +1,133 @@
+{
+  "roles": {
+    "owner": "Owner",
+    "member": "Member"
+  },
+  "validation": {
+    "nameMin": "Minimum 2 characters",
+    "nameMax": "Maximum 80 characters",
+    "emailInvalid": "Invalid email"
+  },
+  "settings": {
+    "loading": "Loading…",
+    "notFound": "Home not found.",
+    "generalTitle": "General information",
+    "generalDescription": "Name and public identifier of the home.",
+    "nameLabel": "Name",
+    "slugLabel": "Slug",
+    "membersTitle": "Members",
+    "membersDescription": "Manage who has access to this home.",
+    "invite": "Invite",
+    "transferTitle": "Transfer Home",
+    "transferDescription": "Transfer ownership of this home to another member.",
+    "transferProse": "Ownership passes to the chosen member. You become a member with full access to the modules.",
+    "dangerTitle": "Danger zone",
+    "dangerDescription": "Irreversible actions. Proceed with caution.",
+    "deleteTitle": "Delete home",
+    "deleteDescription": "Permanently removes all data for this home."
+  },
+  "membersPage": {
+    "loading": "Loading members…",
+    "title": "Members",
+    "description": "Manage who has access to this home.",
+    "invite": "Invite",
+    "inviteCreated": "Invitation created. Acceptance link (dev — copy to test):",
+    "copy": "Copy",
+    "updatePermissionsError": "Could not update the permissions.",
+    "toggleStatusError": "Could not change the member's status."
+  },
+  "members": {
+    "title": "Members ({{count}})",
+    "pendingInvitations": "Pending invitations ({{count}})",
+    "nameHeader": "Name",
+    "emailHeader": "Email",
+    "roleHeader": "Role",
+    "you": "(you)",
+    "invitationMeta": "{{role}} · expires {{date}}",
+    "actions": {
+      "permissions": "Permissions",
+      "makeOwner": "Make owner",
+      "makeMember": "Make member",
+      "enable": "Enable",
+      "disable": "Disable",
+      "remove": "Remove"
+    }
+  },
+  "modules": {
+    "services": "Services",
+    "clients": "Clients",
+    "schedule": "Schedule",
+    "stock": "Stock",
+    "cashier": "Cashier"
+  },
+  "roleDialog": {
+    "title": "Change role",
+    "description": "Change the role of <span>{{name}}</span>.",
+    "newRoleLabel": "New role",
+    "saving": "Saving…"
+  },
+  "permissionsDialog": {
+    "title": "Member permissions",
+    "description": "Choose the modules that <span>{{name}}</span> can access. In each module, the member sees only their own records.",
+    "saving": "Saving…",
+    "submit": "Save permissions"
+  },
+  "removeDialog": {
+    "title": "Remove member",
+    "description": "Are you sure you want to remove <span>{{name}}</span> from the home?",
+    "removing": "Removing…",
+    "submit": "Remove"
+  },
+  "transferDialog": {
+    "trigger": "Transfer",
+    "title": "Transfer home",
+    "description": "Choose the member who will become the new owner. You will switch to a <span>member</span> role with full access to the modules.",
+    "newOwnerLabel": "New owner",
+    "selectPlaceholder": "Select a member",
+    "memberOption": "{{name}} ({{email}})",
+    "error": "Could not transfer the home.",
+    "submitting": "Transferring…",
+    "submit": "Transfer ownership"
+  },
+  "deleteDialog": {
+    "trigger": "Delete home",
+    "title": "Delete home",
+    "description": "This action is <span>irreversible</span>. All home data will be permanently deleted.",
+    "confirmLabel": "Type <span>{{name}}</span> to confirm:",
+    "deleting": "Deleting…",
+    "submit": "Permanently delete"
+  },
+  "createForm": {
+    "title": "New home",
+    "description": "Create a space for your home. You will be the owner.",
+    "nameLabel": "Name",
+    "namePlaceholder": "e.g., Family Home",
+    "timezoneLabel": "Time zone",
+    "timezoneHint": "Sets when scheduled entries are due and when alerts go out. Auto-detected — adjust if needed.",
+    "limitReached": "You already have a home on the Free plan. Go to Settings > Subscription for an existing home to upgrade and create another.",
+    "submitting": "Creating…",
+    "submit": "Create home"
+  },
+  "editForm": {
+    "nameLabel": "Home name",
+    "namePlaceholder": "e.g., Family Home",
+    "slugLabel": "Identifier (slug)",
+    "slugHint": "Automatically generated — cannot be changed.",
+    "timezoneLabel": "Time zone",
+    "timezoneHint": "Sets when scheduled entries are due and when alerts go out.",
+    "notificationHourLabel": "Alert hour",
+    "notificationHourHint": "Reminders and the monthly report go out from this hour, in the home's time zone.",
+    "saving": "Saving…",
+    "submit": "Save changes"
+  },
+  "inviteForm": {
+    "title": "Invite member",
+    "description": "The invitation will be sent via email with an access link.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "name@example.com",
+    "roleLabel": "Role",
+    "rolePlaceholder": "Select a role",
+    "submitting": "Sending…",
+    "submit": "Send invitation"
+  }
+}

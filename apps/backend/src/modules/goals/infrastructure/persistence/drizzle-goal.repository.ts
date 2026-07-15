@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, desc, eq, sql } from "drizzle-orm";
 import { DRIZZLE, type DrizzleDB } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
+import { findHouseholdMemberUserIds } from "../../../../common/household/household-members";
 import type { GoalEntity } from "../../domain/goal.entity";
 import type {
   CreateContributionData,
@@ -162,6 +163,18 @@ export class DrizzleGoalRepository implements IGoalRepository {
       .returning({ id: schema.goalContributions.id });
 
     if (rows.length === 0) throw new GoalContributionNotFoundException(contributionId);
+  }
+
+  async sumContributions(goalId: string): Promise<number> {
+    const [row] = await this.db
+      .select({ total: sql<number>`coalesce(sum(${schema.goalContributions.amountCents}), 0)::int` })
+      .from(schema.goalContributions)
+      .where(eq(schema.goalContributions.goalId, goalId));
+    return row?.total ?? 0;
+  }
+
+  async findHouseholdMemberUserIds(householdId: string): Promise<string[]> {
+    return findHouseholdMemberUserIds(this.db, householdId);
   }
 
   /** Aportes são sempre escopados via goal pai — 404 se a meta não é do lar. */

@@ -1,0 +1,93 @@
+{
+  "nav": {
+    "title": "Mon compte",
+    "profile": "Profil",
+    "access": "Accès",
+    "appearance": "Thème",
+    "locale": "Langue",
+    "notifications": "Notifications",
+    "danger": "Supprimer le compte"
+  },
+  "profile": {
+    "title": "Profil",
+    "description": "Gère ton nom, ton e-mail et ta photo de profil.",
+    "loading": "Chargement…",
+    "avatarAlt": "Photo de profil",
+    "avatarUpload": "Envoyer une photo",
+    "avatarUploading": "Envoi…",
+    "avatarHint": "PNG, JPG, WEBP ou GIF · jusqu’à 5 Mo.",
+    "avatarInvalidType": "Sélectionne un fichier image.",
+    "avatarTooLarge": "L’image doit faire 5 Mo maximum.",
+    "avatarUploadError": "Échec de l’envoi de la photo.",
+    "nameLabel": "Nom",
+    "emailLabel": "E-mail",
+    "emailHint": "Changer l’e-mail modifie aussi ton identifiant de connexion.",
+    "saveError": "Impossible d’enregistrer le profil.",
+    "saved": "Profil mis à jour.",
+    "submit": "Enregistrer les modifications",
+    "submitting": "Enregistrement…"
+  },
+  "access": {
+    "title": "Accès",
+    "description": "Gère ton mot de passe et la sécurité de ton accès.",
+    "changePassword": "Changer le mot de passe",
+    "sentMessage": "Nous avons envoyé un lien à <strong>{{email}}</strong>. Ouvre-le pour définir un nouveau mot de passe — la session est récupérée en toute sécurité directement depuis le lien de l’e-mail.",
+    "explanation": "Par sécurité, le changement de mot de passe se fait via un lien envoyé à ton e-mail. En cliquant sur le lien, tu accèdes à l’écran de nouveau mot de passe avec la session récupérée automatiquement.",
+    "error": "Impossible d’envoyer l’e-mail. Réessaie.",
+    "submit": "Envoyer le lien de modification"
+  },
+  "appearance": {
+    "title": "Thème",
+    "description": "Personnalise l’apparence du tableau de bord.",
+    "cardTitle": "Thème",
+    "cardDescription": "Choisis entre clair, sombre ou automatique (suit le système).",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  },
+  "locale": {
+    "description": "Choisis la langue de l’interface et des e-mails.",
+    "loading": "Chargement…",
+    "error": "Impossible de changer la langue."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Choisis comment tu veux être prévenu(e) pour chaque événement.",
+    "loading": "Chargement…",
+    "error": "Impossible de charger tes préférences.",
+    "columns": {
+      "event": "Événement",
+      "inapp": "Dans l’app",
+      "email": "E-mail",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "stubbedHint": "Pas encore disponible dans cette version."
+    },
+    "events": {
+      "bill_reminder": "Rappel de facture",
+      "goal_reached": "Objectif atteint",
+      "budget_exceeded": "Budget dépassé",
+      "auto_launch": "Transaction automatique",
+      "monthly_report": "Rapport mensuel"
+    }
+  },
+  "danger": {
+    "title": "Zone de danger",
+    "description": "Actions irréversibles sur ton compte.",
+    "cardTitle": "Supprimer le compte",
+    "cardDescription": "La suppression définitive du compte effacera toutes tes données personnelles. Cette action est irréversible.",
+    "deleteTitle": "Supprimer mon compte",
+    "deleteHint": "Tu dois transférer ou supprimer les foyers dont tu es propriétaire avant de supprimer ton compte.",
+    "deleteButton": "Supprimer le compte",
+    "dialogTitle": "Supprimer mon compte",
+    "dialogDescription": "Cette action est <span>irréversible</span>. Tes données personnelles seront définitivement supprimées. Si tu es encore propriétaire d’un foyer, la suppression sera bloquée.",
+    "confirmLabel": "Saisis ton e-mail <span>{{email}}</span> pour confirmer :",
+    "deleteError": "Impossible de supprimer le compte.",
+    "confirmDelete": "Supprimer définitivement",
+    "deleting": "Suppression…"
+  },
+  "validation": {
+    "nameRequired": "Le nom est obligatoire",
+    "invalidEmail": "E-mail invalide"
+  }
+}

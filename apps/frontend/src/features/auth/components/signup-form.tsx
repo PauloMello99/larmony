@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/router"
 import Link from "next/link"
+import { Trans, useTranslation } from "react-i18next"
 import { Loader2 } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import {
@@ -19,7 +20,7 @@ import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { useAuth } from "@/features/auth/hooks/use-auth"
 import {
-  signupSchema,
+  makeSignupSchema,
   type SignupFormValues,
 } from "@/features/auth/schemas/auth.schemas"
 
@@ -28,10 +29,12 @@ function queryParam(value: string | string[] | undefined): string {
 }
 
 export function SignupForm() {
+  const { t } = useTranslation("auth")
   const { signUp } = useAuth()
   const router = useRouter()
   const inviteToken = queryParam(router.query.invite)
   const invitedEmail = queryParam(router.query.email)
+  const signupSchema = React.useMemo(() => makeSignupSchema(t), [t])
 
   const {
     register,
@@ -41,12 +44,24 @@ export function SignupForm() {
     formState: { errors, isSubmitting },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
-    defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      termsAccepted: false,
+    },
   })
 
   React.useEffect(() => {
     if (invitedEmail) {
-      reset({ name: "", email: invitedEmail, password: "", confirmPassword: "" })
+      reset({
+        name: "",
+        email: invitedEmail,
+        password: "",
+        confirmPassword: "",
+        termsAccepted: false,
+      })
     }
   }, [invitedEmail, reset])
 
@@ -55,9 +70,9 @@ export function SignupForm() {
       // O redirect pós-signup (households com onboarding, ou invite/accept) é
       // responsabilidade do GuestGuard que envolve esta página — evita a corrida
       // entre este push e o próprio redirect do guard.
-      await signUp(data.name, data.email, data.password)
+      await signUp(data.name, data.email, data.password, data.termsAccepted)
     } catch {
-      setError("root", { message: "Não foi possível criar a conta. Tente novamente." })
+      setError("root", { message: t("signup.error") })
     }
   }
 
@@ -72,9 +87,9 @@ export function SignupForm() {
           <div className="mb-2 text-xl font-bold">
             <span className="text-primary">lar</span>mony
           </div>
-          <CardTitle className="text-xl">Criar conta</CardTitle>
+          <CardTitle className="text-xl">{t("signup.title")}</CardTitle>
           <CardDescription className="text-foreground/40">
-            Comece a organizar as finanças do seu lar gratuitamente
+            {t("signup.subtitle")}
           </CardDescription>
         </CardHeader>
 
@@ -87,11 +102,11 @@ export function SignupForm() {
             )}
 
             <div className="space-y-1.5">
-              <Label htmlFor="name">Nome</Label>
+              <Label htmlFor="name">{t("signup.nameLabel")}</Label>
               <Input
                 id="name"
                 type="text"
-                placeholder="Seu nome"
+                placeholder={t("signup.namePlaceholder")}
                 autoComplete="name"
                 aria-invalid={!!errors.name}
                 {...register("name")}
@@ -102,11 +117,11 @@ export function SignupForm() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email">{t("signup.emailLabel")}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="seu@email.com"
+                placeholder={t("signup.emailPlaceholder")}
                 autoComplete="email"
                 aria-invalid={!!errors.email}
                 {...register("email")}
@@ -117,11 +132,11 @@ export function SignupForm() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password">{t("signup.passwordLabel")}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Mínimo 8 caracteres"
+                placeholder={t("signup.passwordPlaceholder")}
                 autoComplete="new-password"
                 aria-invalid={!!errors.password}
                 {...register("password")}
@@ -132,7 +147,9 @@ export function SignupForm() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="confirmPassword">Confirmar senha</Label>
+              <Label htmlFor="confirmPassword">
+                {t("signup.confirmPasswordLabel")}
+              </Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -147,6 +164,49 @@ export function SignupForm() {
                 </p>
               )}
             </div>
+
+            {/* Aceite dos Termos/Privacidade (LGPD) — obrigatório. */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="termsAccepted"
+                className="flex items-start gap-2 text-xs leading-relaxed text-foreground/60"
+              >
+                <input
+                  id="termsAccepted"
+                  type="checkbox"
+                  className="mt-0.5 h-3.5 w-3.5 shrink-0 accent-primary"
+                  aria-invalid={!!errors.termsAccepted}
+                  {...register("termsAccepted")}
+                />
+                <span>
+                  <Trans
+                    t={t}
+                    i18nKey="signup.termsAccept"
+                    components={{
+                      terms: (
+                        <Link
+                          href="/legal/termos-de-uso"
+                          target="_blank"
+                          className="text-primary hover:text-orange-300"
+                        />
+                      ),
+                      privacy: (
+                        <Link
+                          href="/legal/privacidade"
+                          target="_blank"
+                          className="text-primary hover:text-orange-300"
+                        />
+                      ),
+                    }}
+                  />
+                </span>
+              </label>
+              {errors.termsAccepted && (
+                <p className="text-xs text-destructive">
+                  {errors.termsAccepted.message}
+                </p>
+              )}
+            </div>
           </CardContent>
 
           <CardFooter className="flex flex-col gap-3">
@@ -156,15 +216,15 @@ export function SignupForm() {
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Criar conta
+              {t("signup.submit")}
             </Button>
             <p className="text-center text-sm text-foreground/40">
-              Já tem conta?{" "}
+              {t("signup.hasAccount")}{" "}
               <Link
                 href={loginHref}
                 className="text-primary hover:text-orange-300"
               >
-                Entrar
+                {t("signup.signIn")}
               </Link>
             </p>
           </CardFooter>

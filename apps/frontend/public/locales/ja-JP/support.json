@@ -1,0 +1,47 @@
+{
+  "format": {
+    "dateLocale": "ja-JP"
+  },
+  "list": {
+    "title": "サポート",
+    "subtitle": "あなたのお問い合わせ、質問、ご意見。",
+    "newTicket": "新しいチケット",
+    "loading": "読み込み中…",
+    "empty": "まだチケットがありません",
+    "emptyDescription": "お困りのこと、質問、ご意見があればチケットを作成してください。"
+  },
+  "newTicket": {
+    "title": "新しいチケット",
+    "subtitle": "必要なことをお知らせください — サポートチームがここで返信します。",
+    "categoryLabel": "カテゴリー",
+    "subjectLabel": "件名",
+    "subjectPlaceholder": "簡潔にまとめてください",
+    "bodyLabel": "メッセージ",
+    "bodyPlaceholder": "詳しく説明してください...",
+    "submit": "チケットを作成",
+    "submitting": "作成中…",
+    "genericError": "チケットを作成できませんでした。もう一度お試しください。"
+  },
+  "category": {
+    "problem": "不具合",
+    "question": "質問",
+    "suggestion": "ご意見",
+    "billing": "請求"
+  },
+  "status": {
+    "open": "未対応",
+    "answered": "返信済み",
+    "closed": "クローズ済み"
+  },
+  "thread": {
+    "title": "チケット",
+    "back": "チケット一覧に戻る",
+    "loading": "読み込み中…",
+    "genericError": "返信を送信できませんでした。もう一度お試しください。",
+    "supportAuthor": "サポート",
+    "closedNotice": "このチケットはクローズされています。さらにサポートが必要な場合は新しいチケットを作成してください。",
+    "replyPlaceholder": "返信を入力...",
+    "replySubmit": "返信する",
+    "replySubmitting": "送信中…"
+  }
+}

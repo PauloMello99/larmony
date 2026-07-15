@@ -3,6 +3,8 @@ import {
   AdminUserRow,
   ADMIN_REPOSITORY,
   IAdminRepository,
+  ListUsersFilter,
+  Page,
 } from "../../domain/admin.repository.interface";
 
 @Injectable()
@@ -11,7 +13,7 @@ export class ListPlatformUsersUseCase {
     @Inject(ADMIN_REPOSITORY) private readonly adminRepo: IAdminRepository,
   ) {}
 
-  execute(): Promise<AdminUserRow[]> {
-    return this.adminRepo.listUsers();
+  execute(filter: ListUsersFilter): Promise<Page<AdminUserRow>> {
+    return this.adminRepo.listUsers(filter);
   }
 }

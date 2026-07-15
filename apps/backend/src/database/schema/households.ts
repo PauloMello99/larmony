@@ -4,6 +4,7 @@ import {
   text,
   timestamp,
   boolean,
+  smallint,
   unique,
 } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
@@ -14,6 +15,13 @@ export const households = pgTable("households", {
   name: text("name").notNull(),
   slug: text("slug").unique().notNull(),
   logoUrl: text("logo_url"),
+  // Fuso IANA do lar (M12, ADR-0024): âncora de "hoje/vencimento/último dia do
+  // mês" nos jobs de cron e no mês corrente dos orçamentos. Definido na criação
+  // a partir do navegador; editável em Configurações do lar. Nunca offset fixo.
+  timezone: text("timezone").notNull().default("America/Sao_Paulo"),
+  // Hora local (0–23) a partir da qual lembrete/relatório podem sair no fuso do
+  // lar. Eventos event-driven (meta/orçamento) e a geração auto ignoram isto.
+  notificationHour: smallint("notification_hour").notNull().default(9),
   // Suspensão pelo super_admin (plataforma): NULL = ativo; preenchido = acesso bloqueado.
   suspendedAt: timestamp("suspended_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })

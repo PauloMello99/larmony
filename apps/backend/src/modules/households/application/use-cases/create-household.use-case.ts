@@ -28,9 +28,12 @@ export class CreateHouseholdUseCase {
     private readonly auditService: AuditService,
   ) {}
 
-  async execute(name: string, creatorAuthId: string): Promise<HouseholdEntity> {
+  // M16: sem régua de contagem de lares. Billing é por lar — cada lar novo
+  // nasce sem assinatura (locked) e passa pelo seu próprio trial/checkout; criar
+  // o lar em si é sempre permitido (o gate de trial do onboarding cuida do resto).
+  async execute(name: string, creatorAuthId: string, timezone?: string): Promise<HouseholdEntity> {
     const slug = generateSlug();
-    const household = await this.householdRepo.create(name, slug, creatorAuthId);
+    const household = await this.householdRepo.create(name, slug, creatorAuthId, timezone);
 
     await this.auditService.logByAuthId(creatorAuthId, {
       householdId: household.id,

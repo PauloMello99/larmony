@@ -21,7 +21,13 @@ Detalhe operacional em `docs/deployment.md`; decisão e racional em
   repo** (turbo prune). Backend: healthcheck `/health`, vars `NODE_ENV=production`,
   `RUN_MIGRATIONS=true`, `CRON_SECRET`. PORT injetado (não criar var) — app e `next start` leem.
 - `DATABASE_URL` = Supabase **Session pooler** (IPv4, 5432) — alcançável pelo container.
-- Frontend image grande (~2GB, full prod deps + `next start`); follow-up: `output: 'standalone'`.
+- Frontend: **standalone** (P-5, 2026-07-13) — runner copia só `.next/standalone`+`static`+`public`
+  (sem node_modules de prod; ~2GB → centenas de MB); `HOSTNAME=0.0.0.0` no Dockerfile.
+- **Squash de migrations (2026-07-13)**: cadeia 0000–0011 → `0000_baseline`; bancos JÁ migrados
+  rodam `migrator baseline` UMA VEZ antes do 1º deploy desta versão (README das migrations).
+- **Backup/restore**: `pnpm --filter backend db:backup` + runbook `docs/backup-restore.md`
+  (drill de restore verificado 2026-07-13); staging free NÃO tem backup automático do Supabase.
+- Headers de segurança: helmet no backend; CSP + security headers no next.config (ADR-0027).
 
 ## Serviços externos
 - **Supabase** (Auth+DB+Storage), **Resend** (e-mail, opcional/off por padrão), **GitHub Actions**

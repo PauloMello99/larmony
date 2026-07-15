@@ -9,11 +9,109 @@
     "delete": "Excluir",
     "edit": "Editar",
     "create": "Criar",
-    "confirm": "Confirmar"
+    "confirm": "Confirmar",
+    "close": "Fechar",
+    "clear": "Limpar",
+    "all": "Tudo",
+    "back": "Voltar"
+  },
+  "export": {
+    "title": "Exportar CSV",
+    "button": "Exportar",
+    "fields": "Campos do CSV",
+    "download": "Baixar CSV"
+  },
+  "filters": {
+    "label": "Filtros",
+    "advanced": "Filtros avançados",
+    "min": "Mín",
+    "max": "Máx"
+  },
+  "datePicker": {
+    "placeholder": "Selecione uma data"
+  },
+  "phoneInput": {
+    "placeholder": "Número de telefone",
+    "country": "País"
+  },
+  "notifications": {
+    "title": "Notificações",
+    "markAll": "Marcar todas",
+    "empty": "Nenhuma notificação."
   },
   "locale": {
     "label": "Idioma",
     "pt-BR": "Português (Brasil)",
-    "en": "English"
+    "en": "English",
+    "es": "Español"
+  },
+  "pagination": {
+    "range": "{{from}}–{{to}} de {{total}}",
+    "perPage": "Por página",
+    "pageOf": "{{page}} de {{totalPages}}",
+    "previous": "Página anterior",
+    "next": "Próxima página"
+  },
+  "api": {
+    "USER_NOT_FOUND": "Usuário não encontrado.",
+    "INVALID_CREDENTIALS": "E-mail ou senha inválidos.",
+    "AUTH_TOKEN_EXPIRED": "Sua sessão expirou — entre novamente.",
+    "ORGANIZATION_NOT_FOUND": "Lar não encontrado.",
+    "SLUG_ALREADY_TAKEN": "Este identificador já está em uso.",
+    "ORG_FORBIDDEN": "Você não tem permissão para realizar esta ação.",
+    "MEMBER_NOT_FOUND": "Membro não encontrado.",
+    "INVITATION_NOT_FOUND": "Convite não encontrado.",
+    "INVITATION_NOT_PENDING": "Este convite não está mais pendente.",
+    "INVITATION_EXPIRED": "Este convite expirou.",
+    "INVITATION_EMAIL_MISMATCH": "Este convite foi enviado para outro e-mail.",
+    "INVITATION_EMAIL_FAILED": "Não foi possível enviar o e-mail de convite.",
+    "MATERIAL_NOT_FOUND": "Material não encontrado.",
+    "MATERIAL_IN_USE_BY_SERVICES": "Este material está em uso por serviços e não pode ser removido.",
+    "INSUFFICIENT_STOCK": "Estoque insuficiente.",
+    "CUSTOMER_NOT_FOUND": "Cliente não encontrado.",
+    "CALENDAR_EVENT_NOT_FOUND": "Evento não encontrado.",
+    "CALENDAR_EVENT_OVERLAP": "Já existe um evento neste horário.",
+    "CALENDAR_EVENT_FORBIDDEN": "Você não tem permissão para alterar este evento.",
+    "CALENDAR_EVENT_INVALID_RANGE": "O intervalo de datas do evento é inválido.",
+    "TRANSACTION_NOT_FOUND": "Transação não encontrada.",
+    "TRANSACTION_ALREADY_REVERSED": "Esta transação já foi estornada.",
+    "TRANSACTION_NOT_REVERSIBLE": "Esta transação não pode ser estornada.",
+    "CASHIER_FORBIDDEN": "Você não tem permissão para realizar esta operação de caixa.",
+    "AVATAR_UPLOAD_FAILED": "Falha ao enviar o avatar — tente novamente.",
+    "LAST_ACTIVE_OWNER": "O lar precisa de pelo menos um proprietário ativo.",
+    "SERVICE_NOT_FOUND": "Serviço não encontrado.",
+    "CUSTOMER_DISABLED": "Este cliente está desativado.",
+    "EMPLOYEE_INACTIVE": "Este funcionário está inativo.",
+    "SERVICE_ALREADY_CANCELED": "Este serviço já foi cancelado.",
+    "SERVICE_NOT_PAYABLE": "Este serviço não pode ser pago.",
+    "SERVICE_FORBIDDEN": "Você não tem permissão para alterar este serviço.",
+    "PLATFORM_TARGET_NOT_FOUND": "Registro não encontrado.",
+    "HOUSEHOLD_HAS_ACTIVE_SUBSCRIPTION": "Este lar tem uma assinatura ativa — cancele-a para poder suspender.",
+    "CATEGORY_NOT_FOUND": "Categoria não encontrada.",
+    "BUDGET_NOT_FOUND": "Orçamento não encontrado.",
+    "BUDGET_ALREADY_EXISTS": "Já existe um orçamento para esta categoria neste mês.",
+    "BUDGET_PERIOD_NOT_EDITABLE": "Este orçamento pertence a um período encerrado e não pode ser editado.",
+    "GOAL_NOT_FOUND": "Meta não encontrada.",
+    "GOAL_CONTRIBUTION_NOT_FOUND": "Aporte da meta não encontrado.",
+    "TRANSACTION_SPLIT_INVALID": "A divisão da transação é inválida — confira os valores.",
+    "INSTALLMENT_GROUP_NOT_FOUND": "Grupo de parcelas não encontrado.",
+    "SCHEDULED_ENTRY_NOT_FOUND": "Lançamento programado não encontrado.",
+    "SCHEDULED_ENTRY_START_DATE_IN_PAST": "A data de início não pode estar no passado no modo automático.",
+    "SCHEDULED_ENTRY_INVALID_DATE_RANGE": "A data final não pode ser anterior à data de início.",
+    "SCHEDULED_ENTRY_NOT_MANUAL": "Este lançamento programado não está no modo manual.",
+    "NO_STRIPE_CUSTOMER": "O lar ainda não tem uma assinatura — assine antes de gerenciar.",
+    "STRIPE_NOT_CONFIGURED": "Pagamentos indisponíveis no momento — tente novamente mais tarde.",
+    "PLAN_NOT_AVAILABLE": "O plano ainda não está disponível — tente novamente em instantes.",
+    "WEBHOOK_SIGNATURE_INVALID": "Não foi possível validar a requisição de pagamento.",
+    "PREMIUM_REQUIRED": "Este recurso requer um plano premium.",
+    "INVALID_DISCOUNT": "Desconto inválido — confira os parâmetros.",
+    "SUBSCRIPTION_NOT_STRIPE_LINKED": "O lar não tem uma assinatura Stripe ativa.",
+    "TRIAL_NOT_ALLOWED": "O trial não está disponível para o plano atual do lar.",
+    "HOUSEHOLD_LIMIT_REACHED": "Você atingiu o limite de lares do plano Free. Faça upgrade de um lar existente para criar outro.",
+    "MEMBER_LIMIT_REACHED": "Este lar atingiu o limite de membros do plano Free. Faça upgrade para convidar mais pessoas.",
+    "GOAL_LIMIT_REACHED": "Este lar já tem o número máximo de metas do plano Free. Faça upgrade para criar mais.",
+    "BUDGET_LIMIT_REACHED": "Este lar já tem o número máximo de orçamentos ativos do plano Free. Encerre um orçamento existente ou faça upgrade.",
+    "NETWORK": "Falha de rede — verifique sua conexão e tente novamente.",
+    "UNEXPECTED": "Ocorreu um erro inesperado. Tente novamente."
   }
 }

@@ -4,30 +4,42 @@ Migrator próprio (`src/database/migrator.ts`), executado via:
 
 ```bash
 pnpm db:migrate          # = tsx src/database/migrator.ts up   (aplica pendentes)
-pnpm exec tsx src/database/migrator.ts status   # estado aplicado/pendente
+pnpm exec tsx src/database/migrator.ts status    # estado aplicado/pendente
 pnpm exec tsx src/database/migrator.ts down [n]  # rollback (exige .down.sql)
+pnpm exec tsx src/database/migrator.ts baseline  # re-baseline pós-squash (ver abaixo)
 ```
 
 O `up` usa o `migrate()` padrão do drizzle-orm, que lê `meta/_journal.json` + os
 arquivos `NNNN_*.sql` e aplica os que ainda não estão em `drizzle.__drizzle_migrations`.
 
+## Squash / baseline (fase pre-production, 2026-07-13)
+
+A cadeia herdada **0000–0011 foi squashada** num único **`0000_baseline`**
+(concatenação literal dos arquivos originais, na mesma ordem — equivalência
+por construção; histórico preservado no git). O `when` do baseline é novo, e o
+`.down.sql` concatena os downs originais em ordem reversa.
+
+- **Banco NOVO** (CI, dev fresh): nada muda — `up` roda o baseline.
+- **Banco EXISTENTE** (staging, dev local já migrado pela cadeia antiga):
+  rodar **UMA VEZ** `migrator.ts baseline` — marca o baseline como aplicado
+  SEM executar SQL (limpa as rows antigas de `__drizzle_migrations` e insere
+  a nova). O comando recusa bancos sem o schema (`public.users`).
+- Nunca rode `baseline` num banco vazio (use `up`).
+
 ## ⚠️ Snapshots e `drizzle-kit generate` (DX-2)
 
-As migrations **0000–0002** foram geradas pelo `drizzle-kit` e têm snapshot em
-`meta/NNNN_snapshot.json`. A partir da **0003**, as migrations são **SQL custom
-escritas à mão** (RLS, buckets, backfills, alterações pontuais) e **não têm snapshot**.
+Não há snapshots (`meta/*_snapshot.json` foi removido no squash). Todas as
+migrations deste projeto são **SQL custom escritas à mão**.
 
-Consequência: **não rode `drizzle-kit generate` esperando regenerar o estado atual** —
-ele compararia o schema TS contra o último snapshot (parado na 0002) e produziria um
-diff gigante/divergente, ignorando tudo que foi feito à mão da 0003 em diante.
+Consequência: **não rode `drizzle-kit generate`** — sem snapshot ele geraria
+um create-everything divergente. Se algum dia for necessário voltar ao
+generate, realinhe o snapshot ao estado real (introspect) antes de confiar no
+diff.
 
 Regra prática:
 
 - **Mudança de schema simples e padrão** → escreva o SQL à mão como nova migration
   custom (passos abaixo). É o caminho default deste projeto.
-- Se algum dia for necessário voltar a usar `drizzle-kit generate`, primeiro **realinhe
-  o snapshot** ao estado real do banco (gerar um snapshot baseline) antes de confiar no
-  diff — caso contrário ele diverge.
 
 ## Como adicionar uma migration custom
 

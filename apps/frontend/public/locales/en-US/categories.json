@@ -1,0 +1,58 @@
+{
+  "page": {
+    "title": "Categories",
+    "subtitle": "Organize your transactions, budgets, and accounts by category",
+    "newCategory": "New category",
+    "empty": "No categories yet.",
+    "createCategory": "Create category"
+  },
+  "types": {
+    "income": "Income",
+    "expense": "Expense",
+    "both": "Both"
+  },
+  "form": {
+    "editTitle": "Edit category",
+    "createTitle": "New category",
+    "description": "Categories organize your transactions, budgets, and accounts.",
+    "nameLabel": "Name",
+    "namePlaceholder": "e.g., Pets",
+    "typeLabel": "Type",
+    "colorLabel": "Color",
+    "iconLabel": "Icon",
+    "iconPlaceholder": "Choose",
+    "saving": "Saving…",
+    "saveChanges": "Save changes",
+    "create": "Create category"
+  },
+  "list": {
+    "headerName": "Name",
+    "headerType": "Type",
+    "defaultSuffix": "(default)"
+  },
+  "deleteDialog": {
+    "title": "Delete category",
+    "description": "Are you sure you want to delete <span>{{name}}</span>? Transactions already assigned to it will become uncategorized — none will be deleted.",
+    "deleting": "Deleting…"
+  },
+  "icons": {
+    "banknote": "Cash",
+    "briefcase": "Work",
+    "trendingUp": "Investments",
+    "utensilsCrossed": "Food",
+    "home": "Housing",
+    "car": "Transport",
+    "heart": "Health",
+    "bookOpen": "Education",
+    "gamepad2": "Leisure",
+    "shirt": "Clothing",
+    "refreshCw": "Subscriptions",
+    "circlePlus": "Other (income)",
+    "circleMinus": "Other (expense)"
+  },
+  "validation": {
+    "nameRequired": "Name is required",
+    "nameMax": "Maximum 60 characters",
+    "colorInvalid": "Invalid color"
+  }
+}

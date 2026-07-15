@@ -11,6 +11,10 @@ import {
   IInvitationRepository,
   INVITATION_REPOSITORY,
 } from "../../domain/invitation.repository.interface";
+import {
+  IUserRepository,
+  USER_REPOSITORY,
+} from "../../../user/domain/user.repository.interface";
 import { AuditService } from "../../../audit/audit.service";
 import { HouseholdForbiddenException } from "../../domain/exceptions/household-forbidden.exception";
 import { HouseholdNotFoundException } from "../../domain/exceptions/household-not-found.exception";
@@ -39,6 +43,8 @@ export class InviteMemberUseCase {
     private readonly householdRepo: IHouseholdRepository,
     @Inject(INVITATION_REPOSITORY)
     private readonly invitationRepo: IInvitationRepository,
+    @Inject(USER_REPOSITORY)
+    private readonly userRepo: IUserRepository,
     private readonly mail: MailService,
     private readonly config: ConfigService,
     private readonly auditService: AuditService,
@@ -54,6 +60,7 @@ export class InviteMemberUseCase {
     const isOwner = await this.householdRepo.isOwner(input.householdId, input.inviterAuthId);
     if (!isOwner) throw new HouseholdForbiddenException();
 
+    // M16: membros ilimitados em qualquer plano pago (régua de contagem removida).
     const invitation = await this.invitationRepo.create({
       householdId: input.householdId,
       invitedBy: input.inviterUserId,
@@ -71,11 +78,16 @@ export class InviteMemberUseCase {
     // habilitado e o envio falhar, revertemos o convite (saga c/ compensação,
     // igual ao sign-up) e abortamos — o owner pode tentar de novo. Em dev o
     // canal é no-op (send retorna false) e o acceptUrl fica disponível p/ teste.
+    // Idioma do convite: o convidado ainda não tem conta, então usamos o locale
+    // do REMETENTE (owner) — decisão do adendo do ADR-0018.
+    const inviter = await this.userRepo.findById(input.inviterUserId);
+
     try {
       await this.mail.sendHouseholdInvite({
         to: input.email,
         householdName: household.name,
         acceptUrl,
+        locale: inviter?.locale,
       });
     } catch (err) {
       await this.compensate(invitation.id);

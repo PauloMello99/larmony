@@ -1,5 +1,6 @@
 "use client"
 
+import { useTranslation } from "react-i18next"
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import {
   DropdownMenu,
@@ -20,10 +21,11 @@ import { cn } from "@/shared/lib/utils"
 import { resolveCategoryIcon } from "../lib/icon-options"
 import type { Category } from "../types"
 
-const TYPE_LABEL: Record<Category["type"], string> = {
-  income: "Receita",
-  expense: "Despesa",
-  both: "Ambos",
+/** Chaves i18n (namespace `categories`) — resolvidas no render. */
+const TYPE_LABEL_KEY: Record<Category["type"], string> = {
+  income: "types.income",
+  expense: "types.expense",
+  both: "types.both",
 }
 
 const TYPE_CLASS: Record<Category["type"], string> = {
@@ -55,6 +57,7 @@ function CategoryActions({ category, onEdit, onDelete }: {
   onEdit: (category: Category) => void
   onDelete: (category: Category) => void
 }) {
+  const { t: tCommon } = useTranslation("common")
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -65,14 +68,14 @@ function CategoryActions({ category, onEdit, onDelete }: {
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => onEdit(category)}>
           <Pencil className="mr-2 h-4 w-4" />
-          Editar
+          {tCommon("actions.edit")}
         </DropdownMenuItem>
         <DropdownMenuItem
           className="text-red-400 focus:text-red-400"
           onClick={() => onDelete(category)}
         >
           <Trash2 className="mr-2 h-4 w-4" />
-          Excluir
+          {tCommon("actions.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -80,18 +83,19 @@ function CategoryActions({ category, onEdit, onDelete }: {
 }
 
 export function CategoryList({ categories, onEdit, onDelete }: CategoryListProps) {
+  const { t } = useTranslation("categories")
   return (
     <>
       {/* Desktop table */}
-      <div className="hidden overflow-hidden rounded-lg border border-foreground/10 sm:block">
+      <div className="hidden overflow-hidden rounded-lg border border-foreground/[0.07] sm:block">
         <Table>
           <TableHeader>
             <TableRow className="bg-foreground/[0.02] hover:bg-transparent">
               <TableHead className="px-4 text-foreground/50 normal-case tracking-normal">
-                Nome
+                {t("list.headerName")}
               </TableHead>
               <TableHead className="px-4 text-foreground/50 normal-case tracking-normal">
-                Tipo
+                {t("list.headerType")}
               </TableHead>
               <TableHead className="w-12 px-4" />
             </TableRow>
@@ -105,7 +109,9 @@ export function CategoryList({ categories, onEdit, onDelete }: CategoryListProps
                     <span className="font-medium">
                       {category.name}
                       {category.isDefault && (
-                        <span className="ml-2 text-xs text-foreground/30">(padrão)</span>
+                        <span className="ml-2 text-xs text-foreground/30">
+                          {t("list.defaultSuffix")}
+                        </span>
                       )}
                     </span>
                   </div>
@@ -117,7 +123,7 @@ export function CategoryList({ categories, onEdit, onDelete }: CategoryListProps
                       TYPE_CLASS[category.type],
                     )}
                   >
-                    {TYPE_LABEL[category.type]}
+                    {t(TYPE_LABEL_KEY[category.type])}
                   </span>
                 </TableCell>
                 <TableCell className="px-4">
@@ -134,14 +140,16 @@ export function CategoryList({ categories, onEdit, onDelete }: CategoryListProps
         {categories.map((category) => (
           <div
             key={category.id}
-            className="flex items-center gap-3 rounded-lg border border-foreground/10 bg-foreground/[0.02] p-3"
+            className="flex items-center gap-3 rounded-lg border border-foreground/[0.07] bg-foreground/[0.03] p-3"
           >
             <CategoryIcon category={category} />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">
                 {category.name}
                 {category.isDefault && (
-                  <span className="ml-1 text-xs text-foreground/30">(padrão)</span>
+                  <span className="ml-1 text-xs text-foreground/30">
+                    {t("list.defaultSuffix")}
+                  </span>
                 )}
               </p>
               <span
@@ -150,7 +158,7 @@ export function CategoryList({ categories, onEdit, onDelete }: CategoryListProps
                   TYPE_CLASS[category.type],
                 )}
               >
-                {TYPE_LABEL[category.type]}
+                {t(TYPE_LABEL_KEY[category.type])}
               </span>
             </div>
             <CategoryActions category={category} onEdit={onEdit} onDelete={onDelete} />

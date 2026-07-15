@@ -1,0 +1,133 @@
+{
+  "roles": {
+    "owner": "Propriétaire",
+    "member": "Membre"
+  },
+  "validation": {
+    "nameMin": "2 caractères minimum",
+    "nameMax": "80 caractères maximum",
+    "emailInvalid": "E-mail invalide"
+  },
+  "settings": {
+    "loading": "Chargement…",
+    "notFound": "Foyer introuvable.",
+    "generalTitle": "Informations générales",
+    "generalDescription": "Nom et identifiant public du foyer.",
+    "nameLabel": "Nom",
+    "slugLabel": "Slug",
+    "membersTitle": "Membres",
+    "membersDescription": "Gère qui a accès à ce foyer.",
+    "invite": "Inviter",
+    "transferTitle": "Transférer le foyer",
+    "transferDescription": "Transfère la propriété de ce foyer à un autre membre.",
+    "transferProse": "La propriété passe au membre choisi. Tu deviens membre avec un accès complet aux modules.",
+    "dangerTitle": "Zone de danger",
+    "dangerDescription": "Actions irréversibles. Procède avec prudence.",
+    "deleteTitle": "Supprimer le foyer",
+    "deleteDescription": "Supprime définitivement toutes les données de ce foyer."
+  },
+  "membersPage": {
+    "loading": "Chargement des membres…",
+    "title": "Membres",
+    "description": "Gère qui a accès à ce foyer.",
+    "invite": "Inviter",
+    "inviteCreated": "Invitation créée. Lien d’acceptation (dev — copie-le pour tester) :",
+    "copy": "Copier",
+    "updatePermissionsError": "Impossible de mettre à jour les permissions.",
+    "toggleStatusError": "Impossible de modifier le statut du membre."
+  },
+  "members": {
+    "title": "Membres ({{count}})",
+    "pendingInvitations": "Invitations en attente ({{count}})",
+    "nameHeader": "Nom",
+    "emailHeader": "E-mail",
+    "roleHeader": "Fonction",
+    "you": "(toi)",
+    "invitationMeta": "{{role}} · expire le {{date}}",
+    "actions": {
+      "permissions": "Permissions",
+      "makeOwner": "Nommer propriétaire",
+      "makeMember": "Nommer membre",
+      "enable": "Activer",
+      "disable": "Désactiver",
+      "remove": "Retirer"
+    }
+  },
+  "modules": {
+    "services": "Services",
+    "clients": "Clients",
+    "schedule": "Agenda",
+    "stock": "Stock",
+    "cashier": "Caisse"
+  },
+  "roleDialog": {
+    "title": "Modifier la fonction",
+    "description": "Modifie la fonction de <span>{{name}}</span>.",
+    "newRoleLabel": "Nouvelle fonction",
+    "saving": "Enregistrement…"
+  },
+  "permissionsDialog": {
+    "title": "Permissions du membre",
+    "description": "Choisis les modules auxquels <span>{{name}}</span> peut accéder. Dans chaque module, le membre ne voit que ses propres enregistrements.",
+    "saving": "Enregistrement…",
+    "submit": "Enregistrer les permissions"
+  },
+  "removeDialog": {
+    "title": "Retirer le membre",
+    "description": "Es-tu sûr(e) de vouloir retirer <span>{{name}}</span> du foyer ?",
+    "removing": "Retrait…",
+    "submit": "Retirer"
+  },
+  "transferDialog": {
+    "trigger": "Transférer",
+    "title": "Transférer le foyer",
+    "description": "Choisis le membre qui deviendra le nouveau propriétaire. Tu auras alors la fonction de <span>membre</span> avec un accès complet aux modules.",
+    "newOwnerLabel": "Nouveau propriétaire",
+    "selectPlaceholder": "Sélectionne un membre",
+    "memberOption": "{{name}} ({{email}})",
+    "error": "Impossible de transférer le foyer.",
+    "submitting": "Transfert…",
+    "submit": "Transférer la propriété"
+  },
+  "deleteDialog": {
+    "trigger": "Supprimer le foyer",
+    "title": "Supprimer le foyer",
+    "description": "Cette action est <span>irréversible</span>. Toutes les données du foyer seront définitivement supprimées.",
+    "confirmLabel": "Saisis <span>{{name}}</span> pour confirmer :",
+    "deleting": "Suppression…",
+    "submit": "Supprimer définitivement"
+  },
+  "createForm": {
+    "title": "Nouveau foyer",
+    "description": "Crée un espace pour ton foyer. Tu en seras le propriétaire.",
+    "nameLabel": "Nom",
+    "namePlaceholder": "Ex : Maison de la famille",
+    "timezoneLabel": "Fuseau horaire",
+    "timezoneHint": "Définit quand les transactions programmées arrivent à échéance et quand les alertes sont envoyées. Détecté automatiquement — ajuste si besoin.",
+    "limitReached": "Tu as déjà un foyer sur le plan Free. Va dans Paramètres > Abonnement d'un foyer existant pour le mettre à niveau et en créer un autre.",
+    "submitting": "Création…",
+    "submit": "Créer le foyer"
+  },
+  "editForm": {
+    "nameLabel": "Nom du foyer",
+    "namePlaceholder": "Ex : Maison de la famille",
+    "slugLabel": "Identifiant (slug)",
+    "slugHint": "Généré automatiquement — ne peut pas être modifié.",
+    "timezoneLabel": "Fuseau horaire",
+    "timezoneHint": "Définit quand les transactions programmées arrivent à échéance et quand les alertes sont envoyées.",
+    "notificationHourLabel": "Heure des alertes",
+    "notificationHourHint": "Les rappels et le rapport mensuel sont envoyés à partir de cette heure, dans le fuseau du foyer.",
+    "saving": "Enregistrement…",
+    "submit": "Enregistrer les modifications"
+  },
+  "inviteForm": {
+    "title": "Inviter un membre",
+    "description": "L’invitation sera envoyée par e-mail avec un lien d’accès.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "nom@exemple.com",
+    "roleLabel": "Fonction",
+    "rolePlaceholder": "Sélectionne une fonction",
+    "submitting": "Envoi…",
+    "submit": "Envoyer l’invitation"
+  }
+}

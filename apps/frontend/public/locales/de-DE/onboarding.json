@@ -1,0 +1,139 @@
+{
+  "nav": {
+    "back": "Zurück",
+    "skip": "Überspringen",
+    "next": "Weiter",
+    "done": "Verstanden",
+    "step": "Schritt {{current}} von {{total}}"
+  },
+  "sidebar": {
+    "welcome": {
+      "title": "Willkommen bei Larmony!",
+      "body": "Lass uns einen kurzen Rundgang durch das Seitenmenü machen, damit du weißt, wo jede Funktion deines Haushalts zu finden ist."
+    },
+    "overview": {
+      "title": "Übersicht",
+      "body": "Die Zusammenfassung deines Haushalts: Saldo des Monats, Budgets, Ziele und bald fällige Rechnungen, alles an einem Ort."
+    },
+    "transactions": {
+      "title": "Transaktionen",
+      "body": "Alle Einnahmen und Ausgaben des Haushalts, mit Filtern nach Monat, Kategorie und Typ."
+    },
+    "categories": {
+      "title": "Kategorien",
+      "body": "Organisieren deine Transaktionen, Budgets und Wiederholungen. Dein Haushalt kommt bereits mit 13 Standardkategorien."
+    },
+    "budgets": {
+      "title": "Budgets",
+      "body": "Lege ein monatliches Ausgabenlimit pro Kategorie fest und verfolge, wie viel bereits ausgegeben wurde."
+    },
+    "goals": {
+      "title": "Ziele",
+      "body": "Erstelle Sparziele mit Zielbetrag und erfasse Einzahlungen, bis du das Vorhaben erreichst."
+    },
+    "scheduledTransactions": {
+      "title": "Einträge",
+      "body": "Erfasse feste Rechnungen oder automatische Einträge — mit E-Mail-Erinnerung oder von Larmony selbst generiert."
+    },
+    "reports": {
+      "title": "Berichte",
+      "body": "Monatliche und jährliche Grafiken zur Entwicklung der Finanzen deines Haushalts."
+    },
+    "settings": {
+      "title": "Einstellungen",
+      "body": "Verwalte die Informationen deines Haushalts und lade weitere Mitglieder ein."
+    }
+  },
+  "overview": {
+    "intro": {
+      "title": "Übersicht deines Haushalts",
+      "body": "Dieses Dashboard zeigt eine schnelle Zusammenfassung: Saldo des Monats, Budgets, Ziele und bald fällige Rechnungen. Es entwickelt sich von selbst weiter, während du Larmony nutzt."
+    }
+  },
+  "transactions": {
+    "intro": {
+      "title": "Transaktionen",
+      "body": "Hier befinden sich alle Einnahmen und Ausgaben des Haushalts. Nutze die Filter, um Einträge nach Monat, Kategorie oder Typ zu finden."
+    },
+    "new": {
+      "title": "Neue Transaktion",
+      "body": "Klicke hier, um jederzeit eine Einnahme oder Ausgabe zu erfassen."
+    }
+  },
+  "transactionForm": {
+    "intro": {
+      "title": "Wie man eine Transaktion erfasst",
+      "body": "Fülle die Grunddaten aus und nutze die Felder unten, um die Ausgabe zu kategorisieren, in Raten aufzuteilen oder mit anderen Mitgliedern des Haushalts zu teilen."
+    },
+    "category": {
+      "title": "Kategorie",
+      "body": "Klassifiziere die Transaktion (z. B. Supermarkt, Transport), um Ausgaben in Berichten und Budgets zu verfolgen. Optional."
+    },
+    "person": {
+      "title": "Person",
+      "body": "Gib an, wer die Ausgabe getätigt hat — nicht unbedingt dieselbe Person, die sie erfasst. Berichte nach Person nutzen dieses Feld. Ohne Auswahl wird davon ausgegangen, dass du es warst."
+    },
+    "installments": {
+      "title": "In Raten aufteilen",
+      "body": "Aktiviere dies, um den Gesamtbetrag auf mehrere monatliche Raten zu verteilen. Larmony erstellt eine Transaktion pro Rate, alle mit derselben Serie verknüpft."
+    },
+    "split": {
+      "title": "Zwischen Mitgliedern aufteilen",
+      "body": "Aktiviere dies, um den Betrag unter den Mitgliedern des Haushalts aufzuteilen — gleichmäßig oder mit einem bestimmten Betrag für jeden."
+    }
+  },
+  "categories": {
+    "intro": {
+      "title": "Kategorien",
+      "body": "Kategorien klassifizieren deine Transaktionen, Budgets und Wiederholungen. Dein Haushalt kommt bereits mit 13 Standardkategorien, und du kannst eigene erstellen."
+    }
+  },
+  "budgets": {
+    "intro": {
+      "title": "Budgets",
+      "body": "Lege ein monatliches Ausgabenlimit pro Kategorie fest. Larmony berechnet automatisch, wie viel bereits ausgegeben wurde, und warnt dich, wenn du das Limit überschreitest."
+    }
+  },
+  "goals": {
+    "intro": {
+      "title": "Ziele",
+      "body": "Erstelle Sparziele mit einem Zielbetrag und optional einem Datum. Erfasse Einzahlungen im Laufe der Zeit, bis du das Vorhaben erreichst."
+    }
+  },
+  "scheduledTransactions": {
+    "intro": {
+      "title": "Einträge",
+      "body": "Erfasse Rechnungen und Einträge, die sich wiederholen — wähle zwischen manuellem Erfassen (mit E-Mail-Erinnerung) oder lass Larmony die Transaktion automatisch zum richtigen Zeitpunkt erstellen."
+    }
+  },
+  "scheduledTransactionForm": {
+    "postingMode": {
+      "title": "Automatisch buchen",
+      "body": "Aktiviere dies, damit Larmony die Transaktion selbstständig am Datum jeder Wiederholung erstellt. Lass es deaktiviert, um eine Erinnerung zu erhalten und selbst zu buchen, wobei du den Betrag im Moment bestätigst."
+    },
+    "frequency": {
+      "title": "Häufigkeit",
+      "body": "Legt den Rhythmus des Eintrags fest (wöchentlich, monatlich oder jährlich) und im Feld \"Alle\", in welchem Abstand er sich wiederholt — z. B. monatlich alle 1, oder wöchentlich alle 2 für zweiwöchentlich."
+    },
+    "reminder": {
+      "title": "Erinnerung",
+      "body": "Nur im manuellen Modus: wie viele Tage vor Fälligkeit Larmony dir eine E-Mail sendet, damit du das Buchen nicht vergisst."
+    }
+  },
+  "reports": {
+    "intro": {
+      "title": "Berichte",
+      "body": "Verfolge die Entwicklung der Finanzen des Haushalts mit monatlichen und jährlichen Grafiken, Ausgaben nach Kategorie und nach Person."
+    }
+  },
+  "settings": {
+    "intro": {
+      "title": "Einstellungen",
+      "body": "Hier verwaltest du die Informationen deines Haushalts."
+    },
+    "members": {
+      "title": "Mitglieder",
+      "body": "Lade weitere Personen ein, um die Finanzen des Haushalts gemeinsam mit dir zu verwalten. Jedes Mitglied kann Transaktionen, Budgets und Ziele erfassen und einsehen."
+    }
+  }
+}

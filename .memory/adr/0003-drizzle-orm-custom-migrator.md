@@ -42,3 +42,27 @@ Drizzle's built-in `migrate()` is used internally for the `up` path, but the mig
 ## Key implementation detail
 
 The `computeMigrationHash` function must hash the raw SQL file content without modification. An early bug split on `"--> statement-breakpoint"` and rejoined â€” this produced a different hash than Drizzle stored. Fixed to: `createHash("sha256").update(rawSql).digest("hex")`.
+
+## Adendo (2026-07-13) — Squash 0000..0011 ? 0000_baseline + comando `baseline`
+
+A cadeia herdada foi squashada num único `0000_baseline` (fase pre-production):
+concatenação LITERAL dos `.sql` originais na mesma ordem (equivalência por
+construção — o `migrate()` do drizzle já aplicava a cadeia inteira numa única
+transação) e downs concatenados em ordem reversa. Snapshots removidos
+(`drizzle-kit generate` já estava aposentado a favor de SQL manual).
+
+Novo comando `migrator.ts baseline` para bancos JÁ migrados pela cadeia antiga
+(staging/devs): limpa `drizzle.__drizzle_migrations` e insere a row do baseline
+(hash+when) SEM executar SQL; recusa bancos sem `public.users`. Bancos novos
+seguem pelo `up` normal. Racional do porquê isso é necessário: o `up` do
+drizzle decide por watermark de timestamp (não por hash), então um banco antigo
+ignoraria/duplicaria o baseline sem o re-baseline explícito.
+
+Verificado: (1) restore do estado antigo real (dump P-3) ? `baseline` ? `status`
+? e `up` no-op, dados intactos; (2) banco recriado do zero (`supabase db reset`)
+? `up` aplica o baseline ? suíte e2e completa passou (exceto 2 flakes
+pré-existentes de meia-noite no spec de scheduled-transactions, alheios ao
+schema — runner UTC-3 vs lar UTC na janela 21h–00h; verdes no CI/UTC).
+
+As regras originais continuam: nunca editar `.sql` aplicado; todo migration com
+`.down.sql`; hash = sha256 do arquivo cru.

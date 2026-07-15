@@ -16,21 +16,22 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
-/** Ícones disponíveis no picker — os mesmos usados nas 13 categorias default + fallback. */
-export const CATEGORY_ICON_OPTIONS: { value: string; label: string; Icon: LucideIcon }[] = [
-  { value: "Banknote", label: "Dinheiro", Icon: Banknote },
-  { value: "Briefcase", label: "Trabalho", Icon: Briefcase },
-  { value: "TrendingUp", label: "Investimentos", Icon: TrendingUp },
-  { value: "UtensilsCrossed", label: "Alimentação", Icon: UtensilsCrossed },
-  { value: "Home", label: "Moradia", Icon: Home },
-  { value: "Car", label: "Transporte", Icon: Car },
-  { value: "Heart", label: "Saúde", Icon: Heart },
-  { value: "BookOpen", label: "Educação", Icon: BookOpen },
-  { value: "Gamepad2", label: "Lazer", Icon: Gamepad2 },
-  { value: "Shirt", label: "Vestuário", Icon: Shirt },
-  { value: "RefreshCw", label: "Assinaturas", Icon: RefreshCw },
-  { value: "CirclePlus", label: "Outros (entrada)", Icon: CirclePlus },
-  { value: "CircleMinus", label: "Outros (saída)", Icon: CircleMinus },
+/** Ícones disponíveis no picker — os mesmos usados nas 13 categorias default + fallback.
+ * `labelKey` é resolvida no render via i18n (namespace `categories`). */
+export const CATEGORY_ICON_OPTIONS: { value: string; labelKey: string; Icon: LucideIcon }[] = [
+  { value: "Banknote", labelKey: "icons.banknote", Icon: Banknote },
+  { value: "Briefcase", labelKey: "icons.briefcase", Icon: Briefcase },
+  { value: "TrendingUp", labelKey: "icons.trendingUp", Icon: TrendingUp },
+  { value: "UtensilsCrossed", labelKey: "icons.utensilsCrossed", Icon: UtensilsCrossed },
+  { value: "Home", labelKey: "icons.home", Icon: Home },
+  { value: "Car", labelKey: "icons.car", Icon: Car },
+  { value: "Heart", labelKey: "icons.heart", Icon: Heart },
+  { value: "BookOpen", labelKey: "icons.bookOpen", Icon: BookOpen },
+  { value: "Gamepad2", labelKey: "icons.gamepad2", Icon: Gamepad2 },
+  { value: "Shirt", labelKey: "icons.shirt", Icon: Shirt },
+  { value: "RefreshCw", labelKey: "icons.refreshCw", Icon: RefreshCw },
+  { value: "CirclePlus", labelKey: "icons.circlePlus", Icon: CirclePlus },
+  { value: "CircleMinus", labelKey: "icons.circleMinus", Icon: CircleMinus },
 ]
 
 const ICON_MAP: Record<string, LucideIcon> = Object.fromEntries(

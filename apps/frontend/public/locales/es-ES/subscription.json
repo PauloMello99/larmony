@@ -1,0 +1,61 @@
+{
+  "title": "Suscripción",
+  "description": "Plan, estado y gestión de la suscripción de este hogar.",
+  "planTitle": "Plan actual",
+  "loadError": "No se pudo cargar la suscripción. Inténtalo de nuevo.",
+  "ownerOnly": "Solo el propietario del hogar puede gestionar la suscripción.",
+  "plan": {
+    "locked": "Sin suscripción",
+    "essencial": "Esencial",
+    "completo": "Completo"
+  },
+  "status": {
+    "active": "Activa",
+    "trialing": "Periodo de prueba",
+    "past_due": "Pago pendiente",
+    "canceled": "Cancelada"
+  },
+  "locked": {
+    "description": "Este hogar no tiene una suscripción activa — aún puedes ver tus datos, pero crear o editar requiere suscribirte.",
+    "trialNotice": "Prueba cualquier plan gratis por 30 días (se requiere tarjeta, sin cargo hasta que termine la prueba).",
+    "onboardingNotice": "¡Tu hogar fue creado! Elige un plan para empezar — los primeros 30 días son gratis.",
+    "descriptionEssencial": "Lo esencial para gestionar las finanzas del día a día.",
+    "descriptionCompleto": "Todo lo de Esencial, más presupuestos, movimientos programados e informes avanzados.",
+    "intervalMonthly": "Mensual",
+    "intervalAnnual": "Anual (2 meses gratis)",
+    "cta": "Iniciar prueba gratis",
+    "ctaPending": "Redirigiendo…"
+  },
+  "active": {
+    "description": "Tu suscripción está activa. Disfruta de todas las funciones de tu plan.",
+    "pastDue": "Hay un pago pendiente. Actualiza el método de pago en el portal para no perder el acceso.",
+    "portalCta": "Gestionar suscripción",
+    "portalPending": "Redirigiendo…"
+  },
+  "trial": {
+    "title": "Periodo de prueba activo",
+    "description": "Este hogar tiene acceso al plan Completo durante el periodo de prueba.",
+    "cta": "Suscribirse ahora"
+  },
+  "comp": {
+    "title": "Acceso de cortesía concedido",
+    "description": "Este hogar tiene acceso completo por cortesía — sin cargo.",
+    "reasonLabel": "Motivo"
+  },
+  "banner": {
+    "success": "¡Suscripción confirmada! El acceso se activa en cuanto Stripe confirma el pago.",
+    "cancel": "Proceso de pago cancelado. No se realizó ningún cargo."
+  },
+  "gate": {
+    "title": "Función del plan Completo",
+    "description": "Los informes avanzados forman parte del plan Completo. Actualiza tu plan para desbloquearlos.",
+    "descriptionCategories": "Las categorías personalizadas forman parte del plan Completo. Actualiza tu plan para desbloquearlas.",
+    "descriptionBudgets": "Los presupuestos forman parte del plan Completo. Actualiza tu plan para desbloquearlos.",
+    "descriptionScheduledEntries": "Los movimientos programados forman parte del plan Completo. Actualiza tu plan para desbloquearlos.",
+    "cta": "Ver planes"
+  },
+  "lockedBanner": {
+    "description": "Este hogar está en modo de solo lectura — sin suscripción activa.",
+    "cta": "Suscribirse"
+  }
+}

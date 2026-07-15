@@ -4,6 +4,7 @@ import * as React from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import { Loader2, MailCheck } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import {
@@ -18,13 +19,15 @@ import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { useAuth } from "@/features/auth/hooks/use-auth"
 import {
-  recoverSchema,
+  makeRecoverSchema,
   type RecoverFormValues,
 } from "@/features/auth/schemas/auth.schemas"
 
 export function RecoverForm() {
+  const { t } = useTranslation("auth")
   const { forgotPassword } = useAuth()
   const [sent, setSent] = React.useState(false)
+  const recoverSchema = React.useMemo(() => makeRecoverSchema(t), [t])
 
   const {
     register,
@@ -41,7 +44,7 @@ export function RecoverForm() {
       await forgotPassword(data.email)
       setSent(true)
     } catch {
-      setError("root", { message: "Não foi possível enviar o e-mail. Tente novamente." })
+      setError("root", { message: t("recover.error") })
     }
   }
 
@@ -52,9 +55,9 @@ export function RecoverForm() {
           <div className="mb-2 text-xl font-bold">
             <span className="text-primary">lar</span>mony
           </div>
-          <CardTitle className="text-xl">Recuperar senha</CardTitle>
+          <CardTitle className="text-xl">{t("recover.title")}</CardTitle>
           <CardDescription className="text-foreground/40">
-            Enviaremos um link para redefinir sua senha
+            {t("recover.subtitle")}
           </CardDescription>
         </CardHeader>
 
@@ -64,11 +67,10 @@ export function RecoverForm() {
               <MailCheck className="h-6 w-6 text-primary" />
             </div>
             <p className="text-sm text-foreground/50">
-              Se esse e-mail estiver cadastrado, você receberá um link em breve.
-              Verifique sua caixa de entrada e a pasta de spam.
+              {t("recover.sentMessage")}
             </p>
             <Button asChild variant="outline" className="w-full border-foreground/10">
-              <Link href="/auth/login">Voltar ao login</Link>
+              <Link href="/auth/login">{t("recover.backToLogin")}</Link>
             </Button>
           </CardContent>
         ) : (
@@ -81,11 +83,11 @@ export function RecoverForm() {
               )}
 
               <div className="space-y-1.5">
-                <Label htmlFor="email">E-mail</Label>
+                <Label htmlFor="email">{t("recover.emailLabel")}</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="seu@email.com"
+                  placeholder={t("recover.emailPlaceholder")}
                   autoComplete="email"
                   aria-invalid={!!errors.email}
                   {...register("email")}
@@ -103,11 +105,11 @@ export function RecoverForm() {
                 className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Enviar link
+                {t("recover.submit")}
               </Button>
               <p className="text-center text-sm text-foreground/40">
                 <Link href="/auth/login" className="hover:text-foreground">
-                  ← Voltar ao login
+                  ← {t("recover.backToLogin")}
                 </Link>
               </p>
             </CardFooter>

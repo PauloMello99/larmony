@@ -18,7 +18,7 @@ export interface Transaction {
   installmentGroupId: string | null
   installmentNumber: number | null
   installmentCount: number | null
-  recurrenceId: string | null
+  scheduledTransactionEntryId: string | null
   memberCount: number
   createdAt: string
   updatedAt: string

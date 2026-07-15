@@ -13,6 +13,7 @@ import {
 } from "@nestjs/common";
 import { AuthGuard } from "../../auth/guards/auth.guard";
 import { HouseholdMembershipGuard } from "../../auth/guards/household-membership.guard";
+import { ActiveSubscriptionGuard } from "../../subscriptions/interface/guards/active-subscription.guard";
 import { CurrentUser } from "../../auth/decorators/current-user.decorator";
 import type { AuthUser } from "../../auth/application/ports/auth-provider.interface";
 import { GetMeUseCase } from "../../user/application/use-cases/get-me.use-case";
@@ -27,8 +28,10 @@ import { CreateGoalDto } from "./dto/create-goal.dto";
 import { UpdateGoalDto } from "./dto/update-goal.dto";
 import { CreateContributionDto } from "./dto/create-contribution.dto";
 
+// ActiveSubscriptionGuard (M16): escrita exige assinatura ativa (locked → 402);
+// GET livre. Metas são núcleo (Essencial), então sem gate de capability.
 @Controller("households/:householdId/goals")
-@UseGuards(AuthGuard, HouseholdMembershipGuard)
+@UseGuards(AuthGuard, HouseholdMembershipGuard, ActiveSubscriptionGuard)
 export class GoalsController {
   constructor(
     private readonly getMe: GetMeUseCase,

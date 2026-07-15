@@ -19,6 +19,8 @@ export class CreateBudgetUseCase {
     authId: string,
     data: CreateBudgetData,
   ): Promise<BudgetEntity> {
+    // M16: orçamentos são uma feature Completo (gateada por @RequireCapability
+    // "budgets" no controller) e ilimitados dentro do tier — sem régua de contagem.
     const budget = await this.budgetRepo.create(householdId, data);
 
     await this.auditService.logByAuthId(authId, {
@@ -26,7 +28,7 @@ export class CreateBudgetUseCase {
       action: "create",
       entityType: "budget",
       entityId: budget.id,
-      metadata: { categoryId: budget.categoryId, month: budget.month, year: budget.year },
+      metadata: { categoryId: budget.categoryId, amountCents: data.amountCents },
     });
 
     return budget;

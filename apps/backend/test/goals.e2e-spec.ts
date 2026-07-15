@@ -1,6 +1,14 @@
 import { INestApplication } from "@nestjs/common";
 import { Pool } from "pg";
-import { adminPool, authed, cleanupByEmailPattern, createTestApp, signUpUser, TestUser } from "./helpers";
+import {
+  activateHousehold,
+  adminPool,
+  authed,
+  cleanupByEmailPattern,
+  createTestApp,
+  signUpUser,
+  TestUser,
+} from "./helpers";
 
 describe("Goals (e2e)", () => {
   let app: INestApplication;
@@ -18,6 +26,8 @@ describe("Goals (e2e)", () => {
       .send({ name: "E2E Lar Metas" })
       .expect(201);
     householdId = created.body.id;
+    // M16: lar novo nasce locked; ativa a assinatura para as escritas passarem.
+    await activateHousehold(pool, householdId);
   });
 
   afterAll(async () => {
@@ -103,6 +113,60 @@ describe("Goals (e2e)", () => {
     expect(goal.savedCents).toBe(100000);
   });
 
+  it("aporte que atinge a meta dispara goal_reached 1x (dispatcher + dedup)", async () => {
+    const created = await authed(app, "post", `/households/${householdId}/goals`, owner.accessToken)
+      .send({
+        name: "Reserva",
+        targetAmountCents: 100000,
+        color: "#22c55e",
+      })
+      .expect(201);
+    const reachedGoalId = created.body.id;
+
+    // Cruza o alvo — deve disparar goal_reached e gravar a notificação in-app.
+    await authed(
+      app,
+      "post",
+      `/households/${householdId}/goals/${reachedGoalId}/contributions`,
+      owner.accessToken,
+    )
+      .send({ amountCents: 100000, date: "2026-07-01" })
+      .expect(201);
+
+    const rows = await pool.query(
+      `SELECT id FROM public.notifications WHERE type = 'goal_reached' AND (data->>'goalId') = $1`,
+      [reachedGoalId],
+    );
+    expect(rows.rows).toHaveLength(1);
+
+    const dedupRows = await pool.query(
+      `SELECT id FROM public.notification_dedup WHERE event_type = 'goal_reached' AND context_id = $1`,
+      [reachedGoalId],
+    );
+    expect(dedupRows.rows).toHaveLength(1);
+
+    // Um 2º aporte não re-dispara (dedup "once" já reivindicado).
+    await authed(
+      app,
+      "post",
+      `/households/${householdId}/goals/${reachedGoalId}/contributions`,
+      owner.accessToken,
+    )
+      .send({ amountCents: 1000, date: "2026-07-02" })
+      .expect(201);
+
+    const rowsAfter = await pool.query(
+      `SELECT id FROM public.notifications WHERE type = 'goal_reached' AND (data->>'goalId') = $1`,
+      [reachedGoalId],
+    );
+    expect(rowsAfter.rows).toHaveLength(1);
+
+    // Limpa — os testes seguintes assumem só a meta "Viagem" ativa no lar.
+    await authed(app, "delete", `/households/${householdId}/goals/${reachedGoalId}`, owner.accessToken).expect(
+      204,
+    );
+  });
+
   it("edita a meta, inclusive limpando a targetDate", async () => {
     const updated = await authed(
       app,
@@ -155,5 +219,36 @@ describe("Goals (e2e)", () => {
   it("não-membro recebe 403", async () => {
     const stranger = await signUpUser(app, "goal.stranger");
     await authed(app, "get", `/households/${householdId}/goals`, stranger.accessToken).expect(403);
+  });
+
+  it("M16: lar sem assinatura (locked) bloqueia criar meta (402 SUBSCRIPTION_REQUIRED); ativa e libera; metas ilimitadas", async () => {
+    // Lar isolado que nasce locked (sem assinatura).
+    const solo = await signUpUser(app, "goal.limit.owner");
+    const solo1 = await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Locked Metas" })
+      .expect(201);
+    const soloHouseholdId = solo1.body.id;
+
+    const blocked = await authed(app, "post", `/households/${soloHouseholdId}/goals`, solo.accessToken)
+      .send({ name: "Meta 1", targetAmountCents: 100000, color: "#06b6d4" })
+      .expect(402);
+    expect(blocked.body.code).toBe("SUBSCRIPTION_REQUIRED");
+
+    // Ativa (comp = completo) e agora cria à vontade — sem régua de contagem.
+    await activateHousehold(pool, soloHouseholdId);
+    for (let i = 1; i <= 5; i++) {
+      await authed(app, "post", `/households/${soloHouseholdId}/goals`, solo.accessToken)
+        .send({ name: `Meta ${i}`, targetAmountCents: 100000, color: "#06b6d4" })
+        .expect(201);
+    }
+  });
+
+  it("GET num lar locked continua livre (somente-leitura)", async () => {
+    const solo = await signUpUser(app, "goal.readonly.owner");
+    const created = await authed(app, "post", "/households", solo.accessToken)
+      .send({ name: "E2E Lar Readonly Metas" })
+      .expect(201);
+    // Sem ativar: GET passa (leitura livre), POST seria 402.
+    await authed(app, "get", `/households/${created.body.id}/goals`, solo.accessToken).expect(200);
   });
 });

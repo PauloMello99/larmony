@@ -1,0 +1,112 @@
+{
+  "nav": {
+    "overview": "Vue d’ensemble",
+    "transactions": "Transactions",
+    "categories": "Catégories",
+    "budgets": "Budgets",
+    "goals": "Objectifs",
+    "scheduledTransactions": "Transactions programmées",
+    "reports": "Rapports",
+    "members": "Membres",
+    "settings": "Paramètres",
+    "settingsGeneral": "Général",
+    "settingsSubscription": "Abonnement",
+    "billing": "Facturation",
+    "households": "Foyers",
+    "sectionHousehold": "Foyer"
+  },
+  "overview": {
+    "goodMorning": "Bonjour",
+    "goodAfternoon": "Bon après-midi",
+    "goodEvening": "Bonsoir",
+    "incomeMonth": "Revenus du mois",
+    "expensesMonth": "Dépenses du mois",
+    "balanceMonth": "Solde du mois",
+    "goalsTotal": "Épargné dans les objectifs",
+    "recentTransactions": "Transactions récentes",
+    "seeAll": "Voir tout",
+    "upcomingEntries": "Prochaines transactions programmées",
+    "activeGoals": "Objectifs actifs",
+    "budgets": "Budgets",
+    "emptyTransactions": "Aucune transaction pour l’instant",
+    "emptyTransactionsHint": "Les transactions de ton foyer apparaîtront ici.",
+    "emptyEntries": "Aucune transaction programmée à venir",
+    "emptyEntriesHint": "Ajoute des transactions programmées manuelles pour recevoir des rappels.",
+    "emptyGoals": "Aucun objectif actif",
+    "emptyGoalsHint": "Crée des objectifs pour suivre tes projets.",
+    "emptyBudgets": "Aucun budget défini",
+    "emptyBudgetsHint": "Définis des limites de dépense par catégorie.",
+    "vsLastMonth": "vs. mois précédent",
+    "goalsActive_one": "{{count}} objectif actif",
+    "goalsActive_other": "{{count}} objectifs actifs",
+    "dueToday": "Échéance aujourd’hui",
+    "dueInDays_one": "Dans {{count}} jour",
+    "dueInDays_other": "Dans {{count}} jours",
+    "budgetOver": "Dépassé",
+    "seeAllTransactions": "Voir tout"
+  },
+  "userMenu": {
+    "account": "Mon compte",
+    "language": "Langue",
+    "support": "Aide et support",
+    "platformPanel": "Tableau de bord de la plateforme",
+    "signOut": "Se déconnecter"
+  },
+  "switcher": {
+    "label": "Foyers",
+    "viewAll": "Voir tous les foyers"
+  },
+  "roles": {
+    "owner": "Propriétaire",
+    "member": "Membre"
+  },
+  "chrome": {
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "expandMenu": "Développer le menu",
+    "collapseMenu": "Réduire le menu"
+  },
+  "householdsList": {
+    "title": "Foyers",
+    "subtitle": "Sélectionne un foyer pour continuer",
+    "new": "Nouveau foyer",
+    "create": "Créer un foyer",
+    "empty": "Aucun foyer pour l’instant.",
+    "welcomeTitle": "Bienvenue sur Larmony !",
+    "welcomeHint": "Créons ton premier foyer pour organiser les finances de ta maison."
+  },
+  "adminBanner": {
+    "managingAs": "Tu gères <strong>{{name}}</strong> en tant que super_admin.",
+    "backToPanel": "Retour au tableau de bord",
+    "superAccess": "Accès super_admin"
+  },
+  "placeholders": {
+    "arriving": "Arrive en {{milestone}}",
+    "underConstruction": "En construction",
+    "comingSoon": "Cette section sera bientôt disponible",
+    "transactions": {
+      "title": "Transactions",
+      "description": "Les entrées et sorties de ton foyer : transactions avec catégorie, personne, paiement en plusieurs fois et répartition entre membres."
+    },
+    "categories": {
+      "title": "Catégories",
+      "description": "Organise les finances du foyer avec des catégories de revenus et de dépenses, des couleurs et des icônes."
+    },
+    "budgets": {
+      "title": "Budgets",
+      "description": "Définis des limites de dépense mensuelles par catégorie et suis ce qui a déjà été utilisé."
+    },
+    "goals": {
+      "title": "Objectifs",
+      "description": "Épargne pour les projets du foyer et suis la progression de chaque objectif."
+    },
+    "bills": {
+      "title": "Factures",
+      "description": "Factures fixes et récurrentes avec rappels par e-mail avant l’échéance."
+    },
+    "reports": {
+      "title": "Rapports",
+      "description": "Analyse mensuelle et annuelle des finances du foyer, par catégorie et par personne."
+    }
+  }
+}

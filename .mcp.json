@@ -27,7 +27,20 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-postgres",
-        "postgresql://postgres.ubpcmccdvldspoyfoark:rQjkxQFpyvl1hHiB@aws-1-sa-east-1.pooler.supabase.com:5432/postgres"
+        "postgresql://postgres.ubpcmccdvldspoyfoark:${STAGING_SUPABASE_DATABASE_PASSWORD}@aws-1-sa-east-1.pooler.supabase.com:5432/postgres"
+      ]
+    },
+    "supabase-production": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=atizwtwdkqegfhpcodkb"
+    },
+    "postgres-production": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://postgres.atizwtwdkqegfhpcodkb:${PRODUCTION_SUPABASE_DATABASE_PASSWORD}@aws-1-us-west-2.pooler.supabase.com:5432/postgres"
       ]
     },
     "larmony-memory": {
@@ -64,6 +77,20 @@
       "url": "https://mcp.betterstack.com",
       "headers": {
         "Authorization": "Bearer ${BETTERSTACK_TOKEN}"
+      }
+    },
+    "stripe-staging": {
+      "url": "https://mcp.stripe.com",
+      "headers": {
+         "Authorization": "Bearer ${STRIPE_RESTRICT_KEY}",
+         "Stripe-Account": "acct_1TsJDx0NG0bf6v4A"
+      }
+    },
+    "stripe-production": {
+      "url": "https://mcp.stripe.com",
+      "headers": {
+         "Authorization": "Bearer ${STRIPE_RESTRICT_PRODUCTION_KEY}",
+         "Stripe-Account": "acct_1TsJDx0NG0bf6v4A"
       }
     }
   }
