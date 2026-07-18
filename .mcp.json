@@ -82,15 +82,26 @@
     "stripe-staging": {
       "url": "https://mcp.stripe.com",
       "headers": {
-         "Authorization": "Bearer ${STRIPE_RESTRICT_KEY}",
-         "Stripe-Account": "acct_1TsJDx0NG0bf6v4A"
+        "Authorization": "Bearer ${STRIPE_RESTRICT_KEY}",
+        "Stripe-Account": "acct_1TsJDx0NG0bf6v4A"
       }
     },
     "stripe-production": {
       "url": "https://mcp.stripe.com",
       "headers": {
-         "Authorization": "Bearer ${STRIPE_RESTRICT_PRODUCTION_KEY}",
-         "Stripe-Account": "acct_1TsJDx0NG0bf6v4A"
+        "Authorization": "Bearer ${STRIPE_RESTRICT_PRODUCTION_KEY}",
+        "Stripe-Account": "acct_1TsJDx0NG0bf6v4A"
+      }
+    },
+    "godaddy": {
+      "type": "http",
+      "url": "https://api.godaddy.com/v1/domains/mcp"
+    },
+    "cloudflare-api": {
+      "type": "http",
+      "url": "https://mcp.cloudflare.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${CLOUDFARE_API_TOKEN}"
       }
     }
   }

@@ -21,6 +21,7 @@ test("signup cria a conta e leva à lista de lares", async ({ page }) => {
   await page.fill("#email", email)
   await page.fill("#password", password)
   await page.fill("#confirmPassword", password)
+  await page.check("#termsAccepted")
   await page.click('button[type="submit"]')
   await page.waitForURL(/\/households/, { timeout: 20_000 })
 })
@@ -36,7 +37,13 @@ test("cria um lar e entra direto no overview (bugfix do link sem /overview)", as
   await page.locator('input:visible[type="text"], input:visible:not([type])').first().fill(`E2E Lar ${runId}`)
   await page.getByRole("button", { name: /^criar/i }).last().click()
 
+  // M16: toda criação de lar leva ao gate de assinatura, não mais à lista.
+  await page.waitForURL(/\/households\/.+\/settings\/subscription\?onboarding=1/, {
+    timeout: 20_000,
+  })
+
   // Link da lista vai direto ao lar (sem /overview) e o overview renderiza.
+  await page.goto("/households")
   const link = page.locator('a[href*="/households/"]').first()
   await expect(link).toBeVisible()
   const href = await link.getAttribute("href")
