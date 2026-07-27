@@ -2,6 +2,7 @@ import * as React from "react"
 import Link from "next/link"
 import { makeI18nProps } from "@/shared/lib/i18n"
 import { LegalLayout, LegalSection } from "@/features/landing/components/legal-layout"
+import { CONTROLLER, LEGAL_UPDATED_AT, LEGAL_VERSION } from "@/shared/lib/legal-info"
 
 /**
  * Termos de Uso (LGPD/consumidor). Versão sincronizada com
@@ -10,7 +11,7 @@ import { LegalLayout, LegalSection } from "@/features/landing/components/legal-l
  */
 export default function TermosDeUsoPage() {
   return (
-    <LegalLayout title="Termos de Uso" updatedAt="12 de julho de 2026" version="2026-07-12">
+    <LegalLayout title="Termos de Uso" updatedAt={LEGAL_UPDATED_AT} version={LEGAL_VERSION}>
       <LegalSection title="1. Aceitação">
         <p>
           Estes Termos de Uso regulam o acesso e a utilização do <strong>Larmony</strong>
@@ -23,9 +24,8 @@ export default function TermosDeUsoPage() {
           . Se você não concorda, não utilize o Serviço.
         </p>
         <p className="text-white/45">
-          Nota: o Larmony encontra-se em fase de formalização empresarial; a razão
-          social e o CNPJ do controlador serão atualizados neste documento quando
-          constituídos.
+          O Larmony é operado por {CONTROLLER.legalName}, CNPJ {CONTROLLER.cnpj}, com
+          sede em {CONTROLLER.address}.
         </p>
       </LegalSection>
 
@@ -57,32 +57,65 @@ export default function TermosDeUsoPage() {
 
       <LegalSection title="4. Planos, pagamento e cancelamento">
         <p>
-          O Larmony oferece um plano gratuito, com funcionalidades essenciais, e o
-          plano <strong>Premium</strong> (assinatura mensal de R$ 14,90), que libera
-          recursos adicionais, como relatórios avançados. Os pagamentos são
-          processados pela <strong>Stripe</strong> em ambiente próprio — não
-          armazenamos dados de cartão.
+          O Larmony é um serviço <strong>pago</strong>. Estão disponíveis dois planos
+          de assinatura: <strong>Essencial</strong> (R$ 9,90/mês
+          ou R$ 99/ano) e <strong>Completo</strong> (R$ 19,90/mês ou R$ 199/ano). Os
+          pagamentos são processados pela <strong>Stripe</strong>; não armazenamos
+          dados de cartão.
         </p>
         <ul className="list-disc space-y-1.5 pl-5">
+          <li>
+            Novos lares têm direito a um <strong>período de teste de 30 dias</strong>,
+            com cartão de pagamento exigido no ato da contratação. Durante o teste, o
+            acesso liberado corresponde sempre ao plano Completo, independentemente do
+            plano escolhido para cobrança futura.
+          </li>
+          <li>
+            Ao final do período de teste, a cobrança automática é feita no plano
+            selecionado no momento da contratação — não há um plano padrão aplicado
+            sem escolha prévia.
+          </li>
+          <li>
+            <strong>O período de teste é limitado a um por lar</strong>, e não por
+            usuário.
+          </li>
           <li>
             A assinatura renova automaticamente a cada período até ser cancelada.
           </li>
           <li>
-            O cancelamento pode ser feito a qualquer momento pelo portal de
-            gerenciamento da assinatura; o acesso Premium permanece até o fim do
-            período já pago.
+            O cancelamento pode ser feito a qualquer momento pelo Portal de Cobrança
+            (Stripe Customer Portal); o acesso permanece até o fim do período já pago.
           </li>
           <li>
-            Podemos conceder períodos de teste (trial), isenções ou descontos a
-            critério da plataforma, com prazo e condições informados na concessão.
+            <strong>
+              Um lar sem assinatura ativa entra em modo somente leitura: os dados
+              nunca são apagados
+            </strong>
+            , apenas o acesso de edição fica restrito até a regularização da
+            assinatura.
           </li>
           <li>
-            <strong>Rebaixar ou cancelar o plano nunca apaga os dados do lar</strong> —
-            apenas restringe funcionalidades pagas daí em diante.
+            Nos termos do art. 49 do Código de Defesa do Consumidor, você pode
+            exercer o <strong>direito de arrependimento em até 7 dias corridos a
+            contar da primeira cobrança efetiva</strong> da assinatura, com reembolso
+            integral do valor cobrado. Para exercê-lo, entre em contato pelo canal{" "}
+            <a
+              href="mailto:suporte@larmony.me"
+              className="text-primary hover:text-orange-300"
+            >
+              suporte@larmony.me
+            </a>{" "}
+            dentro desse prazo.
           </li>
           <li>Preços podem ser reajustados com aviso prévio razoável.</li>
         </ul>
       </LegalSection>
+
+      {/*
+        Inconsistência conhecida (não corrigir agora, apenas registrada para
+        decisão futura): a seção 3 exige 18+ para uso do Serviço, mas o fluxo
+        de signup não faz nenhuma checagem de idade.
+      */}
 
       <LegalSection title="5. Uso aceitável">
         <p>É vedado utilizar o Serviço para:</p>

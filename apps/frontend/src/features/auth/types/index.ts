@@ -22,6 +22,9 @@ export interface Me {
   onboarding: Record<string, number>
   createdAt: string
   updatedAt: string
+  termsAcceptedAt: string | null
+  termsVersion: string | null
+  termsAcceptanceRequired: boolean
 }
 
 export interface AuthSession {

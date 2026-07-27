@@ -67,6 +67,10 @@ export function LegalLayout({
         ·{" "}
         <Link href="/legal/privacidade" className="hover:text-white">
           {t("legal.footer.privacy")}
+        </Link>{" "}
+        ·{" "}
+        <Link href="/legal/cookies" className="hover:text-white">
+          {t("legal.footer.cookies")}
         </Link>
       </footer>
     </div>

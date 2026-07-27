@@ -19,21 +19,27 @@ export function useInvitationLookup(token: string | undefined) {
   })
 }
 
+interface AcceptInvitationPayload {
+  token: string
+  dataSharingAcknowledged: boolean
+}
+
 /** Aceite do convite (requer estar logado). */
 export function useAcceptInvitation() {
   const queryClient = useQueryClient()
   const mutation = useMutation({
-    mutationFn: (token: string) =>
+    mutationFn: ({ token, dataSharingAcknowledged }: AcceptInvitationPayload) =>
       apiRequest<AcceptInvitationResult>("/invitations/accept", {
         method: "POST",
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ token, dataSharingAcknowledged }),
       }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.households.all })
     },
   })
   return {
-    acceptInvitation: (token: string) => mutation.mutateAsync(token),
+    acceptInvitation: (token: string, dataSharingAcknowledged: boolean) =>
+      mutation.mutateAsync({ token, dataSharingAcknowledged }),
     accepting: mutation.isPending,
   }
 }

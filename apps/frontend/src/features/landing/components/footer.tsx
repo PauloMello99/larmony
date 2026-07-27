@@ -18,7 +18,7 @@ const FOOTER_SECTIONS = [
     links: [
       { key: "terms", href: "/legal/termos-de-uso" },
       { key: "privacy", href: "/legal/privacidade" },
-      { key: "cookies", href: "/legal/privacidade#cookies" },
+      { key: "cookies", href: "/legal/cookies" },
       { key: "security", href: "/legal/privacidade#seguranca" },
     ],
   },

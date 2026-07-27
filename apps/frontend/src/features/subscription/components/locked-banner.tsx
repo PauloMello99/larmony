@@ -18,13 +18,13 @@ export function LockedBanner({ householdSlug, isOwner }: LockedBannerProps) {
   const { t } = useTranslation("subscription")
 
   return (
-    <div className="flex shrink-0 items-center justify-center gap-2 bg-orange-400/10 px-4 py-1.5 text-center text-xs text-orange-400 sm:text-sm">
-      <Lock className="h-3.5 w-3.5 shrink-0" />
+    <div className="flex shrink-0 flex-wrap items-center justify-center gap-2 bg-warning/20 px-4 py-2 text-center text-sm font-medium text-warning sm:gap-3 sm:py-2.5 sm:text-base">
+      <Lock className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" />
       <span>{t("lockedBanner.description")}</span>
       {isOwner && (
         <Link
           href={`/households/${householdSlug}/settings/subscription`}
-          className="shrink-0 font-medium underline underline-offset-2 hover:opacity-80"
+          className="shrink-0 rounded-md bg-warning px-3 py-1 text-xs font-semibold text-warning-foreground transition-colors hover:bg-warning/90 sm:text-sm"
         >
           {t("lockedBanner.cta")}
         </Link>

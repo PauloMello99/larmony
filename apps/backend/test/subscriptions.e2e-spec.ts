@@ -36,7 +36,7 @@ describe("Subscriptions (e2e)", () => {
       [householdId, member.email],
     );
     await authed(app, "post", "/invitations/accept", member.accessToken)
-      .send({ token: tokenRow.rows[0]?.token })
+      .send({ token: tokenRow.rows[0]?.token, dataSharingAcknowledged: true })
       .expect((res) => expect([200, 201]).toContain(res.status));
   });
 

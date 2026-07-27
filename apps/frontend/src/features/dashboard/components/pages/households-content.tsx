@@ -44,14 +44,12 @@ export function HouseholdsContent() {
     const created = await createHousehold(values)
     // invalidateQueries in useHouseholdMutations.onSuccess triggers automatic refetch
 
-    // M16: todo lar novo nasce sem assinatura (locked). No onboarding (recém-
-    // cadastrado, 1º lar), leva direto pro gate de assinatura — em vez de
-    // devolver pra lista de lares — pra apresentar o teste grátis antes de usar
-    // o app. Fora do onboarding, o dono decide quando assinar.
-    if (isWelcome) {
-      redirectingToSubscription.current = true
-      await router.replace(`/households/${created.slug}/settings/subscription?onboarding=1`)
-    }
+    // M16: todo lar novo nasce sem assinatura (locked). Toda criação de lar —
+    // onboarding ou avulsa — leva direto pro gate de assinatura, em vez de
+    // devolver pra lista de lares, pra apresentar o teste grátis antes de usar
+    // o app.
+    redirectingToSubscription.current = true
+    await router.replace(`/households/${created.slug}/settings/subscription?onboarding=1`)
   }
 
   return (

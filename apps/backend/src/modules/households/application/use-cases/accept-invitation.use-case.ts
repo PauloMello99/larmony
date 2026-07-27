@@ -78,7 +78,11 @@ export class AcceptInvitationUseCase {
       action: "invite_accepted",
       entityType: "org_invitation",
       entityId: invitation.id,
-      metadata: { email: invitation.email, householdId: invitation.householdId },
+      metadata: {
+        email: invitation.email,
+        householdId: invitation.householdId,
+        dataSharingAcknowledgedAt: new Date().toISOString(),
+      },
     });
 
     return { householdId: invitation.householdId, householdSlug };

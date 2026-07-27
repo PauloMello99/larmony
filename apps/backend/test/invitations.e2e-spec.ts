@@ -76,7 +76,7 @@ describe("Invitations (e2e)", () => {
     const token = await tokenFor(invitee.email);
 
     await authed(app, "post", "/invitations/accept", invitee.accessToken)
-      .send({ token })
+      .send({ token, dataSharingAcknowledged: true })
       .expect((res) => expect([200, 201]).toContain(res.status));
 
     const membership = await pool.query(
@@ -88,8 +88,24 @@ describe("Invitations (e2e)", () => {
     expect(membership.rows[0]?.role).toBe("member");
 
     await authed(app, "post", "/invitations/accept", invitee.accessToken)
-      .send({ token })
+      .send({ token, dataSharingAcknowledged: true })
       .expect((res) => expect(res.status).toBeGreaterThanOrEqual(400));
+  });
+
+  it("aceite sem confirmar o compartilhamento de dados é rejeitado (400)", async () => {
+    const invitee = await signUpUser(app, "inv.noack");
+    await authed(app, "post", `/households/${householdId}/members/invite`, owner.accessToken)
+      .send({ email: invitee.email })
+      .expect(201);
+    const token = await tokenFor(invitee.email);
+
+    await authed(app, "post", "/invitations/accept", invitee.accessToken)
+      .send({ token })
+      .expect(400);
+
+    await authed(app, "post", "/invitations/accept", invitee.accessToken)
+      .send({ token, dataSharingAcknowledged: false })
+      .expect(400);
   });
 
   it("owner cancela um convite pendente", async () => {

@@ -95,6 +95,11 @@ export class StripePaymentGateway implements IPaymentGateway {
       metadata: input.metadata,
       // Página hospedada no idioma da UI do usuário (adendo ADR-0018).
       locale: toStripeLocale(input.locale) as Stripe.Checkout.SessionCreateParams.Locale,
+      // Checkbox obrigatório de aceite dos Termos de Serviço no Checkout, com
+      // trilha de auditoria do lado da Stripe. Exige que a URL dos Termos de
+      // Serviço esteja configurada no Stripe Dashboard (Settings > Checkout)
+      // em test E live mode — sem isso o checkout falha.
+      consent_collection: { terms_of_service: "required" },
       ...(input.trialPeriodDays
         ? {
             subscription_data: { trial_period_days: input.trialPeriodDays },

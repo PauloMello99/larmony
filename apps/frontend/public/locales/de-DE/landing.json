@@ -169,6 +169,10 @@
     "title": "Einfach und transparent",
     "subtitle": "Zwei Pläne, kein Haken — plus 30 Tage kostenlose Testphase von Komplett bei beiden.",
     "note": "Karte erforderlich, um die Testphase zu starten, keine Abbuchung bis zum Ende der 30 Tage. Sichere Zahlung über Stripe abgewickelt — jederzeit kündbar.",
+    "disclosure": {
+      "renewal": "Automatische Verlängerung in jedem Abrechnungszeitraum bis zur Kündigung. 30 Tage Testphase mit hinterlegter Karte — automatische Abbuchung des gewählten Plans, falls nicht vorher gekündigt. Jederzeit über das Kundenportal kündbar; der Zugriff auf deine Daten wird nie entfernt. 7-tägiges Widerrufsrecht ab der ersten Abbuchung (brasilianisches Verbraucherschutzgesetz, Art. 49).",
+      "terms": "Mit dem Abschluss stimmst du den <terms>Nutzungsbedingungen</terms> und der <privacy>Datenschutzerklärung</privacy> zu."
+    },
     "intervalMonthly": "Monatlich",
     "intervalAnnual": "Jährlich",
     "perMonth": "/Mon.",
@@ -269,7 +273,8 @@
     "footer": {
       "copyright": "© {{year}} Larmony. Alle Rechte vorbehalten.",
       "terms": "Nutzungsbedingungen",
-      "privacy": "Datenschutz"
+      "privacy": "Datenschutz",
+      "cookies": "Cookies"
     }
   }
 }

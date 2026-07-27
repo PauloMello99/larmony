@@ -169,6 +169,10 @@
     "title": "Simple and transparent",
     "subtitle": "Two plans, no catch — plus a 30-day free trial of Complete on either one.",
     "note": "Card required to start the trial, no charge until the 30 days are up. Secure payments processed by Stripe — cancel anytime.",
+    "disclosure": {
+      "renewal": "Automatic renewal every billing period until canceled. 30-day trial with card on file — automatic charge on the chosen plan if not canceled beforehand. Cancel anytime from the billing portal; access to your data is never removed. 7-day right of withdrawal from the first charge (Brazilian Consumer Protection Code, art. 49).",
+      "terms": "By subscribing, you agree to the <terms>Terms of Use</terms> and the <privacy>Privacy Policy</privacy>."
+    },
     "intervalMonthly": "Monthly",
     "intervalAnnual": "Annual",
     "perMonth": "/mo",
@@ -269,7 +273,8 @@
     "footer": {
       "copyright": "© {{year}} Larmony. All rights reserved.",
       "terms": "Terms of Service",
-      "privacy": "Privacy"
+      "privacy": "Privacy",
+      "cookies": "Cookies"
     }
   }
 }

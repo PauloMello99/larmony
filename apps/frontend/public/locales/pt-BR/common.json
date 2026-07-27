@@ -114,5 +114,14 @@
     "BUDGET_LIMIT_REACHED": "Este lar já tem o número máximo de orçamentos ativos do plano Free. Encerre um orçamento existente ou faça upgrade.",
     "NETWORK": "Falha de rede — verifique sua conexão e tente novamente.",
     "UNEXPECTED": "Ocorreu um erro inesperado. Tente novamente."
+  },
+  "termsReaccept": {
+    "title": "Atualizamos nossos Termos",
+    "description": "Atualizamos os <terms>Termos de Uso</terms>, a <privacy>Política de Privacidade</privacy> e a <cookies>Política de Cookies</cookies>. Para continuar usando o Larmony, é necessário ler e aceitar os novos termos.",
+    "acceptButton": "Li e aceito",
+    "error": "Não foi possível registrar o aceite. Tente novamente.",
+    "signOutButton": "Sair",
+    "accountLink": "Prefiro encerrar minha conta",
+    "supportLink": "Falar com o suporte"
   }
 }

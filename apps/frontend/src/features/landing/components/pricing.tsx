@@ -1,6 +1,6 @@
 import * as React from "react"
 import Link from "next/link"
-import { useTranslation } from "react-i18next"
+import { Trans, useTranslation } from "react-i18next"
 import { Check } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { cn } from "@/shared/lib/utils"
@@ -151,6 +151,30 @@ export function Pricing() {
         <p className="mx-auto mt-8 max-w-lg text-center text-[12.5px] leading-relaxed text-white/35">
           {t("pricing.note")}
         </p>
+
+        <div className="mx-auto mt-4 max-w-lg text-center text-[11.5px] leading-relaxed text-white/30">
+          <p>{t("pricing.disclosure.renewal")}</p>
+          <p className="mt-1">
+            <Trans
+              t={t}
+              i18nKey="pricing.disclosure.terms"
+              components={{
+                terms: (
+                  <Link
+                    href="/legal/termos-de-uso"
+                    className="underline hover:text-white/50"
+                  />
+                ),
+                privacy: (
+                  <Link
+                    href="/legal/privacidade"
+                    className="underline hover:text-white/50"
+                  />
+                ),
+              }}
+            />
+          </p>
+        </div>
       </div>
     </section>
   )
