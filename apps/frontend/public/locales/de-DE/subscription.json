@@ -18,6 +18,10 @@
   "locked": {
     "description": "Dieser Haushalt hat kein aktives Abonnement — du kannst deine Daten weiterhin einsehen, aber Erstellen oder Bearbeiten erfordert ein Abonnement.",
     "trialNotice": "Teste jeden Plan 30 Tage kostenlos (Karte erforderlich, keine Abbuchung bis zum Ende der Testphase).",
+    "disclosure": {
+      "renewal": "Automatische Verlängerung in jedem Abrechnungszeitraum bis zur Kündigung. 30 Tage Testphase mit hinterlegter Karte — automatische Abbuchung des gewählten Plans, falls nicht gekündigt. Jederzeit über das Kundenportal kündbar; der Zugriff auf die Daten wird nie entfernt. 7-tägiges Widerrufsrecht ab der ersten Abbuchung (brasilianisches Verbraucherschutzgesetz, Art. 49).",
+      "terms": "Mit dem Abschluss stimmst du den <terms>Nutzungsbedingungen</terms> und der <privacy>Datenschutzerklärung</privacy> zu."
+    },
     "onboardingNotice": "Dein Haushalt wurde erstellt! Wähle einen Plan, um loszulegen — die ersten 30 Tage sind kostenlos.",
     "descriptionEssencial": "Das Wesentliche für die Verwaltung der täglichen Finanzen.",
     "descriptionCompleto": "Alles aus Essenziell, plus Budgets, geplante Buchungen und erweiterte Berichte.",

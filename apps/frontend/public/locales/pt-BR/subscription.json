@@ -18,6 +18,10 @@
   "locked": {
     "description": "Este lar não tem uma assinatura ativa — você ainda pode ver seus dados, mas criar ou editar exige assinar.",
     "trialNotice": "Experimente qualquer plano grátis por 30 dias (cartão necessário, sem cobrança até o fim do teste).",
+    "disclosure": {
+      "renewal": "Renovação automática a cada período até o cancelamento. Trial de 30 dias com cartão cadastrado — cobrança automática no plano escolhido se não cancelado. Cancele quando quiser pelo portal de cobrança; o acesso aos dados nunca é removido. Direito de arrependimento de 7 dias a partir da primeira cobrança (CDC art. 49).",
+      "terms": "Ao assinar, você concorda com os <terms>Termos de Uso</terms> e a <privacy>Política de Privacidade</privacy>."
+    },
     "onboardingNotice": "Seu lar foi criado! Escolha um plano para começar — os primeiros 30 dias são grátis.",
     "descriptionEssencial": "O essencial para controlar as finanças do dia a dia.",
     "descriptionCompleto": "Tudo do Essencial, mais orçamentos, lançamentos programados e relatórios avançados.",

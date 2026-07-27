@@ -114,5 +114,14 @@
     "BUDGET_LIMIT_REACHED": "Ce foyer a déjà le nombre maximum de budgets actifs du plan Free. Clôture un budget existant ou mets à niveau.",
     "NETWORK": "Échec réseau — vérifie ta connexion et réessaie.",
     "UNEXPECTED": "Une erreur inattendue s’est produite. Réessaie."
+  },
+  "termsReaccept": {
+    "title": "Nous avons mis à jour nos Conditions",
+    "description": "Nous avons mis à jour les <terms>Conditions d’utilisation</terms>, la <privacy>Politique de confidentialité</privacy> et la <cookies>Politique de cookies</cookies>. Pour continuer à utiliser Larmony, tu dois lire et accepter les nouvelles conditions.",
+    "acceptButton": "J’ai lu et j’accepte",
+    "error": "Impossible d’enregistrer ton acceptation. Réessaie.",
+    "signOutButton": "Se déconnecter",
+    "accountLink": "Je préfère fermer mon compte",
+    "supportLink": "Contacter le support"
   }
 }

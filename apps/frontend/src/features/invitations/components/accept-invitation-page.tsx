@@ -49,6 +49,7 @@ export function AcceptInvitationPage() {
   const { acceptInvitation, accepting } = useAcceptInvitation()
   const { declineInvitation, declining } = useDeclineInvitation()
   const [acceptError, setAcceptError] = React.useState<string | null>(null)
+  const [dataSharingAcknowledged, setDataSharingAcknowledged] = React.useState(false)
 
   // Sem login → manda para login/cadastro carregando o token; volta para cá depois.
   React.useEffect(() => {
@@ -120,7 +121,7 @@ export function AcceptInvitationPage() {
     if (!token) return
     setAcceptError(null)
     try {
-      const res = await acceptInvitation(token)
+      const res = await acceptInvitation(token, dataSharingAcknowledged)
       void router.replace(`/households/${res.householdSlug}`)
     } catch (err) {
       setAcceptError(
@@ -182,14 +183,33 @@ export function AcceptInvitationPage() {
             />
           </div>
         ) : (
-          <p className="text-center text-sm text-foreground/50">
-            <Trans
-              t={t}
-              i18nKey="accept.acceptingAs"
-              values={{ email: user.email }}
-              components={{ span: <span className="text-foreground/80" /> }}
-            />
-          </p>
+          <>
+            <p className="text-center text-sm text-foreground/50">
+              <Trans
+                t={t}
+                i18nKey="accept.acceptingAs"
+                values={{ email: user.email }}
+                components={{ span: <span className="text-foreground/80" /> }}
+              />
+            </p>
+            <label
+              htmlFor="dataSharingAcknowledged"
+              className="flex items-start gap-2 text-xs leading-relaxed text-foreground/60"
+            >
+              <input
+                id="dataSharingAcknowledged"
+                type="checkbox"
+                className="mt-0.5 h-3.5 w-3.5 shrink-0 accent-primary"
+                checked={dataSharingAcknowledged}
+                onChange={(e) => setDataSharingAcknowledged(e.target.checked)}
+              />
+              <span>
+                {t("accept.dataSharingLabel", {
+                  householdName: invite.householdName,
+                })}
+              </span>
+            </label>
+          </>
         )}
       </CardContent>
 
@@ -205,7 +225,7 @@ export function AcceptInvitationPage() {
           <>
             <Button
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-              disabled={accepting || declining}
+              disabled={accepting || declining || !dataSharingAcknowledged}
               onClick={() => void handleAccept()}
             >
               {accepting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

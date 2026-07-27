@@ -18,6 +18,10 @@
   "locked": {
     "description": "Ce foyer n’a pas d’abonnement actif — tu peux toujours voir tes données, mais créer ou modifier nécessite un abonnement.",
     "trialNotice": "Essaie n’importe quel plan gratuitement pendant 30 jours (carte requise, aucun prélèvement avant la fin de l’essai).",
+    "disclosure": {
+      "renewal": "Renouvellement automatique à chaque période tant que tu n’as pas résilié. Essai de 30 jours avec carte enregistrée — prélèvement automatique du plan choisi si tu ne résilies pas. Résilie quand tu veux depuis le portail de facturation ; l’accès aux données n’est jamais supprimé. Droit de rétractation de 7 jours à partir du premier prélèvement (Code de défense du consommateur brésilien, art. 49).",
+      "terms": "En t’abonnant, tu acceptes les <terms>Conditions d’utilisation</terms> et la <privacy>Politique de confidentialité</privacy>."
+    },
     "onboardingNotice": "Ton foyer a été créé ! Choisis un plan pour commencer — les 30 premiers jours sont gratuits.",
     "descriptionEssencial": "L’essentiel pour gérer les finances au quotidien.",
     "descriptionCompleto": "Tout ce qu’il y a dans Essentiel, plus les budgets, les écritures programmées et les rapports avancés.",

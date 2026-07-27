@@ -169,6 +169,10 @@
     "title": "Simples e transparente",
     "subtitle": "Dois planos, sem pegadinha — e 30 dias de teste grátis do Completo em qualquer um deles.",
     "note": "Cartão necessário para começar o teste, sem cobrança até o fim dos 30 dias. Pagamento seguro processado pelo Stripe — cancele quando quiser.",
+    "disclosure": {
+      "renewal": "Renovação automática a cada período até o cancelamento. Trial de 30 dias com cartão cadastrado — cobrança automática no plano escolhido se não cancelado antes. Cancele quando quiser pelo portal de cobrança; o acesso aos seus dados nunca é removido. Direito de arrependimento de 7 dias a partir da primeira cobrança (Código de Defesa do Consumidor, art. 49).",
+      "terms": "Ao assinar, você concorda com os <terms>Termos de Uso</terms> e a <privacy>Política de Privacidade</privacy>."
+    },
     "intervalMonthly": "Mensal",
     "intervalAnnual": "Anual",
     "perMonth": "/mês",
@@ -269,7 +273,8 @@
     "footer": {
       "copyright": "© {{year}} Larmony. Todos os direitos reservados.",
       "terms": "Termos de Uso",
-      "privacy": "Privacidade"
+      "privacy": "Privacidade",
+      "cookies": "Cookies"
     }
   }
 }
