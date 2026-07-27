@@ -118,7 +118,7 @@ describe("Auth (e2e)", () => {
     await authed(app, "post", "/auth/me/accept-terms", user.accessToken).expect(201);
 
     const row = await pool.query(
-      `SELECT terms_version, terms_accepted_at FROM public.users WHERE email = $1`,
+      `SELECT id, terms_version, terms_accepted_at FROM public.users WHERE email = $1`,
       [user.email],
     );
     expect(row.rows[0].terms_version).toBe(TERMS_VERSION);
@@ -127,9 +127,11 @@ describe("Auth (e2e)", () => {
     const afterRes = await authed(app, "get", "/auth/me", user.accessToken).expect(200);
     expect(afterRes.body.termsAcceptanceRequired).toBe(false);
 
+    // user.userId (do corpo do sign-up) é o authId do provedor — o audit log
+    // grava actor_id = public.users.id, por isso buscamos o id real aqui.
     const audit = await pool.query(
       `SELECT action, entity_type, metadata FROM public.audit_logs WHERE actor_id = $1 AND entity_type = 'terms_acceptance' ORDER BY created_at DESC LIMIT 1`,
-      [user.userId],
+      [row.rows[0].id],
     );
     expect(audit.rows[0]).toBeDefined();
     expect(audit.rows[0].action).toBe("update");
