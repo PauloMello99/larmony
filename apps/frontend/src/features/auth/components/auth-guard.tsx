@@ -5,6 +5,7 @@ import { useRouter } from "next/router"
 import { Loader2 } from "lucide-react"
 import { useAuth } from "@/features/auth/hooks/use-auth"
 import { useLocaleSync } from "@/features/auth/hooks/use-locale-sync"
+import { TermsReacceptDialog } from "@/features/auth/components/terms-reaccept-dialog"
 
 interface AuthGuardProps {
   children: React.ReactNode
@@ -33,5 +34,10 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   if (!user) return null
 
-  return <>{children}</>
+  return (
+    <>
+      {children}
+      <TermsReacceptDialog />
+    </>
+  )
 }

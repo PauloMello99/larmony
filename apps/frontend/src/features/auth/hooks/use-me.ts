@@ -46,11 +46,20 @@ export function useMe() {
     },
   })
 
+  const acceptTermsMutation = useMutation({
+    mutationFn: () => apiRequest<Me>("/auth/me/accept-terms", { method: "POST" }),
+    onSuccess: async () => {
+      // O POST não recalcula termsAcceptanceRequired — refetch garante a flag correta.
+      await queryClient.invalidateQueries({ queryKey: queryKeys.me })
+    },
+  })
+
   return {
     me: data ?? null,
     loading: isLoading,
     error: error instanceof Error ? translateApiError(error, t) : null,
     updateMe: (body: UpdateMeBody) => updateMutation.mutateAsync(body),
     uploadAvatar: (file: File) => uploadAvatarMutation.mutateAsync(file),
+    acceptTerms: () => acceptTermsMutation.mutateAsync(),
   }
 }

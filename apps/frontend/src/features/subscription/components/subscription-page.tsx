@@ -1,8 +1,9 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import { useRouter } from "next/router"
-import { useTranslation } from "react-i18next"
+import { Trans, useTranslation } from "react-i18next"
 import { CreditCard, CheckCircle2, Sparkles, ShieldCheck, Lock } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Skeleton } from "@/shared/components/ui/skeleton"
@@ -115,6 +116,7 @@ function PlanPicker({
   pending: boolean
   onCheckout: (planKey: string) => void
 }) {
+  const { t: tNs } = useTranslation("subscription")
   const [interval, setInterval] = React.useState<"month" | "year">("month")
   const essencial = planFor("essencial", interval)
   const completo = planFor("completo", interval)
@@ -160,6 +162,34 @@ function PlanPicker({
           pending={pending}
           onSelect={() => onCheckout(completo.key)}
         />
+      </div>
+
+      <div className="mt-4 text-center text-[11px] leading-relaxed text-foreground/35">
+        <p>{t("locked.disclosure.renewal")}</p>
+        <p className="mt-1">
+          <Trans
+            t={tNs}
+            i18nKey="locked.disclosure.terms"
+            components={{
+              terms: (
+                <Link
+                  href="/legal/termos-de-uso"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-foreground/60"
+                />
+              ),
+              privacy: (
+                <Link
+                  href="/legal/privacidade"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-foreground/60"
+                />
+              ),
+            }}
+          />
+        </p>
       </div>
     </div>
   )
