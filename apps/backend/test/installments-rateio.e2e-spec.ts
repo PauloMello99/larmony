@@ -51,7 +51,7 @@ describe("Installments + Rateio (e2e)", () => {
       [householdId, guest.email],
     );
     await authed(app, "post", "/invitations/accept", guest.accessToken)
-      .send({ token: tokenRes.rows[0].token })
+      .send({ token: tokenRes.rows[0].token, dataSharingAcknowledged: true })
       .expect((res) => expect([200, 201]).toContain(res.status));
 
     // userId (public.users.id) de cada um, via /auth/me.

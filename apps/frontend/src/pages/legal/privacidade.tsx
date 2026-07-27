@@ -2,6 +2,7 @@ import * as React from "react"
 import Link from "next/link"
 import { makeI18nProps } from "@/shared/lib/i18n"
 import { LegalLayout, LegalSection } from "@/features/landing/components/legal-layout"
+import { CONTROLLER, LEGAL_UPDATED_AT, LEGAL_VERSION } from "@/shared/lib/legal-info"
 
 /**
  * Política de Privacidade (LGPD art. 9º: finalidade, forma/duração, identidade
@@ -13,8 +14,8 @@ export default function PrivacidadePage() {
   return (
     <LegalLayout
       title="Política de Privacidade"
-      updatedAt="12 de julho de 2026"
-      version="2026-07-12"
+      updatedAt={LEGAL_UPDATED_AT}
+      version={LEGAL_VERSION}
     >
       <LegalSection title="1. Quem somos (controlador)">
         <p>
@@ -29,9 +30,8 @@ export default function PrivacidadePage() {
           .
         </p>
         <p className="text-white/45">
-          Nota: o Larmony encontra-se em fase de formalização empresarial; a razão
-          social e o CNPJ do controlador serão atualizados nesta política quando
-          constituídos.
+          O Larmony é operado por {CONTROLLER.legalName}, CNPJ {CONTROLLER.cnpj}, com
+          sede em {CONTROLLER.address}.
         </p>
       </LegalSection>
 
@@ -160,17 +160,15 @@ export default function PrivacidadePage() {
       </LegalSection>
 
       <LegalSection id="cookies" title="7. Cookies e armazenamento local">
-        <p>O Larmony não usa cookies de publicidade nem rastreadores de terceiros.</p>
-        <ul className="list-disc space-y-1.5 pl-5">
-          <li>
-            <strong>NEXT_LOCALE</strong> (cookie): guarda o idioma preferido da
-            interface (essencial de preferência, validade de 1 ano).
-          </li>
-          <li>
-            <strong>Sessão</strong> (localStorage): mantém você conectado no
-            navegador em que fez login. É removida ao sair da conta.
-          </li>
-        </ul>
+        <p>
+          Usamos apenas um cookie estritamente necessário (preferência de idioma) e a
+          sessão de autenticação em localStorage — sem cookies de publicidade ou
+          rastreadores de terceiros. Detalhes completos na{" "}
+          <Link href="/legal/cookies" className="text-primary hover:text-orange-300">
+            Política de Cookies
+          </Link>
+          .
+        </p>
       </LegalSection>
 
       <LegalSection id="seguranca" title="8. Segurança">

@@ -169,6 +169,10 @@
     "title": "Simple et transparent",
     "subtitle": "Deux plans, sans piège — et 30 jours d’essai gratuit du plan Complet sur les deux.",
     "note": "Carte requise pour démarrer l’essai, aucun prélèvement avant la fin des 30 jours. Paiement sécurisé traité par Stripe — résilie quand tu veux.",
+    "disclosure": {
+      "renewal": "Renouvellement automatique à chaque période tant que tu n’as pas résilié. Essai de 30 jours avec carte enregistrée — prélèvement automatique du plan choisi si tu ne résilies pas avant. Résilie quand tu veux depuis le portail de facturation ; l’accès à tes données n’est jamais supprimé. Droit de rétractation de 7 jours à partir du premier prélèvement (Code de défense du consommateur brésilien, art. 49).",
+      "terms": "En t’abonnant, tu acceptes les <terms>Conditions d’utilisation</terms> et la <privacy>Politique de confidentialité</privacy>."
+    },
     "intervalMonthly": "Mensuel",
     "intervalAnnual": "Annuel",
     "perMonth": "/mois",
@@ -269,7 +273,8 @@
     "footer": {
       "copyright": "© {{year}} Larmony. Tous droits réservés.",
       "terms": "Conditions d’utilisation",
-      "privacy": "Confidentialité"
+      "privacy": "Confidentialité",
+      "cookies": "Cookies"
     }
   }
 }

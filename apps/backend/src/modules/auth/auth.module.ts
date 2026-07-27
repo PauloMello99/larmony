@@ -20,6 +20,7 @@ import { SignUpUseCase } from "./use-cases/sign-up.use-case";
 import { UpdateMeUseCase } from "./use-cases/update-me.use-case";
 import { UploadAvatarUseCase } from "./use-cases/upload-avatar.use-case";
 import { DeleteAccountUseCase } from "./use-cases/delete-account.use-case";
+import { AcceptTermsUseCase } from "./use-cases/accept-terms.use-case";
 
 @Module({
   imports: [UserModule, HouseholdsInfrastructureModule, MailModule],
@@ -40,6 +41,7 @@ import { DeleteAccountUseCase } from "./use-cases/delete-account.use-case";
     UpdateMeUseCase,
     UploadAvatarUseCase,
     DeleteAccountUseCase,
+    AcceptTermsUseCase,
   ],
   exports: [
     AUTH_PROVIDER,

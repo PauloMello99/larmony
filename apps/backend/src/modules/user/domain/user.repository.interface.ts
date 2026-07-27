@@ -17,6 +17,8 @@ export interface IUserRepository {
     authId: string,
     patch: Record<string, number>,
   ): Promise<UserEntity>;
+  /** Grava o aceite de uma nova versão dos Termos/Privacidade (re-aceite). */
+  acceptTerms(authId: string, version: string): Promise<UserEntity>;
   /** Remove o registro do usuário (exclusão de conta). Bypassa RLS. */
   delete(authId: string): Promise<void>;
 }

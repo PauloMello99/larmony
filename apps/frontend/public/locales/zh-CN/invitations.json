@@ -19,6 +19,7 @@
     "invitedAs": "您被邀请加入，角色为 <span>{{role}}</span>。",
     "emailMismatch": "此邀请是发给 <strong>{{inviteEmail}}</strong> 的，但您当前登录的是 <strong>{{userEmail}}</strong>。请使用正确的账户登录以接受邀请。",
     "acceptingAs": "正以 <span>{{email}}</span> 的身份接受邀请。",
+    "dataSharingLabel": "我理解，一旦接受，\"{{householdName}}\" 的其他成员将能查看其中记录的交易和财务数据，我也能查看他们的数据。",
     "switchAccount": "切换账户",
     "submit": "接受邀请",
     "decline": "拒绝",
