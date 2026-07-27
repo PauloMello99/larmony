@@ -16,6 +16,7 @@ import { GetInvitationByTokenUseCase } from "../application/use-cases/get-invita
 import { AcceptInvitationUseCase } from "../application/use-cases/accept-invitation.use-case";
 import { DeclineInvitationUseCase } from "../application/use-cases/decline-invitation.use-case";
 import { AcceptInvitationDto } from "./dto/accept-invitation.dto";
+import { DeclineInvitationDto } from "./dto/decline-invitation.dto";
 
 @Controller("invitations")
 export class InvitationsController {
@@ -44,7 +45,7 @@ export class InvitationsController {
   @UseGuards(AuthGuard)
   async decline(
     @CurrentUser() user: AuthUser,
-    @Body() dto: AcceptInvitationDto,
+    @Body() dto: DeclineInvitationDto,
   ) {
     await this.declineInvitation.execute({ authUser: user, token: dto.token });
   }

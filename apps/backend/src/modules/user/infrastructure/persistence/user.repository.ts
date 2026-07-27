@@ -103,4 +103,17 @@ export class DrizzleUserRepository implements IUserRepository {
       .returning();
     return UserMapper.toDomain(row!);
   }
+
+  async acceptTerms(authId: string, version: string): Promise<UserEntity> {
+    const [row] = await this.db
+      .update(schema.users)
+      .set({
+        termsAcceptedAt: new Date(),
+        termsVersion: version,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.users.authId, authId))
+      .returning();
+    return UserMapper.toDomain(row!);
+  }
 }

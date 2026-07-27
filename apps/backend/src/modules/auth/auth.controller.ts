@@ -34,6 +34,7 @@ import { SignUpUseCase } from "./use-cases/sign-up.use-case";
 import { UpdateMeUseCase } from "./use-cases/update-me.use-case";
 import { UploadAvatarUseCase } from "./use-cases/upload-avatar.use-case";
 import { DeleteAccountUseCase } from "./use-cases/delete-account.use-case";
+import { AcceptTermsUseCase } from "./use-cases/accept-terms.use-case";
 import { UpdateMeDto } from "./dto/update-me.dto";
 import { CompleteOnboardingDto } from "./dto/complete-onboarding.dto";
 import { GetMeUseCase } from "../user/application/use-cases/get-me.use-case";
@@ -61,6 +62,7 @@ export class AuthController {
     private readonly updateMeUseCase: UpdateMeUseCase,
     private readonly uploadAvatarUseCase: UploadAvatarUseCase,
     private readonly deleteAccountUseCase: DeleteAccountUseCase,
+    private readonly acceptTermsUseCase: AcceptTermsUseCase,
   ) {}
 
   // Endpoints de credenciais: limites apertados contra brute-force/abuso (SEC-4).
@@ -125,6 +127,12 @@ export class AuthController {
     @Body() dto: CompleteOnboardingDto,
   ) {
     return this.completeOnboardingUseCase.execute(user, dto);
+  }
+
+  @Post("me/accept-terms")
+  @UseGuards(AuthGuard)
+  acceptTerms(@CurrentUser() user: AuthUser) {
+    return this.acceptTermsUseCase.execute(user);
   }
 
   @Delete("me")
