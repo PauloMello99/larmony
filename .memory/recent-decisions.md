@@ -33,8 +33,47 @@
 | ADR-0027 | Sessão em localStorage vs cookie httpOnly (hardening pré-produção) | 2026-07-13 | Aceito |
 | ADR-0028 | Redesign do super admin: centrado em lares, suspensão segura, role DB-only (M15) | 2026-07-14 | Aceito |
 | ADR-0029 | Assinatura pago-only: 2 tiers (Essencial/Completo) + trial self-serve, fim do Free (M16) | 2026-07-14 | Aceito (supersede o adendo D-1 do ADR-0026) |
+| ADR-0030 | Cookies: aviso dedicado `/legal/cookies`, sem banner (gatilho de reversão registrado) | 2026-07-27 | Aceito |
+| ADR-0031 | Re-aceite bloqueante de termos (`TERMS_VERSION` deixa de ser inerte) | 2026-07-27 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
+
+- **2026-07-27 — Conformidade legal pré-go-live (LGPD/CDC), ADR-0030 +
+  ADR-0031**: ToS §4 vendia produto que não existe mais ("plano gratuito +
+  Premium R$ 14,90") — reescrita para refletir o ADR-0029 (pago-only 2
+  tiers, trial 30d com cartão upfront, sem tier-padrão pós-trial, lar sem
+  assinatura = somente-leitura, direito de arrependimento CDC art. 49 = 7
+  dias da primeira cobrança efetiva). Fonte única de versionamento criada
+  (`apps/frontend/src/shared/lib/legal-info.ts` ↔
+  `apps/backend/.../auth/terms-version.ts`, par acoplado — só muda junto)
+  com `CONTROLLER` (razão social/CNPJ/endereço reais, populados pelo
+  responsável). Nova página `/legal/cookies` (aviso, não banner — só 1
+  cookie essencial, zero tracker de terceiro). **Re-aceite bloqueante**:
+  bump de `TERMS_VERSION` torna toda a base "stale" instantaneamente, por
+  isso o modal (`TermsReacceptDialog`, montado no `AuthGuard` + em
+  `/invite/accept`) subiu no MESMO PR do bump, nunca separado — endpoint
+  `POST /auth/me/accept-terms` (audit log reusa `action:"update"` +
+  `entityType:"terms_acceptance"`, evita migration de enum), flag
+  `termsAcceptanceRequired` computada no servidor (`GET /auth/me`), rota
+  `/account` isenta do bloqueio (única saída real via exclusão de conta).
+  Divulgação comercial adicionada em `pricing.tsx`/`subscription-page.tsx`
+  + `consent_collection.terms_of_service:"required"` no checkout Stripe
+  (checkbox de aceite com trilha de auditoria do lado da Stripe — **exige
+  URL de Termos configurada no Stripe Dashboard, Settings > Public
+  details, em test E live mode**; sem isso todo checkout falha com 400/500
+  — pegou o CI na primeira rodada, corrigido configurando o Dashboard).
+  Convite de lar ganhou checkbox obrigatório de ciência de
+  compartilhamento de dados (`dataSharingAcknowledged`, DTO próprio
+  extraído do de aceite — estava sendo reaproveitado por `/decline`, que
+  quebraria com o campo obrigatório). **Gotcha de teste**: `TestUser.id`
+  retornado pelo helper `signUpUser` é o `authId` do provedor, não
+  `public.users.id` — auditoria filtra por `users.id`, então specs que
+  cruzam audit log com o usuário de teste precisam buscar o id real por
+  e-mail primeiro. Fluxo: branch única, 5 commits (backend/frontend/i18n/
+  docs/fix de e2e), PR #41 → `development` (CI verde após o fix do
+  Dashboard), PR #42 `development→staging` (CI verde), PR #43
+  `staging→main` aberta e aguardando confirmação explícita antes do merge
+  final (produção).
 
 - **2026-07-14 — M16 CONCLUÍDO — overhaul do modelo de assinatura: pago-only,
   2 tiers, trial self-serve (ADR-0029)**: fim do freemium. **PR 0**: criado o
