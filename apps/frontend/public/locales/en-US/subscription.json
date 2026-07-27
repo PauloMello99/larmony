@@ -18,6 +18,10 @@
   "locked": {
     "description": "This household doesn't have an active subscription — you can still view your data, but creating or editing requires subscribing.",
     "trialNotice": "Try any plan free for 30 days (card required, no charge until the trial ends).",
+    "disclosure": {
+      "renewal": "Automatic renewal every billing period until canceled. 30-day trial with card on file — automatic charge on the chosen plan if not canceled. Cancel anytime from the billing portal; access to your data is never removed. 7-day right of withdrawal from the first charge (Brazilian Consumer Protection Code, art. 49).",
+      "terms": "By subscribing, you agree to the <terms>Terms of Use</terms> and the <privacy>Privacy Policy</privacy>."
+    },
     "onboardingNotice": "Your household was created! Choose a plan to get started — the first 30 days are free.",
     "descriptionEssencial": "The essentials to manage day-to-day finances.",
     "descriptionCompleto": "Everything in Essential, plus budgets, scheduled entries and advanced reports.",

@@ -114,5 +114,14 @@
     "BUDGET_LIMIT_REACHED": "This home already has the Free plan's maximum number of active budgets. Close an existing budget or upgrade.",
     "NETWORK": "Network error — check your connection and try again.",
     "UNEXPECTED": "An unexpected error occurred. Please try again."
+  },
+  "termsReaccept": {
+    "title": "We've updated our Terms",
+    "description": "We've updated the <terms>Terms of Use</terms>, the <privacy>Privacy Policy</privacy>, and the <cookies>Cookie Policy</cookies>. To keep using Larmony, you need to read and accept the new terms.",
+    "acceptButton": "I have read and accept",
+    "error": "Could not register your acceptance. Please try again.",
+    "signOutButton": "Sign out",
+    "accountLink": "I'd rather close my account",
+    "supportLink": "Contact support"
   }
 }

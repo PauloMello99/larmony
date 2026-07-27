@@ -19,6 +19,7 @@
     "invitedAs": "Has sido invitado como <span>{{role}}</span>.",
     "emailMismatch": "Esta invitación es para <strong>{{inviteEmail}}</strong>, pero has iniciado sesión como <strong>{{userEmail}}</strong>. Introduce la cuenta correcta para aceptar.",
     "acceptingAs": "Aceptando como <span>{{email}}</span>.",
+    "dataSharingLabel": "Entiendo que, al aceptar, los miembros del hogar \"{{householdName}}\" podrán ver las transacciones y los datos financieros registrados en él, y yo podré ver los suyos.",
     "switchAccount": "Cambiar de cuenta",
     "submit": "Aceptar invitación",
     "decline": "Rechazar",

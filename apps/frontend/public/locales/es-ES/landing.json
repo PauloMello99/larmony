@@ -169,6 +169,10 @@
     "title": "Simple y transparente",
     "subtitle": "Dos planes, sin trampa — y 30 días de prueba gratis del Completo en cualquiera de ellos.",
     "note": "Se requiere tarjeta para empezar la prueba, sin cobro hasta que terminen los 30 días. Pago seguro procesado por Stripe — cancela cuando quieras.",
+    "disclosure": {
+      "renewal": "Renovación automática en cada periodo hasta que canceles. Prueba de 30 días con tarjeta registrada — cobro automático del plan elegido si no cancelas antes. Cancela cuando quieras desde el portal de facturación; el acceso a tus datos nunca se elimina. Derecho de desistimiento de 7 días desde el primer cobro (Código de Defensa del Consumidor de Brasil, art. 49).",
+      "terms": "Al suscribirte, aceptas los <terms>Términos de Uso</terms> y la <privacy>Política de Privacidad</privacy>."
+    },
     "intervalMonthly": "Mensual",
     "intervalAnnual": "Anual",
     "perMonth": "/mes",
@@ -269,7 +273,8 @@
     "footer": {
       "copyright": "© {{year}} Larmony. Todos los derechos reservados.",
       "terms": "Términos de Uso",
-      "privacy": "Privacidad"
+      "privacy": "Privacidad",
+      "cookies": "Cookies"
     }
   }
 }

@@ -19,6 +19,7 @@
     "invitedAs": "<span>{{role}}</span>として招待されています。",
     "emailMismatch": "この招待は<strong>{{inviteEmail}}</strong>宛のものですが、現在<strong>{{userEmail}}</strong>としてログインしています。承諾するには正しいアカウントでログインしてください。",
     "acceptingAs": "<span>{{email}}</span>として承諾します。",
+    "dataSharingLabel": "承諾すると、「{{householdName}}」の他のメンバーはそこに記録された取引や財務データを閲覧でき、私も彼らのデータを閲覧できるようになることを理解しています。",
     "switchAccount": "アカウントを切り替える",
     "submit": "招待を承諾",
     "decline": "辞退する",

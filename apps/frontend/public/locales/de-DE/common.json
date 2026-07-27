@@ -114,5 +114,14 @@
     "BUDGET_LIMIT_REACHED": "Dieser Haushalt hat bereits die maximale Anzahl aktiver Budgets des Free-Plans erreicht. Schließe ein bestehendes Budget oder führe ein Upgrade durch.",
     "NETWORK": "Netzwerkfehler — bitte prüfe deine Verbindung und versuche es erneut.",
     "UNEXPECTED": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut."
+  },
+  "termsReaccept": {
+    "title": "Wir haben unsere Nutzungsbedingungen aktualisiert",
+    "description": "Wir haben die <terms>Nutzungsbedingungen</terms>, die <privacy>Datenschutzerklärung</privacy> und die <cookies>Cookie-Richtlinie</cookies> aktualisiert. Um Larmony weiter zu nutzen, musst du die neuen Bedingungen lesen und akzeptieren.",
+    "acceptButton": "Gelesen und akzeptiert",
+    "error": "Die Zustimmung konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "signOutButton": "Abmelden",
+    "accountLink": "Ich möchte lieber mein Konto schließen",
+    "supportLink": "Support kontaktieren"
   }
 }

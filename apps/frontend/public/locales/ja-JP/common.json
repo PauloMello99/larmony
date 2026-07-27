@@ -114,5 +114,14 @@
     "BUDGET_LIMIT_REACHED": "この世帯はFreeプランの有効な予算数の上限にすでに達しています。既存の予算を終了するか、アップグレードしてください。",
     "NETWORK": "ネットワークエラーです。接続を確認して、もう一度お試しください。",
     "UNEXPECTED": "予期しないエラーが発生しました。もう一度お試しください。"
+  },
+  "termsReaccept": {
+    "title": "利用規約を更新しました",
+    "description": "<terms>利用規約</terms>、<privacy>プライバシーポリシー</privacy>、<cookies>Cookieポリシー</cookies>を更新しました。Larmonyのご利用を続けるには、新しい規約をお読みいただき、同意していただく必要があります。",
+    "acceptButton": "読んで同意します",
+    "error": "同意を登録できませんでした。もう一度お試しください。",
+    "signOutButton": "ログアウト",
+    "accountLink": "アカウントを解約する",
+    "supportLink": "サポートに問い合わせる"
   }
 }
