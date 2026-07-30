@@ -176,4 +176,12 @@ export class DrizzleUserRepository implements IUserRepository {
       .returning();
     return UserMapper.toDomain(row!);
   }
+
+  async listIdentityAuthIds(userId: string): Promise<string[]> {
+    const rows = await this.admin
+      .select({ authId: schema.userIdentities.authId })
+      .from(schema.userIdentities)
+      .where(eq(schema.userIdentities.userId, userId));
+    return rows.map((r) => r.authId);
+  }
 }

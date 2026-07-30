@@ -31,6 +31,12 @@ export interface IUserRepository {
     provider: AuthIdentityProvider,
     authId: string,
   ): Promise<void>;
+  /**
+   * Lista os auth_id de TODAS as identidades vinculadas a um usuário (senha,
+   * Google, Apple) — usado na exclusão de conta pra limpar todas no provedor,
+   * não só a da sessão atual (ADR-0032 adendo, múltiplas identidades).
+   */
+  listIdentityAuthIds(userId: string): Promise<string[]>;
 }
 
 /** Provedores de identidade suportados em user_identities.provider (enum do banco). */
