@@ -114,10 +114,22 @@ export class DrizzleUserRepository implements IUserRepository {
     provider: AuthIdentityProvider,
     authId: string,
   ): Promise<void> {
+    // onConflictDoUpdate no par (user_id, provider): reautorização do mesmo
+    // provedor (ex.: identidade Google recriada no GoTrue) atualiza o
+    // auth_id em vez de silenciosamente não fazer nada — um
+    // onConflictDoNothing aqui deixaria a sessão recém-verificada sem
+    // nenhuma linha em user_identities, travando o usuário sem erro
+    // nenhum (achado do database-guardian). Conflito na OUTRA constraint
+    // (auth_id já vinculado a outro usuário/provider) não é coberto por
+    // este target — propaga como erro real, que já aciona a compensação
+    // (rollbackAuthUser) no chamador.
     await this.admin
       .insert(schema.userIdentities)
       .values({ userId, provider, authId })
-      .onConflictDoNothing();
+      .onConflictDoUpdate({
+        target: [schema.userIdentities.userId, schema.userIdentities.provider],
+        set: { authId },
+      });
   }
 
   async delete(authId: string): Promise<void> {

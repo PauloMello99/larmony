@@ -29,7 +29,7 @@ ALTER TABLE "user_identities" ADD CONSTRAINT "user_identities_user_id_users_id_f
 -- local só retorna 'email') — mapeado para o nosso 'password' (nome de
 -- domínio, desacoplado da nomenclatura interna do GoTrue). Qualquer valor
 -- não reconhecido (nem 'email'/'password', nem 'google', nem 'apple') cai
--- em 'password' via COALESCE, nunca quebra o cast.
+-- em 'password' via ELSE, nunca quebra o cast.
 INSERT INTO public.user_identities (user_id, provider, auth_id)
 SELECT
   u.id,
@@ -47,7 +47,13 @@ FROM public.users u
 ON CONFLICT (auth_id) DO NOTHING;
 --> statement-breakpoint
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON public.user_identities TO app_user;
+-- Só SELECT: toda escrita nesta tabela passa por DRIZZLE_ADMIN (role
+-- postgres/service-role, BYPASSRLS), nunca pela conexão app_user. Conceder
+-- INSERT/UPDATE/DELETE aqui seria privilégio morto hoje (não há policy
+-- permitindo, então RLS já bloqueia) mas quebraria least-privilege se uma
+-- policy de escrita for adicionada no futuro sem reauditar este GRANT
+-- (achado do database-guardian).
+GRANT SELECT ON public.user_identities TO app_user;
 --> statement-breakpoint
 
 ALTER TABLE public.user_identities ENABLE ROW LEVEL SECURITY;
