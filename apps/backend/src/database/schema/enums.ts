@@ -117,3 +117,11 @@ export const auditActionEnum = pgEnum("audit_action", [
   "invite_accepted",
   "subscription_changed",
 ]);
+
+// Provedor de identidade de autenticação (login social, ADR-0032 adendo
+// múltiplas identidades): cada linha de user_identities usa um destes.
+export const authProviderEnum = pgEnum("auth_provider", [
+  "password",
+  "google",
+  "apple",
+]);
