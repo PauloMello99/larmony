@@ -137,5 +137,57 @@ describe("Auth (e2e)", () => {
     expect(audit.rows[0].action).toBe("update");
     expect(audit.rows[0].metadata.termsVersion).toBe(TERMS_VERSION);
     expect(audit.rows[0].metadata.previousVersion).toBe("2020-01-01");
+
+    // Caminho do usuário social: terms_version parte de NULL (pré-aceite), não
+    // de uma versão desatualizada. Reusa o MESMO usuário/token (sem novo
+    // signUpUser, para não estourar o throttle de sign-up do arquivo).
+    await pool.query(`UPDATE public.users SET terms_version = NULL WHERE email = $1`, [
+      user.email,
+    ]);
+
+    await authed(app, "post", "/auth/me/accept-terms", user.accessToken).expect(201);
+
+    const rowAfterNull = await pool.query(
+      `SELECT terms_version, terms_accepted_at FROM public.users WHERE email = $1`,
+      [user.email],
+    );
+    expect(rowAfterNull.rows[0].terms_version).toBe(TERMS_VERSION);
+    expect(rowAfterNull.rows[0].terms_accepted_at).not.toBeNull();
+
+    const auditAfterNull = await pool.query(
+      `SELECT metadata FROM public.audit_logs WHERE actor_id = $1 AND entity_type = 'terms_acceptance' ORDER BY created_at DESC LIMIT 1`,
+      [row.rows[0].id],
+    );
+    expect(auditAfterNull.rows[0].metadata.previousVersion).toBeNull();
+  });
+
+  it("GET /auth/social/:provider/authorize devolve URL de authorize ou 422 se o provider estiver desligado", async () => {
+    const res = await request(app.getHttpServer()).get("/auth/social/google/authorize");
+    expect([200, 422]).toContain(res.status);
+    if (res.status === 200) {
+      expect(res.body.url).toContain("/auth/v1/authorize");
+      expect(res.body.url).toContain("redirect_to");
+      expect(decodeURIComponent(res.body.url)).toContain("/auth/callback");
+    }
+  });
+
+  it("GET /auth/social/facebook/authorize → 400 (provider não suportado)", async () => {
+    await request(app.getHttpServer()).get("/auth/social/facebook/authorize").expect(400);
+  });
+
+  it("POST /auth/social/callback com tokens inválidos → 401", async () => {
+    await request(app.getHttpServer())
+      .post("/auth/social/callback")
+      .send({
+        accessToken: "token-invalido",
+        refreshToken: "refresh-invalido",
+        expiresAt: Math.floor(Date.now() / 1000) + 3600,
+        socialProvider: "google",
+      })
+      .expect(401);
+  });
+
+  it("POST /auth/social/callback sem body → 400", async () => {
+    await request(app.getHttpServer()).post("/auth/social/callback").send({}).expect(400);
   });
 });

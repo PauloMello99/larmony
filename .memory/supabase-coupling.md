@@ -33,7 +33,10 @@ metadata:
   (`anon.signInWithPassword`), `signOut`, `refreshToken`, `forgotPassword`
   (`resetPasswordForEmail` com redirect p/ `FRONTEND_URL/auth/reset-password`),
   `resetPassword` (`setSession` + `updateUser`), `updateEmail`, `deleteUser`,
-  `verifyToken` (`admin.getUser` do access token).
+  `verifyToken` (`admin.getUser` do access token), `getSocialAuthorizeUrl`
+  (`anon.signInWithOAuth` com `skipBrowserRedirect: true` — login social
+  Google/Apple, ADR-0032). Uma 2ª implementação da porta precisa cobrir
+  também este método.
 - **Migrar** = nova classe que implemente `IAuthProvider` + trocar o `useClass`. Nenhum
   use-case toca o Supabase diretamente. O `AuthGuard` chama `verifyToken` pela porta.
 
@@ -99,3 +102,12 @@ original. Como a compensação usa `IAuthProvider.deleteUser`, continua agnósti
    **ou** policies que leem `request.jwt.claims` diretamente (remove a dependência de `auth`).
 3. Escrever uma 2ª impl de `IAuthProvider`/`IStorageProvider` e cobrir com testes de contrato
    (mesma suíte rodando contra Supabase e contra o provedor novo). Ver regra de TDD por module.
+
+## Login social (ADR-0032)
+
+Google/Apple via GoTrue, mediado pelo backend (frontend continua sem
+`@supabase/*`). `getSocialAuthorizeUrl` monta a URL de authorize;
+`POST /auth/social/callback` verifica os tokens via `verifyToken` (sem side
+effect) e faz find-or-create idempotente do usuário local. Ver ADR-0032 para
+a política de colisão de e-mail, o binding de estado anti-CSRF e o fallback
+de nome para contas Apple com private relay.

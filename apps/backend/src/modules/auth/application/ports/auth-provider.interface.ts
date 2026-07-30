@@ -1,3 +1,5 @@
+import { SocialProvider } from "../../domain/social-providers";
+
 export const AUTH_PROVIDER = Symbol("AUTH_PROVIDER");
 
 export interface AuthUser {
@@ -34,4 +36,13 @@ export interface IAuthProvider {
   updateEmail(authId: string, email: string): Promise<void>;
   /** Remove a identidade do usuário no provedor (exclusão de conta). */
   deleteUser(authId: string): Promise<void>;
+  /**
+   * URL de autorização do provedor OAuth social (Google/Apple), para navegação
+   * top-level do browser. `redirectTo` é sempre {FRONTEND_URL}/auth/callback,
+   * computado pelo backend (nunca aceita do cliente — sem open-redirect).
+   */
+  getSocialAuthorizeUrl(
+    provider: SocialProvider,
+    redirectTo: string,
+  ): Promise<string>;
 }

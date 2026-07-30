@@ -6,6 +6,7 @@ import {
   DrizzleDB,
 } from "../../../../database/database.module";
 import * as schema from "../../../../database/schema";
+import { EmailAlreadyRegisteredException } from "../../../auth/domain/exceptions/email-already-registered.exception";
 import {
   CreateUserData,
   UpdateUserData,
@@ -57,15 +58,30 @@ export class DrizzleUserRepository implements IUserRepository {
         authId: data.authId,
         name: data.name,
         email: data.email,
-        // Aceite dos Termos/Privacidade (LGPD): timestamp + versão vigente.
-        termsAcceptedAt: new Date(),
+        // Aceite dos Termos/Privacidade (LGPD): timestamp só se houver versão
+        // (login social provisiona com termsVersion null — aceite pendente).
+        termsAcceptedAt: data.termsVersion ? new Date() : null,
         termsVersion: data.termsVersion,
         // Locale da UI no cadastro; ausente → default do schema (pt-BR).
         ...(data.locale !== undefined && { locale: data.locale }),
       })
       .onConflictDoNothing()
       .returning();
-    return UserMapper.toDomain(row!);
+
+    if (row) return UserMapper.toDomain(row);
+
+    // onConflictDoNothing sem retorno: colisão por auth_id (mesmo usuário,
+    // tentativa concorrente) ou por email (auth_id diferente já cadastrado).
+    // Re-leitura via admin (não this.findByAuthId): create() roda sem
+    // contexto de auth, então this.db (RLS) não enxergaria a linha.
+    const [existing] = await this.admin
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.authId, data.authId))
+      .limit(1);
+    if (existing) return UserMapper.toDomain(existing);
+
+    throw new EmailAlreadyRegisteredException();
   }
 
   async delete(authId: string): Promise<void> {

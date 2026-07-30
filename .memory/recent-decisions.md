@@ -35,8 +35,57 @@
 | ADR-0029 | Assinatura pago-only: 2 tiers (Essencial/Completo) + trial self-serve, fim do Free (M16) | 2026-07-14 | Aceito (supersede o adendo D-1 do ADR-0026) |
 | ADR-0030 | Cookies: aviso dedicado `/legal/cookies`, sem banner (gatilho de reversão registrado) | 2026-07-27 | Aceito |
 | ADR-0031 | Re-aceite bloqueante de termos (`TERMS_VERSION` deixa de ser inerte) | 2026-07-27 | Aceito |
+| ADR-0032 | Login social (Google/Apple) via Supabase Auth, mediado pelo backend | 2026-07-30 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
+
+- **2026-07-30 — Infra de SEO entregue**: Google Search Console rejeitou a
+  verificação OAuth do app por falta de sinais de SEO na landing (homepage
+  não verificada, sem descrição de finalidade, nome do app não batendo com o
+  site). Adicionado: `NEXT_PUBLIC_SITE_URL` (env nova, build-time, mesmo
+  padrão de `NEXT_PUBLIC_API_URL` — `turbo.json` globalEnv + `.env.example`)
+  + helper `shared/lib/site-url.ts` (`SITE_URL`/`absoluteUrl`); componente
+  `shared/components/seo/page-seo.tsx` (title/description/canonical/OG/
+  Twitter Card/JSON-LD via `next/head`), aplicado na landing (JSON-LD
+  `SoftwareApplication`) e nas 3 páginas legais; `public/robots.txt` (domínio
+  de prod hardcoded, como é padrão — aponta pro `Sitemap:`); `pages/
+  sitemap.xml.tsx` (gerado via `getServerSideProps` escrevendo XML direto na
+  response, sem lib nova, só as 4 rotas públicas estáticas); `pages/api/og.tsx`
+  — imagem Open Graph 1200×630 gerada em runtime via `next/og`
+  (`ImageResponse`, **já embutido no Next 16.2.7**, zero dependência nova) com
+  o SVG do logo + tagline; `next.config.js` ganhou 2º bloco de `headers()`
+  aplicando `X-Robots-Tag: noindex, nofollow` a `/auth/*`, `/households*`,
+  `/account`, `/admin*`, `/invite/*`, `/support*` (mesmo conjunto do
+  `Disallow` do robots.txt — header cobre o caso de uma URL autenticada já
+  indexada por outro meio, que `Disallow` sozinho não desindexa). Verificado
+  ao vivo: `curl`-equivalente via `fetch()` no browser confirmou o header
+  presente em `/households`/`/account` e ausente em `/`/`/legal/*`; `/api/og`
+  renderiza 1200×630 sem erro de edge runtime; build de produção limpo.
+  Pendência do usuário (fora do escopo de código): reverificar a propriedade
+  `https://larmony.me` no Google Search Console e reenviar o app pra revisão
+  OAuth — agora com meta description/title reais no HTML.
+
+- **2026-07-30 — Login social Google/Apple entregue (ADR-0032)**: backend-mediated
+  (frontend continua sem `@supabase/*`); `IAuthProvider.getSocialAuthorizeUrl`
+  monta a URL de authorize com `redirectTo` computado no servidor;
+  `POST /auth/social/callback` verifica via `verifyToken` (sem side effect) e
+  faz find-or-create idempotente. Usuário social nasce com `termsVersion: null`
+  — intercepta no modal bloqueante da ADR-0031 (copy nova `termsFirstAccept.*`).
+  Colisão de e-mail (usuário novo no GoTrue com e-mail já cadastrado por senha)
+  é **rejeitada, não fundida** (409, risco de account takeover) — política
+  defensiva, não testada ao vivo com Google OAuth real antes deste PR. Binding
+  de estado one-shot em `sessionStorage` (nonce) como defesa de login-CSRF, já
+  que a sessão não vive em cookie httpOnly (ADR-0027). Dois bugs preexistentes
+  corrigidos em `DrizzleUserRepository.create()`: `row!` explodindo em
+  `undefined` num conflito de insert (agora idempotente) e `termsAcceptedAt`
+  gravado incondicionalmente (agora condicional a `termsVersion`). Zero env var
+  nova/Railway/CSP — segredos dos providers ficam nos dashboards do Supabase
+  (checklist manual em `docs/deployment.md`, "Auth social"). Corrigido de
+  passagem: `.memory/domain-rules.md` afirmava a existência de um
+  `middleware.ts` de redirect de locale que não existe (roteamento nativo do
+  Next está desligado por design). 7 locales + `check-locales` verde; 12/12 e2e
+  de auth + 145 unit backend verdes. Detalhe completo em
+  `.memory/adr/0032-login-social-backend-mediated.md`.
 
 - **2026-07-27 — Conformidade legal pré-go-live (LGPD/CDC), ADR-0030 +
   ADR-0031**: ToS §4 vendia produto que não existe mais ("plano gratuito +

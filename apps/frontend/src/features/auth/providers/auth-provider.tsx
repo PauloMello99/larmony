@@ -1,8 +1,16 @@
 import React, { createContext, useEffect, useState } from "react"
 import { apiRequest } from "@/infrastructure/api/client"
 import { clearSession, getSession, saveSession } from "@/features/auth/lib/session"
+import { saveSocialAuthState } from "@/features/auth/lib/social-auth-state"
 import { readLocaleCookie } from "@/shared/lib/locale"
-import type { AuthContextValue, AuthSession, AuthUser } from "@/features/auth/types"
+import type {
+  AuthContextValue,
+  AuthSession,
+  AuthUser,
+  SocialAuthorizeResponse,
+  SocialProvider,
+  SocialSession,
+} from "@/features/auth/types"
 
 export const AuthContext = createContext<AuthContextValue | null>(null)
 
@@ -72,9 +80,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })
   }
 
+  const startSocialSignIn = async (
+    provider: SocialProvider,
+    opts?: { invite?: string; redirect?: string },
+  ): Promise<void> => {
+    const { url } = await apiRequest<SocialAuthorizeResponse>(
+      `/auth/social/${provider}/authorize`,
+      { skipAuth: true },
+    )
+    saveSocialAuthState({
+      provider,
+      nonce: crypto.randomUUID(),
+      invite: opts?.invite,
+      redirect: opts?.redirect,
+    })
+    window.location.assign(url)
+  }
+
+  const completeSocialSignIn = async (payload: {
+    accessToken: string
+    refreshToken: string
+    expiresAt: number
+    socialProvider: SocialProvider
+  }): Promise<boolean> => {
+    const { isNewUser, ...session } = await apiRequest<SocialSession>("/auth/social/callback", {
+      method: "POST",
+      body: JSON.stringify({ ...payload, locale: readLocaleCookie() }),
+      skipAuth: true,
+    })
+    saveSession(session)
+    setUser(session.user)
+    return isNewUser
+  }
+
   return (
     <AuthContext.Provider
-      value={{ user, loading, signUp, signIn, signOut, forgotPassword, resetPassword }}
+      value={{
+        user,
+        loading,
+        signUp,
+        signIn,
+        signOut,
+        forgotPassword,
+        resetPassword,
+        startSocialSignIn,
+        completeSocialSignIn,
+      }}
     >
       {children}
     </AuthContext.Provider>

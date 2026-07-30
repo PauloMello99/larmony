@@ -41,6 +41,16 @@ export interface StoredSession {
   user: AuthUser
 }
 
+export type SocialProvider = "google" | "apple"
+
+export interface SocialAuthorizeResponse {
+  url: string
+}
+
+export interface SocialSession extends AuthSession {
+  isNewUser: boolean
+}
+
 export interface AuthContextValue {
   user: AuthUser | null
   loading: boolean
@@ -58,4 +68,14 @@ export interface AuthContextValue {
     newPassword: string,
     refreshToken?: string,
   ) => Promise<void>
+  startSocialSignIn: (
+    provider: SocialProvider,
+    opts?: { invite?: string; redirect?: string },
+  ) => Promise<void>
+  completeSocialSignIn: (payload: {
+    accessToken: string
+    refreshToken: string
+    expiresAt: number
+    socialProvider: SocialProvider
+  }) => Promise<boolean>
 }

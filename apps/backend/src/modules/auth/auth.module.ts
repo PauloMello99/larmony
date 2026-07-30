@@ -21,6 +21,8 @@ import { UpdateMeUseCase } from "./use-cases/update-me.use-case";
 import { UploadAvatarUseCase } from "./use-cases/upload-avatar.use-case";
 import { DeleteAccountUseCase } from "./use-cases/delete-account.use-case";
 import { AcceptTermsUseCase } from "./use-cases/accept-terms.use-case";
+import { GetSocialAuthorizeUrlUseCase } from "./use-cases/get-social-authorize-url.use-case";
+import { SignInWithSocialUseCase } from "./use-cases/sign-in-with-social.use-case";
 
 @Module({
   imports: [UserModule, HouseholdsInfrastructureModule, MailModule],
@@ -42,6 +44,8 @@ import { AcceptTermsUseCase } from "./use-cases/accept-terms.use-case";
     UploadAvatarUseCase,
     DeleteAccountUseCase,
     AcceptTermsUseCase,
+    GetSocialAuthorizeUrlUseCase,
+    SignInWithSocialUseCase,
   ],
   exports: [
     AUTH_PROVIDER,

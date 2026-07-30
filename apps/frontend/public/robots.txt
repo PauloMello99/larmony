@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Allow: /legal/
+Disallow: /auth/
+Disallow: /households
+Disallow: /account
+Disallow: /admin
+Disallow: /invite/
+Disallow: /support
+Disallow: /api/
+
+Sitemap: https://larmony.me/sitemap.xml

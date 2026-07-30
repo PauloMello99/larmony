@@ -113,7 +113,10 @@
     "GOAL_LIMIT_REACHED": "Ce foyer a déjà le nombre maximum d'objectifs du plan Free. Mets à niveau pour en créer d'autres.",
     "BUDGET_LIMIT_REACHED": "Ce foyer a déjà le nombre maximum de budgets actifs du plan Free. Clôture un budget existant ou mets à niveau.",
     "NETWORK": "Échec réseau — vérifie ta connexion et réessaie.",
-    "UNEXPECTED": "Une erreur inattendue s’est produite. Réessaie."
+    "UNEXPECTED": "Une erreur inattendue s’est produite. Réessaie.",
+    "SOCIAL_PROVIDER_UNSUPPORTED": "Ce fournisseur de connexion n’est pas pris en charge.",
+    "SOCIAL_PROVIDER_NOT_CONFIGURED": "Cette méthode de connexion n’est pas disponible pour le moment.",
+    "SOCIAL_EMAIL_ALREADY_REGISTERED": "Cet e-mail est déjà enregistré. Connecte-toi avec ton e-mail et ton mot de passe."
   },
   "termsReaccept": {
     "title": "Nous avons mis à jour nos Conditions",
@@ -123,5 +126,10 @@
     "signOutButton": "Se déconnecter",
     "accountLink": "Je préfère fermer mon compte",
     "supportLink": "Contacter le support"
+  },
+  "termsFirstAccept": {
+    "title": "Avant de commencer",
+    "description": "Pour utiliser Larmony, tu dois lire et accepter les <terms>Conditions d’utilisation</terms>, la <privacy>Politique de confidentialité</privacy> et la <cookies>Politique de cookies</cookies>.",
+    "acceptButton": "J’ai lu et j’accepte"
   }
 }

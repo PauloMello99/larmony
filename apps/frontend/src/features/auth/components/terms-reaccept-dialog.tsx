@@ -39,6 +39,16 @@ export function TermsReacceptDialog() {
   // "encerrar minha conta" abaixo inútil — o dialog reapareceria por cima.
   if (!me?.termsAcceptanceRequired || router.pathname === "/account") return null
 
+  // termsVersion null = usuário nunca aceitou nada (ex.: provisionado via login
+  // social, ADR-0031 + login social) — copy de primeiro aceite, não "atualizamos
+  // os termos". O restante do dialog (botão, sign-out, account, suporte, erro)
+  // é compartilhado entre os dois casos.
+  const isFirstAccept = me.termsVersion === null
+  const titleKey = isFirstAccept ? "termsFirstAccept.title" : "termsReaccept.title"
+  const descriptionKey = isFirstAccept
+    ? "termsFirstAccept.description"
+    : "termsReaccept.description"
+
   const handleAccept = async () => {
     setSubmitting(true)
     setError(null)
@@ -64,11 +74,11 @@ export function TermsReacceptDialog() {
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>{t("termsReaccept.title")}</DialogTitle>
+          <DialogTitle>{t(titleKey)}</DialogTitle>
           <DialogDescription>
             <Trans
               t={t}
-              i18nKey="termsReaccept.description"
+              i18nKey={descriptionKey}
               components={{
                 terms: (
                   <Link
