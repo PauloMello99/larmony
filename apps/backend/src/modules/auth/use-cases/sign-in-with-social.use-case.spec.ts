@@ -87,6 +87,7 @@ describe("SignInWithSocialUseCase", () => {
       name: "novo",
       termsVersion: null,
       locale: "pt-BR",
+      provider: "google",
     });
     expect(result.isNewUser).toBe(true);
     expect(audit.log).toHaveBeenCalledWith(

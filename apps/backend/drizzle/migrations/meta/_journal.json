@@ -43,6 +43,13 @@
       "when": 1784435200000,
       "tag": "0005_user_identities",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1784521600000,
+      "tag": "0006_rls_user_identities",
+      "breakpoints": true
     }
   ]
 }

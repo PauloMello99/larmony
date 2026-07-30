@@ -89,6 +89,7 @@ export class SignInWithSocialUseCase {
         // ADR-0031: modal bloqueante de primeiro aceite intercepta.
         termsVersion: null,
         locale: input.locale,
+        provider: input.socialProvider,
       });
       createdUserId = created.id;
     } catch (err) {

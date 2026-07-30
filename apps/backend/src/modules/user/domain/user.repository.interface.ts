@@ -21,4 +21,17 @@ export interface IUserRepository {
   acceptTerms(authId: string, version: string): Promise<UserEntity>;
   /** Remove o registro do usuário (exclusão de conta). Bypassa RLS. */
   delete(authId: string): Promise<void>;
+  /**
+   * Vincula uma NOVA identidade de auth (Supabase auth_id) a um usuário local
+   * já existente — caminho de merge do login social (ADR-0032 adendo).
+   * Idempotente (onConflictDoNothing por auth_id). Bypassa RLS (admin).
+   */
+  linkIdentity(
+    userId: string,
+    provider: AuthIdentityProvider,
+    authId: string,
+  ): Promise<void>;
 }
+
+/** Provedores de identidade suportados em user_identities.provider (enum do banco). */
+export type AuthIdentityProvider = "password" | "google" | "apple";
