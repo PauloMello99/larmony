@@ -53,6 +53,7 @@ function make() {
     findByAuthId: jest.fn(),
     findByEmail: jest.fn(),
     create: jest.fn(),
+    linkIdentity: jest.fn(),
   } as unknown as jest.Mocked<IUserRepository>;
   const mail = {
     sendWelcome: jest.fn().mockResolvedValue(true),
@@ -87,6 +88,7 @@ describe("SignInWithSocialUseCase", () => {
       name: "novo",
       termsVersion: null,
       locale: "pt-BR",
+      provider: "google",
     });
     expect(result.isNewUser).toBe(true);
     expect(audit.log).toHaveBeenCalledWith(
@@ -155,7 +157,47 @@ describe("SignInWithSocialUseCase", () => {
     expect(result.isNewUser).toBe(true);
   });
 
-  it("colisão de e-mail → lança SocialEmailAlreadyRegisteredException e compensa (deleteUser), create nunca é chamado", async () => {
+  it("colisão de e-mail + verificado → vincula identidade ao usuário existente, audita, isNewUser false", async () => {
+    const { uc, auth, userRepo, mail, audit } = make();
+    auth.verifyToken.mockResolvedValue({
+      id: "auth_new",
+      email: "existente@example.com",
+      emailVerified: true,
+    });
+    userRepo.findByAuthId.mockResolvedValue(null);
+    userRepo.findByEmail.mockResolvedValue(
+      makeUser({ id: "user_other", authId: "auth_other" }),
+    );
+    userRepo.linkIdentity.mockResolvedValue(undefined);
+
+    const result = await uc.execute(makeInput());
+
+    expect(userRepo.linkIdentity).toHaveBeenCalledWith(
+      "user_other",
+      "google",
+      "auth_new",
+    );
+    expect(userRepo.create).not.toHaveBeenCalled();
+    expect(auth.deleteUser).not.toHaveBeenCalled();
+    expect(mail.sendWelcome).not.toHaveBeenCalled();
+    expect(audit.log).toHaveBeenCalledWith(
+      expect.objectContaining({
+        actorId: "user_other",
+        action: "update",
+        entityType: "user",
+        entityId: "user_other",
+        metadata: expect.objectContaining({
+          event: "identity_linked",
+          socialProvider: "google",
+          email: "existente@example.com",
+        }),
+      }),
+    );
+    expect(result.isNewUser).toBe(false);
+    expect(result.accessToken).toBe("access_1");
+  });
+
+  it("colisão de e-mail + linkIdentity falha → compensa (deleteUser) e propaga o erro", async () => {
     const { uc, auth, userRepo } = make();
     auth.verifyToken.mockResolvedValue({
       id: "auth_new",
@@ -166,12 +208,11 @@ describe("SignInWithSocialUseCase", () => {
     userRepo.findByEmail.mockResolvedValue(
       makeUser({ id: "user_other", authId: "auth_other" }),
     );
+    const linkError = new Error("db down");
+    userRepo.linkIdentity.mockRejectedValue(linkError);
 
-    await expect(uc.execute(makeInput())).rejects.toBeInstanceOf(
-      SocialEmailAlreadyRegisteredException,
-    );
+    await expect(uc.execute(makeInput())).rejects.toBe(linkError);
     expect(auth.deleteUser).toHaveBeenCalledWith("auth_new");
-    expect(userRepo.create).not.toHaveBeenCalled();
   });
 
   it("emailVerified false → lança SocialEmailAlreadyRegisteredException sem checar colisão, create nunca é chamado", async () => {

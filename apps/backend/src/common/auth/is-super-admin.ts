@@ -3,7 +3,8 @@ import type { DrizzleDB } from "../../database/database.module";
 import * as schema from "../../database/schema";
 
 /**
- * True se o usuário (por auth_id) tem `platform_role = 'super_admin'`.
+ * True se o usuário (por auth_id de QUALQUER identidade vinculada — senha,
+ * Google, Apple) tem `platform_role = 'super_admin'`.
  *
  * Usado no **caminho de miss** dos guards e do repo de household (quando não há
  * membership): o super_admin pode agir como owner de qualquer lar. Não
@@ -18,7 +19,11 @@ export async function isSuperAdmin(
   const [row] = await db
     .select({ platformRole: schema.users.platformRole })
     .from(schema.users)
-    .where(eq(schema.users.authId, authId))
+    .innerJoin(
+      schema.userIdentities,
+      eq(schema.userIdentities.userId, schema.users.id),
+    )
+    .where(eq(schema.userIdentities.authId, authId))
     .limit(1);
   return row?.platformRole === "super_admin";
 }
