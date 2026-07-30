@@ -113,7 +113,10 @@
     "GOAL_LIMIT_REACHED": "该家庭已达到 Free 套餐的目标数量上限。请升级以创建更多目标。",
     "BUDGET_LIMIT_REACHED": "该家庭已达到 Free 套餐的有效预算数量上限。请先结束一个现有预算，或升级套餐。",
     "NETWORK": "网络故障——请检查您的网络连接并重试。",
-    "UNEXPECTED": "发生了意外错误。请重试。"
+    "UNEXPECTED": "发生了意外错误。请重试。",
+    "SOCIAL_PROVIDER_UNSUPPORTED": "不支持该登录方式。",
+    "SOCIAL_PROVIDER_NOT_CONFIGURED": "该登录方式目前不可用。",
+    "SOCIAL_EMAIL_ALREADY_REGISTERED": "该邮箱已注册。请使用邮箱和密码登录。"
   },
   "termsReaccept": {
     "title": "我们更新了服务条款",
@@ -123,5 +126,10 @@
     "signOutButton": "退出登录",
     "accountLink": "我想注销账户",
     "supportLink": "联系支持"
+  },
+  "termsFirstAccept": {
+    "title": "开始之前",
+    "description": "要使用 Larmony，您需要阅读并同意<terms>服务条款</terms>、<privacy>隐私政策</privacy>和<cookies>Cookie 政策</cookies>。",
+    "acceptButton": "我已阅读并同意"
   }
 }

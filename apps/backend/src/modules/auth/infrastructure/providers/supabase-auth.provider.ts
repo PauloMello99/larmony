@@ -13,6 +13,8 @@ import {
 } from "../../application/ports/auth-provider.interface";
 import { InvalidCredentialsException } from "../../domain/exceptions/invalid-credentials.exception";
 import { AuthTokenExpiredException } from "../../domain/exceptions/auth-token-expired.exception";
+import { SocialProvider } from "../../domain/social-providers";
+import { SocialProviderNotConfiguredException } from "../../domain/exceptions/social-provider-not-configured.exception";
 
 @Injectable()
 export class SupabaseAuthProvider implements IAuthProvider {
@@ -137,6 +139,22 @@ export class SupabaseAuthProvider implements IAuthProvider {
       email: data.user.email!,
       emailVerified: !!data.user.email_confirmed_at,
     };
+  }
+
+  async getSocialAuthorizeUrl(
+    provider: SocialProvider,
+    redirectTo: string,
+  ): Promise<string> {
+    const { data, error } = await this.anon.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo, skipBrowserRedirect: true },
+    });
+    if (error || !data.url) {
+      throw new SocialProviderNotConfiguredException(
+        error?.message ?? "Failed to generate social authorize URL",
+      );
+    }
+    return data.url;
   }
 
   private mapSession(session: Session, user: User): AuthSession {

@@ -113,7 +113,10 @@
     "GOAL_LIMIT_REACHED": "Este lar já tem o número máximo de metas do plano Free. Faça upgrade para criar mais.",
     "BUDGET_LIMIT_REACHED": "Este lar já tem o número máximo de orçamentos ativos do plano Free. Encerre um orçamento existente ou faça upgrade.",
     "NETWORK": "Falha de rede — verifique sua conexão e tente novamente.",
-    "UNEXPECTED": "Ocorreu um erro inesperado. Tente novamente."
+    "UNEXPECTED": "Ocorreu um erro inesperado. Tente novamente.",
+    "SOCIAL_PROVIDER_UNSUPPORTED": "Este provedor de login não é suportado.",
+    "SOCIAL_PROVIDER_NOT_CONFIGURED": "Este método de login não está disponível no momento.",
+    "SOCIAL_EMAIL_ALREADY_REGISTERED": "Este e-mail já está cadastrado. Entre com e-mail e senha."
   },
   "termsReaccept": {
     "title": "Atualizamos nossos Termos",
@@ -123,5 +126,10 @@
     "signOutButton": "Sair",
     "accountLink": "Prefiro encerrar minha conta",
     "supportLink": "Falar com o suporte"
+  },
+  "termsFirstAccept": {
+    "title": "Antes de começar",
+    "description": "Para usar o Larmony, é necessário ler e aceitar os <terms>Termos de Uso</terms>, a <privacy>Política de Privacidade</privacy> e a <cookies>Política de Cookies</cookies>.",
+    "acceptButton": "Li e aceito"
   }
 }

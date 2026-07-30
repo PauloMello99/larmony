@@ -82,7 +82,13 @@ provisionamento de cada ambiente).
 Com `RUN_MIGRATIONS=true`, o `entrypoint.sh` roda `node dist/database/migrator.js up` antes de subir
 o servidor. O `up` aplica **só os tags forward** de `apps/backend/drizzle/migrations/meta/_journal.json`;
 os `*.down.sql` **nunca** rodam no `up` (só servem ao `db:rollback`). Logo, **não há risco de aplicar
-os downs** e **não é preciso configurar nada dentro do Supabase** além das connection strings.
+os downs** e, **para as migrações do schema**, não é preciso configurar nada dentro do Supabase
+além das connection strings.
+
+> **Escopo dessa afirmação: só migrações de schema.** Auth (redirect URLs, providers OAuth) e
+> Storage (bucket `avatars`, provisionado por migration) têm configuração própria no Supabase que
+> **não** é coberta pelas migrações — ver "Auth social (providers OAuth)" abaixo para o que precisa
+> de configuração manual por projeto.
 
 > Replica única (`numReplicas: 1`) → sem corrida de migração no boot. Mantenha migrações
 > backward-compatible (expand-contract) para deploys seguros.
@@ -108,6 +114,50 @@ os downs** e **não é preciso configurar nada dentro do Supabase** além das co
 3. **Smoke test**: abrir o frontend, sign-in, home do household (placeholder). Aguardar o cron
    no próximo `*/15` (ou redeployar o serviço Cron para rodar na hora) e conferir nos logs do Cron
    os status `200`.
+
+## Auth social (providers OAuth) — ADR-0032
+
+Login social (Google/Apple) exige configuração manual **por projeto Supabase** (staging e
+production) que **não** viaja com o deploy nem com as migrações — precisa ser refeita em cada
+ambiente novo.
+
+**Google Cloud Console**
+1. OAuth consent screen: External, domínio `larmony.me`, scopes `email`/`profile`/`openid`.
+2. Credentials → OAuth client ID → Web application.
+3. Authorized redirect URIs (callback do **GoTrue**, um por projeto Supabase):
+   `https://<project-ref>.supabase.co/auth/v1/callback`.
+
+**Apple Developer Portal**
+1. App ID com Sign in with Apple habilitado.
+2. Services ID (ex. `me.larmony.web`) — é o `client_id` web. Domains: host `*.supabase.co` do
+   projeto; Return URLs: `https://<project-ref>.supabase.co/auth/v1/callback`.
+3. Keys → criar chave Sign in with Apple → baixar o `.p8` (download único); anotar Key ID + Team ID.
+4. Gerar o **client secret JWT** (ES256, `iss`=Team ID, `sub`=Services ID,
+   `aud`=`https://appleid.apple.com`, `kid`=Key ID, `exp` ≤ 6 meses).
+5. **Rotação obrigatória a cada ≤ 6 meses** — o secret é um JWT com expiração, não um segredo
+   estático. Expirado, o login Apple falha silenciosamente (usuário recebe
+   `422 SOCIAL_PROVIDER_NOT_CONFIGURED`). Registre a data de expiração ao configurar cada
+   ambiente: **[preencher na primeira configuração real — staging: \_\_\_, production: \_\_\_]**.
+
+**Supabase Dashboard — por projeto**
+1. Authentication → Providers → **Google**: enable, Client ID/Secret do passo acima. "Skip nonce
+   check" **OFF** (isso é só para o stack local).
+2. Authentication → Providers → **Apple**: enable, Client ID = Services ID, Secret Key = o JWT.
+3. Authentication → URL Configuration → Redirect URLs: adicionar
+   `https://<frontend-do-ambiente>/auth/callback` (**match exato**, mesma exigência que já vale
+   para `/auth/reset-password`).
+
+Nenhuma env var nova no Railway — os segredos ficam só no dashboard do Supabase.
+
+**Runbook de teste manual** (após configurar um ambiente):
+1. Google com e-mail novo → conta criada, modal de primeiro aceite, redireciona para
+   `/households?welcome=1`.
+2. Google com e-mail já cadastrado por senha → confirma se o GoTrue linka a identidade
+   automaticamente ou rejeita com `409 SOCIAL_EMAIL_ALREADY_REGISTERED` (política de colisão —
+   ver ADR-0032; não foi testada ao vivo neste ambiente antes do primeiro deploy).
+3. Apple 1ª autorização (nome/e-mail vêm) vs 2ª (não vêm) → nome de fallback estável, sem
+   duplicar usuário.
+4. Apple com "Ocultar meu e-mail" → conta com private relay funciona.
 
 ## Production (diferenças)
 
