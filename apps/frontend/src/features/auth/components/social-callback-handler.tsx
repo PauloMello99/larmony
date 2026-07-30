@@ -13,15 +13,18 @@ import {
   sanitizeInternalRedirect,
 } from "@/features/auth/lib/social-auth-state"
 import { queryKeys } from "@/infrastructure/query/query-keys"
+import { translateApiError } from "@/shared/lib/api-error"
 
 type CallbackStatus = "loading" | "error"
 
 export function SocialCallbackHandler() {
   const { t } = useTranslation("auth")
+  const { t: tCommon } = useTranslation("common")
   const router = useRouter()
   const { completeSocialSignIn } = useAuth()
   const queryClient = useQueryClient()
   const [status, setStatus] = React.useState<CallbackStatus>("loading")
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const ranRef = React.useRef(false)
 
   React.useEffect(() => {
@@ -86,18 +89,21 @@ export function SocialCallbackHandler() {
           return
         }
         await router.replace(isNewUser ? "/households?welcome=1" : "/households")
-      } catch {
+      } catch (err) {
+        // Mensagem específica por código (ex.: e-mail já cadastrado por senha)
+        // quando disponível; fallback ao genérico de callback.
+        setErrorMessage(translateApiError(err, tCommon))
         setStatus("error")
       }
     })()
-  }, [completeSocialSignIn, queryClient, router])
+  }, [completeSocialSignIn, queryClient, router, tCommon])
 
   if (status === "error") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background px-4">
         <div className="w-full max-w-sm space-y-4 text-center">
           <p className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-            {t("callback.error")}
+            {errorMessage ?? t("callback.error")}
           </p>
           <Button
             asChild
