@@ -30,7 +30,11 @@ export class PlatformAdminGuard implements CanActivate {
     const [row] = await this.db
       .select({ platformRole: schema.users.platformRole })
       .from(schema.users)
-      .where(eq(schema.users.authId, user.id))
+      .innerJoin(
+        schema.userIdentities,
+        eq(schema.userIdentities.userId, schema.users.id),
+      )
+      .where(eq(schema.userIdentities.authId, user.id))
       .limit(1);
 
     if (!row || row.platformRole !== "super_admin") {

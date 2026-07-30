@@ -42,7 +42,11 @@ export class DrizzleHouseholdRepository implements IHouseholdRepository {
         eq(schema.householdMemberships.householdId, schema.households.id),
       )
       .innerJoin(schema.users, eq(schema.users.id, schema.householdMemberships.userId))
-      .where(eq(schema.users.authId, authId))
+      .innerJoin(
+        schema.userIdentities,
+        eq(schema.userIdentities.userId, schema.users.id),
+      )
+      .where(eq(schema.userIdentities.authId, authId))
       .orderBy(asc(schema.households.name));
 
     return rows.map(HouseholdMapper.toDomain);
@@ -57,7 +61,11 @@ export class DrizzleHouseholdRepository implements IHouseholdRepository {
         eq(schema.householdMemberships.householdId, schema.households.id),
       )
       .innerJoin(schema.users, eq(schema.users.id, schema.householdMemberships.userId))
-      .where(and(eq(schema.households.id, householdId), eq(schema.users.authId, authId)))
+      .innerJoin(
+        schema.userIdentities,
+        eq(schema.userIdentities.userId, schema.users.id),
+      )
+      .where(and(eq(schema.households.id, householdId), eq(schema.userIdentities.authId, authId)))
       .limit(1);
 
     if (row) return HouseholdMapper.toDomain(row);
@@ -77,7 +85,11 @@ export class DrizzleHouseholdRepository implements IHouseholdRepository {
         eq(schema.householdMemberships.householdId, schema.households.id),
       )
       .innerJoin(schema.users, eq(schema.users.id, schema.householdMemberships.userId))
-      .where(and(eq(schema.households.slug, slug), eq(schema.users.authId, authId)))
+      .innerJoin(
+        schema.userIdentities,
+        eq(schema.userIdentities.userId, schema.users.id),
+      )
+      .where(and(eq(schema.households.slug, slug), eq(schema.userIdentities.authId, authId)))
       .limit(1);
 
     if (row) return HouseholdMapper.toDomain(row);
@@ -113,10 +125,14 @@ export class DrizzleHouseholdRepository implements IHouseholdRepository {
       .select({ role: schema.householdMemberships.role })
       .from(schema.householdMemberships)
       .innerJoin(schema.users, eq(schema.users.id, schema.householdMemberships.userId))
+      .innerJoin(
+        schema.userIdentities,
+        eq(schema.userIdentities.userId, schema.users.id),
+      )
       .where(
         and(
           eq(schema.householdMemberships.householdId, householdId),
-          eq(schema.users.authId, authId),
+          eq(schema.userIdentities.authId, authId),
           eq(schema.householdMemberships.role, "owner"),
         ),
       )
@@ -138,7 +154,11 @@ export class DrizzleHouseholdRepository implements IHouseholdRepository {
       const [user] = await tx
         .select({ id: schema.users.id })
         .from(schema.users)
-        .where(eq(schema.users.authId, creatorAuthId))
+        .innerJoin(
+          schema.userIdentities,
+          eq(schema.userIdentities.userId, schema.users.id),
+        )
+        .where(eq(schema.userIdentities.authId, creatorAuthId))
         .limit(1);
 
       if (!user) throw new Error("User not found");

@@ -91,7 +91,11 @@ export class DrizzleNotificationRepository implements INotificationRepository {
     const [row] = await this.db
       .select({ id: schema.users.id })
       .from(schema.users)
-      .where(eq(schema.users.authId, authId))
+      .innerJoin(
+        schema.userIdentities,
+        eq(schema.userIdentities.userId, schema.users.id),
+      )
+      .where(eq(schema.userIdentities.authId, authId))
       .limit(1);
     return row?.id ?? null;
   }

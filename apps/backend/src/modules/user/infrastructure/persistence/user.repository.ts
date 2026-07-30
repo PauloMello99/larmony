@@ -12,7 +12,10 @@ import {
   UpdateUserData,
   UserEntity,
 } from "../../domain/user.entity";
-import { IUserRepository } from "../../domain/user.repository.interface";
+import {
+  AuthIdentityProvider,
+  IUserRepository,
+} from "../../domain/user.repository.interface";
 import { UserMapper } from "./user.mapper";
 
 @Injectable()
@@ -23,13 +26,27 @@ export class DrizzleUserRepository implements IUserRepository {
     @Inject(DRIZZLE_ADMIN) private readonly admin: DrizzleDB,
   ) {}
 
-  async findByAuthId(authId: string): Promise<UserEntity | null> {
-    const [row] = await this.db
-      .select()
-      .from(schema.users)
-      .where(eq(schema.users.authId, authId))
+  /**
+   * Resolve o users.id a partir de um auth_id de qualquer identidade
+   * vinculada (senha, Google, Apple) — nunca users.auth_id direto, que só
+   * cobre a identidade original (ADR-0032 adendo, múltiplas identidades).
+   */
+  private async resolveUserIdByAuthId(
+    authId: string,
+    conn: DrizzleDB = this.db,
+  ): Promise<string | null> {
+    const [row] = await conn
+      .select({ userId: schema.userIdentities.userId })
+      .from(schema.userIdentities)
+      .where(eq(schema.userIdentities.authId, authId))
       .limit(1);
-    return row ? UserMapper.toDomain(row) : null;
+    return row?.userId ?? null;
+  }
+
+  async findByAuthId(authId: string): Promise<UserEntity | null> {
+    const userId = await this.resolveUserIdByAuthId(authId);
+    if (!userId) return null;
+    return this.findById(userId);
   }
 
   async findById(id: string): Promise<UserEntity | null> {
@@ -52,44 +69,79 @@ export class DrizzleUserRepository implements IUserRepository {
   }
 
   async create(data: CreateUserData): Promise<UserEntity> {
-    const [row] = await this.admin
-      .insert(schema.users)
-      .values({
-        authId: data.authId,
-        name: data.name,
-        email: data.email,
-        // Aceite dos Termos/Privacidade (LGPD): timestamp só se houver versão
-        // (login social provisiona com termsVersion null — aceite pendente).
-        termsAcceptedAt: data.termsVersion ? new Date() : null,
-        termsVersion: data.termsVersion,
-        // Locale da UI no cadastro; ausente → default do schema (pt-BR).
-        ...(data.locale !== undefined && { locale: data.locale }),
-      })
-      .onConflictDoNothing()
-      .returning();
+    return this.admin.transaction(async (tx) => {
+      const [row] = await tx
+        .insert(schema.users)
+        .values({
+          authId: data.authId,
+          name: data.name,
+          email: data.email,
+          // Aceite dos Termos/Privacidade (LGPD): timestamp só se houver versão
+          // (login social provisiona com termsVersion null — aceite pendente).
+          termsAcceptedAt: data.termsVersion ? new Date() : null,
+          termsVersion: data.termsVersion,
+          // Locale da UI no cadastro; ausente → default do schema (pt-BR).
+          ...(data.locale !== undefined && { locale: data.locale }),
+        })
+        .onConflictDoNothing()
+        .returning();
 
-    if (row) return UserMapper.toDomain(row);
+      if (row) {
+        await tx
+          .insert(schema.userIdentities)
+          .values({ userId: row.id, provider: data.provider, authId: data.authId })
+          .onConflictDoNothing();
+        return UserMapper.toDomain(row);
+      }
 
-    // onConflictDoNothing sem retorno: colisão por auth_id (mesmo usuário,
-    // tentativa concorrente) ou por email (auth_id diferente já cadastrado).
-    // Re-leitura via admin (não this.findByAuthId): create() roda sem
-    // contexto de auth, então this.db (RLS) não enxergaria a linha.
-    const [existing] = await this.admin
-      .select()
-      .from(schema.users)
-      .where(eq(schema.users.authId, data.authId))
-      .limit(1);
-    if (existing) return UserMapper.toDomain(existing);
+      // onConflictDoNothing sem retorno: colisão por auth_id (mesmo usuário,
+      // tentativa concorrente) ou por email (auth_id diferente já cadastrado).
+      // Re-leitura via tx (não this.findByAuthId): create() roda sem
+      // contexto de auth, então this.db (RLS) não enxergaria a linha.
+      const [existing] = await tx
+        .select()
+        .from(schema.users)
+        .where(eq(schema.users.authId, data.authId))
+        .limit(1);
+      if (existing) return UserMapper.toDomain(existing);
 
-    throw new EmailAlreadyRegisteredException();
+      throw new EmailAlreadyRegisteredException();
+    });
+  }
+
+  async linkIdentity(
+    userId: string,
+    provider: AuthIdentityProvider,
+    authId: string,
+  ): Promise<void> {
+    // onConflictDoUpdate no par (user_id, provider): reautorização do mesmo
+    // provedor (ex.: identidade Google recriada no GoTrue) atualiza o
+    // auth_id em vez de silenciosamente não fazer nada — um
+    // onConflictDoNothing aqui deixaria a sessão recém-verificada sem
+    // nenhuma linha em user_identities, travando o usuário sem erro
+    // nenhum (achado do database-guardian). Conflito na OUTRA constraint
+    // (auth_id já vinculado a outro usuário/provider) não é coberto por
+    // este target — propaga como erro real, que já aciona a compensação
+    // (rollbackAuthUser) no chamador.
+    await this.admin
+      .insert(schema.userIdentities)
+      .values({ userId, provider, authId })
+      .onConflictDoUpdate({
+        target: [schema.userIdentities.userId, schema.userIdentities.provider],
+        set: { authId },
+      });
   }
 
   async delete(authId: string): Promise<void> {
     // Exclusão de conta roda fora de contexto multi-tenant → conexão admin.
-    await this.admin.delete(schema.users).where(eq(schema.users.authId, authId));
+    const userId = await this.resolveUserIdByAuthId(authId, this.admin);
+    if (!userId) return;
+    await this.admin.delete(schema.users).where(eq(schema.users.id, userId));
   }
 
   async update(authId: string, data: UpdateUserData): Promise<UserEntity> {
+    const userId = await this.resolveUserIdByAuthId(authId);
+    if (!userId) throw new Error("User not found for authId");
     const [row] = await this.db
       .update(schema.users)
       .set({
@@ -99,7 +151,7 @@ export class DrizzleUserRepository implements IUserRepository {
         ...(data.locale !== undefined && { locale: data.locale }),
         updatedAt: new Date(),
       })
-      .where(eq(schema.users.authId, authId))
+      .where(eq(schema.users.id, userId))
       .returning();
     return UserMapper.toDomain(row!);
   }
@@ -108,6 +160,8 @@ export class DrizzleUserRepository implements IUserRepository {
     authId: string,
     patch: Record<string, number>,
   ): Promise<UserEntity> {
+    const userId = await this.resolveUserIdByAuthId(authId);
+    if (!userId) throw new Error("User not found for authId");
     const [row] = await this.db
       .update(schema.users)
       .set({
@@ -115,12 +169,14 @@ export class DrizzleUserRepository implements IUserRepository {
         onboarding: sql`${schema.users.onboarding} || ${JSON.stringify(patch)}::jsonb`,
         updatedAt: new Date(),
       })
-      .where(eq(schema.users.authId, authId))
+      .where(eq(schema.users.id, userId))
       .returning();
     return UserMapper.toDomain(row!);
   }
 
   async acceptTerms(authId: string, version: string): Promise<UserEntity> {
+    const userId = await this.resolveUserIdByAuthId(authId);
+    if (!userId) throw new Error("User not found for authId");
     const [row] = await this.db
       .update(schema.users)
       .set({
@@ -128,8 +184,16 @@ export class DrizzleUserRepository implements IUserRepository {
         termsVersion: version,
         updatedAt: new Date(),
       })
-      .where(eq(schema.users.authId, authId))
+      .where(eq(schema.users.id, userId))
       .returning();
     return UserMapper.toDomain(row!);
+  }
+
+  async listIdentityAuthIds(userId: string): Promise<string[]> {
+    const rows = await this.admin
+      .select({ authId: schema.userIdentities.authId })
+      .from(schema.userIdentities)
+      .where(eq(schema.userIdentities.userId, userId));
+    return rows.map((r) => r.authId);
   }
 }

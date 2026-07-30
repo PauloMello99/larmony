@@ -55,13 +55,17 @@ export class HouseholdMembershipGuard implements CanActivate {
         eq(schema.users.id, schema.householdMemberships.userId),
       )
       .innerJoin(
+        schema.userIdentities,
+        eq(schema.userIdentities.userId, schema.users.id),
+      )
+      .innerJoin(
         schema.households,
         eq(schema.households.id, schema.householdMemberships.householdId),
       )
       .where(
         and(
           eq(schema.householdMemberships.householdId, householdId),
-          eq(schema.users.authId, user.id),
+          eq(schema.userIdentities.authId, user.id),
           // Membro inativo perde acesso à household.
           eq(schema.householdMemberships.enabled, true),
         ),

@@ -40,10 +40,14 @@ export class HouseholdOwnerGuard implements CanActivate {
         schema.users,
         eq(schema.users.id, schema.householdMemberships.userId),
       )
+      .innerJoin(
+        schema.userIdentities,
+        eq(schema.userIdentities.userId, schema.users.id),
+      )
       .where(
         and(
           eq(schema.householdMemberships.householdId, householdId),
-          eq(schema.users.authId, user.id),
+          eq(schema.userIdentities.authId, user.id),
           eq(schema.householdMemberships.role, "owner"),
           eq(schema.householdMemberships.enabled, true),
         ),
