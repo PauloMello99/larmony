@@ -20,6 +20,7 @@ import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { useAuth } from "@/features/auth/hooks/use-auth"
 import { AuthLayout } from "@/features/auth/components/auth-layout"
+import { SocialAuthButtons } from "@/features/auth/components/social-auth-buttons"
 import {
   makeLoginSchema,
   type LoginFormValues,
@@ -139,6 +140,7 @@ export function LoginForm() {
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t("login.submit")}
             </Button>
+            <SocialAuthButtons invite={inviteToken || undefined} />
             <p className="text-center text-sm text-foreground/40">
               {t("login.noAccount")}{" "}
               <Link

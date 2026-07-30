@@ -113,7 +113,10 @@
     "GOAL_LIMIT_REACHED": "Este hogar ya tiene el número máximo de metas del plan Free. Mejora el plan para crear más.",
     "BUDGET_LIMIT_REACHED": "Este hogar ya tiene el número máximo de presupuestos activos del plan Free. Cierra un presupuesto existente o mejora el plan.",
     "NETWORK": "Fallo de red — verifique su conexión e inténtelo de nuevo.",
-    "UNEXPECTED": "Se produjo un error inesperado. Inténtelo de nuevo."
+    "UNEXPECTED": "Se produjo un error inesperado. Inténtelo de nuevo.",
+    "SOCIAL_PROVIDER_UNSUPPORTED": "Este proveedor de inicio de sesión no es compatible.",
+    "SOCIAL_PROVIDER_NOT_CONFIGURED": "Este método de inicio de sesión no está disponible en este momento.",
+    "SOCIAL_EMAIL_ALREADY_REGISTERED": "Este correo electrónico ya está registrado. Inicie sesión con correo electrónico y contraseña."
   },
   "termsReaccept": {
     "title": "Actualizamos nuestros Términos",
@@ -123,5 +126,10 @@
     "signOutButton": "Cerrar sesión",
     "accountLink": "Prefiero cerrar mi cuenta",
     "supportLink": "Contactar con soporte"
+  },
+  "termsFirstAccept": {
+    "title": "Antes de empezar",
+    "description": "Para usar Larmony, es necesario leer y aceptar los <terms>Términos de Uso</terms>, la <privacy>Política de Privacidad</privacy> y la <cookies>Política de Cookies</cookies>.",
+    "acceptButton": "He leído y acepto"
   }
 }

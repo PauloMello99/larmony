@@ -429,18 +429,25 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
 
 ### i18n
 
-- Idiomas: `pt-BR` (padrão), `en` e `es`. Locale persistido em `users.locale` **e** no
-  cookie `NEXT_LOCALE` (o que o Next.js honra na detecção). Fonte única da lista de
-  locales: `apps/frontend/src/shared/lib/locale.ts` (`SUPPORTED_LOCALES`/`DEFAULT_LOCALE`);
+- Idiomas (ADR-0018 + adendo): **7 locales BCP-47** — `pt-BR` (padrão), `en-US`,
+  `es-ES`, `zh-CN`, `de-DE`, `fr-FR`, `ja-JP`. Locale persistido em `users.locale`
+  **e** no cookie `NEXT_LOCALE`. Fonte única da lista de locales:
+  `apps/frontend/src/shared/lib/locale.ts` (`SUPPORTED_LOCALES`/`DEFAULT_LOCALE`);
   `next-i18next.config.js` espelha manualmente (é `.js`, não importa TS).
-- **Gotcha (persistência):** o Next.js só consulta o cookie `NEXT_LOCALE` para
-  redirecionar a **raiz** (`/`) — rotas profundas não-prefixadas (`/auth/login`,
-  `/dashboard/...`) são servidas no `defaultLocale`, ignorando o cookie. Por isso há um
-  **`middleware.ts`** que redireciona qualquer path não-prefixado para a variante do
-  locale do cookie (cobre SSR de páginas públicas E autenticadas, sem flash).
+- **Correção (2026-07-30): não existe `middleware.ts`, e não deveria.**
+  `next.config.js` desliga deliberadamente o roteamento nativo de i18n do Next
+  (sem `i18n` no config) — **o locale nunca influencia a rota** (sem prefixo
+  `/en-US/`, `/es-ES/`, etc.). `makeI18nProps` (`shared/lib/i18n.ts`) lê o
+  cookie `NEXT_LOCALE` no `getServerSideProps` de cada página e injeta as
+  traduções via `serverSideTranslations`, então toda rota (inclusive
+  `/auth/login`, `/auth/callback`) já respeita o cookie sem redirect algum.
+  A entrada anterior deste arquivo (que descrevia um middleware de redirect
+  path-prefixed) estava desatualizada e foi verificada como falsa durante o
+  ADR-0032 (login social) — `Glob`/`Grep` por `middleware.ts` no repo não
+  retornam nada.
   `LocaleSection` seta o cookie ao trocar; `useLocaleSync` (montado em `AuthGuard`)
   reconcilia `users.locale` → cookie após o login; `_document` deriva `<html lang>` do
-  locale ativo. Verificado: cookie `en` + `/auth/login` → 302 → `/en/auth/login`, `lang="en"`.
+  locale ativo.
 - Formatação: use `shared/lib/format.ts` (`useActiveLocale` + `formatDate`/`formatNumber`,
   sensíveis ao locale ativo do router). Moeda continua **BRL fixa** (`formatCentsToBRL`).
 - **Estado do rollout:** scaffold `next-i18next` pronto; features `dashboard`+`auth(login)`

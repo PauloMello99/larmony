@@ -19,6 +19,7 @@ import {
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { useAuth } from "@/features/auth/hooks/use-auth"
+import { SocialAuthButtons } from "@/features/auth/components/social-auth-buttons"
 import {
   makeSignupSchema,
   type SignupFormValues,
@@ -218,6 +219,7 @@ export function SignupForm() {
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t("signup.submit")}
             </Button>
+            <SocialAuthButtons invite={inviteToken || undefined} />
             <p className="text-center text-sm text-foreground/40">
               {t("signup.hasAccount")}{" "}
               <Link
