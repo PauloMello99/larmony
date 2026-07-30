@@ -63,7 +63,16 @@ const nextConfig = {
   output: "standalone",
   outputFileTracingRoot: monorepoRoot,
   async headers() {
-    return [{ source: "/(.*)", headers: securityHeaders }];
+    return [
+      { source: "/(.*)", headers: securityHeaders },
+      {
+        // Rotas autenticadas/admin: nunca devem aparecer no Google. robots.txt
+        // já pede pra não crawlear, mas Disallow não impede indexação de uma
+        // URL já conhecida por outro meio — o header cobre esse caso.
+        source: "/(auth|households|account|admin|invite|support)/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+    ];
   },
 };
 
