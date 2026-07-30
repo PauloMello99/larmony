@@ -113,7 +113,10 @@
     "GOAL_LIMIT_REACHED": "この世帯はFreeプランの目標数の上限にすでに達しています。アップグレードするとさらに作成できます。",
     "BUDGET_LIMIT_REACHED": "この世帯はFreeプランの有効な予算数の上限にすでに達しています。既存の予算を終了するか、アップグレードしてください。",
     "NETWORK": "ネットワークエラーです。接続を確認して、もう一度お試しください。",
-    "UNEXPECTED": "予期しないエラーが発生しました。もう一度お試しください。"
+    "UNEXPECTED": "予期しないエラーが発生しました。もう一度お試しください。",
+    "SOCIAL_PROVIDER_UNSUPPORTED": "このログインプロバイダーには対応していません。",
+    "SOCIAL_PROVIDER_NOT_CONFIGURED": "この方法でのログインは現在ご利用いただけません。",
+    "SOCIAL_EMAIL_ALREADY_REGISTERED": "このメールアドレスはすでに登録されています。メールアドレスとパスワードでログインしてください。"
   },
   "termsReaccept": {
     "title": "利用規約を更新しました",
@@ -123,5 +126,10 @@
     "signOutButton": "ログアウト",
     "accountLink": "アカウントを解約する",
     "supportLink": "サポートに問い合わせる"
+  },
+  "termsFirstAccept": {
+    "title": "ご利用の前に",
+    "description": "Larmonyをご利用いただくには、<terms>利用規約</terms>、<privacy>プライバシーポリシー</privacy>、<cookies>Cookieポリシー</cookies>をお読みいただき、同意していただく必要があります。",
+    "acceptButton": "読んで同意します"
   }
 }

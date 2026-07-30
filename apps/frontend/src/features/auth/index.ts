@@ -5,6 +5,8 @@ export { RecoverForm } from "./components/recover-form"
 export { ResetPasswordForm } from "./components/reset-password-form"
 export { AuthGuard } from "./components/auth-guard"
 export { GuestGuard } from "./components/guest-guard"
+export { SocialAuthButtons } from "./components/social-auth-buttons"
+export { SocialCallbackHandler } from "./components/social-callback-handler"
 
 // Schemas
 export {

@@ -113,7 +113,10 @@
     "GOAL_LIMIT_REACHED": "This home already has the Free plan's maximum number of goals. Upgrade to create more.",
     "BUDGET_LIMIT_REACHED": "This home already has the Free plan's maximum number of active budgets. Close an existing budget or upgrade.",
     "NETWORK": "Network error — check your connection and try again.",
-    "UNEXPECTED": "An unexpected error occurred. Please try again."
+    "UNEXPECTED": "An unexpected error occurred. Please try again.",
+    "SOCIAL_PROVIDER_UNSUPPORTED": "This login provider isn't supported.",
+    "SOCIAL_PROVIDER_NOT_CONFIGURED": "This sign-in method isn't available right now.",
+    "SOCIAL_EMAIL_ALREADY_REGISTERED": "This email is already registered. Sign in with email and password."
   },
   "termsReaccept": {
     "title": "We've updated our Terms",
@@ -123,5 +126,10 @@
     "signOutButton": "Sign out",
     "accountLink": "I'd rather close my account",
     "supportLink": "Contact support"
+  },
+  "termsFirstAccept": {
+    "title": "Before you start",
+    "description": "To use Larmony, you need to read and accept the <terms>Terms of Use</terms>, the <privacy>Privacy Policy</privacy>, and the <cookies>Cookie Policy</cookies>.",
+    "acceptButton": "I have read and accept"
   }
 }

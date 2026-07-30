@@ -113,7 +113,10 @@
     "GOAL_LIMIT_REACHED": "Dieser Haushalt hat bereits die maximale Anzahl an Zielen des Free-Plans erreicht. Führe ein Upgrade durch, um weitere zu erstellen.",
     "BUDGET_LIMIT_REACHED": "Dieser Haushalt hat bereits die maximale Anzahl aktiver Budgets des Free-Plans erreicht. Schließe ein bestehendes Budget oder führe ein Upgrade durch.",
     "NETWORK": "Netzwerkfehler — bitte prüfe deine Verbindung und versuche es erneut.",
-    "UNEXPECTED": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut."
+    "UNEXPECTED": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.",
+    "SOCIAL_PROVIDER_UNSUPPORTED": "Dieser Login-Anbieter wird nicht unterstützt.",
+    "SOCIAL_PROVIDER_NOT_CONFIGURED": "Diese Anmeldemethode ist derzeit nicht verfügbar.",
+    "SOCIAL_EMAIL_ALREADY_REGISTERED": "Diese E-Mail-Adresse ist bereits registriert. Melde dich mit E-Mail und Passwort an."
   },
   "termsReaccept": {
     "title": "Wir haben unsere Nutzungsbedingungen aktualisiert",
@@ -123,5 +126,10 @@
     "signOutButton": "Abmelden",
     "accountLink": "Ich möchte lieber mein Konto schließen",
     "supportLink": "Support kontaktieren"
+  },
+  "termsFirstAccept": {
+    "title": "Bevor es losgeht",
+    "description": "Um Larmony zu nutzen, musst du die <terms>Nutzungsbedingungen</terms>, die <privacy>Datenschutzerklärung</privacy> und die <cookies>Cookie-Richtlinie</cookies> lesen und akzeptieren.",
+    "acceptButton": "Gelesen und akzeptiert"
   }
 }

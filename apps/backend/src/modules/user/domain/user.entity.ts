@@ -26,8 +26,12 @@ export interface CreateUserData {
   authId: string;
   name: string;
   email: string;
-  /** Versão dos Termos/Privacidade aceita no cadastro (LGPD). */
-  termsVersion: string;
+  /**
+   * Versão dos Termos/Privacidade aceita no cadastro (LGPD). `null` = usuário
+   * social pré-aceite — o modal bloqueante de re-aceite (ADR-0031) intercepta
+   * no próximo acesso, pois `termsVersion !== TERMS_VERSION` é true p/ null.
+   */
+  termsVersion: string | null;
   /** Locale da UI no cadastro (ADR-0018). Ausente → default do banco (pt-BR). */
   locale?: string;
 }

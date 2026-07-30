@@ -8,6 +8,7 @@ import {
   HttpStatus,
   FileTypeValidator,
   MaxFileSizeValidator,
+  Param,
   ParseFilePipe,
   Patch,
   Post,
@@ -23,12 +24,15 @@ import { RefreshTokenDto } from "./dto/refresh-token.dto";
 import { ResetPasswordDto } from "./dto/reset-password.dto";
 import { SignInDto } from "./dto/sign-in.dto";
 import { SignUpDto } from "./dto/sign-up.dto";
+import { SocialCallbackDto } from "./dto/social-callback.dto";
 import { AuthGuard } from "./guards/auth.guard";
 import { AuthUser } from "./application/ports/auth-provider.interface";
 import { ForgotPasswordUseCase } from "./use-cases/forgot-password.use-case";
+import { GetSocialAuthorizeUrlUseCase } from "./use-cases/get-social-authorize-url.use-case";
 import { RefreshTokenUseCase } from "./use-cases/refresh-token.use-case";
 import { ResetPasswordUseCase } from "./use-cases/reset-password.use-case";
 import { SignInUseCase } from "./use-cases/sign-in.use-case";
+import { SignInWithSocialUseCase } from "./use-cases/sign-in-with-social.use-case";
 import { SignOutUseCase } from "./use-cases/sign-out.use-case";
 import { SignUpUseCase } from "./use-cases/sign-up.use-case";
 import { UpdateMeUseCase } from "./use-cases/update-me.use-case";
@@ -63,6 +67,8 @@ export class AuthController {
     private readonly uploadAvatarUseCase: UploadAvatarUseCase,
     private readonly deleteAccountUseCase: DeleteAccountUseCase,
     private readonly acceptTermsUseCase: AcceptTermsUseCase,
+    private readonly getSocialAuthorizeUrlUseCase: GetSocialAuthorizeUrlUseCase,
+    private readonly signInWithSocialUseCase: SignInWithSocialUseCase,
   ) {}
 
   // Endpoints de credenciais: limites apertados contra brute-force/abuso (SEC-4).
@@ -106,6 +112,24 @@ export class AuthController {
       dto.newPassword,
       dto.refreshToken,
     );
+  }
+
+  @Throttle({ default: { limit: 20, ttl: 60_000 } })
+  @Get("social/:provider/authorize")
+  getSocialAuthorizeUrl(@Param("provider") provider: string) {
+    return this.getSocialAuthorizeUrlUseCase.execute(provider);
+  }
+
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  @Post("social/callback")
+  signInWithSocial(@Body() dto: SocialCallbackDto) {
+    return this.signInWithSocialUseCase.execute({
+      accessToken: dto.accessToken,
+      refreshToken: dto.refreshToken,
+      expiresAt: dto.expiresAt,
+      socialProvider: dto.socialProvider,
+      locale: dto.locale,
+    });
   }
 
   @Get("me")
