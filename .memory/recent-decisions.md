@@ -35,9 +35,38 @@
 | ADR-0029 | Assinatura pago-only: 2 tiers (Essencial/Completo) + trial self-serve, fim do Free (M16) | 2026-07-14 | Aceito (supersede o adendo D-1 do ADR-0026) |
 | ADR-0030 | Cookies: aviso dedicado `/legal/cookies`, sem banner (gatilho de reversão registrado) | 2026-07-27 | Aceito |
 | ADR-0031 | Re-aceite bloqueante de termos (`TERMS_VERSION` deixa de ser inerte) | 2026-07-27 | Aceito |
-| ADR-0032 | Login social (Google/Apple) via Supabase Auth, mediado pelo backend | 2026-07-30 | Aceito |
+| ADR-0032 | Login social (Google/Apple) via Supabase Auth, mediado pelo backend | 2026-07-30 | Aceito (adendo: múltiplas identidades por usuário, mesmo dia) |
 
 ## Decisões/registros recentes (sem ADR)
+
+- **2026-07-30 — Múltiplas identidades por usuário entregue (adendo
+  ADR-0032)**: teste real em staging expôs que login social rejeitava
+  (409) quando o e-mail já tinha conta por senha. Causa raiz encontrada:
+  `auth.users` do GoTrue tem índice único **case-sensitive** em `email`,
+  enquanto `findByEmail` do Larmony já comparava via `lower()` — um e-mail
+  com capitalização diferente entre cadastro por senha e o devolvido pelo
+  Google passa pelo índice do GoTrue (2ª linha criada) mas é pego como
+  colisão pelo nosso código. Decisão do usuário: e-mail como fonte única de
+  verdade, múltiplos métodos de login pra mesma conta. Nova tabela
+  `user_identities` (migration `0005`, aditiva); as 4 funções RLS
+  (`is_super_admin`, `is_household_member`, `is_household_owner`,
+  `shares_household_with`) + policies de `users`/`notification_preferences`
+  reescritas pra resolver via essa tabela (migration `0006`,
+  comportamentalmente no-op pra quem tem 1 identidade). **8 pontos extras**
+  fora do módulo `user` faziam a mesma resolução inline (guards de
+  household/platform-admin, repos de household/member/notification) —
+  descobertos só durante a implementação; sem corrigi-los, login social
+  funcionaria mas todo acesso a lar quebraria com 403 pra quem logasse por
+  identidade não-primária. `SignInWithSocialUseCase`: colisão de e-mail
+  verificado agora vincula (`linkIdentity`) em vez de rejeitar;
+  `DeleteAccountUseCase` passa a limpar TODAS as identidades no provedor,
+  não só a da sessão atual. `users.auth_id` mantido como coluna legada
+  (remoção é migration futura, só após validação prolongada). 152/152 unit
+  + 173/173 e2e verdes. Lacuna aceita e documentada: e2e do cenário
+  completo (2 identidades GoTrue reais) exigiria forjar JWT — cobertura
+  fica no nível de unit test + validação manual já feita ao vivo em
+  staging (é a origem deste próprio adendo). Detalhe completo no adendo de
+  `.memory/adr/0032-login-social-backend-mediated.md`.
 
 - **2026-07-30 — Infra de SEO entregue**: Google Search Console rejeitou a
   verificação OAuth do app por falta de sinais de SEO na landing (homepage

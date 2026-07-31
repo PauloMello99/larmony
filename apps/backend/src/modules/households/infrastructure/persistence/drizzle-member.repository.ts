@@ -141,10 +141,14 @@ export class DrizzleMemberRepository implements IMemberRepository {
           schema.users,
           eq(schema.users.id, schema.householdMemberships.userId),
         )
+        .innerJoin(
+          schema.userIdentities,
+          eq(schema.userIdentities.userId, schema.users.id),
+        )
         .where(
           and(
             eq(schema.householdMemberships.householdId, householdId),
-            eq(schema.users.authId, authId),
+            eq(schema.userIdentities.authId, authId),
           ),
         )
         .limit(1);
@@ -162,7 +166,11 @@ export class DrizzleMemberRepository implements IMemberRepository {
             email: schema.users.email,
           })
           .from(schema.users)
-          .where(eq(schema.users.authId, authId))
+          .innerJoin(
+            schema.userIdentities,
+            eq(schema.userIdentities.userId, schema.users.id),
+          )
+          .where(eq(schema.userIdentities.authId, authId))
           .limit(1);
         if (!u) return null;
         return MemberMapper.toDomain({

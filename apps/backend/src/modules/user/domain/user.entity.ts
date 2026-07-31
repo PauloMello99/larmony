@@ -1,3 +1,5 @@
+import type { AuthIdentityProvider } from "./user.repository.interface";
+
 export type PlatformRole = "super_admin" | "user";
 export type Gender = "male" | "female" | "other";
 
@@ -34,6 +36,8 @@ export interface CreateUserData {
   termsVersion: string | null;
   /** Locale da UI no cadastro (ADR-0018). Ausente → default do banco (pt-BR). */
   locale?: string;
+  /** Provedor da identidade Supabase gravada junto (ADR-0032 adendo). */
+  provider: AuthIdentityProvider;
 }
 
 export interface UpdateUserData {

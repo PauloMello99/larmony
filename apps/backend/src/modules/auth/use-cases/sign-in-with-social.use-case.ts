@@ -65,14 +65,45 @@ export class SignInWithSocialUseCase {
       throw new SocialEmailAlreadyRegisteredException();
     }
 
-    // Usuário genuinamente novo no GoTrue, mas o e-mail pode já ter conta
-    // local com um auth_id diferente. Rejeitamos e não fundimos (rebind de
-    // auth_id seria risco de account takeover); compensamos removendo a
-    // identidade social recém-criada no provedor.
+    // Usuário genuinamente novo no GoTrue, mas o e-mail já tem conta local
+    // com um auth_id diferente. E-mail social é sempre verificado pelo
+    // provider (checado acima) — confiança suficiente pra vincular a nova
+    // identidade ao MESMO usuário (múltiplas identidades, adendo ADR-0032),
+    // em vez de criar um 2º usuário duplicado ou rejeitar o login.
     const emailCollision = await this.userRepo.findByEmail(authUser.email);
     if (emailCollision) {
-      await this.rollbackAuthUser(authUser.id);
-      throw new SocialEmailAlreadyRegisteredException();
+      try {
+        await this.userRepo.linkIdentity(
+          emailCollision.id,
+          input.socialProvider,
+          authUser.id,
+        );
+      } catch (err) {
+        // Identidade Google/Apple válida no GoTrue mas sem vínculo local —
+        // mesma saga de compensação do caminho de criação abaixo.
+        await this.rollbackAuthUser(authUser.id);
+        throw err;
+      }
+
+      await this.auditService.log({
+        actorId: emailCollision.id,
+        action: "update",
+        entityType: "user",
+        entityId: emailCollision.id,
+        metadata: {
+          event: "identity_linked",
+          socialProvider: input.socialProvider,
+          email: authUser.email,
+        },
+      });
+
+      return {
+        accessToken: input.accessToken,
+        refreshToken: input.refreshToken,
+        expiresAt: input.expiresAt,
+        user: authUser,
+        isNewUser: false,
+      };
     }
 
     // AuthUser não carrega nome (Apple só manda na 1ª autorização, e não
@@ -89,6 +120,7 @@ export class SignInWithSocialUseCase {
         // ADR-0031: modal bloqueante de primeiro aceite intercepta.
         termsVersion: null,
         locale: input.locale,
+        provider: input.socialProvider,
       });
       createdUserId = created.id;
     } catch (err) {

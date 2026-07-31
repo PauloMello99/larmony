@@ -48,6 +48,7 @@ export class SignUpUseCase {
         termsVersion: TERMS_VERSION,
         // Locale ativo da UI no cadastro (ADR-0018); ausente → default pt-BR.
         locale,
+        provider: "password",
       });
       createdUserId = created.id;
     } catch (err) {

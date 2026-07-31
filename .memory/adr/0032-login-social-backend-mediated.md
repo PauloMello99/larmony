@@ -85,22 +85,119 @@ houver estado (callback não solicitado por esta aba), o handler nunca chama
 aba/origem e o estado é consumido uma única vez, um link malicioso aberto
 diretamente não encontra estado válido.
 
-### Política de colisão de e-mail
+### Política de colisão de e-mail (revisada — ver adendo abaixo)
 
-Usuário genuinamente novo no GoTrue (não achado por `findByAuthId`) mas com
+~~Usuário genuinamente novo no GoTrue (não achado por `findByAuthId`) mas com
 e-mail que já existe em `public.users` sob outro `auth_id`: **rejeitado, não
 fundido**. Rebind de `users.auth_id` para o novo `auth_id` seria risco de
-account takeover (qualquer um que registre uma conta Google/Apple com o
-e-mail de uma vítima assumiria a conta dela). A identidade social recém-criada
-no GoTrue é removida (compensação best-effort, mesmo padrão de
-`rollbackAuthUser` do `sign-up.use-case.ts`), e a resposta é
-`409 SOCIAL_EMAIL_ALREADY_REGISTERED`. Mesma rejeição, sem checar colisão,
-quando `emailVerified === false` — não dá para confiar em e-mail não
-verificado para nenhuma decisão de identidade.
+account takeover~~ — **superado pelo adendo "Múltiplas identidades por
+usuário" abaixo**, depois de confirmado ao vivo em staging que esse cenário
+acontece de verdade e o usuário decidiu que e-mail deve ser a fonte única de
+verdade. Mesma rejeição, sem checar colisão, quando `emailVerified === false`
+— **isso não muda**: e-mail não verificado nunca é base suficiente para
+nenhuma decisão de identidade, nem merge nem rejeição.
 
 Essa política foi definida de forma **defensiva**, sem teste ao vivo do
 comportamento real de auto-link do GoTrue neste ambiente (ficou como dívida
-de validação manual — ver checklist de teste em `docs/deployment.md`).
+de validação manual). A validação aconteceu — ver adendo.
+
+## Adendo (2026-07-30) — Múltiplas identidades por usuário
+
+### Contexto do adendo
+
+Em teste real de staging, um usuário criou conta por senha e depois tentou
+entrar via Google com o mesmo e-mail. O backend rejeitou corretamente com
+`409 SOCIAL_EMAIL_ALREADY_REGISTERED` (política original acima) — mas isso
+provou, ao vivo, que o **auto-link nativo do GoTrue não cobre este caso**
+neste projeto. Investigação encontrada na documentação oficial do Supabase
+(`auth-identity-linking`): o GoTrue *deveria*, por padrão, unificar
+identidades de e-mail verificado automaticamente (mesmo `auth.users.id`,
+múltiplas linhas em `auth.identities`) — mas o comportamento observado aqui
+foi a criação de uma **segunda linha em `auth.users`**, com `auth_id`
+diferente.
+
+**Causa raiz identificada**: `auth.users` tem um índice único
+(`users_email_partial_key`) sobre a coluna `email` **crua**, não sobre
+`lower(email)` — enquanto o `DrizzleUserRepository.findByEmail` do Larmony já
+comparava por `lower(email)` (case-insensitive) desde antes deste adendo. Um
+e-mail com capitalização diferente entre o cadastro por senha e o retornado
+pelo Google (ex.: `User@Gmail.com` vs `user@gmail.com`) passa pelo índice
+único do GoTrue sem conflito, criando de fato um segundo `auth.users`, mas é
+pego como colisão pelo `findByEmail` do Larmony. Essa é a explicação
+concreta — não hipotética — de por que a colisão acontece na prática, mesmo
+com o GoTrue "prometendo" auto-link.
+
+### Decisão
+
+Em vez de reimplementar auto-link no GoTrue (fora do nosso controle), ou
+seguir rejeitando o login (fricção ruim: usuário precisa lembrar qual método
+usou no cadastro), o Larmony passa a suportar **múltiplas identidades de
+autenticação por usuário local** — 1 `public.users.id` pode ter N
+identidades Supabase (`auth_id`), uma por provedor (senha, Google, Apple).
+
+- Nova tabela `user_identities` (`user_id` FK cascade, `provider`, `auth_id`
+  único) — migration `0005_user_identities.sql`. `users.auth_id` **mantido
+  como coluna legada** (não removido nesta fase) até validação prolongada em
+  produção; nenhuma query nova depende dela.
+- As 4 funções RLS (`is_super_admin`, `is_household_member`,
+  `is_household_owner`, `shares_household_with`) e as policies de
+  `users`/`notification_preferences` passam a resolver identidade via JOIN
+  em `user_identities` em vez de `users.auth_id` direto — migration
+  `0006_rls_user_identities.sql`. Comportamentalmente no-op para todo
+  usuário com 1 identidade (o caso de 100% da base até este adendo).
+- `IUserRepository` ganha `linkIdentity(userId, provider, authId)` e
+  `listIdentityAuthIds(userId)`; `findByAuthId`/`update`/`mergeOnboarding`/
+  `acceptTerms`/`delete` resolvem `userId` a partir de QUALQUER identidade
+  vinculada (não só a original), via `resolveUserIdByAuthId` (dois passos:
+  resolve `user_identities` → opera em `users.id`) — evita depender de
+  sintaxe de UPDATE/DELETE com JOIN do Drizzle.
+- **Fora do módulo `user`**: 8 outros pontos faziam a mesma resolução
+  inline (`is-super-admin.ts`, guards de household/platform-admin,
+  `DrizzleHouseholdRepository` ×5, `DrizzleMemberRepository.findByAuthId`,
+  `DrizzleNotificationRepository.findUserIdByAuthId`) — descobertos durante
+  a implementação, não previstos no desenho inicial da ADR original. Sem
+  corrigi-los, login social funcionaria mas todo acesso a household quebraria
+  com 403 para quem logasse por uma identidade não-primária.
+- `SignInWithSocialUseCase`: o ramo de colisão de e-mail (`emailCollision`,
+  com `emailVerified === true`) deixa de rejeitar e passa a chamar
+  `linkIdentity(emailCollision.id, socialProvider, authUser.id)` — vincula a
+  nova identidade ao usuário existente, audita como
+  `action: "update"` / `metadata.event: "identity_linked"`, retorna
+  `isNewUser: false`. Falha de `linkIdentity` aciona a mesma compensação
+  (`rollbackAuthUser`) do caminho de criação.
+- `DeleteAccountUseCase`: agora captura `listIdentityAuthIds(user.id)` ANTES
+  de deletar o usuário local (FK cascade apaga `user_identities` junto) e
+  remove CADA identidade no provedor (best-effort — uma falha não impede as
+  demais nem a exclusão já concluída). Antes, só a identidade da sessão
+  atual era removida, deixando identidades órfãs no GoTrue.
+
+### Por que confiar em e-mail verificado é aceitável aqui
+
+Mesmo nível de confiança usado por GitHub, Notion e a maioria dos apps que
+oferecem múltiplos métodos de login: o e-mail retornado por um provedor
+OAuth (`emailVerified: true`) já passou pela verificação do PRÓPRIO
+provedor (Google confirma antes de devolver o claim). Continuamos **nunca**
+confiando em e-mail não verificado para nenhuma decisão — esse caso segue
+rejeitando sem checar colisão, comportamento inalterado deste adendo.
+
+### Lacuna de teste registrada (não bloqueante)
+
+Simular em e2e o cenário completo (2 identidades GoTrue reais para o mesmo
+e-mail) exigiria forjar um JWT compatível com o GoTrue local (secret HS256 +
+claims exatos) ou orquestrar OAuth real — avaliado como esforço
+desproporcional ao valor: a lógica de merge já tem cobertura unitária direta
+(`sign-in-with-social.use-case.spec.ts`: merge bem-sucedido + falha de
+`linkIdentity` com compensação), a suíte e2e completa dos endpoints segue
+verde sem alteração, e o cenário motivador deste adendo já foi validado
+manualmente ao vivo em staging (é a origem deste próprio adendo). Gap
+aceito, não um teste pulado por descuido.
+
+### Fora de escopo
+
+- Remover `users.auth_id` (coluna legada) — migration futura, só depois de
+  staging/produção rodarem por um tempo sem regressão.
+- UI de "contas conectadas" (usuário ver/desvincular identidades em
+  `/account`) — nada no adendo impede, mas não foi pedido.
 
 ### Apple private relay
 

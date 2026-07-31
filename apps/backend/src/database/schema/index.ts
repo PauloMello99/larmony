@@ -1,5 +1,6 @@
 export * from "./enums";
 export * from "./users";
+export * from "./user-identities";
 export * from "./households";
 export * from "./subscriptions";
 export * from "./stripe-webhook-events";
