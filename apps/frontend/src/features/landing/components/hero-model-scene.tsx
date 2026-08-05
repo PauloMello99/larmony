@@ -1,4 +1,4 @@
-/* eslint-disable react/no-unknown-property -- React Three Fiber usa um reconciler próprio; props como `object`/`position`/`intensity` são válidas no three.js, não no DOM. */
+/* eslint-disable react/no-unknown-property */
 import * as React from "react"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { Center, Environment, Lightformer, useGLTF } from "@react-three/drei"
