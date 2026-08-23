@@ -16,6 +16,7 @@ import { CurrentUser } from "../../auth/decorators/current-user.decorator";
 import type { AuthUser } from "../../auth/application/ports/auth-provider.interface";
 import { GetMeUseCase } from "../../user/application/use-cases/get-me.use-case";
 import { CreateStatementImportJobUseCase } from "../application/use-cases/create-statement-import-job.use-case";
+import { GetStatementImportJobUseCase } from "../application/use-cases/get-statement-import-job.use-case";
 import { ListStatementImportCandidatesUseCase } from "../application/use-cases/list-statement-import-candidates.use-case";
 import { ConfirmStatementImportCandidateUseCase } from "../application/use-cases/confirm-statement-import-candidate.use-case";
 import { DismissStatementImportCandidateUseCase } from "../application/use-cases/dismiss-statement-import-candidate.use-case";
@@ -28,6 +29,7 @@ export class StatementImportsController {
   constructor(
     private readonly getMe: GetMeUseCase,
     private readonly createJob: CreateStatementImportJobUseCase,
+    private readonly getJob: GetStatementImportJobUseCase,
     private readonly listCandidates: ListStatementImportCandidatesUseCase,
     private readonly confirmCandidate: ConfirmStatementImportCandidateUseCase,
     private readonly dismissCandidate: DismissStatementImportCandidateUseCase,
@@ -46,6 +48,14 @@ export class StatementImportsController {
       source: dto.source,
       fileBase64: dto.fileBase64,
     });
+  }
+
+  @Get(":jobId")
+  get(
+    @Param("householdId", ParseUUIDPipe) householdId: string,
+    @Param("jobId", ParseUUIDPipe) jobId: string,
+  ) {
+    return this.getJob.execute(jobId, householdId);
   }
 
   @Get(":jobId/candidates")

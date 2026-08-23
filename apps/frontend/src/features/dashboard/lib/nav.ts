@@ -8,6 +8,7 @@ import {
   ChartPie,
   Settings,
   CreditCard,
+  FileUp,
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
@@ -59,6 +60,7 @@ export const HOUSEHOLD_NAV_SECTIONS: NavSection[] = [
     items: [
       { labelKey: "nav.overview", href: "", icon: LayoutGrid, dataTour: "nav-overview" },
       { labelKey: "nav.transactions", href: "transactions", icon: ArrowLeftRight, dataTour: "nav-transactions" },
+      { labelKey: "nav.statementImports", href: "statement-imports", icon: FileUp, dataTour: "nav-statement-imports" },
       { labelKey: "nav.categories", href: "categories", icon: Tags, dataTour: "nav-categories" },
       { labelKey: "nav.budgets", href: "budgets", icon: PiggyBank, dataTour: "nav-budgets" },
       { labelKey: "nav.goals", href: "goals", icon: Target, dataTour: "nav-goals" },
@@ -121,6 +123,7 @@ export function isOwnerOnlyPath(subpath: string): boolean {
 /** Segmento de rota → chave i18n (namespace dashboard) para breadcrumbs. */
 export const PAGE_LABEL_KEYS: Record<string, string> = {
   transactions: "nav.transactions",
+  "statement-imports": "nav.statementImports",
   categories: "nav.categories",
   budgets: "nav.budgets",
   goals: "nav.goals",

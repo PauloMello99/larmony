@@ -98,6 +98,14 @@ describe("Statement import — fluxo completo (e2e)", () => {
     expect(res.body.status).toBe("pending");
     jobId1 = res.body.id;
 
+    const got = await authed(
+      app,
+      "get",
+      `/households/${householdId}/statement-imports/${jobId1}`,
+      user.accessToken,
+    ).expect(200);
+    expect(got.body).toMatchObject({ id: jobId1, status: "pending", source: "csv" });
+
     expect(fakeProcessor.submitJob).toHaveBeenCalledTimes(1);
     const call = fakeProcessor.submitJob.mock.calls[0][0] as SubmitStatementImportJobInput;
     expect(call.context.categories).toContainEqual(
@@ -108,6 +116,15 @@ describe("Statement import — fluxo completo (e2e)", () => {
         type: "expense",
       }),
     );
+  });
+
+  it("GET de job inexistente retorna 404", async () => {
+    await authed(
+      app,
+      "get",
+      `/households/${householdId}/statement-imports/00000000-0000-0000-0000-000000000000`,
+      user.accessToken,
+    ).expect(404);
   });
 
   it("callback de sucesso do processor gera candidato com a categoria real do household", async () => {
