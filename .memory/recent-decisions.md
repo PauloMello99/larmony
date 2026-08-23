@@ -36,8 +36,65 @@
 | ADR-0030 | Cookies: aviso dedicado `/legal/cookies`, sem banner (gatilho de reversão registrado) | 2026-07-27 | Aceito |
 | ADR-0031 | Re-aceite bloqueante de termos (`TERMS_VERSION` deixa de ser inerte) | 2026-07-27 | Aceito |
 | ADR-0032 | Login social (Google/Apple) via Supabase Auth, mediado pelo backend | 2026-07-30 | Aceito (adendo: múltiplas identidades por usuário, mesmo dia) |
+| ADR-0033 | Import/categorização: pipeline em camadas (regras+ML) | 2026-08-22 | Aceito (adendo: serviço Python dedicado pra OCR/regras/ML, mesmo dia) |
+| ADR-0034 | Contrato de API entre `backend` e `statement-processor` | 2026-08-22 | Aceito |
 
 ## Decisões/registros recentes (sem ADR)
+
+- **2026-08-23 — Fase 2 do import de extrato + débito da Fase 1 quitado**:
+  sessão pedida como só Fase 2 (memória por lar) encontrou o módulo backend
+  inteiro do import de extrato faltando (só o serviço Python da Fase 1
+  existia) — as duas foram entregues juntas. Backend: migrations 0007–0010
+  (`merchant_category_memory`, `statement_import_jobs`,
+  `statement_import_candidates`, RLS household-scoped provado por e2e
+  cross-tenant), módulo `statement-import` completo (4 camadas),
+  `ProcessorSecretGuard`, 2 eventos de notificação novos (7 locales, sempre
+  contagem — nunca percentual isolado, regra do ADR-0033), job de cron de
+  reconciliação de timeout (30s csv/ofx, 5min pdf). Processor Python:
+  `rules/merchant_key.py` (normalizador) + `rules/household_member.py`
+  (cross-referência) integrados ao pipeline. Limite de body HTTP global
+  subiu de 100kb (default Express) pra 10mb (`main.ts`/`test/helpers.ts`,
+  `useBodyParser`) — CSV/OFX em base64 excede o default; verificado que não
+  quebra a verificação de assinatura do webhook Stripe (rawBody
+  preservado). **Decisão em aberto**: gate de assinatura ficou igual ao de
+  transações (tier Essencial) por analogia, não confirmado com produto —
+  revisar antes do lançamento se import de extrato deveria exigir tier
+  Completo. **Achado crítico na revisão final** (só apareceu depois de toda
+  a implementação/testes passarem): `amountCents` cruzava a fronteira
+  processor→backend com sinal nativo do extrato (negativo pra despesa) em
+  vez de sempre positivo como o próprio ADR-0034 já mandava — inverteria
+  silenciosamente somas de orçamento. Corrigido nos dois lados (`pipeline.py`
+  deriva `type` do sinal antes do `abs()`; backend rejeita — nunca coage —
+  `amountCents` não-positivo no callback) + `completeJob`/`insertCandidates`
+  unificados numa transação atômica (`completeJobWithCandidates`, evita job
+  `completed` órfão sem candidatos em caso de crash no meio). Detalhe
+  completo em `docs/product/features/16-import-extrato.md` (atualização
+  2026-08-23) e [[statement-import-amount-cents-sign-gotcha]].
+
+- **2026-08-22 — Investigação de viabilidade de LLM/ML → ADR-0033**:
+  investigação de várias sessões (não implementação) testando viabilidade
+  de LLM pequeno pro import/categorização/relatório/chatbot. PoCs reais com
+  5 extratos Nubank (meses diferentes) + 2 PDFs reais da Caixa: LLM
+  genérico como motor primário errou de forma concreta (Pix pessoa física
+  virando "Salário" com alta confiança, fatura de cartão tratada como
+  categoria única); regras+CNPJ+memória por lar cobriram 76,6–96,1% em
+  meses "normais" mas caíram pra 12,9–16,9% em meses antigos (causa raiz:
+  a regra mais valiosa dependia de um relacionamento/conta compartilhada
+  que só passou a existir depois — cobertura de import não é constante);
+  cross-referência com membros do lar (dado que o Larmony já tem) bateu
+  regra de texto de banco sozinha; classificador de ML simples (TF-IDF+
+  LogReg) generalizou nome de comerciante em ordem de palavra diferente,
+  mas só com `class_weight="balanced"` e só rodando depois da checagem
+  estrutural. PDF real da Caixa não tinha camada de texto (é imagem) —
+  Docling (OCR CPU-only) testado ao vivo com 0 valor errado em 2
+  documentos. **Decisão: nenhum serviço próprio de IA/ML** — pipeline em
+  camadas dentro do backend NestJS (módulo novo `statement-import`),
+  classificador de ML adiado do launch (quando entrar, roda embutido, sem
+  microserviço Python), OCR de PDF via API gerenciada (não self-host de
+  Docling), LLM só como fallback estreito. Self-hosting de GPU
+  (Railway/RunPod) rejeitado. Detalhe completo em
+  `.memory/adr/0033-import-categorizacao-regras-ml-llm-fallback.md` e nas
+  notas de sessão `.memory/sessions/2026-08-21-llm-viability-investigation.md`.
 
 - **2026-07-30 — Múltiplas identidades por usuário entregue (adendo
   ADR-0032)**: teste real em staging expôs que login social rejeitava

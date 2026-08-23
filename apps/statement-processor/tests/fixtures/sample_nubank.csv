@@ -1,0 +1,6 @@
+Data,Valor,Identificador,Descrição
+01/03/2026,-120.50,fx-0001,Transferência enviada pelo Pix (saldo compartilhado) - FULANO DE TAL - CPF ***.111.222-** - Conta 1000-0
+02/03/2026,-89.90,fx-0002,Compra no débito - SUPERMERCADO EXEMPLO LTDA
+03/03/2026,-45.00,fx-0003,Transferência enviada pelo Pix - JOAO DA SILVA - ***.333.444-** - BCO TESTE (0001) Agência: 1 Conta: 111-1
+04/03/2026,-2500.00,fx-0004,Pagamento de fatura
+05/03/2026,-60.00,fx-0005,Transferência enviada pelo Pix - EMPRESA TESTE ENERGIA LTDA - 11.222.333/0001-44 - BCO TESTE

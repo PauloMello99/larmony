@@ -17,3 +17,6 @@ export * from "./finance/transactions";
 export * from "./finance/goals";
 export * from "./finance/budgets";
 export * from "./finance/budget-versions";
+export * from "./finance/merchant-category-memory";
+export * from "./finance/statement-import-jobs";
+export * from "./finance/statement-import-candidates";

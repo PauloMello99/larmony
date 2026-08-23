@@ -86,6 +86,8 @@ export const notificationTypeEnum = pgEnum("notification_type", [
   "monthly_report",
   "support_ticket_created",
   "support_reply",
+  "statement_import_completed",
+  "statement_import_failed",
 ]);
 
 export const supportTicketStatusEnum = pgEnum("support_ticket_status", [
@@ -124,4 +126,32 @@ export const authProviderEnum = pgEnum("auth_provider", [
   "password",
   "google",
   "apple",
+]);
+
+// Formato de arquivo aceito pelo import de extrato (ADR-0034). PDF (OCR) só
+// entra na Fase 3 do plano — o valor já existe aqui pra não precisar de
+// migration de enum quando essa fase chegar.
+export const statementImportSourceEnum = pgEnum("statement_import_source", [
+  "csv",
+  "ofx",
+  "pdf",
+]);
+
+export const statementImportJobStatusEnum = pgEnum(
+  "statement_import_job_status",
+  ["pending", "processing", "completed", "failed"],
+);
+
+// "duplicate" é reservado (mesma external_id não vira uma 2ª linha por causa
+// do unique(household_id, external_id) — a proteção real é onConflictDoNothing
+// no insert) — nenhum código desta fase emite este status.
+export const statementImportCandidateStatusEnum = pgEnum(
+  "statement_import_candidate_status",
+  ["pending_review", "confirmed", "dismissed", "duplicate"],
+);
+
+export const categoryConfidenceEnum = pgEnum("category_confidence", [
+  "high",
+  "medium",
+  "low",
 ]);
