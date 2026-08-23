@@ -18,5 +18,6 @@ Uma spec-esqueleto por milestone do roadmap (`.memory/roadmap.md`). Cada spec de
 | [11](11-orcamentos-recorrentes.md) | Orçamentos recorrentes/versionados (refatora 05) | M10 | ✅ entregue (série + versões, resolução on-read, ADR-0022) |
 | [12](12-notificacoes-multicanal.md) | Notificações multicanal + preferências | M11 | 🔲 não iniciado (spec 2026-07-10) |
 | [13](13-cron-horario-timezone.md) | Disparos com horário + timezone | M12 | 🔲 não iniciado (spec 2026-07-10) |
+| [16](16-import-extrato.md) | Import de extrato CSV/OFX/PDF + categorização (regras+ML) | ADR-0033 | 🔲 não iniciado (spec 2026-08-22) |
 
 Legenda: 🔲 não iniciado · 🚧 em desenvolvimento · ✅ entregue · ⛔ superseded

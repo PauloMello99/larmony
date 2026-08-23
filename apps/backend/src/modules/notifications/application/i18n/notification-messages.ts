@@ -26,7 +26,11 @@ export type NotificationParams =
     }
   | { type: "bill_reminder"; description: string; amountCents: number; daysUntil: number; dueDay: number }
   | { type: "support_ticket_created"; ticketId: string; subject: string; authorName: string }
-  | { type: "support_reply"; ticketId: string; subject: string };
+  | { type: "support_reply"; ticketId: string; subject: string }
+  // Contagens, nunca percentual isolado (achado da investigação: cobertura de
+  // categorização varia muito por mês/lar — ADR-0033 §Contexto).
+  | { type: "statement_import_completed"; total: number; resolvedCount: number; unresolvedCount: number }
+  | { type: "statement_import_failed"; errorCode: string };
 
 export interface RenderedNotification {
   title: string;
@@ -78,6 +82,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
       body: "O suporte respondeu o seu chamado.",
       actionLabel: "Ver resposta",
     }),
+    statement_import_completed: (p) => ({
+      title: "Import de extrato concluído",
+      body: `${p.total} transações importadas — ${p.resolvedCount} já categorizadas, ${p.unresolvedCount} pra revisar.`,
+      actionLabel: "Revisar import",
+    }),
+    statement_import_failed: (p) => ({
+      title: "Falha no import de extrato",
+      body: `Não foi possível processar o arquivo (${p.errorCode}). Tente reenviar.`,
+      actionLabel: "Tentar novamente",
+    }),
   },
   "en-US": {
     goal_reached: (p, f) => ({
@@ -114,6 +128,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
       title: `Reply on your ticket "${p.subject}"`,
       body: "Support has replied to your ticket.",
       actionLabel: "View reply",
+    }),
+    statement_import_completed: (p) => ({
+      title: "Statement import completed",
+      body: `${p.total} transactions imported — ${p.resolvedCount} already categorized, ${p.unresolvedCount} to review.`,
+      actionLabel: "Review import",
+    }),
+    statement_import_failed: (p) => ({
+      title: "Statement import failed",
+      body: `Couldn't process the file (${p.errorCode}). Try uploading it again.`,
+      actionLabel: "Try again",
     }),
   },
   "es-ES": {
@@ -152,6 +176,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
       body: "El soporte respondió tu ticket.",
       actionLabel: "Ver respuesta",
     }),
+    statement_import_completed: (p) => ({
+      title: "Importación de extracto completada",
+      body: `${p.total} transacciones importadas — ${p.resolvedCount} ya categorizadas, ${p.unresolvedCount} por revisar.`,
+      actionLabel: "Revisar importación",
+    }),
+    statement_import_failed: (p) => ({
+      title: "Falló la importación del extracto",
+      body: `No se pudo procesar el archivo (${p.errorCode}). Intenta reenviarlo.`,
+      actionLabel: "Intentar de nuevo",
+    }),
   },
   "zh-CN": {
     goal_reached: (p, f) => ({
@@ -187,6 +221,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
       title: `你的工单"${p.subject}"收到了回复`,
       body: "客服已回复你的工单。",
       actionLabel: "查看回复",
+    }),
+    statement_import_completed: (p) => ({
+      title: "对账单导入完成",
+      body: `已导入 ${p.total} 笔交易 — ${p.resolvedCount} 笔已分类，${p.unresolvedCount} 笔待审核。`,
+      actionLabel: "查看导入结果",
+    }),
+    statement_import_failed: (p) => ({
+      title: "对账单导入失败",
+      body: `无法处理该文件（${p.errorCode}）。请重新上传。`,
+      actionLabel: "重试",
     }),
   },
   "de-DE": {
@@ -227,6 +271,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
       body: "Der Support hat auf Ihr Ticket geantwortet.",
       actionLabel: "Antwort ansehen",
     }),
+    statement_import_completed: (p) => ({
+      title: "Kontoauszug-Import abgeschlossen",
+      body: `${p.total} Transaktionen importiert — ${p.resolvedCount} bereits kategorisiert, ${p.unresolvedCount} zu überprüfen.`,
+      actionLabel: "Import überprüfen",
+    }),
+    statement_import_failed: (p) => ({
+      title: "Kontoauszug-Import fehlgeschlagen",
+      body: `Die Datei konnte nicht verarbeitet werden (${p.errorCode}). Bitte erneut hochladen.`,
+      actionLabel: "Erneut versuchen",
+    }),
   },
   "fr-FR": {
     goal_reached: (p, f) => ({
@@ -264,6 +318,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
       body: "Le support a répondu à votre ticket.",
       actionLabel: "Voir la réponse",
     }),
+    statement_import_completed: (p) => ({
+      title: "Import de relevé terminé",
+      body: `${p.total} transactions importées — ${p.resolvedCount} déjà catégorisées, ${p.unresolvedCount} à vérifier.`,
+      actionLabel: "Vérifier l'import",
+    }),
+    statement_import_failed: (p) => ({
+      title: "Échec de l'import du relevé",
+      body: `Impossible de traiter le fichier (${p.errorCode}). Réessayez l'envoi.`,
+      actionLabel: "Réessayer",
+    }),
   },
   "ja-JP": {
     goal_reached: (p, f) => ({
@@ -299,6 +363,16 @@ const CATALOG: Record<NotificationLocale, Builders> = {
       title: `チケット「${p.subject}」に返信がありました`,
       body: "サポートがあなたのチケットに返信しました。",
       actionLabel: "返信を見る",
+    }),
+    statement_import_completed: (p) => ({
+      title: "明細のインポートが完了しました",
+      body: `${p.total} 件の取引をインポート — ${p.resolvedCount} 件は分類済み、${p.unresolvedCount} 件は確認が必要です。`,
+      actionLabel: "インポートを確認",
+    }),
+    statement_import_failed: (p) => ({
+      title: "明細のインポートに失敗しました",
+      body: `ファイルを処理できませんでした（${p.errorCode}）。再度アップロードしてください。`,
+      actionLabel: "再試行",
     }),
   },
 };

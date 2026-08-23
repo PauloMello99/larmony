@@ -6,6 +6,9 @@
 - [Roadmap](roadmap.md) — Fases do bootstrap + milestones M1–M9 (cada um vira plano próprio)
 - [Recent Decisions](recent-decisions.md) — Índice rápido de todos os ADRs
 - [Supabase Coupling](supabase-coupling.md) — Mapa de acoplamento ao Supabase (auth/storage/RLS) e sign-up atômico
+- [Jest e2e testMatch em worktree Windows](jest-e2e-testmatch-worktree-windows.md) — "No tests found" sob `.claude/worktrees`, workaround com `--testMatch`
+- [Supabase local multi-worktree](larmony-supabase-local-multi-worktree.md) — portas +1000 pra rodar em paralelo, `db reset` quando o volume compartilhado tem migrations divergentes
+- [amountCents sinal no statement-import](statement-import-amount-cents-sign-gotcha.md) — bug real de sinal negativo cruzando a fronteira processor↔backend, corrigido na revisão final da Fase 2
 
 ## ADRs
 
@@ -33,3 +36,5 @@
 - [ADR-0022: Orçamentos série + versões](adr/0022-budget-series-versions.md) — resolução on-read, upsert no mês corrente, remoção sempre encerra
 - [ADR-0023: Dispatcher multicanal de notificações](adr/0023-notification-dispatcher-multicanal.md) — in-app+e-mail+SMS/WhatsApp stub, dedup por evento em tabela dedicada
 - [ADR-0024: Timezone + hora dos disparos por lar](adr/0024-cron-timezone-household.md) — cron resolve "agora" no fuso do lar (date-fns-tz), hora preferida por lar, currentPeriodStart migrado
+- [ADR-0033: Import/categorização regras+ML](adr/0033-import-categorizacao-regras-ml-llm-fallback.md) — pipeline em camadas (regras/CNPJ/membro do lar/memória/ML/LLM fallback); adendo: serviço Python dedicado (`statement-processor`), nunca toca Postgres/RLS direto
+- [ADR-0034: Contrato de API backend↔statement-processor](adr/0034-contrato-api-backend-statement-processor.md) — POST /jobs + callback, categoryCode fechado de 13 códigos, staging em `statement_import_candidates` (não em `transactions`)

@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
+import type { NestExpressApplication } from "@nestjs/platform-express";
 import helmet from "helmet";
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
@@ -10,7 +11,13 @@ async function bootstrap() {
   // rawBody: expõe req.rawBody (Buffer) para a verificação de assinatura do
   // webhook do Stripe (POST /webhooks/stripe) — o parse JSON das outras rotas
   // segue normal (ver stripe-webhook.controller.ts, M14/ADR-0026).
-  const app = await NestFactory.create(AppModule, { rawBody: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
+
+  // CSV/OFX em base64 (import de extrato, ADR-0034) excede o default de 100kb
+  // do body-parser do Express — 10mb cobre com folga sem abrir demais a
+  // superfície de payload. useBodyParser preserva o rawBody:true configurado
+  // acima (usado pela verificação de assinatura do webhook Stripe).
+  app.useBodyParser("json", { limit: "10mb" });
 
   // Headers de segurança (ADR-0027, defesa em profundidade): API JSON pura —
   // os defaults do helmet (nosniff, frameguard, HSTS atrás de TLS etc.)
