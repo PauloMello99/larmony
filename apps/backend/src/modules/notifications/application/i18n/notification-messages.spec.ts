@@ -12,7 +12,7 @@ const LOCALES: NotificationLocale[] = [
 ];
 
 describe("renderNotification", () => {
-  it("renderiza os 5 tipos em todos os 7 locales sem lançar, com title/body não-vazios", () => {
+  it("renderiza os tipos financeiros + import de extrato em todos os 7 locales sem lançar, com title/body não-vazios", () => {
     const samples: NotificationParams[] = [
       { type: "goal_reached", goalName: "Viagem", savedCents: 500000, targetCents: 500000 },
       { type: "budget_exceeded", categoryName: "Lazer", spentCents: 29033, limitCents: 25000 },
@@ -26,6 +26,8 @@ describe("renderNotification", () => {
         balanceCents: 1032156,
       },
       { type: "bill_reminder", description: "Aluguel", amountCents: 250000, daysUntil: 3, dueDay: 9 },
+      { type: "statement_import_completed", total: 94, resolvedCount: 72, unresolvedCount: 22 },
+      { type: "statement_import_failed", errorCode: "PARSE_ERROR" },
     ];
 
     for (const locale of LOCALES) {

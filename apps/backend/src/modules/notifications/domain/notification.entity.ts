@@ -8,7 +8,9 @@ export type NotificationType =
   | "budget_exceeded"
   | "monthly_report"
   | "support_ticket_created"
-  | "support_reply";
+  | "support_reply"
+  | "statement_import_completed"
+  | "statement_import_failed";
 
 export interface NotificationProps {
   id: string;

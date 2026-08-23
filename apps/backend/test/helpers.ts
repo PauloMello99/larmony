@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
+import type { NestExpressApplication } from "@nestjs/platform-express";
 import { Test } from "@nestjs/testing";
 import { Pool } from "pg";
 import request from "supertest";
@@ -15,7 +16,10 @@ export async function createTestApp(): Promise<INestApplication> {
 
   // rawBody: mesmo do main.ts — os e2e do webhook do Stripe precisam do
   // req.rawBody para a verificação de assinatura.
-  const app = moduleRef.createNestApplication({ rawBody: true });
+  const app = moduleRef.createNestApplication<NestExpressApplication>({ rawBody: true });
+  // CSV/OFX em base64 (import de extrato, ADR-0034) excede o default de
+  // 100kb do body-parser do Express — mesmo ajuste do main.ts.
+  app.useBodyParser("json", { limit: "10mb" });
   app.useGlobalFilters(new AllExceptionsFilter(app.get(TelemetryService)));
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   await app.init();
