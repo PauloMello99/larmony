@@ -2,6 +2,7 @@
   "nav": {
     "overview": "Vue d’ensemble",
     "transactions": "Transactions",
+    "statementImports": "Importer un relevé",
     "categories": "Catégories",
     "budgets": "Budgets",
     "goals": "Objectifs",

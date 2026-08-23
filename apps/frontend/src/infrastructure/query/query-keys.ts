@@ -92,6 +92,15 @@ export const queryKeys = {
     detail: (householdId: string) => ["subscription", householdId] as const,
   },
 
+  // ─── Statement imports (importação de extrato CSV/OFX) ─────────────────────
+  statementImports: {
+    all: (householdId: string) => ["statement-imports", householdId] as const,
+    job: (householdId: string, jobId: string) =>
+      ["statement-imports", householdId, "job", jobId] as const,
+    candidates: (householdId: string, jobId: string) =>
+      ["statement-imports", householdId, "candidates", jobId] as const,
+  },
+
   // ─── Admin (plataforma / super_admin) ──────────────────────────────────────
   admin: {
     all: ["admin"] as const,

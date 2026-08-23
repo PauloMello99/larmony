@@ -2,6 +2,7 @@
   "nav": {
     "overview": "Overview",
     "transactions": "Transactions",
+    "statementImports": "Import statement",
     "categories": "Categories",
     "budgets": "Budgets",
     "goals": "Goals",

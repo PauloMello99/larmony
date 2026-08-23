@@ -2,6 +2,7 @@
   "nav": {
     "overview": "总览",
     "transactions": "交易",
+    "statementImports": "导入对账单",
     "categories": "分类",
     "budgets": "预算",
     "goals": "目标",
