@@ -2,6 +2,7 @@
   "nav": {
     "overview": "Visão geral",
     "transactions": "Transações",
+    "statementImports": "Importar extrato",
     "categories": "Categorias",
     "budgets": "Orçamentos",
     "goals": "Metas",

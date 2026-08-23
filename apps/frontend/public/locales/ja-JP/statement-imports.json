@@ -1,0 +1,44 @@
+{
+  "page": {
+    "title": "明細をインポート",
+    "description": "銀行のCSVまたはOFXファイルをアップロードし、確定する前に取引内容を確認してください。"
+  },
+  "upload": {
+    "button": "ファイルをインポート",
+    "uploading": "アップロード中…",
+    "invalidType": "形式が無効です。.csv、.ofx、.qfxのいずれかのファイルをアップロードしてください。",
+    "featureDisabled": "明細のインポートは一時的に無効になっています。しばらくしてから再度お試しください。",
+    "genericError": "ファイルをアップロードできませんでした。もう一度お試しください。",
+    "emptyTitle": "まだ明細がインポートされていません",
+    "emptyDescription": "CSVまたはOFXファイルをアップロードして取引の確認を始めましょう。"
+  },
+  "job": {
+    "processing": "明細を処理しています…",
+    "genericFailure": "明細を処理できませんでした。",
+    "retry": "再試行"
+  },
+  "candidates": {
+    "headerDate": "日付",
+    "headerDescription": "説明",
+    "headerAmount": "金額",
+    "headerCategory": "カテゴリー",
+    "headerStatus": "ステータス",
+    "headerActions": "操作",
+    "categoryPlaceholder": "カテゴリーを選択",
+    "confirm": "確定",
+    "dismiss": "却下",
+    "emptyTitle": "取引が見つかりません",
+    "emptyDescription": "アップロードされたファイルに確認する取引がありません。"
+  },
+  "status": {
+    "pendingReview": "確認待ち",
+    "confirmed": "確定済み",
+    "dismissed": "却下済み",
+    "duplicate": "重複"
+  },
+  "confidence": {
+    "high": "信頼度：高",
+    "medium": "信頼度：中",
+    "low": "信頼度：低"
+  }
+}

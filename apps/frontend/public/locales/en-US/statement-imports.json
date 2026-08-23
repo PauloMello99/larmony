@@ -1,0 +1,44 @@
+{
+  "page": {
+    "title": "Import statement",
+    "description": "Upload a CSV or OFX file from your bank and review the transactions before confirming."
+  },
+  "upload": {
+    "button": "Import file",
+    "uploading": "Uploading…",
+    "invalidType": "Invalid format. Upload a .csv, .ofx or .qfx file.",
+    "featureDisabled": "Statement import is temporarily disabled. Please try again later.",
+    "genericError": "Could not upload the file. Please try again.",
+    "emptyTitle": "No statement imported yet",
+    "emptyDescription": "Upload a CSV or OFX file to start reviewing transactions."
+  },
+  "job": {
+    "processing": "Processing the statement…",
+    "genericFailure": "Could not process the statement.",
+    "retry": "Try again"
+  },
+  "candidates": {
+    "headerDate": "Date",
+    "headerDescription": "Description",
+    "headerAmount": "Amount",
+    "headerCategory": "Category",
+    "headerStatus": "Status",
+    "headerActions": "Actions",
+    "categoryPlaceholder": "Select a category",
+    "confirm": "Confirm",
+    "dismiss": "Dismiss",
+    "emptyTitle": "No transactions found",
+    "emptyDescription": "The uploaded file has no transactions to review."
+  },
+  "status": {
+    "pendingReview": "Awaiting review",
+    "confirmed": "Confirmed",
+    "dismissed": "Dismissed",
+    "duplicate": "Duplicate"
+  },
+  "confidence": {
+    "high": "High confidence",
+    "medium": "Medium confidence",
+    "low": "Low confidence"
+  }
+}

@@ -2,6 +2,7 @@
   "nav": {
     "overview": "Übersicht",
     "transactions": "Transaktionen",
+    "statementImports": "Kontoauszug importieren",
     "categories": "Kategorien",
     "budgets": "Budgets",
     "goals": "Ziele",

@@ -1,0 +1,44 @@
+{
+  "page": {
+    "title": "导入对账单",
+    "description": "上传银行的CSV或OFX文件，并在确认前核对交易记录。"
+  },
+  "upload": {
+    "button": "导入文件",
+    "uploading": "正在上传…",
+    "invalidType": "文件格式无效。请上传 .csv、.ofx 或 .qfx 文件。",
+    "featureDisabled": "对账单导入功能暂时已禁用，请稍后再试。",
+    "genericError": "无法上传文件，请重试。",
+    "emptyTitle": "尚未导入任何对账单",
+    "emptyDescription": "上传CSV或OFX文件即可开始核对交易记录。"
+  },
+  "job": {
+    "processing": "正在处理对账单…",
+    "genericFailure": "无法处理对账单。",
+    "retry": "重试"
+  },
+  "candidates": {
+    "headerDate": "日期",
+    "headerDescription": "描述",
+    "headerAmount": "金额",
+    "headerCategory": "分类",
+    "headerStatus": "状态",
+    "headerActions": "操作",
+    "categoryPlaceholder": "选择分类",
+    "confirm": "确认",
+    "dismiss": "忽略",
+    "emptyTitle": "未找到任何交易",
+    "emptyDescription": "上传的文件中没有可核对的交易记录。"
+  },
+  "status": {
+    "pendingReview": "待审核",
+    "confirmed": "已确认",
+    "dismissed": "已忽略",
+    "duplicate": "重复"
+  },
+  "confidence": {
+    "high": "高置信度",
+    "medium": "中等置信度",
+    "low": "低置信度"
+  }
+}

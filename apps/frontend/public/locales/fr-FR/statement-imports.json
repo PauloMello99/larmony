@@ -1,0 +1,44 @@
+{
+  "page": {
+    "title": "Importer un relevé",
+    "description": "Envoyez un fichier CSV ou OFX de votre banque et vérifiez les transactions avant de les confirmer."
+  },
+  "upload": {
+    "button": "Importer un fichier",
+    "uploading": "Envoi en cours…",
+    "invalidType": "Format invalide. Envoyez un fichier .csv, .ofx ou .qfx.",
+    "featureDisabled": "L'importation de relevés est temporairement désactivée. Réessayez plus tard.",
+    "genericError": "Impossible d'envoyer le fichier. Réessayez.",
+    "emptyTitle": "Aucun relevé importé pour le moment",
+    "emptyDescription": "Envoyez un fichier CSV ou OFX pour commencer à vérifier les transactions."
+  },
+  "job": {
+    "processing": "Traitement du relevé…",
+    "genericFailure": "Impossible de traiter le relevé.",
+    "retry": "Réessayer"
+  },
+  "candidates": {
+    "headerDate": "Date",
+    "headerDescription": "Description",
+    "headerAmount": "Montant",
+    "headerCategory": "Catégorie",
+    "headerStatus": "Statut",
+    "headerActions": "Actions",
+    "categoryPlaceholder": "Sélectionner une catégorie",
+    "confirm": "Confirmer",
+    "dismiss": "Rejeter",
+    "emptyTitle": "Aucune transaction trouvée",
+    "emptyDescription": "Le fichier envoyé ne contient aucune transaction à vérifier."
+  },
+  "status": {
+    "pendingReview": "En attente de révision",
+    "confirmed": "Confirmée",
+    "dismissed": "Rejetée",
+    "duplicate": "Doublon"
+  },
+  "confidence": {
+    "high": "Confiance élevée",
+    "medium": "Confiance moyenne",
+    "low": "Confiance faible"
+  }
+}

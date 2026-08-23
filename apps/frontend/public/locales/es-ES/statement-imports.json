@@ -1,0 +1,44 @@
+{
+  "page": {
+    "title": "Importar extracto",
+    "description": "Sube un archivo CSV u OFX de tu banco y revisa las transacciones antes de confirmarlas."
+  },
+  "upload": {
+    "button": "Importar archivo",
+    "uploading": "Subiendo…",
+    "invalidType": "Formato inválido. Sube un archivo .csv, .ofx o .qfx.",
+    "featureDisabled": "La importación de extractos está temporalmente deshabilitada. Inténtalo de nuevo más tarde.",
+    "genericError": "No se pudo subir el archivo. Inténtalo de nuevo.",
+    "emptyTitle": "Aún no se ha importado ningún extracto",
+    "emptyDescription": "Sube un archivo CSV u OFX para empezar a revisar las transacciones."
+  },
+  "job": {
+    "processing": "Procesando el extracto…",
+    "genericFailure": "No se pudo procesar el extracto.",
+    "retry": "Intentar de nuevo"
+  },
+  "candidates": {
+    "headerDate": "Fecha",
+    "headerDescription": "Descripción",
+    "headerAmount": "Importe",
+    "headerCategory": "Categoría",
+    "headerStatus": "Estado",
+    "headerActions": "Acciones",
+    "categoryPlaceholder": "Seleccionar categoría",
+    "confirm": "Confirmar",
+    "dismiss": "Descartar",
+    "emptyTitle": "No se encontraron transacciones",
+    "emptyDescription": "El archivo subido no contiene transacciones para revisar."
+  },
+  "status": {
+    "pendingReview": "Pendiente de revisión",
+    "confirmed": "Confirmada",
+    "dismissed": "Descartada",
+    "duplicate": "Duplicada"
+  },
+  "confidence": {
+    "high": "Alta confianza",
+    "medium": "Confianza media",
+    "low": "Baja confianza"
+  }
+}

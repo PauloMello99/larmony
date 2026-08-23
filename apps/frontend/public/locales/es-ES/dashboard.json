@@ -2,6 +2,7 @@
   "nav": {
     "overview": "Resumen",
     "transactions": "Transacciones",
+    "statementImports": "Importar extracto",
     "categories": "Categorías",
     "budgets": "Presupuestos",
     "goals": "Metas",
