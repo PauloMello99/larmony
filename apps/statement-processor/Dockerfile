@@ -20,6 +20,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY pyproject.toml ./
 COPY src/ ./src/
 
+# docling puxa torch/torchvision via PyPI normal, que nessa plataforma
+# resolve pro build com CUDA completo (~2.5GB de pacotes nvidia-*,
+# inclusive triton/cuda-toolkit) mesmo o serviço sendo CPU-only (ADR-0033).
+# Achado real, validado em build isolado (3.05GB) e depois no Dockerfile
+# completo com OCR real dentro do container (mesmas 153 transações do
+# ambiente de dev) antes de trazer essa mudança pro Dockerfile principal:
+# pré-instalar as MESMAS versões (2.13.0/0.28.0) do índice oficial
+# CPU-only do PyTorch faz o `pip install .` seguinte reconhecer a
+# constraint de docling (torch<3.0.0,>=2.2.2) como já satisfeita e pular a
+# reinstalação -- reduz a imagem final de 11.2GB para 4.62GB (com modelos
+# Docling baked), sem nenhum pacote nvidia-*, torch.cuda.is_available()
+# retorna False. Se o range de versão do torch mudar (ex.: bump do
+# docling), reconferir que a versão pinada aqui ainda existe no índice CPU.
+RUN pip install --no-cache-dir torch==2.13.0 torchvision==0.28.0 --index-url https://download.pytorch.org/whl/cpu
+
 RUN pip install --no-cache-dir .
 
 # Fase 3 (OCR/Docling): baixa os modelos NO BUILD, nunca em cold-start de
