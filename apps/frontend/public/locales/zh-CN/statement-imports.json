@@ -1,19 +1,19 @@
 {
   "page": {
     "title": "导入对账单",
-    "description": "上传银行的CSV或OFX文件，并在确认前核对交易记录。"
+    "description": "上传银行的CSV、OFX或PDF文件，并在确认前核对交易记录。"
   },
   "upload": {
     "button": "导入文件",
     "uploading": "正在上传…",
-    "invalidType": "文件格式无效。请上传 .csv、.ofx 或 .qfx 文件。",
+    "invalidType": "文件格式无效。请上传 .csv、.ofx、.qfx 或 .pdf 文件。",
     "featureDisabled": "对账单导入功能暂时已禁用，请稍后再试。",
     "genericError": "无法上传文件，请重试。",
     "emptyTitle": "尚未导入任何对账单",
-    "emptyDescription": "上传CSV或OFX文件即可开始核对交易记录。"
+    "emptyDescription": "上传CSV、OFX或PDF文件即可开始核对交易记录。"
   },
   "job": {
-    "processing": "正在处理对账单…",
+    "processing": "正在处理对账单…（PDF文件可能需要几分钟）",
     "genericFailure": "无法处理对账单。",
     "retry": "重试"
   },

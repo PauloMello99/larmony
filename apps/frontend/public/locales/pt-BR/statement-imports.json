@@ -1,19 +1,19 @@
 {
   "page": {
     "title": "Importar extrato",
-    "description": "Envie um arquivo CSV ou OFX do seu banco e revise as transações antes de confirmar."
+    "description": "Envie um arquivo CSV, OFX ou PDF do seu banco e revise as transações antes de confirmar."
   },
   "upload": {
     "button": "Importar arquivo",
     "uploading": "Enviando…",
-    "invalidType": "Formato inválido. Envie um arquivo .csv, .ofx ou .qfx.",
+    "invalidType": "Formato inválido. Envie um arquivo .csv, .ofx, .qfx ou .pdf.",
     "featureDisabled": "A importação de extratos está temporariamente desativada. Tente novamente mais tarde.",
     "genericError": "Não foi possível enviar o arquivo. Tente novamente.",
     "emptyTitle": "Nenhum extrato importado ainda",
-    "emptyDescription": "Envie um arquivo CSV ou OFX para começar a revisar as transações."
+    "emptyDescription": "Envie um arquivo CSV, OFX ou PDF para começar a revisar as transações."
   },
   "job": {
-    "processing": "Processando o extrato…",
+    "processing": "Processando o extrato… (arquivos PDF podem levar alguns minutos)",
     "genericFailure": "Não foi possível processar o extrato.",
     "retry": "Tentar novamente"
   },

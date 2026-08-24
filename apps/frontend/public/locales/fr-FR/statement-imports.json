@@ -1,19 +1,19 @@
 {
   "page": {
     "title": "Importer un relevé",
-    "description": "Envoyez un fichier CSV ou OFX de votre banque et vérifiez les transactions avant de les confirmer."
+    "description": "Envoyez un fichier CSV, OFX ou PDF de votre banque et vérifiez les transactions avant de les confirmer."
   },
   "upload": {
     "button": "Importer un fichier",
     "uploading": "Envoi en cours…",
-    "invalidType": "Format invalide. Envoyez un fichier .csv, .ofx ou .qfx.",
+    "invalidType": "Format invalide. Envoyez un fichier .csv, .ofx, .qfx ou .pdf.",
     "featureDisabled": "L'importation de relevés est temporairement désactivée. Réessayez plus tard.",
     "genericError": "Impossible d'envoyer le fichier. Réessayez.",
     "emptyTitle": "Aucun relevé importé pour le moment",
-    "emptyDescription": "Envoyez un fichier CSV ou OFX pour commencer à vérifier les transactions."
+    "emptyDescription": "Envoyez un fichier CSV, OFX ou PDF pour commencer à vérifier les transactions."
   },
   "job": {
-    "processing": "Traitement du relevé…",
+    "processing": "Traitement du relevé… (les fichiers PDF peuvent prendre quelques minutes)",
     "genericFailure": "Impossible de traiter le relevé.",
     "retry": "Réessayer"
   },

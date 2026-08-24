@@ -37,7 +37,7 @@
 | ADR-0031 | Re-aceite bloqueante de termos (`TERMS_VERSION` deixa de ser inerte) | 2026-07-27 | Aceito |
 | ADR-0032 | Login social (Google/Apple) via Supabase Auth, mediado pelo backend | 2026-07-30 | Aceito (adendo: múltiplas identidades por usuário, mesmo dia) |
 | ADR-0033 | Import/categorização: pipeline em camadas (regras+ML) | 2026-08-22 | Aceito (adendo: serviço Python dedicado pra OCR/regras/ML, mesmo dia) |
-| ADR-0034 | Contrato de API entre `backend` e `statement-processor` | 2026-08-22 | Aceito |
+| ADR-0034 | Contrato de API entre `backend` e `statement-processor` | 2026-08-22 | Aceito (adendo: timeout de PDF corrigido pra 20min na Fase 3, 2026-08-23) |
 
 ## Decisões/registros recentes (sem ADR)
 
@@ -70,6 +70,26 @@
   `completed` órfão sem candidatos em caso de crash no meio). Detalhe
   completo em `docs/product/features/16-import-extrato.md` (atualização
   2026-08-23) e [[statement-import-amount-cents-sign-gotcha]].
+
+- **2026-08-23 — Fase 3 do import de extrato (PDF/OCR via Docling+EasyOCR)**:
+  parser genérico (`apps/statement-processor/src/statement_processor/parsers/pdf.py`)
+  + Dockerfile validados com instalação real e `docker build` de ponta a
+  ponta (não só lido/inferido da doc). Achados reais que não estavam na
+  ADR-0033/0034 original, detalhados em [[statement-processor-docling-ocr-gotchas]]:
+  pacote `easyocr` não vem com `docling` base (só RapidOCR); `docling-tools
+  models download` sem argumentos NÃO inclui easyocr no set default;
+  `python:3.12-slim` precisa de libs gráficas de sistema (libxcb etc.) pro
+  `opencv-python` que `rapidocr`/`easyocr` puxam; `BackgroundTasks` do
+  FastAPI roda no mesmo event loop do uvicorn — OCR síncrono e pesado
+  (minutos) precisava de `asyncio.to_thread`, senão travava o processo
+  inteiro por job. Também corrigido: timeout de PDF do ADR-0034 (era 5min,
+  correto é 20min — os "14-40s" da PoC eram por página, não por
+  documento; medido ~6-8min reais pra 6 páginas). Imagem Docker final:
+  **11.2GB** — `torch` puxa build CUDA completo do PyPI mesmo sendo serviço
+  CPU-only (ADR-0033 já aceitava "imagem maior", mas não nessa escala);
+  fix seria pinar torch/torchvision no índice CPU-only do PyTorch, não
+  tentado nesta sessão por risco de quebrar o build com uma versão
+  indisponível — reportado como follow-up, não como bug bloqueante.
 
 - **2026-08-22 — Investigação de viabilidade de LLM/ML → ADR-0033**:
   investigação de várias sessões (não implementação) testando viabilidade

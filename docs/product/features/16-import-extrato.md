@@ -263,13 +263,22 @@ investigação: sozinha, mais valiosa que CNPJ) integrada aqui, lendo
 > ADR-0033 §Contexto, itens 3–4). Nunca reportar como número fixo em
 > UI/telemetria.
 
-**Fase 3 — Import de PDF (OCR assíncrono)**
+**Fase 3 — Import de PDF (OCR assíncrono)** ✅ implementado (2026-08-23)
 Docling dentro do processor (modelo baixado no build da imagem Docker, não
-em runtime — evita repetir o cold-start de download visto na PoC). Import
-de PDF vira genuinamente assíncrono: job criado com status `processing`,
-callback ao backend quando pronto, notificação ao usuário
-(`DispatchNotificationUseCase`). Cron tick ganha job de reconciliação
-(jobs presos há mais de N minutos).
+em runtime — evita repetir o cold-start de download visto na PoC), motor
+EasyOCR, parser genérico por heurística de cabeçalho de coluna (sem adapter
+por banco). Import de PDF vira genuinamente assíncrono: job criado com
+status `processing`, callback ao backend quando pronto, notificação ao
+usuário (`DispatchNotificationUseCase`). Cron tick ganha job de
+reconciliação (jobs presos são marcados `TIMEOUT`).
+
+**Correção sobre os números da PoC**: os "14-40s" citados eram **por
+página**, não por documento — o timeout inicial de 5min (ADR-0034) partia
+dessa leitura errada. Medido com Docling+EasyOCR reais (CPU-only, sem GPU):
+um PDF escaneado de 6 páginas levou ~6-8min de ponta a ponta; timeout
+corrigido pra 20min. Jobs de PDF são serializados no processor (um único
+modelo de OCR cacheado por processo, sem OCR concorrente) — ver addendum
+na ADR-0034 pra detalhe completo.
 
 **Fase 4 — LLM fallback (sobra residual)**
 Groq (`gpt-oss-120b`, schema compacto — índice curto + código de categoria,
