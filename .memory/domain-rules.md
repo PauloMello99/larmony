@@ -177,6 +177,78 @@ Estas regras derivam do ADR-0006 e são **obrigatórias** em qualquer novo códi
   (`CreateHouseholdUseCase`), não por trigger (diferença deliberada vs old-larmony).
 - Categoria é opcional na transação (`category_id` nullable, `ON DELETE SET NULL`).
 
+### Import de extrato — LLM fallback (statement-processor, Fase 4, ADR-0033)
+
+- **`confidence` da resposta da Groq NUNCA é usada.** Toda resolução da camada
+  6 (`llm_fallback`) grava `RuleHit(confidence="low", ...)` hardcoded, mesmo
+  que o modelo devolva outro valor no JSON — achado real da PoC: um modelo
+  pequeno reportou alta confiança numa categorização errada ("Salário"
+  fantasma pra um Pix de pessoa física). Ver comentário no topo de
+  `apps/statement-processor/src/statement_processor/rules/llm_fallback.py`.
+- **Dedup de descrição (`seen`) é por chamada/job, nunca cache de
+  módulo/processo.** `category_code` é resolvido no contexto de um household
+  específico (vocabulário fechado daquele lar); um cache global vazaria a
+  resolução de um household pra outro, quebrando a premissa do processor ser
+  stateless (ADR-0033). Cada chamada a `resolve_llm_fallback` cria seu
+  próprio dict `seen`.
+- **Chamadas à Groq são serializadas processo inteiro** via
+  `_GROQ_CALL_LOCK = asyncio.Semaphore(1)` (mesmo princípio do `_PDF_OCR_LOCK`
+  em `job_runner.py`, mas pra um recurso externo compartilhado em vez de um
+  modelo em memória): o rate limit do free tier (8000 tokens/min, achado da
+  PoC) é **por organização**, não por job — vários jobs em paralelo
+  estourando o limite ao mesmo tempo desperdiça o retry de todos.
+- **Orçamento de tempo por `source`** (`_LLM_BUDGET_SECONDS` em
+  `pipeline.py`: 15s csv/ofx, 60s pdf) é medido a partir do início da fase
+  LLM — na prática soma com o que as camadas 1-4 já gastaram, não é
+  descontado do timeout total do backend. Estourar o orçamento **degrada
+  pra mais `unresolved`, nunca derruba o job** — a Fase 4 é estritamente
+  aditiva sobre as camadas 1-4. Por isso `CSV_OFX_TIMEOUT`
+  (`sweep-statement-import-timeouts.use-case.ts`) foi subido de **30s para
+  60s** na Fase 4.
+  **Auditoria de tempo real (2026-08-24)**: chamadas reais (não mockadas) a
+  BrasilAPI (5 CNPJs distintos, sem cache — Magazine Luiza, Nubank, Banco
+  do Brasil, Bradesco, Petrobras) levaram **31-157ms por chamada** (~0,3s
+  somado), bem abaixo do timeout de 10s/chamada da camada CNPJ→CNAE. Groq
+  real (`reasoning_effort:"low"`) resolveu um batch de 20 itens em **~1,3s**
+  e um de 5 itens em **~0,8s**. Ou seja, no caminho feliz (sem 429/retry) o
+  total real fica na casa de 1-2s — muito abaixo dos 15s/60s de orçamento.
+  **Risco residual ainda não medido**: essa auditoria rodou sem carga
+  concorrente; o cenário que de fato ameaça o orçamento é retry+backoff em
+  cascata quando o rate limit da Groq (8000 tokens/min por organização) é
+  estourado por vários jobs/households competindo pelo `_GROQ_CALL_LOCK`
+  (semáforo processo-inteiro) ao mesmo tempo — monitorar taxa de TIMEOUT em
+  produção e medir sob carga real se justificar.
+- **Gotcha real corrigido durante a implementação**: o semáforo acima
+  esperava (`async with _GROQ_CALL_LOCK`) sem limite de tempo — um job podia
+  passar no check de deadline (feito só entre batches) e depois ficar preso
+  esperando o lock por dezenas de segundos enquanto outro job/household já
+  estava no meio do próprio retry+backoff, tornando o orçamento por `source`
+  decorativo. Fix: a espera pelo lock é limitada ao tempo restante até o
+  deadline (`asyncio.wait_for(_GROQ_CALL_LOCK.acquire(), timeout=remaining)`),
+  com o deadline também rechecado a cada tentativa de retry (não só entre
+  batches). Coberto por
+  `test_deadline_expires_while_waiting_for_the_process_wide_lock` em
+  `tests/test_llm_fallback.py`.
+- **`merchant_key` nunca é populado pela camada LLM** (`RuleHit.merchant_key`
+  fica `None`) — decisão deliberada pra impedir que uma alucinação do modelo
+  vire uma entrada permanente em `merchant_category_memory` via confirmação
+  posterior do usuário. Ao aplicar o hit em `pipeline.py`, só `category_code`/
+  `category_confidence`/`resolved_by` são sobrescritos no candidate — o
+  `merchant_key` já computado por uma camada anterior (se houver) é
+  preservado.
+- **Índice posicional, nunca `external_id`, é a chave entre `pipeline.py` e
+  `resolve_llm_fallback`** — `external_id` pode colidir (é derivado de
+  data+valor+descrição quando o parser não fornece um, ver
+  `deterministic_external_id`), então aplicar hits por ele arriscaria
+  categorizar a transação errada.
+- **`GROQ_API_KEY` é opcional e processor-only** (`Settings.groq_api_key`
+  nunca lança, ao contrário de `processor_shared_secret`) — ausente = Fase 4
+  desligada, pipeline se comporta como nas Fases 1-3. Como os `.env` deste
+  serviço não são carregados automaticamente por nenhuma lib (sem
+  `python-dotenv`/`load_dotenv` no projeto), a env real do processo (shell,
+  Railway, etc.) é que precisa ter a variável — copiar pro `.env` local
+  documenta a convenção mas não injeta nada sozinho.
+
 ### Transações — entidade central
 
 - `type`: `income` | `expense`. Valor em **centavos inteiros** (`amount_cents`).

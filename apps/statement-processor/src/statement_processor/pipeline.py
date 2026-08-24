@@ -11,14 +11,44 @@ import time
 
 import httpx
 
+from .config import settings
 from .parsers import ParsedTransaction, deterministic_external_id
 from .rules import RuleHit
 from .rules.cnpj_cnae import match_cnpj_cnae
 from .rules.household_member import match_household_member
 from .rules.keyword import match_keyword
+from .rules.llm_fallback import resolve_llm_fallback
 from .rules.merchant_key import normalize_merchant
 from .rules.structural import match_structural
-from .schemas import CandidateTransaction, JobContext, JobStats, MerchantMemoryEntry
+from .schemas import (
+    CandidateTransaction,
+    JobContext,
+    JobStats,
+    MerchantMemoryEntry,
+    Source,
+)
+
+# Orçamento de tempo da FASE de fallback LLM em si, medido a PARTIR do
+# início desta fase (não do job inteiro, e não descontado do tempo já
+# gasto nas camadas 1-4 antes dela) -- na prática soma com o que as
+# camadas 1-4 (parsing + CNPJ→CNAE) já consumiram, então CSV_OFX_TIMEOUT
+# (backend, sweep-statement-import-timeouts.use-case.ts) foi subido de
+# 30s -> 60s na Fase 4 pra dar folga real a essa soma.
+#
+# Auditoria de tempo real (2026-08-24, chamadas reais a BrasilAPI e Groq,
+# fora de carga concorrente -- ver [[domain-rules]]): CNPJ→CNAE (5 CNPJs
+# distintos reais, sem cache) levou 31-157ms por chamada (~0,3s somado,
+# bem abaixo do timeout de 10s por chamada); Groq (`reasoning_effort:
+# "low"`) resolveu um batch de 20 itens em ~1,3s e um de 5 itens em
+# ~0,8s -- ordens de grandeza abaixo dos 15s deste orçamento no caminho
+# feliz (sem 429/retry). O risco real não é o cálculo em si ser lento --
+# é o retry+backoff em cascata quando o rate limit da Groq (8000
+# tokens/min por organização) é estourado por múltiplos jobs/households
+# concorrentes competindo pelo `_GROQ_CALL_LOCK` (semáforo processo-
+# inteiro) ao mesmo tempo; esse cenário não foi medido aqui (precisaria de
+# carga concorrente real) e seria o próximo passo se a telemetria de
+# TIMEOUT em produção justificar.
+_LLM_BUDGET_SECONDS: dict[str, float] = {"csv": 15.0, "ofx": 15.0, "pdf": 60.0}
 
 
 def match_merchant_memory(
@@ -91,7 +121,7 @@ async def categorize_one(
 
 
 async def run_pipeline(
-    transactions: list[ParsedTransaction], context: JobContext
+    transactions: list[ParsedTransaction], context: JobContext, source: Source
 ) -> tuple[list[CandidateTransaction], JobStats]:
     start = time.monotonic()
     async with httpx.AsyncClient() as client:
@@ -99,12 +129,39 @@ async def run_pipeline(
             await categorize_one(client, txn, context) for txn in transactions
         ]
 
-    resolved_by_rules = sum(1 for c in candidates if c.category_code is not None)
+        resolved_by_rules = sum(1 for c in candidates if c.category_code is not None)
+
+        # Índice POSICIONAL na lista `candidates` (nunca external_id, que
+        # pode colidir) -- é a chave usada tanto pra montar o batch quanto
+        # pra reaplicar os hits abaixo.
+        unresolved_items = [
+            (i, c.description, c.type)
+            for i, c in enumerate(candidates)
+            if c.resolved_by == "unresolved"
+        ]
+        if unresolved_items and settings.groq_api_key is not None:
+            deadline = time.monotonic() + _LLM_BUDGET_SECONDS[source]
+            llm_hits = await resolve_llm_fallback(
+                client, unresolved_items, context.categories, deadline
+            )
+            for index, hit in llm_hits.items():
+                # merchant_key do hit da LLM é sempre None por design --
+                # nunca sobrescreve um merchant_key já computado por uma
+                # camada anterior nesse mesmo candidate.
+                candidates[index] = candidates[index].model_copy(
+                    update={
+                        "category_code": hit.category_code,
+                        "category_confidence": hit.confidence,
+                        "resolved_by": hit.resolved_by,
+                    }
+                )
+
     unresolved = sum(1 for c in candidates if c.resolved_by == "unresolved")
+    resolved_by_llm = sum(1 for c in candidates if c.resolved_by == "llm_fallback")
     stats = JobStats(
         total=len(candidates),
         resolvedByRules=resolved_by_rules,
-        resolvedByLlm=0,  # LLM fallback entra na Fase 4
+        resolvedByLlm=resolved_by_llm,
         unresolved=unresolved,
         processingMs=round((time.monotonic() - start) * 1000),
     )
