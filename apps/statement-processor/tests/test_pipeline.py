@@ -1,15 +1,50 @@
+import json
+
 import httpx
 import pytest
 
+from statement_processor.config import settings
 from statement_processor.parsers import ParsedTransaction
-from statement_processor.pipeline import categorize_one
-from statement_processor.schemas import HouseholdMember, JobContext, MerchantMemoryEntry
+from statement_processor.pipeline import categorize_one, run_pipeline
+from statement_processor.rules import llm_fallback
+from statement_processor.rules.llm_fallback import _GROQ_CALL_LOCK, _GROQ_URL, _MAX_RETRIES
+from statement_processor.schemas import (
+    CategoryRef,
+    HouseholdMember,
+    JobContext,
+    MerchantMemoryEntry,
+)
 
 
 def _txn(description: str, amount_cents: int = -1000) -> ParsedTransaction:
     return ParsedTransaction(
         external_id="fx-1", date="2026-03-01", amount_cents=amount_cents, description=description
     )
+
+
+# Descrição de pix pra pessoa física genérica, sem CNPJ, sem keyword de
+# comerciante e sem membro do lar cadastrado -- fica "unresolved" nas
+# camadas 1-4, exatamente o cenário que a camada 6 (LLM) deve tentar cobrir.
+def _unresolved_txn(amount_cents: int = -5000) -> ParsedTransaction:
+    return _txn("Transferência recebida pelo Pix - PESSOA DESCONHECIDA", amount_cents)
+
+
+def _groq_envelope(items: list[dict]) -> dict:
+    return {"choices": [{"message": {"content": json.dumps({"items": items})}}]}
+
+
+@pytest.fixture(autouse=True)
+def _reset_groq_lock():
+    # Mesmo padrão de tests/test_llm_fallback.py -- _GROQ_CALL_LOCK é global
+    # de processo; um teste que falhe segurando o lock travaria qualquer
+    # teste seguinte que dependa dele.
+    _GROQ_CALL_LOCK._value = 1
+    yield
+    _GROQ_CALL_LOCK._value = 1
+
+
+def _set_groq_key(monkeypatch: pytest.MonkeyPatch, value: str | None) -> None:
+    monkeypatch.setattr(type(settings), "groq_api_key", property(lambda self: value))
 
 
 @pytest.mark.asyncio
@@ -115,3 +150,100 @@ async def test_structural_wins_over_household_member_and_memory():
         )
     assert candidate.resolved_by == "structural"
     assert candidate.category_code is None
+
+
+@pytest.mark.asyncio
+async def test_run_pipeline_resolves_residual_via_groq_fallback(monkeypatch, httpx_mock):
+    _set_groq_key(monkeypatch, "test-groq-key")
+    context = JobContext(
+        categories=[CategoryRef(code="ALI", id="cat-ali", name="Alimentação", type="expense")],
+        merchantMemory=[],
+        householdMembers=[],
+    )
+    transactions = [_unresolved_txn()]
+    httpx_mock.add_response(
+        url=_GROQ_URL,
+        json=_groq_envelope([{"index": 0, "categoryCode": "ALI"}]),
+    )
+
+    candidates, stats = await run_pipeline(transactions, context, "csv")
+
+    assert candidates[0].resolved_by == "llm_fallback"
+    assert candidates[0].category_confidence == "low"
+    assert candidates[0].category_code == "ALI"
+    assert stats.resolved_by_llm >= 1
+    assert stats.unresolved == 0
+
+
+@pytest.mark.asyncio
+async def test_run_pipeline_skips_groq_entirely_without_api_key(monkeypatch, httpx_mock):
+    _set_groq_key(monkeypatch, None)
+    context = JobContext(
+        categories=[CategoryRef(code="ALI", id="cat-ali", name="Alimentação", type="expense")],
+        merchantMemory=[],
+        householdMembers=[],
+    )
+    transactions = [_unresolved_txn()]
+
+    candidates, stats = await run_pipeline(transactions, context, "csv")
+
+    assert httpx_mock.get_requests(url=_GROQ_URL) == []
+    assert candidates[0].resolved_by == "unresolved"
+    assert stats.resolved_by_llm == 0
+
+
+@pytest.mark.asyncio
+async def test_run_pipeline_survives_groq_retry_exhaustion(monkeypatch, httpx_mock):
+    _set_groq_key(monkeypatch, "test-groq-key")
+
+    async def _fake_sleep(seconds: float) -> None:
+        return None
+
+    monkeypatch.setattr(llm_fallback.asyncio, "sleep", _fake_sleep)
+
+    for _ in range(_MAX_RETRIES):
+        httpx_mock.add_response(url=_GROQ_URL, status_code=429)
+
+    context = JobContext(
+        categories=[CategoryRef(code="ALI", id="cat-ali", name="Alimentação", type="expense")],
+        merchantMemory=[],
+        householdMembers=[],
+    )
+    transactions = [_unresolved_txn()]
+
+    candidates, stats = await run_pipeline(transactions, context, "csv")
+
+    assert candidates[0].resolved_by == "unresolved"
+    assert stats.resolved_by_llm == 0
+    assert len(httpx_mock.get_requests(url=_GROQ_URL)) == _MAX_RETRIES
+
+
+@pytest.mark.asyncio
+async def test_run_pipeline_resolved_by_rules_stable_regardless_of_llm(
+    monkeypatch, httpx_mock
+):
+    # stats.resolved_by_rules é um snapshot tirado ANTES da fase LLM em
+    # pipeline.py -- nunca deveria variar por causa da camada 6 rodar ou
+    # não. Roda o MESMO conjunto de transações duas vezes: uma com a Groq
+    # resolvendo tudo, outra com a chave ausente.
+    context = JobContext(
+        categories=[CategoryRef(code="ALI", id="cat-ali", name="Alimentação", type="expense")],
+        merchantMemory=[],
+        householdMembers=[],
+    )
+    transactions = [
+        _txn("Compra no débito - SUPERMERCADO EXEMPLO LTDA", amount_cents=-8990),
+        _unresolved_txn(),
+    ]
+
+    _set_groq_key(monkeypatch, "test-groq-key")
+    httpx_mock.add_response(
+        url=_GROQ_URL,
+        json=_groq_envelope([{"index": 0, "categoryCode": "ALI"}]),
+    )
+    _, stats_with_llm = await run_pipeline(transactions, context, "csv")
+
+    _set_groq_key(monkeypatch, None)
+    _, stats_without_llm = await run_pipeline(transactions, context, "csv")
+
+    assert stats_with_llm.resolved_by_rules == stats_without_llm.resolved_by_rules

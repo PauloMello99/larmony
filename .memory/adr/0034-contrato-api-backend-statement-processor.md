@@ -153,10 +153,10 @@ revisar se o processor algum dia for multi-tenant entre produtos, o que não
   mesmo `jobId` (retry de rede) é tratado como no-op se o job já está
   `completed`/`failed` — mesmo padrão dos webhooks Stripe (ADR-0026,
   `stripe_webhook_events`).
-- Timeout de espera pelo callback: 30s pra `csv`/`ofx`, 20min pra `pdf`
-  (corrigido na Fase 3 — ver Addendum no fim do documento). Job de
-  reconciliação do cron tick marca como `failed` (`TIMEOUT`) o que passar
-  do prazo sem callback.
+- Timeout de espera pelo callback: 60s pra `csv`/`ofx` (corrigido na Fase 4,
+  era 30s), 20min pra `pdf` (corrigido na Fase 3) — ver Addenda no fim do
+  documento. Job de reconciliação do cron tick marca como `failed`
+  (`TIMEOUT`) o que passar do prazo sem callback.
 - Reimport do mesmo período: `externalId` funciona como chave de dedup —
   candidato cujo `externalId` já existe (em `statement_import_candidates`
   confirmado ou em `transactions.notes`/campo de origem) é marcado
@@ -302,3 +302,23 @@ são module-level, então escalar pra N workers criaria N locks/converters
 independentes e voltaria a permitir OCR concorrente de verdade; revisar
 esta nota se o serviço um dia escalar horizontalmente dentro do mesmo
 container.
+
+## Addendum (Fase 4 — correção do timeout de CSV/OFX)
+
+A camada 6 (LLM fallback via Groq, ver ADR-0033) soma tempo real em cima
+das camadas 1-5 — o orçamento de tempo por `source` do processor
+(`_LLM_BUDGET_SECONDS` em `pipeline.py`) é medido a partir do início da
+fase LLM, não descontado do que as camadas anteriores já gastaram.
+`CSV_OFX_TIMEOUT` subido de **30s para 60s** por decisão explícita do
+usuário ao revisar esse risco.
+
+Auditoria de tempo real (2026-08-24, chamadas reais a BrasilAPI e Groq,
+fora de carga concorrente): CNPJ→CNAE (5 CNPJs distintos reais, sem cache)
+levou 31-157ms por chamada; Groq (`reasoning_effort:"low"`) resolveu um
+batch de 20 itens em ~1,3s e um de 5 itens em ~0,8s. Caminho feliz fica na
+casa de 1-2s total — 60s dá folga generosa sobre o caso comum. Risco
+residual não medido (precisaria de carga concorrente real pra reproduzir):
+retry+backoff em cascata quando o rate limit da Groq (8000 tokens/min por
+organização) é estourado por múltiplos jobs/households competindo pelo
+`_GROQ_CALL_LOCK` (semáforo processo-inteiro) ao mesmo tempo — monitorar
+taxa de `TIMEOUT` em produção e medir sob carga se justificar.

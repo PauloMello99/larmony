@@ -11,13 +11,13 @@ implementação em `docs/product/features/16-import-extrato.md`.
 `pnpm build`/`turbo.json`. Deploy como serviço Railway próprio (Dockerfile
 dedicado), mesma plataforma de `apps/backend`/`apps/frontend`.
 
-## Escopo atual (Fases 1–3)
+## Escopo atual (Fases 1–4)
 
 Esqueleto do serviço + parsing CSV (adapter Nubank)/OFX (padrão)/PDF (OCR
 via Docling, motor EasyOCR, parser genérico por heurística de cabeçalho de
-coluna — sem adapter por banco) + camadas 1–3 de categorização (estrutural,
-keyword, CNPJ→CNAE via BrasilAPI) + cross-referência de membro do lar
-(Fase 2). Sem ML (Fase 5), sem LLM fallback (Fase 4).
+coluna — sem adapter por banco) + camadas 1–4 de categorização (estrutural,
+keyword, CNPJ→CNAE via BrasilAPI, cross-referência de membro do lar da Fase
+2) + fallback LLM via Groq (Fase 4) pra sobra residual. Sem ML (Fase 5).
 
 Import de PDF é CPU-only e self-hospedado (sem serviço externo de OCR). O
 modelo do EasyOCR deve estar pré-baixado no build da imagem Docker (nunca
@@ -93,12 +93,16 @@ src/statement_processor/
     registry.py     — escolhe o adapter certo por source + conteúdo
   rules/
     structural.py   — camada 1 (movimentação interna, fatura de cartão)
-    keyword.py      — camada 2 (dicionário de comerciante)
-    cnpj_cnae.py     — camada 3 (CNPJ -> CNAE via BrasilAPI -> categoria)
+    household_member.py — camada 3 (cross-referência de membro do lar;
+                       camada 2, memória de comerciante, resolvida inline em
+                       pipeline.py)
+    keyword.py      — camada 4 (dicionário de comerciante)
+    cnpj_cnae.py     — camada 5 (CNPJ -> CNAE via BrasilAPI -> categoria)
+    llm_fallback.py  — camada 6 (Groq, Fase 4), sobra residual das camadas
+                       1-5
 ```
 
 ## Próximas fases (não implementadas aqui)
 
-- **Fase 4**: LLM fallback (Groq) pra sobra residual.
 - **Fase 5**: classificador de ML embutido (gatilho por volume de dado, não
   por data).

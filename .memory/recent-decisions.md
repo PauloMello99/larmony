@@ -93,6 +93,40 @@
   available=False`, zero pacotes `nvidia-*`). Detalhe em
   [[statement-processor-docling-ocr-gotchas]].
 
+- **2026-08-24 — Fase 4 do import de extrato (LLM fallback via Groq)**:
+  camada 6 de categorização (`apps/statement-processor/src/statement_processor/rules/llm_fallback.py`)
+  pra sobra residual que as camadas 1-5 não resolvem — Groq
+  `openai/gpt-oss-120b`, schema compacto (índice curto + `categoryCode`,
+  nunca UUID/nome completo), `reasoning_effort:"low"`, retry-with-backoff
+  honrando `Retry-After` desde o dia 1 (achado da PoC: rate limit de 8000
+  tokens/min por organização no free tier). `GROQ_API_KEY` opcional e
+  processor-only (`Settings.groq_api_key`, nunca lança se ausente — Fase 4
+  fica desligada, pipeline se comporta como nas Fases 1-3); adicionada
+  também ao `turbo.json` (`globalEnv`, passthrough). Decisões não-óbvias
+  (confidence sempre "low", dedup por-job nunca global, semáforo
+  processo-inteiro pro rate limit, orçamento de tempo por `source`,
+  `merchant_key` nunca populado pela LLM, hits aplicados por índice
+  posicional nunca `external_id`) documentadas em [[domain-rules]] (seção
+  "Import de extrato — LLM fallback"). **Gotcha real corrigido durante a
+  implementação** (achado por revisão, não pela suíte original): o
+  semáforo que serializa as chamadas Groq esperava sem limite de tempo,
+  deixando o orçamento por `source` (15s csv/ofx, 60s pdf) decorativo
+  sempre que dois jobs/households competiam pela Groq ao mesmo tempo —
+  corrigido limitando a espera do lock ao tempo restante até o deadline
+  (`asyncio.wait_for`) — inclusive o timeout da requisição HTTP e o sleep
+  de backoff/`Retry-After`, achado num 2º round de revisão (o fix inicial só
+  limitava a espera pelo lock, não o request/sleep já com o lock em mãos) —
+  coberto por 2 testes de regressão dedicados em `tests/test_llm_fallback.py`.
+  `CSV_OFX_TIMEOUT` (backend) subido de **30s para 60s** por decisão
+  explícita do usuário, já que a camada 6 soma tempo real em cima das
+  camadas 1-5. **Auditoria de tempo real (chamadas reais a BrasilAPI e
+  Groq, fora de carga concorrente)**: CNPJ→CNAE levou 31-157ms/chamada
+  (5 CNPJs distintos reais, sem cache); Groq resolveu um batch de 20 itens
+  em ~1,3s e de 5 itens em ~0,8s — caminho feliz fica na casa de 1-2s
+  total, bem abaixo dos 15s/60s de orçamento. Risco residual não medido:
+  retry+backoff em cascata sob rate limit da Groq com jobs concorrentes —
+  ver [[domain-rules]] pro detalhe completo.
+
 - **2026-08-22 — Investigação de viabilidade de LLM/ML → ADR-0033**:
   investigação de várias sessões (não implementação) testando viabilidade
   de LLM pequeno pro import/categorização/relatório/chatbot. PoCs reais com
