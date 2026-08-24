@@ -1,19 +1,19 @@
 {
   "page": {
     "title": "Kontoauszug importieren",
-    "description": "Lade eine CSV- oder OFX-Datei deiner Bank hoch und überprüfe die Transaktionen, bevor du sie bestätigst."
+    "description": "Lade eine CSV-, OFX- oder PDF-Datei deiner Bank hoch und überprüfe die Transaktionen, bevor du sie bestätigst."
   },
   "upload": {
     "button": "Datei importieren",
     "uploading": "Wird hochgeladen…",
-    "invalidType": "Ungültiges Format. Lade eine .csv-, .ofx- oder .qfx-Datei hoch.",
+    "invalidType": "Ungültiges Format. Lade eine .csv-, .ofx-, .qfx- oder .pdf-Datei hoch.",
     "featureDisabled": "Der Kontoauszugsimport ist vorübergehend deaktiviert. Bitte versuche es später erneut.",
     "genericError": "Die Datei konnte nicht hochgeladen werden. Bitte versuche es erneut.",
     "emptyTitle": "Noch kein Kontoauszug importiert",
-    "emptyDescription": "Lade eine CSV- oder OFX-Datei hoch, um mit der Überprüfung der Transaktionen zu beginnen."
+    "emptyDescription": "Lade eine CSV-, OFX- oder PDF-Datei hoch, um mit der Überprüfung der Transaktionen zu beginnen."
   },
   "job": {
-    "processing": "Kontoauszug wird verarbeitet…",
+    "processing": "Kontoauszug wird verarbeitet… (PDF-Dateien können einige Minuten dauern)",
     "genericFailure": "Der Kontoauszug konnte nicht verarbeitet werden.",
     "retry": "Erneut versuchen"
   },

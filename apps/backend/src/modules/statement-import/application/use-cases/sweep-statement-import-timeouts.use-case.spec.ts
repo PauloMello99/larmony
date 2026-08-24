@@ -15,12 +15,12 @@ function make() {
 }
 
 describe("SweepStatementImportTimeoutsUseCase", () => {
-  it("chama sweepTimeouts com os thresholds do ADR-0034 (30s csv/ofx, 5min pdf)", async () => {
+  it("chama sweepTimeouts com os thresholds do ADR-0034 (30s csv/ofx, 20min pdf)", async () => {
     const { useCase, adminRepo } = make();
 
     await useCase.execute();
 
-    expect(adminRepo.sweepTimeouts).toHaveBeenCalledWith("30 seconds", "5 minutes");
+    expect(adminRepo.sweepTimeouts).toHaveBeenCalledWith("30 seconds", "20 minutes");
   });
 
   it("nenhum job vencido → timedOut: 0", async () => {

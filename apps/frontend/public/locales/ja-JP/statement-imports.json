@@ -1,19 +1,19 @@
 {
   "page": {
     "title": "明細をインポート",
-    "description": "銀行のCSVまたはOFXファイルをアップロードし、確定する前に取引内容を確認してください。"
+    "description": "銀行のCSV、OFXまたはPDFファイルをアップロードし、確定する前に取引内容を確認してください。"
   },
   "upload": {
     "button": "ファイルをインポート",
     "uploading": "アップロード中…",
-    "invalidType": "形式が無効です。.csv、.ofx、.qfxのいずれかのファイルをアップロードしてください。",
+    "invalidType": "形式が無効です。.csv、.ofx、.qfx、.pdfのいずれかのファイルをアップロードしてください。",
     "featureDisabled": "明細のインポートは一時的に無効になっています。しばらくしてから再度お試しください。",
     "genericError": "ファイルをアップロードできませんでした。もう一度お試しください。",
     "emptyTitle": "まだ明細がインポートされていません",
-    "emptyDescription": "CSVまたはOFXファイルをアップロードして取引の確認を始めましょう。"
+    "emptyDescription": "CSV、OFXまたはPDFファイルをアップロードして取引の確認を始めましょう。"
   },
   "job": {
-    "processing": "明細を処理しています…",
+    "processing": "明細を処理しています…(PDFファイルは数分かかる場合があります)",
     "genericFailure": "明細を処理できませんでした。",
     "retry": "再試行"
   },
