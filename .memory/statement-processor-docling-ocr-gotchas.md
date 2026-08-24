@@ -57,12 +57,22 @@ carregamento de modelo (esse é ~segundos). Corrigido pra 20min
 de 6 páginas ainda podem estourar; correção definitiva seria
 heartbeat/progresso do processor, não tentado nesta fase.
 
-**Imagem Docker final: 11.2GB.** `torch` (dependência do docling) puxa o
-build CUDA completo do PyPI (`nvidia-cublas`, `nvidia-cudnn`, `triton`,
-etc. — ~2.5GB só de pacotes NVIDIA) mesmo o serviço sendo CPU-only
-(decisão explícita do ADR-0033). Não corrigido nesta sessão: trocar pra
-`torch`/`torchvision` do índice CPU-only do PyTorch
-(`download.pytorch.org/whl/cpu`) exigiria confirmar que a versão exata
-pinada (2.13.0) existe nesse índice, e um build real pra validar — risco
-de quebrar o build sem essa validação. Reportado como follow-up de
-otimização, não bloqueante pro merge da Fase 3.
+**Imagem Docker: 11.2GB → 4.62GB com torch CPU-only (corrigido).** `torch`
+(dependência do docling) por padrão puxa o build CUDA completo do PyPI
+(`nvidia-cublas`, `nvidia-cudnn`, `triton`, etc. — ~2.5GB só de pacotes
+NVIDIA) mesmo o serviço sendo CPU-only (decisão explícita do ADR-0033).
+Fix validado em experimento isolado antes de tocar no Dockerfile real:
+`RUN pip install torch==2.13.0 torchvision==0.28.0 --index-url
+https://download.pytorch.org/whl/cpu` ANTES do `pip install .` — pip
+reconhece a constraint de docling (`torch<3.0.0,>=2.2.2`) como já
+satisfeita pelas wheels `+cpu` e nunca baixa a build CUDA. Validado com
+`docker build` real de ponta a ponta + OCR real dentro do container
+(153 transações extraídas, idêntico ao ambiente de desenvolvimento) —
+`torch.cuda.is_available()` retorna `False`, zero pacotes `nvidia-*`
+instalados. **Atenção**: o pin de versão CPU vive só no Dockerfile —
+`pip install -e .` local (fora do container) continua puxando a build
+CUDA normal do PyPI, então dev e produção divergem deliberadamente no
+"sabor" do torch instalado (dev não sofre com isso, só ocupa mais disco
+local). Se o range de versão que o docling exige mudar num bump futuro,
+reconferir que a versão exata pinada existe no índice `whl/cpu` antes de
+atualizar.
