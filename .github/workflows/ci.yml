@@ -65,6 +65,18 @@ jobs:
       # Valor fixo de CI — os e2e do webhook (B-3) assinam o payload com este
       # mesmo secret (generateTestHeaderString), então não vem do dashboard.
       STRIPE_WEBHOOK_SECRET: whsec_test_ci_larmony_b3
+      # Import de extrato (ADR-0034) — sem isso os e2e de statement-import
+      # (flow/rls/cron) recebem 503 STATEMENT_IMPORT_DISABLED antes mesmo de
+      # criar o job. PROCESSOR_SHARED_SECRET é lido tanto pelo teste quanto
+      # pelo ProcessorSecretGuard (mesmo processo) — qualquer valor não-vazio
+      # serve, só precisam bater. STATEMENT_PROCESSOR_URL fica
+      # deliberadamente ausente: o handshake síncrono do HttpStatementProcessor
+      # real (não mockado nos e2e de rls/cron) precisa falhar graciosamente
+      # (job nasce "failed" via markFailedSync) — ver comentário no topo de
+      # test/statement-import-rls.e2e-spec.ts.
+      STATEMENT_IMPORT_ENABLED: "true"
+      PROCESSOR_SHARED_SECRET: ci-processor-secret
+      BACKEND_PUBLIC_URL: http://localhost:3001
     steps:
       - uses: actions/checkout@v4
 
