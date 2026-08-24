@@ -8,6 +8,16 @@ dependencies = [
   "uvicorn[standard]>=0.32",
   "pydantic>=2.9",
   "httpx>=0.27",
+  # Fase 3 (OCR de PDF). Confirmado por instalação real: o pacote base
+  # `docling` (2.121.0) traz RapidOCR como dependência, mas NÃO EasyOCR —
+  # `EasyOcrOptions()` falha em runtime com ImportError sem o pacote
+  # `easyocr` explícito (motor escolhido: EasyOCR, decisão confirmada com
+  # o usuário, apesar do RapidOCR ser o mais leve). Versão travada no minor
+  # validado: o Dockerfile assume fatos específicos desta versão (conjunto
+  # default de `docling-tools models download`, nome da pasta "EasyOcr/"
+  # em artifacts_path) que podem mudar silenciosamente em um minor futuro.
+  "docling~=2.121.0",
+  "easyocr~=1.7.2",
 ]
 
 [project.optional-dependencies]
@@ -20,6 +30,8 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+markers = ["slow: exercita OCR real (Docling+EasyOCR), 1-4min — nao roda por default"]
+addopts = "-m 'not slow'"
 
 [build-system]
 requires = ["setuptools>=68"]

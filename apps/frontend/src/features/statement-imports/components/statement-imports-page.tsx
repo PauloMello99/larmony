@@ -21,6 +21,7 @@ function detectSource(fileName: string): StatementImportSource | null {
   const ext = fileName.split(".").pop()?.toLowerCase()
   if (ext === "csv") return "csv"
   if (ext === "ofx" || ext === "qfx") return "ofx"
+  if (ext === "pdf") return "pdf"
   return null
 }
 
@@ -87,7 +88,7 @@ export function StatementImportsPage() {
           <input
             ref={fileInputRef}
             type="file"
-            accept=".csv,.ofx,.qfx"
+            accept=".csv,.ofx,.qfx,.pdf"
             className="hidden"
             onChange={handleFileChange}
           />

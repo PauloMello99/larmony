@@ -153,8 +153,8 @@ revisar se o processor algum dia for multi-tenant entre produtos, o que não
   mesmo `jobId` (retry de rede) é tratado como no-op se o job já está
   `completed`/`failed` — mesmo padrão dos webhooks Stripe (ADR-0026,
   `stripe_webhook_events`).
-- Timeout de espera pelo callback: 30s pra `csv`/`ofx`, 5min pra `pdf`
-  (folga generosa sobre os 14–40s medidos na PoC do Docling). Job de
+- Timeout de espera pelo callback: 30s pra `csv`/`ofx`, 20min pra `pdf`
+  (corrigido na Fase 3 — ver Addendum no fim do documento). Job de
   reconciliação do cron tick marca como `failed` (`TIMEOUT`) o que passar
   do prazo sem callback.
 - Reimport do mesmo período: `externalId` funciona como chave de dedup —
@@ -274,3 +274,31 @@ misturar exigiria auditar/filtrar por status em todo lugar que já lê
 - Versionamento de contrato (ex.: `Accept-Version` header) — só um
   consumidor (o próprio backend), sem terceiros; revisar se o processor
   algum dia servir outro cliente.
+
+## Addendum (Fase 3 — correção do timeout de PDF)
+
+Os "14-40s" citados na decisão original eram **por página**, não por
+documento — mal-interpretado ao definir o timeout inicial de 5min. Medido
+com Docling+EasyOCR reais (sem GPU) contra o fixture de teste (PDF
+escaneado, 6 páginas): ~6-8min de ponta a ponta, e cachear o
+`DocumentConverter` entre jobs do mesmo processo não reduz isso — o custo
+é OCR por página, não carregamento de modelo (que already é ~segundos).
+`PDF_TIMEOUT` corrigido para 20min (folga real sobre o pior caso medido).
+
+Risco residual aceito: um extrato com significativamente mais de 6 páginas
+ainda pode estourar 20min. Correção definitiva seria o processor reportar
+progresso/heartbeat pro backend em vez de um timeout fixo — fora do escopo
+da Fase 3, candidato a follow-up se extratos muito longos aparecerem em
+produção.
+
+Jobs de PDF são serializados no processor (`_PDF_OCR_LOCK` em
+`job_runner.py` — um único `DocumentConverter`/EasyOCR Reader cacheado
+por processo, não seguro pra chamada concorrente de múltiplas threads).
+Isso significa que os 20min cobrem fila de espera + OCR, não só OCR —
+se dois PDFs grandes chegarem juntos, o segundo pode consumir boa parte
+do orçamento só esperando o primeiro terminar. Isso vale com o `uvicorn`
+de 1 worker atual (`Dockerfile` não passa `--workers`) — o lock e o cache
+são module-level, então escalar pra N workers criaria N locks/converters
+independentes e voltaria a permitir OCR concorrente de verdade; revisar
+esta nota se o serviço um dia escalar horizontalmente dentro do mesmo
+container.

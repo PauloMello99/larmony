@@ -5,3 +5,4 @@ __pycache__/
 *.egg-info/
 build/
 .env
+.docling-models-test/

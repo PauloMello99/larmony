@@ -11,12 +11,29 @@ implementação em `docs/product/features/16-import-extrato.md`.
 `pnpm build`/`turbo.json`. Deploy como serviço Railway próprio (Dockerfile
 dedicado), mesma plataforma de `apps/backend`/`apps/frontend`.
 
-## Escopo desta Fase 1
+## Escopo atual (Fases 1–3)
 
-Esqueleto do serviço + parsing CSV (adapter Nubank)/OFX (padrão) + camadas
-1–3 de categorização (estrutural, keyword, CNPJ→CNAE via BrasilAPI). Sem
-PDF/OCR (Fase 3), sem cross-referência de membro do lar/memória por lar
-(Fase 2), sem ML (Fase 5), sem LLM fallback (Fase 4).
+Esqueleto do serviço + parsing CSV (adapter Nubank)/OFX (padrão)/PDF (OCR
+via Docling, motor EasyOCR, parser genérico por heurística de cabeçalho de
+coluna — sem adapter por banco) + camadas 1–3 de categorização (estrutural,
+keyword, CNPJ→CNAE via BrasilAPI) + cross-referência de membro do lar
+(Fase 2). Sem ML (Fase 5), sem LLM fallback (Fase 4).
+
+Import de PDF é CPU-only e self-hospedado (sem serviço externo de OCR). O
+modelo do EasyOCR deve estar pré-baixado no build da imagem Docker (nunca
+em runtime — cold-start repetiria o download a cada instância fria); a env
+`DOCLING_ARTIFACTS_PATH` aponta pro diretório onde o modelo foi baixado
+(setada no `Dockerfile`). Em dev local sem esse pre-cache, o Docling cai no
+comportamento default (baixa on-demand, mais lento só na primeira chamada
+do processo).
+
+OCR real é caro (medido: ~6-8min pra um PDF de 6 páginas, CPU-only) e o
+`DocumentConverter`/EasyOCR Reader é cacheado por processo (evita
+recarregar o modelo a cada job) — por isso jobs de PDF são serializados
+(`_PDF_OCR_LOCK` em `job_runner.py`): rodar OCR concorrente contra o mesmo
+modelo cacheado não é documentado como seguro pelo Docling, e em CPU-only
+não ganharia throughput mesmo se fosse. csv/ofx (rápido, sem modelo
+compartilhado) não passa por esse lock.
 
 ## Rodando local
 
@@ -32,13 +49,28 @@ uvicorn statement_processor.main:app --reload
 ## Testes
 
 ```bash
-pytest -q
+pytest -q          # suíte rápida, pula o teste de OCR real (marker `slow`)
+pytest -m slow -q  # só o teste de OCR real (Docling+EasyOCR), 1-4min
 ```
+
+O teste de OCR real (`tests/test_pdf_ocr_slow.py`, marcado `@pytest.mark.slow`)
+processa o PDF escaneado de verdade (14-40s/página) — isolado via
+`addopts = "-m 'not slow'"` em `pyproject.toml` pra não pesar o `pytest -q`
+padrão.
 
 Fixtures em `tests/fixtures/` são **dados sintéticos** (nomes/CPFs/CNPJs
 fake) — nunca os extratos reais usados durante a investigação de
 viabilidade (`_poc_templates/` na raiz do repo principal, que contêm dados
 financeiros pessoais reais e não devem ir pro controle de versão).
+
+`pdf_bank_statement_digital.pdf`, `pdf_bank_statement_scanned.pdf` e
+`pdf_bank_statement_ground_truth.json` (Fase 3, OCR) vêm do dataset público
+[AgamiAI/Indian-Bank-Statements](https://huggingface.co/datasets/AgamiAI/Indian-Bank-Statements)
+(Apache 2.0, "Fully synthetic — no real customer information") — mesmo
+extrato sintético em duas variantes (PDF com camada de texto e PDF
+escaneado, exigindo OCR de verdade). O ground truth foi truncado às 20
+primeiras transações do arquivo original (150+); suficiente para validar a
+heurística de parsing sem inflar o fixture.
 
 ## Estrutura
 
@@ -56,6 +88,8 @@ src/statement_processor/
   parsers/
     ofx.py          — parser OFX (formato padrão, não depende de banco)
     csv_nubank.py   — adapter de CSV específico do Nubank
+    pdf.py          — parser de PDF via OCR (Docling/EasyOCR), heurística
+                      genérica de cabeçalho de coluna (Fase 3)
     registry.py     — escolhe o adapter certo por source + conteúdo
   rules/
     structural.py   — camada 1 (movimentação interna, fatura de cartão)
@@ -65,11 +99,6 @@ src/statement_processor/
 
 ## Próximas fases (não implementadas aqui)
 
-- **Fase 2**: cross-referência de membro do lar + memória por comerciante
-  (tabela `merchant_category_memory`, gerenciada pelo backend — o processor
-  só recebe a memória já resolvida via `context.merchantMemory` no request).
-- **Fase 3**: OCR de PDF (Docling, modelo pré-baked na imagem Docker —
-  nunca baixado em runtime, achado da PoC).
 - **Fase 4**: LLM fallback (Groq) pra sobra residual.
 - **Fase 5**: classificador de ML embutido (gatilho por volume de dado, não
   por data).

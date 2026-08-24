@@ -1,19 +1,19 @@
 {
   "page": {
     "title": "Import statement",
-    "description": "Upload a CSV or OFX file from your bank and review the transactions before confirming."
+    "description": "Upload a CSV, OFX or PDF file from your bank and review the transactions before confirming."
   },
   "upload": {
     "button": "Import file",
     "uploading": "Uploading…",
-    "invalidType": "Invalid format. Upload a .csv, .ofx or .qfx file.",
+    "invalidType": "Invalid format. Upload a .csv, .ofx, .qfx or .pdf file.",
     "featureDisabled": "Statement import is temporarily disabled. Please try again later.",
     "genericError": "Could not upload the file. Please try again.",
     "emptyTitle": "No statement imported yet",
-    "emptyDescription": "Upload a CSV or OFX file to start reviewing transactions."
+    "emptyDescription": "Upload a CSV, OFX or PDF file to start reviewing transactions."
   },
   "job": {
-    "processing": "Processing the statement…",
+    "processing": "Processing the statement… (PDF files may take a few minutes)",
     "genericFailure": "Could not process the statement.",
     "retry": "Try again"
   },

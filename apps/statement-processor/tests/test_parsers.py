@@ -52,9 +52,11 @@ def test_registry_raises_parse_error_for_unknown_csv_layout():
         pass
 
 
-def test_registry_raises_parse_error_for_pdf_in_fase_1():
+def test_registry_raises_parse_error_for_pdf_with_wrong_raw_type():
+    # source="pdf" espera bytes (job_runner.py não decodifica PDF como
+    # utf-8, Fase 3) -- receber str aqui indicaria um bug no chamador.
     try:
         parse("pdf", "qualquer coisa")
-        assert False, "esperava ParseError — PDF só entra na Fase 3"
+        assert False, "esperava ParseError — pdf exige bytes, não str"
     except ParseError:
         pass
