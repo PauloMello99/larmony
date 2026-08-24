@@ -84,12 +84,14 @@
   (minutos) precisava de `asyncio.to_thread`, senão travava o processo
   inteiro por job. Também corrigido: timeout de PDF do ADR-0034 (era 5min,
   correto é 20min — os "14-40s" da PoC eram por página, não por
-  documento; medido ~6-8min reais pra 6 páginas). Imagem Docker final:
-  **11.2GB** — `torch` puxa build CUDA completo do PyPI mesmo sendo serviço
-  CPU-only (ADR-0033 já aceitava "imagem maior", mas não nessa escala);
-  fix seria pinar torch/torchvision no índice CPU-only do PyTorch, não
-  tentado nesta sessão por risco de quebrar o build com uma versão
-  indisponível — reportado como follow-up, não como bug bloqueante.
+  documento; medido ~6-8min reais pra 6 páginas). Imagem Docker: **11.2GB
+  → 4.62GB** — `torch` puxava build CUDA completo do PyPI mesmo sendo
+  serviço CPU-only; corrigido pré-instalando torch/torchvision do índice
+  CPU-only oficial do PyTorch antes do `pip install .` (validado isolado
+  primeiro, depois no Dockerfile real com OCR de verdade rodando dentro do
+  container — mesmas 153 transações do ambiente de dev, `cuda
+  available=False`, zero pacotes `nvidia-*`). Detalhe em
+  [[statement-processor-docling-ocr-gotchas]].
 
 - **2026-08-22 — Investigação de viabilidade de LLM/ML → ADR-0033**:
   investigação de várias sessões (não implementação) testando viabilidade
