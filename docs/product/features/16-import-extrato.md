@@ -280,12 +280,18 @@ corrigido pra 20min. Jobs de PDF são serializados no processor (um único
 modelo de OCR cacheado por processo, sem OCR concorrente) — ver addendum
 na ADR-0034 pra detalhe completo.
 
-**Fase 4 — LLM fallback (sobra residual)**
-Groq (`gpt-oss-120b`, schema compacto — índice curto + código de categoria,
+**Fase 4 — LLM fallback (sobra residual)** ✅ implementado (2026-08-24)
+Groq (`openai/gpt-oss-120b`, schema compacto — índice curto + código de categoria,
 `reasoning_effort:"low"`, achados de engenharia da PoC) chamado pelo
 processor só pra transações que as camadas 1–4 não resolveram. Rate
 limit/retry-with-backoff do free tier tratado desde o dia 1 (achado da PoC:
-8.000 tokens/min por org, estourava até com lotes pequenos).
+8.000 tokens/min por org, estourava até com lotes pequenos), com o semáforo
+de rate limit limitado ao orçamento de tempo por `source` (nunca segura o
+job além do deadline). `GROQ_API_KEY` opcional — ausente, a Fase 4 fica
+desligada e o pipeline se comporta como nas Fases 1-3. Detalhe completo das
+decisões não-óbvias (confidence sempre "low", dedup por-job, `merchant_key`
+nunca populado pela LLM, aplicação de hits por índice posicional) em
+[[domain-rules]] (seção "Import de extrato — LLM fallback").
 
 **Fase 5 (opcional, gatilho por dado) — Classificador de ML embutido**
 Só entra quando telemetria de produção mostrar volume de correção

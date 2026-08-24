@@ -3,6 +3,9 @@ import os
 import pytest
 
 os.environ.setdefault("PROCESSOR_SHARED_SECRET", "test-secret")
+# Mesmo padrão do secret acima -- evita que testes que não mockam a Groq
+# explicitamente falhem com "chave ausente" mascarando a causa real.
+os.environ.setdefault("GROQ_API_KEY", "test-groq-key")
 
 
 @pytest.fixture(autouse=True)

@@ -85,7 +85,9 @@ async def run_job(request: CreateJobRequest) -> None:
         return
 
     try:
-        candidates, stats = await run_pipeline(transactions, request.context)
+        candidates, stats = await run_pipeline(
+            transactions, request.context, request.source
+        )
     except Exception:
         logger.exception("Erro inesperado categorizando job %s", request.job_id)
         await send_callback(
